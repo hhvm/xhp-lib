@@ -1,0 +1,13 @@
+all: xhp_scanner.lex.cpp xhp_parser.yacc.cpp
+
+clean:
+	rm phpx xhp_scanner.lex.cpp xhp_scanner.lex.hpp xhp_parser.yacc.cpp xhp_parser.yacc.hpp xhp_parser.yacc.output
+
+xhp_scanner.lex.cpp: xhp_scanner.l
+	flex --header-file=xhp_scanner.lex.hpp --prefix=xhp -o $@ -d $<
+
+xhp_parser.yacc.cpp: xhp_parser.y
+	bison --debug --name-prefix=xhp --verbose -d -o $@ $<
+
+phpx: xhp_scanner.lex.cpp xhp_parser.yacc.cpp parser.cpp lineno_str.cpp
+	g++ -ggdb -Wall $^ -o $@
