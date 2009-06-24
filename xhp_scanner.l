@@ -44,6 +44,7 @@ bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %option bison-bridge
 %option bison-locations
 
+%s TERMINATE
 %s PHP
 %s PHP_NO_RESERVED_WORDS
 %s HEREDOC_LINE_START
@@ -60,6 +61,11 @@ WHITESPACE [ \t\x0b\x0c\xa0\r\n]
 B b?
 
 %%
+<TERMINATE>{
+  .|\n {
+    return 0;
+  }
+}
 <INITIAL>{
   (?i:"<?php") return tok(t_PHP_OPEN_TAG);
   "<?" return tok(t_PHP_OPEN_TAG);
@@ -133,7 +139,6 @@ B b?
   (?i:return) return tok(t_RETURN);
   (?i:try) return tok(t_TRY);
   (?i:catch) return tok(t_CATCH);
-  (?i:finally) return tok(t_CATCH);
   (?i:throw) return tok(t_THROW);
   (?i:global) return tok(t_GLOBAL);
   (?i:static) return tok(t_STATIC);

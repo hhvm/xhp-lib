@@ -9,15 +9,27 @@
   #undef yylineno
   #endif
   #define yylineno (unsigned int)(yylloc.internal_line)  
+  #define yyterminate(s) yyerror(&yylloc, yyscanner, filename, root, s); yy_begin(TERMINATE);
   #define cr(s) code_rope(s, yylineno)
   extern int yydebug;
   static void yyerror(YYLTYPE* xhplloc, void* yyscanner, const char* filename, code_rope* str, const char* a) {
+    xhp_extra_type* ex = static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
+    if (ex->terminated) {
+      return;
+    }
+    ex->terminated = true;
+
     CG(zend_lineno) = xhplloc->internal_line + xhplloc->actual_line_offset;
     zend_set_compiled_filename(const_cast<char*>(filename) TSRMLS_CC);
     *str = a;
     return;
   }
-
+  void replacestr(std::string &source, const std::string &find, const std::string &rep) {
+    size_t j; 
+    while ((j = source.find(find)) != std::string::npos) {
+      source.replace(j, find.length(), rep);
+    }
+  }
 %}
 
 %locations
@@ -40,7 +52,6 @@
 %token t_NEW t_CLONE
 %token t_TRY
 %nonassoc t_CATCH
-%nonassoc t_FINALLY
 %nonassoc p_CATCH
 %token t_ABSTRACT t_FINAL t_PRIVATE t_PROTECTED t_PUBLIC t_VAR
 %token t_CLASS t_INTERFACE t_EXTENDS t_IMPLEMENTS t_ELEMENT
@@ -140,8 +151,9 @@ statement:
     $$ = cr("<?=");
   }
 | t_LCURLY statement_list t_RCURLY {
-    $$ = "{" + $2 + "}";
+    $$ = "{" + $2 + cr("}");
   }
+| function_declaration
 | if_statement // TODO
 | while_statement
 | for_statement
@@ -155,10 +167,9 @@ statement:
 | t_INLINE_HTML
 | expression_statement
 | class_declaration
-
 | try_statement
+
 | declaration_statement
-| function_declaration
 | semicolon
 | xhp_element_declaration
 ;
@@ -238,10 +249,10 @@ switch_statement:
 
 switch_case_list:
   t_LCURLY case_list t_RCURLY {
-    $$ = "{" + $2 + "}";
+    $$ = "{" + $2 + cr("}");
   }
 | t_LCURLY semicolon case_list t_RCURLY {
-    $$ = "{" + $2 + $3 + "}";
+    $$ = "{" + $2 + $3 + cr("}");
   }
 | t_COLON case_list t_ENDSWITCH {
     $$ = "{" + $2 + "}";
@@ -289,7 +300,6 @@ continue_statement:
 ;
 
 return_statement:
-  // TODO: T_RETURN expr_without_variable?
   t_RETURN expression semicolon {
     $$ = "return " + $2 + $3;
   }
@@ -311,20 +321,17 @@ expression_statement:
 ;
 
 try_statement:
-  t_TRY t_LCURLY statement_list t_RCURLY catch_blocks {
-    $$ = "try { " + $3 + "} " + $5;
+  t_TRY t_LCURLY statement_list t_RCURLY t_CATCH t_LPAREN identifier expression t_RPAREN t_LCURLY statement_list t_RCURLY additional_catches {
+    $$ = "try { " + $3 + "} catch(" + $7 + " " + $8 + ") {" + $11 + "}" + $13;
   }
 ;
 
-catch_blocks:
-  catch_blocks catch_blocks %prec p_CATCH {
-    $$ = $1 + $2;
+additional_catches:
+  /* empty */ {
+    $$ = "";
   }
-| t_CATCH t_LPAREN identifier expression t_RPAREN t_LCURLY statement_list t_RCURLY {
-    $$ = "catch(" + $3 + " " + $4 + ") {" + $7 + "}";
-  }
-| t_FINALLY t_LCURLY statement_list t_RCURLY {
-    $$ = "finally {" + $3 + "}";
+| additional_catches t_CATCH t_LPAREN identifier expression t_RPAREN t_LCURLY statement_list t_RCURLY {
+    $$ = $1 + "catch(" + $4 + " " + $5 + ") {" + $8 + cr("}");
   }
 ;
 
@@ -392,7 +399,6 @@ identifier:
   }
 ;
 
-
 expression_with_comma:
   expression
 | expression_with_comma t_COMMA expression {
@@ -420,6 +426,9 @@ expression:
   }
 | identifier identifier {
     $$ = $1 + " " + $2;
+  }
+| t_ARRAY identifier {
+    $$ = "array " + $2;
   }
 | t_ARRAY t_LPAREN array_pair_list t_RPAREN {
     $$ = "array(" + $3 + ")";
@@ -690,7 +699,7 @@ function_name:
 
 function_declaration:
   t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
-    $$ = "function " + $2 + $3 + " {" + $5 + "}";
+    $$ = "function " + $2 + $3 + " {" + $5 + cr("}");
   }
 | t_FUNCTION function_name argument_list semicolon {
     $$ = "function " + $2 + $3 + $4;
@@ -700,10 +709,10 @@ function_declaration:
 // Classes
 class_declaration:
   class_entry identifier class_extends class_implements t_LCURLY class_statement_list t_RCURLY {
-    $$ = $1 + " " + $2 + " " + $3 + " " + $4 + "{" + $6 + "}";
+    $$ = $1 + " " + $2 + " " + $3 + " " + $4 + "{" + $6 + cr("}");
   }
 | t_INTERFACE identifier interface_extends t_LCURLY class_statement_list t_RCURLY {
-    $$ = "interface " + $2 + " " + $3 + "{" + $5 + "}";
+    $$ = "interface " + $2 + " " + $3 + "{" + $5 + cr("}");
   }
 ;
 
@@ -824,7 +833,6 @@ xhp_expression:
 xhp_children:
   xhp_children_ {
     if ($1.back() == ',') {
-//      $1.pop_back();
       $$ = "array(" + $1 + ")";
     } else {
       $$ = "array()";
@@ -902,6 +910,7 @@ xhp_open_tag:
   xhp_tag_start xhp_attributes t_XHP_GREATER_THAN {
     yy_pop_state(); // XHP_ATTR
     yy_push_state(XHP_CHILD_START);
+    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->xhp_tag_stack->push($1.c_str());
     $$ = "new xhp_" + $1 + "(array(" + $2 + "), ";
   }
 ;
@@ -910,7 +919,18 @@ xhp_close_tag:
   t_XHP_LESS_THAN_DIV { yy_push_state(XHP_LABEL); } xhp_label t_XHP_GREATER_THAN {
     yy_pop_state(); // XHP_LABEL
     yy_pop_state(); // XHP_CHILD_START
-    // TODO: check stack for mismatched tags
+    xhp_extra_type* ex = static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
+    if (ex->xhp_tag_stack->top() != $3.c_str()) {
+      std::string e1 = $3.c_str();
+      std::string e2 = ex->xhp_tag_stack->top();
+      replacestr(e1, "__", ":");
+      replacestr(e1, "_", "-");
+      replacestr(e2, "__", ":");
+      replacestr(e2, "_", "-");
+      std::string e = std::string("mismatched tag </") + e1 + ">; expecting </" + e2 +">";
+      yyterminate(e.c_str());
+    }
+    ex->xhp_tag_stack->pop();
     $$ = ")";
   }
 ;
@@ -952,7 +972,7 @@ xhp_whitespace_hack:
 // element declarations
 xhp_element_declaration:
   t_ELEMENT { yy_push_state(PHP_NO_RESERVED_WORDS); } xhp_label xhp_whitespace_hack xhp_element_extends xhp_element_implements t_LCURLY class_statement_list t_RCURLY {
-    $$ = cr("class xhp_") + $3 + " " + $5 + " " + $6 + "{" + $8 + "}";
+    $$ = cr("class xhp_") + $3 + " " + $5 + " " + $6 + "{" + $8 + cr("}");
   }
 ;
 

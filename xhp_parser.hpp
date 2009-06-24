@@ -1,6 +1,8 @@
 #pragma once
 
 #include <stdio.h>
+#include <string>
+#include <stack>
 #include "code_rope.hpp"
 
 #define YYSTYPE code_rope
@@ -13,6 +15,8 @@ typedef struct {
   size_t heredoc_eom_len;
   char* heredoc_data_start;
   char* heredoc_data_last;
+  bool terminated;
+  std::stack<std::string>* xhp_tag_stack;
 } xhp_extra_type;
 #define YY_EXTRA_TYPE xhp_extra_type*
 
@@ -42,6 +46,7 @@ void flex_pop_state(void*);
 
 extern int xhpdebug;
 int xhpparse(void*, const char*, code_rope*);
+YY_EXTRA_TYPE xhpget_extra(void* scanner);
 #ifndef FLEX_SCANNER
 void* xhp_scan_string(const char *yy_str, void* yyscanner);
 #endif

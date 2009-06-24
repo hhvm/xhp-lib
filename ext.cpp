@@ -7,6 +7,8 @@
 #include "zend_extensions.h"
 #include <string>
 
+using namespace std;
+
 typedef zend_op_array* (zend_compile_file_t)(zend_file_handle*, int TSRMLS_DC);
 typedef zend_op_array* (zend_compile_string_t)(zval*, char* TSRMLS_DC);
 static zend_compile_file_t* dist_compile_file;
@@ -43,6 +45,8 @@ char* xhp_parse_str(const char* code, const char* filename, int firsttok) {
   code_rope buf;
   xhp_extra_type extra;
   extra.firsttoken = firsttok;
+  extra.xhp_tag_stack = new stack<string>();
+  extra.terminated = false;
 
   //xhpdebug = 1;
   xhplex_init(&scanner);
@@ -50,6 +54,7 @@ char* xhp_parse_str(const char* code, const char* filename, int firsttok) {
   xhp_scan_string(code, scanner);
   int ret = xhpparse(scanner, filename, &buf);
   xhplex_destroy(scanner);
+  delete extra.xhp_tag_stack;
   if (ret) {
     zend_error(E_COMPILE_ERROR, buf.c_str());
     return NULL;
