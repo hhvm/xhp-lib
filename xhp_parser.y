@@ -42,7 +42,7 @@
 %nonassoc t_CATCH
 %nonassoc t_FINALLY
 %nonassoc p_CATCH
-%token t_ABSTRACT t_FINAL t_PRIVATE t_PROTECTED t_PUBLIC
+%token t_ABSTRACT t_FINAL t_PRIVATE t_PROTECTED t_PUBLIC t_VAR
 %token t_CLASS t_INTERFACE t_EXTENDS t_IMPLEMENTS t_ELEMENT
 
 // Literals
@@ -154,12 +154,13 @@ statement:
 | echo_statement
 | t_INLINE_HTML
 | expression_statement
+| class_declaration
 
-| class_statement
 | try_statement
 | declaration_statement
-| function
+| function_declaration
 | semicolon
+| xhp_element_declaration
 ;
 
 semicolon:
@@ -288,7 +289,7 @@ continue_statement:
 ;
 
 return_statement:
-  // TODO: T_RETURN expr_without_variable
+  // TODO: T_RETURN expr_without_variable?
   t_RETURN expression semicolon {
     $$ = "return " + $2 + $3;
   }
@@ -687,11 +688,8 @@ function_name:
   }
 ;
 
-function:
-  many_fancy_delarations function {
-    $$ = $1 + " " + $2;
-  }
-| t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
+function_declaration:
+  t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
     $$ = "function " + $2 + $3 + " {" + $5 + "}";
   }
 | t_FUNCTION function_name argument_list semicolon {
@@ -700,33 +698,115 @@ function:
 ;
 
 // Classes
-class_statement:
-  t_CLASS classy_stuff t_LCURLY statement_list t_RCURLY {
-    $$ = "class " + $2 + " {" + $4 +  "}";
+class_declaration:
+  class_entry identifier class_extends class_implements t_LCURLY class_statement_list t_RCURLY {
+    $$ = $1 + " " + $2 + " " + $3 + " " + $4 + "{" + $6 + "}";
   }
-| many_fancy_delarations t_CLASS classy_stuff t_LCURLY statement_list t_RCURLY {
-    $$ = $1 + " class " + $3 + " {" + $5 +  "}";
-  }
-| t_INTERFACE classy_stuff t_LCURLY statement_list t_RCURLY {
-    $$ = "interface " + $2 + " {" + $4 +  "}";
+| t_INTERFACE identifier interface_extends t_LCURLY class_statement_list t_RCURLY {
+    $$ = "interface " + $2 + " " + $3 + "{" + $5 + "}";
   }
 ;
 
-classy_stuff:
+class_entry:
+  t_CLASS {
+    $$ = cr("class");
+  }
+| t_ABSTRACT t_CLASS {
+    $$ = cr("abstract class");
+  }
+| t_FINAL t_CLASS {
+    $$ = cr("final class");
+  }
+;
+
+class_extends:
   /* empty */ {
     $$ = "";
   }
-| classy_stuff t_EXTENDS {
-    $$ = $1 + cr(" extends ");
+| t_EXTENDS identifier {
+    $$ = "extends " + $2;
   }
-| classy_stuff t_IMPLEMENTS {
-    $$ = $1 + cr(" implements ");
+;
+
+interface_extends:
+  /* empty */ {
+    $$ = "";
   }
-| classy_stuff identifier {
+| t_EXTENDS class_implements_list {
+    $$ = "extends " + $2;
+  }
+;
+
+class_implements:
+  /* empty */ {
+    $$ = "";
+  }
+| t_IMPLEMENTS class_implements_list {
+    $$ = "implements " + $2;
+  }
+;
+
+class_implements_list:
+  identifier
+| class_implements_list t_COMMA identifier {
+    $$ = $1 + "," + $3;
+  }
+;
+
+class_statement_list:
+  /* empty */ {
+    $$ = "";
+  }
+| class_statement_list class_statement {
+    $$ = $1 + $2;
+  }
+;
+
+class_statement:
+  class_variable_modifier expression_with_comma semicolon {
+    $$ = $1 + " " + $2 + $3;
+  }
+| t_CONST expression_with_comma semicolon {
+    $$ = "const " + $2 + $3;
+  }
+| class_member_modifiers function_declaration {
     $$ = $1 + " " + $2;
   }
-| classy_stuff t_COMMA {
-    $$ = $1 + cr(", ");
+| function_declaration
+;
+
+class_variable_modifier:
+  t_VAR {
+    $$ = cr("var");
+  }
+| class_member_modifiers
+;
+
+class_member_modifiers:
+  class_member_modifier
+| class_member_modifiers class_member_modifier {
+    $$ = $1 + " " + $2;
+  }
+;
+
+class_member_modifier:
+  t_PUBLIC {
+    $$ = cr("public");
+  }
+| t_PROTECTED {
+    $$ = cr("protected");
+  }
+| t_PRIVATE {
+    $$ = cr("private");
+  }
+| t_STATIC {
+    $$ = cr("static");
+  }
+| t_ABSTRACT {
+    $$ = cr("abstract");
+  }
+| t_FINAL {
+    $$ = cr("final");
   }
 ;
 
@@ -867,6 +947,38 @@ xhp_lt:
 xhp_whitespace_hack:
   /* empty */
 | t_XHP_WHITESPACE
+;
+
+// element declarations
+xhp_element_declaration:
+  t_ELEMENT { yy_push_state(PHP_NO_RESERVED_WORDS); } xhp_label xhp_whitespace_hack xhp_element_extends xhp_element_implements t_LCURLY class_statement_list t_RCURLY {
+    $$ = cr("class xhp_") + $3 + " " + $5 + " " + $6 + "{" + $8 + "}";
+  }
+;
+
+xhp_element_extends:
+  /* empty */ {
+    $$ = "extends XHPCore";
+  }
+| t_EXTENDS xhp_label xhp_whitespace_hack {
+    $$ = "extends " + $2;
+  }
+;
+
+xhp_element_implements:
+  /* empty */ {
+    $$ = "";
+  }
+| t_IMPLEMENTS xhp_element_implements_list {
+    $$ = "implements " + $2;
+  }
+;
+
+xhp_element_implements_list:
+  xhp_label xhp_whitespace_hack
+| xhp_element_implements_list t_COMMA xhp_label xhp_whitespace_hack {
+    $$ = $1 + "," + $3;
+  }
 ;
 
 %%

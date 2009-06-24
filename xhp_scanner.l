@@ -142,6 +142,7 @@ B b?
   (?i:private) return tok(t_PRIVATE);
   (?i:protected) return tok(t_PROTECTED);
   (?i:public) return tok(t_PUBLIC);
+  (?i:var) return tok(t_VAR);
   (?i:class) return tok(t_CLASS);
   (?i:element) return tok(t_ELEMENT);
   (?i:interface) return tok(t_INTERFACE);
