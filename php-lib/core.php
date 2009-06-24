@@ -35,6 +35,7 @@ abstract class XHPPrimitive {
       }
     }
     $this->attributes = $attributes;
+    $this->children = array();
     foreach ($children as $child) {
       $this->appendChild($child);
     }
@@ -163,9 +164,10 @@ abstract class XHPPrimitive {
  * of XHPCore are not allowed to implement `__toString`.
  */
 abstract class XHPCore extends XHPPrimitive {
-  public final function __toString() {
+  public /* final TDOO: Restore this once there's a doctype solution */ function __toString() {
     $that = $this;
     while (($that = $that->render()) instanceof XHPCore);
+    
     return $that->__toString();
   }
 }
