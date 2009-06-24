@@ -10,6 +10,32 @@
 #define tok(t) flex_tok(t, yyg);
 
 static int flex_tok(int t, void* y);
+const char* yytokname(int tok);
+
+bool utf8ize(uint32_t v, char* buf /* [5] */) {
+  if (v <= 0x7f) { // 0xxxxxxx
+    buf[0] = v;
+    buf[1] = 0;
+  } else if (v <= 0x7ff) { // 110yyyxx 10xxxxxx
+    buf[0] = 0xc0 | (v >> 6);
+    buf[1] = 0x80 | (v & 0x3f);
+    buf[2] = 0;
+  } else if (v <= 0xffff) { // 1110yyyy 10yyyyxx 10xxxxxx
+    buf[0] = 0xe0 | (v >> 12);
+    buf[1] = 0x80 | ((v >> 6) & 0x3f);
+    buf[2] = 0x80 | (v & 0x3f);
+    buf[3] = 0;
+  } else if (v <= 0x1fffff) { // 11110zzz 10zzyyyy 10yyyyxx 10xxxxxx
+    buf[0] = 0xf0 | (v >> 18);
+    buf[1] = 0x80 | ((v >> 12) & 0x3f);
+    buf[2] = 0x80 | ((v >> 6) & 0x3f);
+    buf[3] = 0x80 | (v & 0x3f);
+    buf[4] = 0;
+  } else {
+    return false;
+  }
+  return true;
+}
 %}
 
 %option stack
@@ -22,8 +48,16 @@ static int flex_tok(int t, void* y);
 %s PHP_NO_RESERVED_WORDS
 %s HEREDOC_LINE_START
 %s HEREDOC_DATA
-%s XHP
+%s XHP_CHILD
+%s XHP_CHILD_START
+%s XHP_LABEL
 %s XHP_ATTR
+%s XHP_ATTR_VAL
+
+NEWLINE ("\r"|"\n"|"\r\n")
+LABEL [a-zA-Z_\x7f-\xff][0-9a-zA-Z_\x7f-\xff]*
+WHITESPACE [ \t\x0b\x0c\xa0\r\n]
+B b?
 
 %%
 <INITIAL>{
@@ -34,7 +68,7 @@ static int flex_tok(int t, void* y);
   [^<]* *yylval = yytext; return tok(t_INLINE_HTML);
 }
 <PHP,PHP_NO_RESERVED_WORDS>{
-  "?>"\r?\n {
+  "?>"{NEWLINE} {
     ++yylloc->internal_line;
     flex_pop_state(yyg);
     return tok(t_PHP_CLOSE_TAG);
@@ -42,9 +76,9 @@ static int flex_tok(int t, void* y);
   "?>" flex_pop_state(yyg); return tok(t_PHP_CLOSE_TAG);
 }
 <PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR>{
-  ("//"|"#").*  |
-  [ \t\x0b\x0c\xa0\r]+ /* eat it up */
-  \n {
+  [ \t\x0b\x0c\xa0]+ /* eat it up */
+  ("//"|"#").*{NEWLINE} |
+  {NEWLINE} {
     ++yylloc->internal_line;
   }
   "/*" {
@@ -78,12 +112,17 @@ static int flex_tok(int t, void* y);
   (?i:if) return tok(t_IF);
   (?i:else) return tok(t_ELSE);
   (?i:elseif) return tok(t_ELSEIF);
+  (?i:endif) return tok(t_ENDIF);
   (?i:do) return tok(t_DO);
   (?i:while) return tok(t_WHILE);
+  (?i:endwhile) return tok(t_ENDWHILE);
   (?i:for) return tok(t_FOR);
+  (?i:endfor) return tok(t_ENDFOR);
   (?i:foreach) return tok(t_FOREACH);
+  (?i:endforeach) return tok(t_ENDFOREACH);
   (?i:as) return tok(t_AS);
   (?i:switch) return tok(t_SWITCH);
+  (?i:endswitch) return tok(t_ENDSWITCH);
   (?i:case) return tok(t_CASE);
   (?i:default) return tok(t_DEFAULT);
   (?i:break) return tok(t_BREAK);
@@ -104,6 +143,7 @@ static int flex_tok(int t, void* y);
   (?i:protected) return tok(t_PROTECTED);
   (?i:public) return tok(t_PUBLIC);
   (?i:class) return tok(t_CLASS);
+  (?i:element) return tok(t_ELEMENT);
   (?i:interface) return tok(t_INTERFACE);
   (?i:extends) return tok(t_EXTENDS);
   (?i:implements) return tok(t_IMPLEMENTS);
@@ -111,8 +151,15 @@ static int flex_tok(int t, void* y);
   (?i:include_once) return tok(t_INC_ONCE);
   (?i:require) return tok(t_REQ);
   (?i:include) return tok(t_INC);
+  (?i:array) return tok(t_ARRAY);
+  (?i:or) return tok(t_LOGICAL_OR);
+  (?i:and) return tok(t_LOGICAL_AND);
+  (?i:xor) return tok(t_LOGICAL_XOR);
 }
-<PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR>{
+<PHP,PHP_NO_RESERVED_WORDS>{
+  "=" return tok(t_ASSIGN);
+}
+<PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR,XHP_LABEL>{
   "===" return tok(t_STRICT_EQUAL);
   "!==" return tok(t_STRICT_NOT_EQUAL);
   "<<=" return tok(t_LSHIFT_ASSIGN);
@@ -133,9 +180,6 @@ static int flex_tok(int t, void* y);
   "&=" return tok(t_BIT_AND_ASSIGN);
   "|=" return tok(t_BIT_OR_ASSIGN);
   "^=" return tok(t_BIT_XOR_ASSIGN);
-  (?i:or) return tok(t_LOGICAL_OR);
-  (?i:and) return tok(t_LOGICAL_AND);
-  (?i:xor) return tok(t_LOGICAL_XOR);
   ".=" return tok(t_APPEND);
   "&&" return tok(t_AND);
   "||" return tok(t_OR);
@@ -161,7 +205,6 @@ static int flex_tok(int t, void* y);
   "^" return tok(t_BIT_XOR);
   "!" return tok(t_NOT);
   "~" return tok(t_BIT_NOT);
-  "=" return tok(t_ASSIGN);
   "$" return tok(t_DOLLAR);
   "@" return tok(t_AT);
   "(" return tok(t_LPAREN);
@@ -177,12 +220,8 @@ static int flex_tok(int t, void* y);
   "/" return tok(t_DIV);
   ">" return tok(t_GREATER_THAN);
 }
-<XHP_ATTR>{
-  "/" return tok(t_XHP_DIV);
-  ">" return tok(t_XHP_GREATER_THAN);
-}
 <PHP,PHP_NO_RESERVED_WORDS>{
-  '(\\.|\\\n|[^\\']+)*' {
+  {B}'(\\.|\\\n|[^\\']+)*' {
     *yylval = yytext;
     for (char* ii = yytext; *ii; ++ii) {
       if (*ii == '\n') {
@@ -191,7 +230,7 @@ static int flex_tok(int t, void* y);
     }
     return tok(t_LITERAL_STRING);
   }
-  \"(\\.|\\\n|[^\\\"]+)*\" {
+  {B}\"(\\.|\\\n|[^\\\"]+)*\" {
     *yylval = yytext;
     for (char* ii = yytext; *ii; ++ii) {
       if (*ii == '\n') {
@@ -227,99 +266,181 @@ static int flex_tok(int t, void* y);
     return tok(t_NUMBER);
   }
 }
-<PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR>{
-  [a-zA-Z_$][a-zA-Z_$0-9]* {
-    *yylval = yytext;
-    return tok(t_IDENTIFIER);
-  }
-}
-<XHP>{
-  [^<"{]+ {
-    *yylval = yytext;
-    return tok(t_XHP_TEXT);
-  }
-  "{" {
-    return tok(t_LCURLY);
-  }
-  \" {
-    return tok(t_DOUBLE_QUOTE);
-  }
-  "<" {
-    return tok(t_LESS_THAN);
-  }
-  "</" {
-    return tok(t_XHP_LESS_THAN_DIV);
-  }
-}
-
 <PHP,PHP_NO_RESERVED_WORDS>{
-  "<<<".+\n {
-    yyextra->heredoc_eom = yytext + 3;
-    yyextra->heredoc_eom_len = strlen(yyextra->heredoc_eom) - 1;
-    yyextra->heredoc_data_last = yyextra->heredoc_data_start = yyextra->heredoc_eom + yyextra->heredoc_eom_len + 1;
-    if (yyextra->heredoc_eom[yyextra->heredoc_eom_len - 1] == '\r') {
-      --yyextra->heredoc_eom_len;
+  {B}"<<<".+{NEWLINE} {
+    char* eom = yytext;
+    if (*eom == 'b') {
+      ++eom;
     }
+    eom += 3;
+    while (*eom == '\t' || *eom == ' ') ++eom;
+    size_t len = yyleng - (eom - yytext) - 1;
+    if (eom[len - 2] == '\r') { // windows [\r\n] encoding
+      --len;
+    }
+    yyextra->heredoc_eom = eom;
+    yyextra->heredoc_eom_len = len;
+    yyextra->heredoc_data_last = yytext + yyleng;
     ++yylloc->actual_line_offset;
     yymore();
     flex_push_state(HEREDOC_LINE_START, yyg);
-    BEGIN(HEREDOC_LINE_START);
   }
 }
 <HEREDOC_LINE_START>{
-  [a-zA-Z0-9]+$ {
-    // copy-pasted below.
-    if (yyextra->heredoc_eom_len <= strlen(yyextra->heredoc_data_last)
-      && strncmp(yyextra->heredoc_eom, yyextra->heredoc_data_last, yyextra->heredoc_eom_len) == 0) {
-      *yylval = yytext;
-      *yylval = code_rope("<<<") + yyextra->heredoc_eom + "\n";
+  {LABEL};?{NEWLINE} {
+    size_t len = yyleng - (yyextra->heredoc_data_last - yytext);
+    if (yyextra->heredoc_eom_len <= len &&
+        strncmp(yyextra->heredoc_eom, yyextra->heredoc_data_last, yyextra->heredoc_eom_len) == 0
+      ) {
+      char* trailing = yytext + yyleng - 1;
+      if (*trailing == '\n') {
+        --trailing;
+      }
+      if (*trailing == '\r') {
+        --trailing;
+      }
+      if (*trailing == ';') {
+        yyless(trailing - yytext);
+      }
+      *yylval = code_rope(yytext) + "\n";
       flex_pop_state(yyg);
+      ++yylloc->internal_line;
       return tok(t_HEREDOC);
     } else {
+      ++yylloc->actual_line_offset;
       yymore();
       BEGIN(HEREDOC_DATA);
     }
   }
-  [a-zA-Z0-9]+/; {
-    // copy-pasted from above.
-    if (yyextra->heredoc_eom_len <= strlen(yyextra->heredoc_data_last)
-      && strncmp(yyextra->heredoc_eom, yyextra->heredoc_data_last, yyextra->heredoc_eom_len) == 0) {
-      *yylval = yytext;
-      *yylval = code_rope("<<<") + yyextra->heredoc_eom + "\n";
-      flex_pop_state(yyg);
-      return tok(t_HEREDOC);
-    } else {
-      yymore();
-      BEGIN(HEREDOC_DATA);
-    }
-  }
-  . {
+  [^\r\n]+ {
     yymore();
     BEGIN(HEREDOC_DATA);
   }
-  \r?\n {
+  {NEWLINE} {
     ++yylloc->actual_line_offset;
-    ++yyextra->heredoc_data_last;
-    if (*yyextra->heredoc_data_last == '\n') {
-      ++yyextra->heredoc_data_last;
-    }
     yymore();
     BEGIN(HEREDOC_LINE_START);
   }
 }
 <HEREDOC_DATA>{
-  .*\r?\n {
+  .*{NEWLINE} {
     ++yylloc->actual_line_offset;
-    yyextra->heredoc_data_last += strlen(yyextra->heredoc_data_last);
+    yyextra->heredoc_data_last = yytext + yyleng;
     yymore();
     BEGIN(HEREDOC_LINE_START);
+  }
+}
+<PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR,XHP_LABEL>{
+  [a-zA-Z_$][a-zA-Z_$0-9]* {
+    *yylval = yytext;
+    return tok(t_IDENTIFIER);
+  }
+}
+
+<XHP_ATTR>{
+  "/" return tok(t_XHP_DIV);
+  ">" return tok(t_XHP_GREATER_THAN);
+}
+<XHP_LABEL>{
+  " " {
+    flex_pop_state(yyg);
+    return tok(t_XHP_WHITESPACE);
+  }
+  "=" {
+    flex_pop_state(yyg);
+    return tok(t_ASSIGN);
+  }
+  "/" {
+    flex_pop_state(yyg);
+    return tok(t_XHP_DIV);
+  }
+  ">" {
+    flex_pop_state(yyg);
+    return tok(t_XHP_GREATER_THAN);
+  }
+}
+<XHP_CHILD_START>{
+  {WHITESPACE}+ {
+    /* ignore whitespace at the start */
+    yytext[0] = ' ';
+    yyless(yyleng - 1);
+    BEGIN(XHP_CHILD);
+  }
+  . {
+    yyless(0);
+    BEGIN(XHP_CHILD);
+  }
+}
+<XHP_CHILD,XHP_ATTR_VAL>{
+  &amp; {
+    *yylval = "&";
+    return tok(t_XHP_TEXT);
+  }
+  &quot; {
+    *yylval = "\\\"";
+    return tok(t_XHP_TEXT);
+  }
+  &lt; {
+    *yylval = "<";
+    return tok(t_XHP_TEXT);
+  }
+  &gt; {
+    *yylval = ">";
+    return tok(t_XHP_TEXT);
+  }
+  &#[0-9]+; {
+    char buf[5];
+    utf8ize(atoi(yytext + 2), buf);
+    *yylval = buf;
+    return tok(t_XHP_TEXT);
+  }
+  &[^;]{0,5} {
+    fprintf(stderr, "Unknown entity: (%s)\n", yytext);
+    return 0;
+  }
+  ' {
+    *yylval = "\\'";
+    return tok(t_XHP_TEXT);
+  }
+  "\\" {
+    *yylval = "\\\\";
+    return tok(t_XHP_TEXT);
+  }
+}
+<XHP_CHILD>{
+  [^&'<>\\{ \t\x0b\x0c\xa0\r\n]+{WHITESPACE}{0,1} {
+    *yylval = yytext;
+    return tok(t_XHP_TEXT);
+  }
+  {WHITESPACE}* {
+    *yylval = yytext;
+    return tok(t_XHP_TEXT);
+  }
+  {WHITESPACE}*"{" {
+    return tok(t_LCURLY);
+  }
+  {WHITESPACE}*"<" {
+    return tok(t_LESS_THAN);
+  }
+  {WHITESPACE}*"</" {
+    return tok(t_XHP_LESS_THAN_DIV);
+  }
+}
+<XHP_ATTR_VAL>{
+  [^&'\\"]+ {
+    *yylval = yytext;
+    return tok(t_XHP_TEXT);
+  }
+  \" {
+    flex_pop_state(yyg);
+    return tok(t_DOUBLE_QUOTE);
   }
 }
 
 <*>{
   .|\n  {
-    fprintf(stderr,"Unknown text: (%s)\n", yytext);
-    return tok(t_IDK);
+    fprintf(stderr, "Unknown text: (%s)\n", yytext);
+    return 0;
     if (0) {
       // stop warning me about unused functions!
       yyunput(0, NULL, NULL);
@@ -338,10 +459,20 @@ inline char* findstate(int s) {
       return "PHP";
     case PHP_NO_RESERVED_WORDS:
       return "PHP_NO_RESERVED_WORDS";
-    case XHP:
-      return "XHP";
+    case HEREDOC_LINE_START:
+      return "HEREDOC_LINE_START";
+    case HEREDOC_DATA:
+      return "HEREDOC_DATA";
+    case XHP_CHILD:
+      return "XHP_CHILD";
+    case XHP_CHILD_START:
+      return "XHP_CHILD_START";
+    case XHP_LABEL:
+      return "XHP_LABEL";
     case XHP_ATTR:
       return "XHP_ATTR";
+    case XHP_ATTR_VAL:
+      return "XHP_ATTR_VAL";
     default:
       char* a = new char[12];
       sprintf(a, "%d", s);
@@ -372,6 +503,6 @@ static int flex_tok(int t, void* y) {
   if (YY_START == PHP_NO_RESERVED_WORDS) {
     flex_pop_state(yyg);
   }
-//printf("\ntok:%d\n", YY_START);
+//  printf("\ntok:%s\n", yytokname(t));
   return t;
 }

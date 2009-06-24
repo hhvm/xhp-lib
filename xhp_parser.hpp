@@ -37,6 +37,7 @@ void flex_pop_state(void*);
 #include "xhp_scanner.lex.hpp"
 #define yy_push_state(a) flex_push_state(a, yyscanner);
 #define yy_pop_state() flex_pop_state(yyscanner);
+#define yy_begin(a) flexBEGIN(a, yyscanner);
 #endif
 
 extern int xhpdebug;

@@ -44,7 +44,7 @@ char* xhp_parse_str(const char* code, const char* filename, int firsttok) {
   xhp_extra_type extra;
   extra.firsttoken = firsttok;
 
-//  xhpdebug = 1;
+  //xhpdebug = 1;
   xhplex_init(&scanner);
   xhpset_extra(&extra, scanner);
   xhp_scan_string(code, scanner);
@@ -55,6 +55,7 @@ char* xhp_parse_str(const char* code, const char* filename, int firsttok) {
     return NULL;
   } else {
     // Create a string stream with the rewritten code and give to compile_file
+//printf("%s", buf.c_str());
     return estrdup(buf.c_str());
   }
 }

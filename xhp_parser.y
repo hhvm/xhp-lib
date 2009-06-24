@@ -16,11 +16,8 @@
     zend_set_compiled_filename(const_cast<char*>(filename) TSRMLS_CC);
     *str = a;
     return;
-
-    std::stringstream c;
-    c << xhplloc->internal_line + xhplloc->actual_line_offset;
-    *str = (std::string(a) + " in " + filename + " on line " + c.str()).c_str();
   }
+
 %}
 
 %locations
@@ -32,27 +29,30 @@
 %error-verbose
 
 // Keywords
-%token t_IF 
+%token BOGUS
+%token t_IF t_ENDIF
 %nonassoc p_IF
 %left t_ELSEIF
 %left t_ELSE
-%token t_DO t_WHILE t_FOR t_FOREACH
-%token t_SWITCH t_CASE t_DEFAULT t_BREAK t_CONTINUE
+%token t_DO t_WHILE t_ENDWHILE t_FOR t_ENDFOR t_FOREACH t_ENDFOREACH
+%token t_SWITCH t_ENDSWITCH t_CASE t_DEFAULT t_BREAK t_CONTINUE
 %token t_FUNCTION t_RETURN
 %token t_NEW t_CLONE
 %token t_TRY
 %nonassoc t_CATCH
 %nonassoc t_FINALLY
-%nonassoc p_CATCH;
+%nonassoc p_CATCH
 %token t_ABSTRACT t_FINAL t_PRIVATE t_PROTECTED t_PUBLIC
-%token t_CLASS t_INTERFACE t_EXTENDS t_IMPLEMENTS
+%token t_CLASS t_INTERFACE t_EXTENDS t_IMPLEMENTS t_ELEMENT
 
 // Literals
 %token t_LITERAL_STRING t_EVALUATED_STRING t_SHELL_EXPRESSION
 %token t_NUMBER
 %token t_HEREDOC
+%token t_ARRAY
 %token t_XHP_TEXT
 %token t_XHP_DIV t_XHP_LESS_THAN_DIV t_XHP_GREATER_THAN
+%token t_XHP_WHITESPACE
 
 // Operators
 %left t_AS
@@ -120,17 +120,14 @@ statement_list:
   /* empty */ {
     $$ = cr("");
   }
-|  statement_list statement {
+| statement_list statement {
     $$ = $1 + $2;
   }
 ;
 
 // Statements
 statement:
-  t_LCURLY statement_list t_RCURLY {
-    $$ = "{" + $2 + "}";
-  }
-| t_PHP_OPEN_TAG {
+  t_PHP_OPEN_TAG {
     yy_push_state(PHP);
     $$ = cr("<?php ");
   }
@@ -142,19 +139,27 @@ statement:
     yy_push_state(PHP);
     $$ = cr("<?=");
   }
-|  expression_statement
-|  if_statement
-|  for_statement
-|  foreach_statement
-|  do_statement
-|  switch_statement
-|  return_statement
-|  class_statement
-|  try_statement
-|  declaration_statement
-|  function
-| semicolon
+| t_LCURLY statement_list t_RCURLY {
+    $$ = "{" + $2 + "}";
+  }
+| if_statement // TODO
+| while_statement
+| for_statement
+| foreach_statement
+| switch_statement
+| break_statement
+| continue_statement
+| return_statement
+// TODO: global, static
+| echo_statement
 | t_INLINE_HTML
+| expression_statement
+
+| class_statement
+| try_statement
+| declaration_statement
+| function
+| semicolon
 ;
 
 semicolon:
@@ -166,17 +171,11 @@ semicolon:
   }
 ;
 
-expression_statement:
-  expression_with_comma semicolon {
-    $$ = $1 + $2;
-  }
-;
-
 if_statement:
   t_IF t_LPAREN expression t_RPAREN statement {
     $$ = "if (" + $3 + ") " + $5;
   }
-|  statement t_ELSE statement {
+| statement t_ELSE statement {
     $$ = $1 + " else " + $3;
   }
 | statement t_ELSEIF t_LPAREN expression t_RPAREN statement {
@@ -184,66 +183,129 @@ if_statement:
   }
 ;
 
+while_statement:
+  t_WHILE t_LPAREN expression t_RPAREN statement {
+    $$ = "while (" + $3 + ") " + $5;
+  }
+| t_WHILE t_LPAREN expression t_RPAREN t_COLON statement_list t_ENDWHILE {
+    $$ = "while (" + $3 + ") {" + $6 + "}";
+  }
+| t_DO statement t_WHILE t_LPAREN expression t_RPAREN semicolon {
+    $$ = "do " + $2 + " while (" + $5 + ")" + $7;
+  }
+;
+
 for_statement: 
-  t_FOR t_LPAREN statement statement expression_with_comma t_RPAREN statement {
-    $$ = "for (" + $3 + $4 + $5 + ") " + $7;
+  t_FOR t_LPAREN for_expression t_SEMICOLON for_expression t_SEMICOLON for_expression t_RPAREN statement {
+    $$ = "for (" + $3 + ";" + $5 + ";" + $7 + ") " + $9;
   }
-|  t_FOR t_LPAREN statement statement t_RPAREN statement {
-    $$ = "for (" + $3 + $4 + ") " + $6;
+| t_FOR t_LPAREN for_expression t_SEMICOLON for_expression t_SEMICOLON for_expression t_RPAREN t_COLON statement t_ENDFOR {
+    $$ = "for (" + $3 + ";" + $5 + ";" + $7 + ") {" + $10 + "}";
   }
+;
+
+for_expression:
+  /* empty */ {
+    $$ = cr("");
+  }
+| expression_with_comma
 ;
 
 foreach_statement: 
-  t_FOREACH t_LPAREN expression t_RPAREN statement {
-    $$ = "foreach (" + $3 + ") " + $5;
+  t_FOREACH t_LPAREN expression t_AS expression foreach_optional_arg t_RPAREN statement {
+    $$ = "foreach (" + $3 + " AS " + $5 + $6 + ") " + $8;
+  }
+| t_FOREACH t_LPAREN expression t_AS expression foreach_optional_arg t_RPAREN t_COLON statement_list t_ENDFOREACH {
+    $$ = "foreach (" + $3 + " AS " + $5 + $6 + ") {" + $9 + "}";
   }
 ;
 
-do_statement:
-  t_DO statement t_WHILE t_LPAREN expression t_RPAREN semicolon {
-    $$ = "do " + $2 + " while (" + $5 + ")" + $7;
+foreach_optional_arg:
+  /* empty */ {
+    $$ = cr("");
   }
-|  t_WHILE t_LPAREN expression t_RPAREN statement {
-    $$ = "while (" + $3 + ") " + $5;
+| t_DOUBLE_ARROW expression {
+    $$ = "=>" + $2;
   }
 ;
 
 switch_statement:
-  t_SWITCH t_LPAREN expression t_RPAREN statement {
+  t_SWITCH t_LPAREN expression t_RPAREN switch_case_list {
     $$ = "switch (" + $3 + ") " + $5;
   }
-|  t_CASE expression t_COLON {
-    $$ = "case " + $2 + ":";
+;
+
+switch_case_list:
+  t_LCURLY case_list t_RCURLY {
+    $$ = "{" + $2 + "}";
   }
-|  t_CASE expression semicolon {
-    $$ = "case " + $2 + $3;
+| t_LCURLY semicolon case_list t_RCURLY {
+    $$ = "{" + $2 + $3 + "}";
   }
-|  t_DEFAULT t_COLON {
-    $$ = "default:";
+| t_COLON case_list t_ENDSWITCH {
+    $$ = "{" + $2 + "}";
   }
-|  t_DEFAULT semicolon {
-    $$ = "default" + $2;
+| t_COLON semicolon case_list t_ENDSWITCH {
+    $$ = "{" + $2 + $3 + "}";
   }
-|  t_BREAK expression semicolon {
+;
+
+case_list:
+  /* empty */ {
+    $$ = cr("");
+  }
+| case_list t_CASE expression case_separator statement_list {
+    $$ = $1 + " case " + $3 + $4 + $5;
+  }
+| case_list t_DEFAULT case_separator statement_list {
+    $$ = $1 + " default" + $3 + $4;
+  }
+;
+
+case_separator:
+  semicolon
+| t_COLON {
+    $$ = cr(":");
+  }
+;
+
+break_statement:
+  t_BREAK expression semicolon {
     $$ = "break " + $2 + $3;
   }
-|  t_BREAK semicolon {
+| t_BREAK semicolon {
     $$ = "break" + $2;
   }
-|  t_CONTINUE expression semicolon {
+;
+
+continue_statement:
+  t_CONTINUE expression semicolon {
     $$ = "continue" + $2 + $3;
   }
-|  t_CONTINUE semicolon {
+| t_CONTINUE semicolon {
     $$ = "continue" + $2;
   }
 ;
 
 return_statement:
+  // TODO: T_RETURN expr_without_variable
   t_RETURN expression semicolon {
     $$ = "return " + $2 + $3;
   }
-|  t_RETURN semicolon {
+| t_RETURN semicolon {
     $$ = cr("return") + $2;
+  }
+;
+
+echo_statement:
+  t_ECHO expression_with_comma semicolon {
+    $$ = "echo " + $2 + $3;
+  }
+;
+
+expression_statement:
+  expression semicolon {
+    $$ = $1 + $2;
   }
 ;
 
@@ -257,10 +319,10 @@ catch_blocks:
   catch_blocks catch_blocks %prec p_CATCH {
     $$ = $1 + $2;
   }
-|  t_CATCH t_LPAREN identifier expression t_RPAREN t_LCURLY statement_list t_RCURLY {
+| t_CATCH t_LPAREN identifier expression t_RPAREN t_LCURLY statement_list t_RCURLY {
     $$ = "catch(" + $3 + " " + $4 + ") {" + $7 + "}";
   }
-|  t_FINALLY t_LCURLY statement_list t_RCURLY {
+| t_FINALLY t_LCURLY statement_list t_RCURLY {
     $$ = "finally {" + $3 + "}";
   }
 ;
@@ -270,10 +332,10 @@ argument_list:
   t_LPAREN t_RPAREN {
     $$ = cr("()");
   }
-|  t_LPAREN _argument_list t_RPAREN {
+| t_LPAREN _argument_list t_RPAREN {
     $$ = "(" + $2 + ")";
   }
-|  t_LPAREN _argument_list t_COMMA t_RPAREN {
+| t_LPAREN _argument_list t_COMMA t_RPAREN {
     $$ = "(" + $2 + ",)";
   }
 ;
@@ -286,10 +348,10 @@ _argument_list:
 | t_COMMA expression {
     $$ = "," + $2;
   }
-|  _argument_list t_COMMA expression {
+| _argument_list t_COMMA expression {
     $$ = $1 + "," + $3;
   }
-|  _argument_list t_COMMA {
+| _argument_list t_COMMA {
     $$ = $1 + ",";
   }
 ;
@@ -305,7 +367,7 @@ string_literal:
   t_LITERAL_STRING {
     $$ = cr($1);
   }
-|  t_EVALUATED_STRING {
+| t_EVALUATED_STRING {
     $$ = cr($1);
   }
 ;
@@ -319,8 +381,8 @@ heredoc_literal:
 // Expressions
 literal_expression:
   numeric_literal
-|  string_literal
-|  heredoc_literal
+| string_literal
+| heredoc_literal
 ;
 
 identifier:
@@ -329,105 +391,10 @@ identifier:
   }
 ;
 
-// XHP extensions
-xhp_expression:
-  xhp_singleton
-|  xhp_open_tag xhp_children xhp_close_tag {
-    $$ = $1 + $2 + $3;
-  }
-;
-
-xhp_children:
-  xhp_children_ {
-    if ($1.back() == ',') {
-      $1.pop_back();
-      $$ = "array(" + $1 + ")";
-    } else {
-      $$ = "null";
-    }
-  }
-;
-
-xhp_children_:
-  /* empty */ {
-    $$ = cr("");
-  }
-|  xhp_children_ xhp_child {
-    $$ = $1 + $2 + ",";
-  }
-;
-
-xhp_child:
-  t_XHP_TEXT {
-    $$ = "\"" + $1 + "\"";
-  }
-|  xhp_expression
-|  t_LCURLY { yy_push_state(PHP); } expression t_RCURLY { yy_pop_state(); } {
-    $$ = $3;
-  }
-;
-
-xhp_attributes:
-  /* empty */ {
-    $$ = cr("");
-  }
-|  xhp_attributes xhp_attribute {
-    $$ = $1 + $2 + ",";
-  }
-
-xhp_attribute:
-  t_IDENTIFIER t_ASSIGN { yy_push_state(XHP); } t_DOUBLE_QUOTE t_XHP_TEXT { yy_pop_state(); } t_DOUBLE_QUOTE {
-    $$ = "\"" + $1 + "\" => " + $5;
-  }
-|  t_IDENTIFIER t_ASSIGN { yy_push_state(PHP); } t_LCURLY expression { yy_pop_state(); } t_RCURLY {
-    $$ = "\"" + $1 + "\" => " + $5;
-  }
-;
-
-xhp_lt:
-  t_LESS_THAN {
-    $$ = cr("");
-    yy_push_state(XHP_ATTR);
-  }
-;
-
-xhp_tag_name:
-  t_IDENTIFIER
-|  xhp_tag_name t_COLON t_IDENTIFIER {
-    $$ = $1 + "_" + $3;
-  }
-|  xhp_tag_name t_MINUS t_IDENTIFIER {
-    $$ = $1 + "-" + $3;
-  }
-;
-
-xhp_singleton:
-  xhp_lt xhp_tag_name xhp_attributes t_XHP_DIV t_XHP_GREATER_THAN {
-    yy_pop_state();
-    $$ = $1 + "new xhp_" + $2 + "(array(" + $3 + "), array())";
-  }
-;
-
-xhp_open_tag:
-  xhp_lt xhp_tag_name xhp_attributes t_XHP_GREATER_THAN {
-    yy_pop_state();
-    yy_push_state(XHP);
-    $$ = $1 + "new xhp_" + $2 + "(array(" + $3 + "), ";
-  }
-;
-
-xhp_close_tag:
-  t_XHP_LESS_THAN_DIV { yy_push_state(XHP_ATTR); } t_IDENTIFIER t_XHP_GREATER_THAN {
-    yy_pop_state();
-    yy_pop_state();
-    // TODO: check stack for mismatched tags
-    $$ = ")";
-  }
-;
 
 expression_with_comma:
   expression
-|  expression_with_comma t_COMMA expression {
+| expression_with_comma t_COMMA expression {
     $$ = $1 + "," + $3;
   }
 ;
@@ -435,228 +402,246 @@ expression_with_comma:
 variables_and_stuff:
   literal_expression
 | t_SHELL_EXPRESSION
-|  identifier
-|  xhp_expression
-|  expression t_LBRACKET expression t_RBRACKET {
+| identifier
+| xhp_expression
+| expression t_LBRACKET expression t_RBRACKET {
     $$ = $1 + "[" + $3 + "]";
   }
-|  expression t_ARROW t_LCURLY expression t_RCURLY {
+| expression t_ARROW t_LCURLY expression t_RCURLY {
     $$ = $1 + "->{" + $4 + "}";
   }
 ;
 
 expression:
   variables_and_stuff
-|  variables_and_stuff argument_list {
+| variables_and_stuff argument_list {
     $$ = $1 + $2;
   }
 | identifier identifier {
     $$ = $1 + " " + $2;
   }
-|  t_LPAREN expression t_RPAREN {
+| t_ARRAY t_LPAREN array_pair_list t_RPAREN {
+    $$ = "array(" + $3 + ")";
+  }
+| t_LPAREN expression t_RPAREN {
     $$ = "(" + $2 + ")";
   }
-|  t_LPAREN expression t_RPAREN expression {
+| t_LPAREN expression t_RPAREN expression {
     $$ = "(" + $2 + ")" + $4;
   }
-|  expression t_LCURLY expression t_RCURLY {
+| t_LPAREN t_ARRAY t_RPAREN expression {
+    $$ = "(array)" + $4;
+  }
+| expression t_LCURLY expression t_RCURLY {
     $$ = $1 + "{" + $3 + "}";
   }
-|  expression t_LBRACKET t_RBRACKET {
+| expression t_LBRACKET t_RBRACKET {
     $$ = $1 + "[]";
   }
-|  expression t_PLING expression t_COLON expression {
+| expression t_PLING expression t_COLON expression {
     $$ = $1 + " ? " + $3 + " : " + $5;
   }
-|  expression t_ASSIGN expression {
+| expression t_ASSIGN expression {
     $$ = $1 + "=" + $3;
   }
-|  expression t_APPEND expression {
+| expression t_APPEND expression {
     $$ = $1 + ".=" + $3;
   }
-|  expression t_PLUS_ASSIGN expression {
+| expression t_PLUS_ASSIGN expression {
     $$ = $1 + "+=" + $3;
   }
-|  expression t_MINUS_ASSIGN expression {
+| expression t_MINUS_ASSIGN expression {
     $$ = $1 + "-=" + $3;
   }
-|  expression t_DIV_ASSIGN expression {
+| expression t_DIV_ASSIGN expression {
     $$ = $1 + "/=" + $3;
   }
-|  expression t_MULT_ASSIGN expression {
+| expression t_MULT_ASSIGN expression {
     $$ = $1 + "*=" + $3;
   }
-|  expression t_MOD_ASSIGN expression {
+| expression t_MOD_ASSIGN expression {
     $$ = $1 + "%=" + $3;
   }
-|  expression t_BIT_AND_ASSIGN expression {
+| expression t_BIT_AND_ASSIGN expression {
     $$ = $1 + "&=" + $3;
   }
-|  expression t_BIT_OR_ASSIGN expression {
+| expression t_BIT_OR_ASSIGN expression {
     $$ = $1 + "|=" + $3;
   }
-|  expression t_BIT_XOR_ASSIGN expression {
+| expression t_BIT_XOR_ASSIGN expression {
     $$ = $1 + "^=" + $3;
   }
-|  expression t_LSHIFT_ASSIGN expression {
+| expression t_LSHIFT_ASSIGN expression {
     $$ = $1 + "<<=" + $3;
   }
-|  expression t_RSHIFT_ASSIGN expression {
+| expression t_RSHIFT_ASSIGN expression {
     $$ = $1 + ">>=" + $3;
   }
-|  expression t_OR expression {
+| expression t_OR expression {
     $$ = $1 + "||" + $3;
   }
-|  expression t_AND expression {
+| expression t_AND expression {
     $$ = $1 + "&&" + $3;
   }
-|  expression t_BIT_OR expression {
+| expression t_BIT_OR expression {
     $$ = $1 + "|" + $3;
   }
-|  expression t_BIT_AND expression {
+| expression t_BIT_AND expression {
     $$ = $1 + "&" + $3;
   }
-|  expression t_BIT_XOR expression {
+| expression t_BIT_XOR expression {
     $$ = $1 + "^" + $3;
   }
-|  expression t_LOGICAL_OR expression {
+| expression t_LOGICAL_OR expression {
     $$ = $1 + " OR " + $3;
   }
-|  expression t_LOGICAL_XOR expression {
+| expression t_LOGICAL_XOR expression {
     $$ = $1 + " XOR " + $3;
   }
-|  expression t_LOGICAL_AND expression {
+| expression t_LOGICAL_AND expression {
     $$ = $1 + " AND " + $3;
   }
-|  expression t_EQUAL expression {
+| expression t_EQUAL expression {
     $$ = $1 + "==" + $3;
   }
-|  expression t_NOT_EQUAL expression {
+| expression t_NOT_EQUAL expression {
     $$ = $1 + "!=" + $3;
   }
-|  expression t_STRICT_EQUAL expression {
+| expression t_STRICT_EQUAL expression {
     $$ = $1 + "===" + $3;
   }
-|  expression t_STRICT_NOT_EQUAL expression {
+| expression t_STRICT_NOT_EQUAL expression {
     $$ = $1 + "!==" + $3;
   }
-|  expression t_LESS_THAN_EQUAL expression {
+| expression t_LESS_THAN_EQUAL expression {
     $$ = $1 + "<=" + $3;
   }
-|  expression t_GREATER_THAN_EQUAL expression {
+| expression t_GREATER_THAN_EQUAL expression {
     $$ = $1 + ">=" + $3;
   }
-|  expression t_LESS_THAN expression {
+| expression t_LESS_THAN expression {
     $$ = $1 + "<" + $3;
   }
-|  expression t_GREATER_THAN expression {
+| expression t_GREATER_THAN expression {
     $$ = $1 + ">" + $3;
   }
-|  expression t_LSHIFT expression {
+| expression t_LSHIFT expression {
     $$ = $1 + "<<" + $3;
   }
-|  expression t_RSHIFT expression {
+| expression t_RSHIFT expression {
     $$ = $1 + ">>" + $3;
   }
-|  expression t_PLUS expression {
+| expression t_PLUS expression {
     $$ = $1 + "+" + $3;
   }
-|  expression t_MINUS expression {
+| expression t_MINUS expression {
     $$ = $1 + "-" + $3;
   }
-|  expression t_MULT expression {
+| expression t_MULT expression {
     $$ = $1 + "*" + $3;
   }
-|  expression t_DIV expression {
+| expression t_DIV expression {
     $$ = $1 + "/" + $3;
   }
-|  expression t_MOD expression {
+| expression t_MOD expression {
     $$ = $1 + "%" + $3;
   }
-|  expression t_CONCAT expression {
+| expression t_CONCAT expression {
     $$ = $1 + " . " + $3;
   }
-|  expression t_INSTANCEOF expression {
+| expression t_INSTANCEOF expression {
     $$ = $1 + " instanceof " + $3;
   }
-|  expression t_AS expression {
-    $$ = $1 + " as " + $3;
-  }
-|  expression t_DOUBLE_ARROW expression {
-    $$ = $1 + "=>" + $3;
-  }
-|  expression t_HEBREW_THING expression {
+| expression t_HEBREW_THING expression {
     $$ = $1 + "::" + $3;
   }
-|  expression t_ARROW expression {
+| expression t_ARROW expression {
     $$ = $1 + "->" + $3;
   }
-|  t_INCR expression {
+| t_INCR expression {
     $$ = "++" + $2;
   }
-|  t_DECR expression {
+| t_DECR expression {
     $$ = "--" + $2;
   }
-|  expression t_INCR {
+| expression t_INCR {
     $$ = $1 + "++";
   }
-|  expression t_DECR {
+| expression t_DECR {
     $$ = $1 + "--";
   }
-|  t_PLUS expression {
+| t_PLUS expression {
     $$ = "+" + $2;
   }
-|  t_MINUS expression {
+| t_MINUS expression {
     $$ = "-" + $2;
   }
-|  t_BIT_NOT expression {
+| t_BIT_NOT expression {
     $$ = "~" + $2;
   }
-|  t_NOT expression {
+| t_NOT expression {
     $$ = "!" + $2;
   }
-|  t_BIT_AND expression {
+| t_BIT_AND expression {
     $$ = "&" + $2;
   }
-|  t_AT expression {
+| t_AT expression {
     $$ = "@" + $2;
   }
-|  t_DOLLAR t_LCURLY expression t_RCURLY {
+| t_DOLLAR t_LCURLY expression t_RCURLY {
     $$ = "${" + $3 + "}";
   }
-|  t_PRINT expression {
+| t_PRINT expression {
     $$ = "print " + $2;
   }
-|  t_ECHO expression {
-    $$ = "echo " + $2;
-  }
-|  t_CLONE expression {
+| t_CLONE expression {
     $$ = "clone " + $2;
   }
-|  t_NEW expression {
+| t_NEW expression {
     $$ = "new " + $2;
   }
-|  t_THROW expression {
+| t_THROW expression {
     $$ = "throw " + $2;
   }
-|  t_REQ_ONCE expression {
+| t_REQ_ONCE expression {
     $$ = "require_once " + $2;
   }
-|  t_REQ expression {
+| t_REQ expression {
     $$ = "require " + $2;
   }
-|  t_INC_ONCE expression {
+| t_INC_ONCE expression {
     $$ = "include_once " + $2;
   }
-|  t_INC expression {
+| t_INC expression {
     $$ = "include " + $2;
   }
+;
+
+array_pair_list:
+  /* empty */ {
+    $$ = cr("");
+  }
+| array_pair_list_real
+| array_pair_list_real t_COMMA
+;
+
+array_pair_list_real:
+  array_pair_list_real t_COMMA expression t_DOUBLE_ARROW expression {
+    $$ = $1 + "," + $3 + "=>" + $5;
+  }
+| array_pair_list_real t_COMMA expression {
+    $$ = $1 + "," + $3;
+  }
+| expression t_DOUBLE_ARROW expression {
+    $$ = $1 + "=>" + $3;
+  }
+| expression
 ;
 
 // Declarations
 many_fancy_delarations:
   fancy_delarations
-|  many_fancy_delarations fancy_delarations {
+| many_fancy_delarations fancy_delarations {
     $$ = $1 + " " + $2;
   }
 ;
@@ -665,25 +650,25 @@ fancy_delarations:
   t_GLOBAL {
     $$ = cr("global");
   }
-|  t_CONST {
+| t_CONST {
     $$ = cr("const");
   }
-|  t_PUBLIC {
+| t_PUBLIC {
     $$ = cr("public");
   }
-|  t_PROTECTED {
+| t_PROTECTED {
     $$ = cr("protected");
   }
-|  t_PRIVATE {
+| t_PRIVATE {
     $$ = cr("private");
   }
-|  t_STATIC {
+| t_STATIC {
     $$ = cr("static");
   }
-|  t_ABSTRACT {
+| t_ABSTRACT {
     $$ = cr("abstract");
   }
-|  t_FINAL {
+| t_FINAL {
     $$ = cr("final");
   }
 ;
@@ -706,10 +691,10 @@ function:
   many_fancy_delarations function {
     $$ = $1 + " " + $2;
   }
-|  t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
+| t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
     $$ = "function " + $2 + $3 + " {" + $5 + "}";
   }
-|  t_FUNCTION function_name argument_list semicolon {
+| t_FUNCTION function_name argument_list semicolon {
     $$ = "function " + $2 + $3 + $4;
   }
 ;
@@ -719,10 +704,10 @@ class_statement:
   t_CLASS classy_stuff t_LCURLY statement_list t_RCURLY {
     $$ = "class " + $2 + " {" + $4 +  "}";
   }
-|  many_fancy_delarations t_CLASS classy_stuff t_LCURLY statement_list t_RCURLY {
+| many_fancy_delarations t_CLASS classy_stuff t_LCURLY statement_list t_RCURLY {
     $$ = $1 + " class " + $3 + " {" + $5 +  "}";
   }
-|  t_INTERFACE classy_stuff t_LCURLY statement_list t_RCURLY {
+| t_INTERFACE classy_stuff t_LCURLY statement_list t_RCURLY {
     $$ = "interface " + $2 + " {" + $4 +  "}";
   }
 ;
@@ -731,16 +716,164 @@ classy_stuff:
   /* empty */ {
     $$ = "";
   }
-|  classy_stuff t_EXTENDS {
+| classy_stuff t_EXTENDS {
     $$ = $1 + cr(" extends ");
   }
-|  classy_stuff t_IMPLEMENTS {
+| classy_stuff t_IMPLEMENTS {
     $$ = $1 + cr(" implements ");
   }
-|  classy_stuff identifier {
+| classy_stuff identifier {
     $$ = $1 + " " + $2;
   }
-|  classy_stuff t_COMMA {
+| classy_stuff t_COMMA {
     $$ = $1 + cr(", ");
   }
 ;
+
+//
+// XHP extensions
+
+// high-level expressions
+xhp_expression:
+  xhp_singleton
+| xhp_open_tag xhp_children xhp_close_tag {
+    $$ = $1 + $2 + $3;
+  }
+;
+
+xhp_children:
+  xhp_children_ {
+    if ($1.back() == ',') {
+//      $1.pop_back();
+      $$ = "array(" + $1 + ")";
+    } else {
+      $$ = "array()";
+    }
+  }
+;
+
+xhp_children_:
+  /* empty */ {
+    $$ = cr("");
+  }
+| xhp_literal_text {
+    yy_begin(XHP_CHILD_START);
+    $$ = "'" + $1 + "',";
+  }
+| xhp_children_ xhp_child {
+    yy_begin(XHP_CHILD_START);
+    $$ = $1 + $2 + ",";
+  }
+| xhp_children_ xhp_child xhp_literal_text {
+    yy_begin(XHP_CHILD_START);
+    $$ = $1 + $2 + ",'" + $3 + "',";
+  }
+;
+
+xhp_child:
+  xhp_expression
+| t_LCURLY { yy_push_state(PHP); } expression t_RCURLY { yy_pop_state(); } {
+    $$ = $3;
+  }
+;
+
+// attributes
+xhp_attributes:
+  /* empty */ {
+    $$ = cr("");
+    yy_push_state(XHP_ATTR);
+  }
+| xhp_attributes xhp_attribute {
+    $$ = $1 + $2 + ",";
+  }
+;
+
+xhp_attribute:
+  xhp_label xhp_whitespace_hack t_ASSIGN xhp_attribute_value {
+    $$ = "'" + $1 + "' => " + $4;
+  }
+;
+
+xhp_attribute_value:
+  t_DOUBLE_QUOTE { yy_push_state(XHP_ATTR_VAL); /* pop'd in the scanner on double quote */ } xhp_literal_text t_DOUBLE_QUOTE {
+    $$ = "'" + $3 + "'";
+  }
+| t_LCURLY { yy_push_state(PHP); } expression { yy_pop_state(); } t_RCURLY {
+    $$ = $3;
+  }
+;
+
+// tags
+xhp_tag_start:
+  xhp_lt xhp_label xhp_whitespace_hack {
+    yy_pop_state();
+    $$ = $2;
+  }
+;
+
+xhp_singleton:
+  xhp_tag_start xhp_attributes t_XHP_DIV t_XHP_GREATER_THAN {
+    yy_pop_state(); // XHP_ATTR
+    $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
+  }
+;
+
+xhp_open_tag:
+  xhp_tag_start xhp_attributes t_XHP_GREATER_THAN {
+    yy_pop_state(); // XHP_ATTR
+    yy_push_state(XHP_CHILD_START);
+    $$ = "new xhp_" + $1 + "(array(" + $2 + "), ";
+  }
+;
+
+xhp_close_tag:
+  t_XHP_LESS_THAN_DIV { yy_push_state(XHP_LABEL); } xhp_label t_XHP_GREATER_THAN {
+    yy_pop_state(); // XHP_LABEL
+    yy_pop_state(); // XHP_CHILD_START
+    // TODO: check stack for mismatched tags
+    $$ = ")";
+  }
+;
+
+// misc
+xhp_literal_text:
+  t_XHP_TEXT
+| xhp_literal_text t_XHP_TEXT {
+    $$ = $1 + $2;
+  }
+;
+
+xhp_label:
+  t_IDENTIFIER {
+    // this gets pop'd in the scanner on " ", ">", "/>", or "="
+    yy_push_state(XHP_LABEL);
+    $$ = $1;
+  }
+| xhp_label t_COLON t_IDENTIFIER {
+    $$ = $1 + "__" + $3;
+  }
+| xhp_label t_MINUS t_IDENTIFIER {
+    $$ = $1 + "_" + $3;
+  }
+;
+
+xhp_lt:
+  t_LESS_THAN {
+    $$ = cr("");
+    yy_push_state(XHP_LABEL);
+  }
+;
+
+xhp_whitespace_hack:
+  /* empty */
+| t_XHP_WHITESPACE
+;
+
+%%
+
+const char* yytokname(int tok) {
+  if (tok < 255) {
+    return "?";
+  }
+  return yytname[tok - 255];
+}
