@@ -971,8 +971,17 @@ xhp_whitespace_hack:
 
 // element declarations
 xhp_element_declaration:
-  t_ELEMENT { yy_push_state(PHP_NO_RESERVED_WORDS); } xhp_label xhp_whitespace_hack xhp_element_extends xhp_element_implements t_LCURLY class_statement_list t_RCURLY {
-    $$ = cr("class xhp_") + $3 + " " + $5 + " " + $6 + "{" + $8 + cr("}");
+  xhp_element_entry { yy_push_state(PHP_NO_RESERVED_WORDS); } xhp_label xhp_whitespace_hack xhp_element_extends xhp_element_implements t_LCURLY class_statement_list t_RCURLY {
+    $$ = $1 + $3 + " " + $5 + " " + $6 + "{" + $8 + cr("}");
+  }
+;
+
+xhp_element_entry:
+  t_ELEMENT {
+    $$ = cr("class xhp_");
+  }
+| t_ABSTRACT t_ELEMENT {
+    $$ = cr("abstract class xhp_");
   }
 ;
 

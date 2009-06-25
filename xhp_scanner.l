@@ -314,8 +314,8 @@ B b?
       return tok(t_HEREDOC);
     } else {
       ++yylloc->actual_line_offset;
+      yyextra->heredoc_data_last = yytext + yyleng;
       yymore();
-      BEGIN(HEREDOC_DATA);
     }
   }
   [^\r\n]+ {
@@ -324,8 +324,8 @@ B b?
   }
   {NEWLINE} {
     ++yylloc->actual_line_offset;
+    yyextra->heredoc_data_last = yytext + yyleng;
     yymore();
-    BEGIN(HEREDOC_LINE_START);
   }
 }
 <HEREDOC_DATA>{
@@ -348,7 +348,7 @@ B b?
   ">" return tok(t_XHP_GREATER_THAN);
 }
 <XHP_LABEL>{
-  " " {
+  {WHITESPACE} {
     flex_pop_state(yyg);
     return tok(t_XHP_WHITESPACE);
   }
