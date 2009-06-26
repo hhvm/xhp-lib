@@ -1017,7 +1017,10 @@ xhp_element_extends:
     $$ = "extends XHPCore";
   }
 | t_EXTENDS xhp_label xhp_whitespace_hack {
-    $$ = "extends xhp_" + $2;
+    $$ = "extends " + $2;
+  }
+| t_EXTENDS t_ELEMENT xhp_label xhp_whitespace_hack {
+    $$ = "extends xhp_" + $3;
   }
 ;
 
