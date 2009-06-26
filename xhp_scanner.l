@@ -83,9 +83,38 @@ B b?
 }
 <PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR>{
   [ \t\x0b\x0c\xa0]+ /* eat it up */
-  ("//"|"#").*{NEWLINE} |
   {NEWLINE} {
     ++yylloc->internal_line;
+  }
+  "//"|"#" {
+    char c;
+    for (;;) {
+      while ((c = yyinput(yyscanner)) != '?' && c != '\r' && c != '\n' && c != EOF);
+      honk:
+      if (c == '\r') {
+        ++yylloc->internal_line;
+        c == yyinput(yyscanner);
+        if (c != '\n') {
+          unput(c);
+          break;
+        }
+      } else if (c == '\n') {
+        ++yylloc->internal_line;
+        break;
+      }
+      if (c == '?') {
+        c = yyinput(yyscanner);
+        if (c == '>') {
+          unput('>');
+          unput('?');
+          break;
+        }
+        goto honk;
+      }
+      if (c == EOF) {
+        return tok(0);
+      }
+    }
   }
   "/*" {
     char c;
@@ -133,7 +162,13 @@ B b?
   (?i:default) return tok(t_DEFAULT);
   (?i:break) return tok(t_BREAK);
   (?i:continue) return tok(t_CONTINUE);
-  (?i:function) return tok(t_FUNCTION);
+  (?i:function) {
+    int tt = tok(t_FUNCTION);
+    // needed so you can say function element(){}
+    // this only works on objects, though.
+    flex_push_state(PHP_NO_RESERVED_WORDS, yyg);
+    return tt;
+  }
   (?i:const) return tok(t_CONST);
   (?i:instanceof) return tok(t_INSTANCEOF);
   (?i:return) return tok(t_RETURN);
@@ -195,7 +230,11 @@ B b?
     return tt;
   }
   "=>" return tok(t_DOUBLE_ARROW);
-  "::" return tok(t_HEBREW_THING);
+  "::" {
+    int tt = tok(t_HEBREW_THING);
+    flex_push_state(PHP_NO_RESERVED_WORDS, yyg);
+    return tt;
+  }
   "." return tok(t_CONCAT);
   "," return tok(t_COMMA);
   ";" return tok(t_SEMICOLON);
@@ -262,11 +301,11 @@ B b?
     *yylval = yytext;
     return tok(t_NUMBER);
   }
-  [0-9]*\.?[0-9]+[eE]-?[0-9]{1,3}  {
+  [0-9]*\.?[0-9]+[eE][\-+]?[0-9]{1,3}  {
     *yylval = yytext;
     return tok(t_NUMBER);
   }
-  [0-9]+ |
+  [0-9]+\.? |
   [0-9]*\.[0-9]+ {
     *yylval = yytext;
     return tok(t_NUMBER);
@@ -281,7 +320,7 @@ B b?
     eom += 3;
     while (*eom == '\t' || *eom == ' ') ++eom;
     size_t len = yyleng - (eom - yytext) - 1;
-    if (eom[len - 2] == '\r') { // windows [\r\n] encoding
+    if (eom[len - 1] == '\r') { // windows [\r\n] encoding
       --len;
     }
     yyextra->heredoc_eom = eom;
@@ -509,6 +548,6 @@ static int flex_tok(int t, void* y) {
   if (YY_START == PHP_NO_RESERVED_WORDS) {
     flex_pop_state(yyg);
   }
-//  printf("\ntok:%s\n", yytokname(t));
+//  fprintf(stderr, "\ntok:%s\n", yytokname(t));
   return t;
 }

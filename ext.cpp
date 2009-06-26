@@ -100,9 +100,7 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
         maybe_xhp = 1;
         break;
       }
-    } else if (*ii == 'e' && ii[1] == 'l' && ii[2] == 'e' && ii[3] == 'm' && ii[4] == 'e' && ii[5] == 'n' && ii[6] == 't') {
-//    } else if (memcmp(ii, "element", 7)) {
-      // why is this faster than memcmp? i'm bad at computers and i don't know.
+    } else if (!memcmp(ii, "element", 7)) {
       maybe_xhp = 1;
       break;
     }

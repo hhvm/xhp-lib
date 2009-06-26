@@ -39,6 +39,7 @@
 %parse-param { code_rope* root }
 %lex-param { void* yyscanner }
 %error-verbose
+%expect 2 // i hate php's if syntax
 
 // Keywords
 %token BOGUS
@@ -154,7 +155,7 @@ statement:
     $$ = "{" + $2 + cr("}");
   }
 | function_declaration
-| if_statement // TODO
+| if_statement
 | while_statement
 | for_statement
 | foreach_statement
@@ -187,11 +188,32 @@ if_statement:
   t_IF t_LPAREN expression t_RPAREN statement {
     $$ = "if (" + $3 + ") " + $5;
   }
-| statement t_ELSE statement {
+| if_statement t_ELSE statement {
     $$ = $1 + " else " + $3;
   }
-| statement t_ELSEIF t_LPAREN expression t_RPAREN statement {
-    $$ = $1 + "elseif (" + $4 + ") " + $6;
+| if_statement t_ELSEIF t_LPAREN expression t_RPAREN statement {
+    $$ = $1 + " elseif (" + $4 + ") " + $6;
+  }
+| t_IF t_LPAREN expression t_RPAREN t_COLON statement_list elseif_list else_single t_ENDIF semicolon {
+    $$ = "if (" + $3 + "): " + $6 + $7 + $8 + " endif" + $10;
+  }
+;
+
+elseif_list:
+  /* empty */ {
+    $$ = "";
+  }
+| elseif_list t_ELSEIF t_LPAREN expression t_RPAREN t_COLON statement_list {
+    $$ = $1 + " elseif(" + $4 + "):" + $7;
+  }
+;
+
+else_single:
+  /* empty */ {
+    $$ = "";
+  }
+| t_ELSE statement_list {
+    $$ = " else: " + $2;
   }
 ;
 
@@ -430,6 +452,10 @@ expression:
 | t_ARRAY identifier {
     $$ = "array " + $2;
   }
+| t_ARRAY t_BIT_AND identifier {
+    // handles function foo(array &bar){}
+    $$ = "array &" + $3;
+  }
 | t_ARRAY t_LPAREN array_pair_list t_RPAREN {
     $$ = "array(" + $3 + ")";
   }
@@ -566,7 +592,8 @@ expression:
     $$ = $1 + "::" + $3;
   }
 | expression t_ARROW expression {
-    $$ = $1 + "->" + $3;
+    // Need -> in the rope because "$foo-> if()" is a syntax error, but if you remove the space it's not.
+    $$ = $1 + cr("->") + $3;
   }
 | t_INCR expression {
     $$ = "++" + $2;
