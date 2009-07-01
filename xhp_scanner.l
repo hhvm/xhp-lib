@@ -427,7 +427,7 @@ B b?
     return tok(t_XHP_TEXT);
   }
   &quot; {
-    *yylval = "\\\"";
+    *yylval = "\"";
     return tok(t_XHP_TEXT);
   }
   &lt; {
@@ -436,6 +436,130 @@ B b?
   }
   &gt; {
     *yylval = ">";
+    return tok(t_XHP_TEXT);
+  }
+  &middot; {
+    *yylval = "\u00B7";
+    return tok(t_XHP_TEXT);
+  }
+  &laquo; {
+    *yylval = "\u00AB";
+    return tok(t_XHP_TEXT);
+  }
+  &raquo; {
+    *yylval = "\u00BB";
+    return tok(t_XHP_TEXT);
+  }
+  &lsaquo; {
+    *yylval = "\u2039";
+    return tok(t_XHP_TEXT);
+  }
+  &rsaquo; {
+    *yylval = "\u203A";
+    return tok(t_XHP_TEXT);
+  }
+  &lsquo; {
+    *yylval = "\u2018";
+    return tok(t_XHP_TEXT);
+  }
+  &rsquo; {
+    *yylval = "\u2019";
+    return tok(t_XHP_TEXT);
+  }
+  &ldquo; {
+    *yylval = "\u201C";
+    return tok(t_XHP_TEXT);
+  }
+  &rdquo; {
+    *yylval = "\u201D";
+    return tok(t_XHP_TEXT);
+  }
+  &hellip; {
+    *yylval = "\u2026";
+    return tok(t_XHP_TEXT);
+  }
+  &mdash; {
+    *yylval = "\u2014";
+    return tok(t_XHP_TEXT);
+  }
+  &hearts; {
+    *yylval = "\u2665";
+    return tok(t_XHP_TEXT);
+  }
+  &cloud; {
+    *yylval = "\u2601";
+    return tok(t_XHP_TEXT);
+  }
+  &umbrella; {
+    *yylval = "\u2602";
+    return tok(t_XHP_TEXT);
+  }
+  &snowman; {
+    *yylval = "\u2603";
+    return tok(t_XHP_TEXT);
+  }
+  &snowflake; {
+    *yylval = "\u2745";
+    return tok(t_XHP_TEXT);
+  }
+  &comet; {
+    *yylval = "\u2604";
+    return tok(t_XHP_TEXT);
+  }
+  &thunderstorm; {
+    *yylval = "\u2608";
+    return tok(t_XHP_TEXT);
+  }
+  &whiteking; {
+    *yylval = "\u2654";
+    return tok(t_XHP_TEXT);
+  }
+  &whitequeen; {
+    *yylval = "\u2655";
+    return tok(t_XHP_TEXT);
+  }
+  &whiterook; {
+    *yylval = "\u2656";
+    return tok(t_XHP_TEXT);
+  }
+  &whitebishop; {
+    *yylval = "\u2657";
+    return tok(t_XHP_TEXT);
+  }
+  &whiteknight; {
+    *yylval = "\u2658";
+    return tok(t_XHP_TEXT);
+  }
+  &whitepawn; {
+    *yylval = "\u2659";
+    return tok(t_XHP_TEXT);
+  }
+  &blackking; {
+    *yylval = "\u265A";
+    return tok(t_XHP_TEXT);
+  }
+  &blackqueen; {
+    *yylval = "\u265B";
+    return tok(t_XHP_TEXT);
+  }
+  &blackrook; {
+    *yylval = "\u265C";
+    return tok(t_XHP_TEXT);
+  }
+  &blackbishop; {
+    *yylval = "\u265D";
+    return tok(t_XHP_TEXT);
+  }
+  &blackknight; {
+    *yylval = "\u265E";
+    return tok(t_XHP_TEXT);
+  }
+  &blackpawn; {
+    *yylval = "\u265F";
+    return tok(t_XHP_TEXT);
+  }
+  &bull; {
+    *yylval = "\u2022";
     return tok(t_XHP_TEXT);
   }
   &#[0-9]+; {
