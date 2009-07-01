@@ -177,7 +177,7 @@ statement:
 
 semicolon:
   t_PHP_CLOSE_TAG {
-    $$ = "?>";
+    $$ = cr("?>");
   }
 | t_SEMICOLON {
     $$ = ";";

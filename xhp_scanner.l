@@ -389,6 +389,11 @@ B b?
 <XHP_LABEL>{
   {WHITESPACE} {
     flex_pop_state(yyg);
+    if (*yytext == '\n') {
+      ++yylloc->internal_line;
+    } else if (*yytext == '\r') {
+      yyless(0);
+    }
     return tok(t_XHP_WHITESPACE);
   }
   "=" {
