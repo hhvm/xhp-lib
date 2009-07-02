@@ -8,6 +8,7 @@
     return ft; \
   }
 #define tok(t) flex_tok(t, yyg);
+#define tokent(s) *yylval = s; BEGIN(XHP_AFTER_ENT); return tok(t_XHP_TEXT);
 
 static int flex_tok(int t, void* y);
 const char* yytokname(int tok);
@@ -51,6 +52,7 @@ bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s HEREDOC_DATA
 %s XHP_CHILD
 %s XHP_CHILD_START
+%s XHP_AFTER_ENT
 %s XHP_LABEL
 %s XHP_ATTR
 %s XHP_ATTR_VAL
@@ -421,175 +423,141 @@ B b?
     BEGIN(XHP_CHILD);
   }
 }
-<XHP_CHILD,XHP_ATTR_VAL>{
+<XHP_CHILD,XHP_AFTER_ENT,XHP_ATTR_VAL>{
   &amp; {
-    *yylval = "&";
-    return tok(t_XHP_TEXT);
+    tokent("&");
   }
   &quot; {
-    *yylval = "\"";
-    return tok(t_XHP_TEXT);
+    tokent("\"");
   }
   &lt; {
-    *yylval = "<";
-    return tok(t_XHP_TEXT);
+    tokent("<")
   }
   &gt; {
-    *yylval = ">";
-    return tok(t_XHP_TEXT);
+    tokent(">");
   }
   &middot; {
-    *yylval = "\u00B7";
-    return tok(t_XHP_TEXT);
+    tokent("\u00B7");
   }
   &laquo; {
-    *yylval = "\u00AB";
-    return tok(t_XHP_TEXT);
+    tokent("\u00AB");
   }
   &raquo; {
-    *yylval = "\u00BB";
-    return tok(t_XHP_TEXT);
+    tokent("\u00BB");
   }
   &lsaquo; {
-    *yylval = "\u2039";
-    return tok(t_XHP_TEXT);
+    tokent("\u2039");
   }
   &rsaquo; {
-    *yylval = "\u203A";
-    return tok(t_XHP_TEXT);
+    tokent("\u203A");
   }
   &lsquo; {
-    *yylval = "\u2018";
-    return tok(t_XHP_TEXT);
+    tokent("\u2018");
   }
   &rsquo; {
-    *yylval = "\u2019";
-    return tok(t_XHP_TEXT);
+    tokent("\u2019");
   }
   &ldquo; {
-    *yylval = "\u201C";
-    return tok(t_XHP_TEXT);
+    tokent("\u201C");
   }
   &rdquo; {
-    *yylval = "\u201D";
-    return tok(t_XHP_TEXT);
+    tokent("\u201D");
   }
   &hellip; {
-    *yylval = "\u2026";
-    return tok(t_XHP_TEXT);
+    tokent("\u2026");
   }
   &mdash; {
-    *yylval = "\u2014";
-    return tok(t_XHP_TEXT);
+    tokent("\u2014");
   }
   &hearts; {
-    *yylval = "\u2665";
-    return tok(t_XHP_TEXT);
+    tokent("\u2665");
   }
   &cloud; {
-    *yylval = "\u2601";
-    return tok(t_XHP_TEXT);
+    tokent("\u2601");
   }
   &umbrella; {
-    *yylval = "\u2602";
-    return tok(t_XHP_TEXT);
+    tokent("\u2602");
   }
   &snowman; {
-    *yylval = "\u2603";
-    return tok(t_XHP_TEXT);
+    tokent("\u2603");
   }
   &snowflake; {
-    *yylval = "\u2745";
-    return tok(t_XHP_TEXT);
+    tokent("\u2745");
   }
   &comet; {
-    *yylval = "\u2604";
-    return tok(t_XHP_TEXT);
+    tokent("\u2604");
   }
   &thunderstorm; {
-    *yylval = "\u2608";
-    return tok(t_XHP_TEXT);
+    tokent("\u2608");
   }
   &whiteking; {
-    *yylval = "\u2654";
-    return tok(t_XHP_TEXT);
+    tokent("\u2654");
   }
   &whitequeen; {
-    *yylval = "\u2655";
-    return tok(t_XHP_TEXT);
+    tokent("\u2655");
   }
   &whiterook; {
-    *yylval = "\u2656";
-    return tok(t_XHP_TEXT);
+    tokent("\u2656");
   }
   &whitebishop; {
-    *yylval = "\u2657";
-    return tok(t_XHP_TEXT);
+    tokent("\u2657");
   }
   &whiteknight; {
-    *yylval = "\u2658";
-    return tok(t_XHP_TEXT);
+    tokent("\u2658");
   }
   &whitepawn; {
-    *yylval = "\u2659";
-    return tok(t_XHP_TEXT);
+    tokent("\u2659");
   }
   &blackking; {
-    *yylval = "\u265A";
-    return tok(t_XHP_TEXT);
+    tokent("\u265A");
   }
   &blackqueen; {
-    *yylval = "\u265B";
-    return tok(t_XHP_TEXT);
+    tokent("\u265B");
   }
   &blackrook; {
-    *yylval = "\u265C";
-    return tok(t_XHP_TEXT);
+    tokent("\u265C");
   }
   &blackbishop; {
-    *yylval = "\u265D";
-    return tok(t_XHP_TEXT);
+    tokent("\u265D");
   }
   &blackknight; {
-    *yylval = "\u265E";
-    return tok(t_XHP_TEXT);
+    tokent("\u265E");
   }
   &blackpawn; {
-    *yylval = "\u265F";
-    return tok(t_XHP_TEXT);
+    tokent("\u265F");
   }
   &bull; {
-    *yylval = "\u2022";
-    return tok(t_XHP_TEXT);
+    tokent("\u2022");
   }
   &#[0-9]+; {
     char buf[5];
     utf8ize(atoi(yytext + 2), buf);
-    *yylval = buf;
-    return tok(t_XHP_TEXT);
+    tokent(buf);
   }
   &[^;]{0,5} {
     fprintf(stderr, "Unknown entity: (%s)\n", yytext);
     return 0;
   }
   ' {
-    *yylval = "\\'";
-    return tok(t_XHP_TEXT);
+    tokent("\\'");
   }
   "\\" {
-    *yylval = "\\\\";
-    return tok(t_XHP_TEXT);
+    tokent("\\\\");
   }
 }
-<XHP_CHILD>{
+<XHP_CHILD,XHP_AFTER_ENT>{
   [^&'<>\\{ \t\x0b\x0c\xa0\r\n]+{WHITESPACE}{0,1} {
     *yylval = yytext;
+    BEGIN(XHP_CHILD);
     return tok(t_XHP_TEXT);
   }
   {WHITESPACE}* {
     *yylval = yytext;
+    BEGIN(XHP_CHILD);
     return tok(t_XHP_TEXT);
   }
+}
+<XHP_CHILD>{
   {WHITESPACE}*"{" {
     return tok(t_LCURLY);
   }
@@ -641,6 +609,8 @@ inline char* findstate(int s) {
       return "XHP_CHILD";
     case XHP_CHILD_START:
       return "XHP_CHILD_START";
+    case XHP_AFTER_ENT:
+      return "XHP_AFTER_ENT";
     case XHP_LABEL:
       return "XHP_LABEL";
     case XHP_ATTR:
