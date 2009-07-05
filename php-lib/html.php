@@ -27,6 +27,30 @@ class XHPHTMLElement extends XHPPrimitive implements JavascriptExpression {
   protected final function renderBaseAttrs() {
     $buf = '<'.$this->tagName;
     if ($this->attributes) {
+
+      if (IS_LITE_SITE) {
+        //  Support for Stratcom event delegation.
+        $attrs = $this->attributes;
+        if (isset($attrs['sigil'])) {
+          $class = idx($attrs, 'class', null);
+          if (isset($attrs['meta'])) {
+            $id = JavelinStratcom::registerData($attrs['meta']);
+            $class = $id.' '.$class;
+            unset($attrs['meta']);
+          }
+          $class = trim(JavelinStratcom::renderName($attrs['sigil']).' '.$class);
+          unset($attrs['sigil']);
+          $attrs['class'] = $class;
+        }
+        
+        if (!empty($attrs['uniqueid']) && empty($attrs['id'])) {
+          unset($attrs['uniqueid']);
+          $attrs['id'] = $this->requireUniqueID();
+        }
+        
+        $this->attributes = $attrs;
+      }
+      
       foreach ($this->attributes as $key => $val) {
         if ($val !== null) {
           $buf .= ' ' . txt2html($key) . '="' . txt2html($val) . '"';
@@ -48,6 +72,9 @@ class XHPHTMLElement extends XHPPrimitive implements JavascriptExpression {
       'onfocus', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onmousedown',
       'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onreset',
       'onresize', 'onselect', 'onsubmit', 'onunload',
+      
+      //  Javelin/Lite Extensions
+      'sigil', 'meta', 'uniqueid'
     ), parent::supportedAttributes());
   }
 
@@ -409,7 +436,7 @@ element input extends XHPHTMLSingleton {
   protected function supportedAttributes() {
     return array_merge(array(
       'accept', 'align', 'alt', 'checked', 'disabled', 'maxlength', 'name',
-      'readonly', 'size', 'src', 'type', 'value',
+      'readonly', 'size', 'src', 'type', 'value', 'autocomplete',
     ), parent::supportedAttributes());
   }
 }
