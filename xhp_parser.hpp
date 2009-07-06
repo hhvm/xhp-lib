@@ -16,6 +16,7 @@ typedef struct {
   char* heredoc_data_start;
   char* heredoc_data_last;
   bool terminated;
+  bool used;
   std::stack<std::string>* xhp_tag_stack;
 } xhp_extra_type;
 #define YY_EXTRA_TYPE xhp_extra_type*

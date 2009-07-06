@@ -1,6 +1,9 @@
 %{
   #include "xhp_parser.hpp"
+#ifdef PHP_ATOM_INC
+#define XHP_USE_ZEND
   #include "zend_compile.h"
+#endif
   #include <sstream>
 %}
 
@@ -18,9 +21,10 @@
       return;
     }
     ex->terminated = true;
-
+#ifdef XHP_USE_ZEND
     CG(zend_lineno) = xhplloc->internal_line + xhplloc->actual_line_offset;
     zend_set_compiled_filename(const_cast<char*>(filename) TSRMLS_CC);
+#endif
     *str = a;
     return;
   }
@@ -851,8 +855,12 @@ class_member_modifier:
 
 // high-level expressions
 xhp_expression:
-  xhp_singleton
+  xhp_singleton {
+    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->used = true;
+    $$ = $1;
+  }
 | xhp_open_tag xhp_children xhp_close_tag {
+    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->used = true;
     $$ = $1 + $2 + $3;
   }
 ;
@@ -999,6 +1007,7 @@ xhp_whitespace_hack:
 // element declarations
 xhp_element_declaration:
   xhp_element_entry { yy_push_state(PHP_NO_RESERVED_WORDS); } xhp_label xhp_whitespace_hack xhp_element_extends xhp_element_implements t_LCURLY class_statement_list t_RCURLY {
+    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->used = true;
     $$ = $1 + $3 + " " + $5 + " " + $6 + "{" + $8 + cr("}");
   }
 ;

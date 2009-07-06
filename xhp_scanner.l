@@ -95,7 +95,7 @@ B b?
       honk:
       if (c == '\r') {
         ++yylloc->internal_line;
-        c == yyinput(yyscanner);
+        c = yyinput(yyscanner);
         if (c != '\n') {
           unput(c);
           break;
@@ -637,9 +637,8 @@ void flex_push_state(int s, void* y) {
 
 void flex_pop_state(void* y) {
   yyguts_t* yyg = (yyguts_t*)y;
-  int o = (yyg->yy_start-1)/2;
+//  int o = (yyg->yy_start-1)/2; fprintf(stderr, "--> POP(%s -> %s)\n", findstate(o), findstate((yyg->yy_start-1)/2));
   yy_pop_state(yyg);
-//  fprintf(stderr, "--> POP(%s -> %s)\n", findstate(o), findstate((yyg->yy_start-1)/2));
 }
 
 static int flex_tok(int t, void* y) {

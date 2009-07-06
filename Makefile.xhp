@@ -9,5 +9,5 @@ xhp_scanner.lex.cpp: xhp_scanner.l
 xhp_parser.yacc.cpp: xhp_parser.y
 	bison --debug --name-prefix=xhp --verbose -d -o $@ $<
 
-phpx: xhp_scanner.lex.cpp xhp_parser.yacc.cpp parser.cpp lineno_str.cpp
+xhpize: xhp_scanner.lex.cpp xhp_parser.yacc.cpp xhpize.cpp code_rope.cpp
 	g++ -ggdb -Wall $^ -o $@
