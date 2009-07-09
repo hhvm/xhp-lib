@@ -1,13 +1,27 @@
-all: xhp_scanner.lex.cpp xhp_parser.yacc.cpp
+ifdef DEBUG
+CPPFLAGS = -ggdb -Wall
+else
+CPPFLAGS = -g -Wall -O3
+endif
+
+all: libxhp.a
 
 clean:
-	rm phpx xhp_scanner.lex.cpp xhp_scanner.lex.hpp xhp_parser.yacc.cpp xhp_parser.yacc.hpp xhp_parser.yacc.output
+	rm -f phpx xhp_scanner.lex.cpp xhp_scanner.lex.hpp xhp_parser.yacc.cpp xhp_parser.yacc.hpp xhp_parser.yacc.output libxhp.a xhp_preprocess.o
 
-xhp_scanner.lex.cpp: xhp_scanner.l
+xhp_scanner.lex.cpp: xhp_scanner.l xhp_parser.yacc.cpp
 	flex --header-file=xhp_scanner.lex.hpp --prefix=xhp -o $@ -d $<
 
 xhp_parser.yacc.cpp: xhp_parser.y
 	bison --debug --name-prefix=xhp --verbose -d -o $@ $<
 
-xhpize: xhp_scanner.lex.cpp xhp_parser.yacc.cpp xhpize.cpp code_rope.cpp
-	g++ -ggdb -Wall $^ -o $@
+xhpize: xhpize.o libxhp.a
+	g++ -o $@ $^
+
+libxhp.a : xhp_scanner.lex.o xhp_parser.yacc.o xhp_preprocess.o code_rope.o
+	ar -crs $@ $^
+
+%.o: %.cpp
+	g++ -c $(CPPFLAGS) -o $@ $<
+
+.PHONY: all clean
