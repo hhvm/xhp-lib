@@ -529,6 +529,9 @@ B b?
   &bull; {
     tokent("\u2022");
   }
+  &times; {
+    tokent("\u00D7");
+  }
   &#[0-9]+; {
     char buf[5];
     utf8ize(atoi(yytext + 2), buf);
@@ -557,7 +560,7 @@ B b?
     return tok(t_XHP_TEXT);
   }
 }
-<XHP_CHILD>{
+<XHP_CHILD,XHP_AFTER_ENT>{
   {WHITESPACE}*"{" {
     return tok(t_LCURLY);
   }
