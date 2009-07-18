@@ -11,14 +11,18 @@
 #define YY_HEADER_EXPORT_START_CONDITIONS
 
 typedef struct {
-  int firsttoken;
+  // internal book-keeping
   char* heredoc_eom;
   size_t heredoc_eom_len;
   char* heredoc_data_start;
   char* heredoc_data_last;
-  bool terminated;
-  bool used;
   std::stack<std::string>* xhp_tag_stack;
+  // public
+  int firsttoken; // first token to return to parser. use t_PHP_FAKE_OPEN_TAG for eval'd code.
+  bool terminated; // becomes true when the parser terminates with an error
+  int lineno; // line number (used for early termination)
+  std::string error; // description of error
+  bool used; // was any xhp even used in this code?
 } xhp_extra_type;
 #define YY_EXTRA_TYPE xhp_extra_type*
 
@@ -50,5 +54,6 @@ extern int xhpdebug;
 int xhpparse(void*, const char*, code_rope*);
 YY_EXTRA_TYPE xhpget_extra(void* scanner);
 #ifndef FLEX_SCANNER
-void* xhp_scan_string(const char *yy_str, void* yyscanner);
+void* xhp_scan_string(const char *yy_str, void* yyscanner); // will scan a copy of the string
+void* xhp_scan_buffer(char *yy_str, yy_size_t size, void* yyscanner); // will modify yy_str, but avoids a strcpy
 #endif

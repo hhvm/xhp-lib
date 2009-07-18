@@ -98,8 +98,8 @@ B b?
         c = yyinput(yyscanner);
         if (c != '\n') {
           unput(c);
-          break;
         }
+        break;
       } else if (c == '\n') {
         ++yylloc->internal_line;
         break;
@@ -389,12 +389,10 @@ B b?
   ">" return tok(t_XHP_GREATER_THAN);
 }
 <XHP_LABEL>{
-  {WHITESPACE} {
+   [ \t\x0b\x0c\xa0\n]|\r\n|\r {
     flex_pop_state(yyg);
-    if (*yytext == '\n') {
+    if (*yytext == '\n' || *yytext == '\r') {
       ++yylloc->internal_line;
-    } else if (*yytext == '\r') {
-      yyless(0);
     }
     return tok(t_XHP_WHITESPACE);
   }
@@ -414,7 +412,6 @@ B b?
 <XHP_CHILD_START>{
   {WHITESPACE}+ {
     /* ignore whitespace at the start */
-    yytext[0] = ' ';
     yyless(yyleng - 1);
     BEGIN(XHP_CHILD);
   }
@@ -548,7 +545,21 @@ B b?
     tokent("\\\\");
   }
 }
-<XHP_CHILD,XHP_AFTER_ENT>{
+<XHP_AFTER_ENT>{
+  [ \t\x0b\x0c\xa0\n]|\r\n|\r {
+    if (*yytext == '\r' || *yytext == '\n') {
+      ++yylloc->internal_line;
+    }
+    BEGIN(XHP_CHILD);
+    *yylval = " ";
+    return tok(t_XHP_TEXT);
+  }
+  . {
+    BEGIN(XHP_CHILD);
+    yyless(0);
+  }
+}
+<XHP_CHILD>{
   [^&'<>\\{ \t\x0b\x0c\xa0\r\n]+{WHITESPACE}{0,1} {
     *yylval = yytext;
     BEGIN(XHP_CHILD);
@@ -559,8 +570,6 @@ B b?
     BEGIN(XHP_CHILD);
     return tok(t_XHP_TEXT);
   }
-}
-<XHP_CHILD,XHP_AFTER_ENT>{
   {WHITESPACE}*"{" {
     return tok(t_LCURLY);
   }

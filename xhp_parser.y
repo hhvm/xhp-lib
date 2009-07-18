@@ -1,9 +1,5 @@
 %{
   #include "xhp_parser.hpp"
-#ifdef PHP_ATOM_INC
-#define XHP_USE_ZEND
-  #include "zend_compile.h"
-#endif
   #include <sstream>
 %}
 
@@ -15,17 +11,14 @@
   #define yyterminate(s) yyerror(&yylloc, yyscanner, filename, root, s); yy_begin(TERMINATE);
   #define cr(s) code_rope(s, yylineno)
   extern int yydebug;
-  static void yyerror(YYLTYPE* xhplloc, void* yyscanner, const char* filename, code_rope* str, const char* a) {
+  static void yyerror(YYLTYPE* xhplloc, void* yyscanner, const char* _, code_rope* str, const char* error) {
     xhp_extra_type* ex = static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
     if (ex->terminated) {
       return;
     }
     ex->terminated = true;
-#ifdef XHP_USE_ZEND
-    CG(zend_lineno) = xhplloc->internal_line + xhplloc->actual_line_offset;
-    zend_set_compiled_filename(const_cast<char*>(filename) TSRMLS_CC);
-#endif
-    *str = a;
+    ex->lineno = xhplloc->internal_line + xhplloc->actual_line_offset;
+    ex->error = error;
     return;
   }
   void replacestr(std::string &source, const std::string &find, const std::string &rep) {
@@ -896,6 +889,7 @@ xhp_children_:
 xhp_child:
   xhp_expression
 | t_LCURLY { yy_push_state(PHP); } expression t_RCURLY { yy_pop_state(); } {
+    yy_begin(XHP_CHILD_START);
     $$ = $3;
   }
 ;
@@ -937,6 +931,9 @@ xhp_tag_start:
 xhp_singleton:
   xhp_tag_start xhp_attributes t_XHP_DIV t_XHP_GREATER_THAN {
     yy_pop_state(); // XHP_ATTR
+    if (!static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->xhp_tag_stack->empty()) {
+      yy_begin(XHP_CHILD_START);
+    }
     $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
   }
 ;
@@ -966,6 +963,9 @@ xhp_close_tag:
       yyterminate(e.c_str());
     }
     ex->xhp_tag_stack->pop();
+    if (!ex->xhp_tag_stack->empty()) {
+      yy_begin(XHP_CHILD_START);
+    }
     $$ = ")";
   }
 ;

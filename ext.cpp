@@ -1,11 +1,14 @@
 #include "ext.hpp"
 #include "xhp_parser.hpp"
+#include "xhp_preprocess.hpp"
 #include "zend.h"
 #include "zend_API.h"
 #include "zend_compile.h"
 #include "zend_hash.h"
 #include "zend_extensions.h"
 #include <string>
+#include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -38,33 +41,6 @@ long xhp_stream_fteller(xhp_stream_t* handle TSRMLS_DC) {
   return (long)handle->pos;
 }
 
-char* xhp_parse_str(const char* code, const char* filename, int firsttok) {
-
-  // Run it through the php superset parser which may generate valid php code...
-  void* scanner;
-  code_rope buf;
-  xhp_extra_type extra;
-  extra.firsttoken = firsttok;
-  extra.xhp_tag_stack = new stack<string>();
-  extra.terminated = false;
-
-  //xhpdebug = 1;
-  xhplex_init(&scanner);
-  xhpset_extra(&extra, scanner);
-  xhp_scan_string(code, scanner);
-  int ret = xhpparse(scanner, filename, &buf);
-  xhplex_destroy(scanner);
-  delete extra.xhp_tag_stack;
-  if (ret) {
-    zend_error(E_COMPILE_ERROR, buf.c_str());
-    return NULL;
-  } else {
-    // Create a string stream with the rewritten code and give to compile_file
-//printf("%s", buf.c_str());
-    return estrdup(buf.c_str());
-  }
-}
-
 static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) {
 
   if (open_file_for_scanning(f TSRMLS_CC) == FAILURE) {
@@ -77,56 +53,39 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   }
 
   // Read full program from zend stream
-  std::string str;
-  char buf[4096];
+  std::string buffer;
+  char read_buf[4096];
   size_t len;
-  while (len = zend_stream_read(f, (char*)&buf, 4095 TSRMLS_CC)) {
-    buf[len] = 0;
-    str += buf;
+  while (len = zend_stream_read(f, (char*)&read_buf, 4095 TSRMLS_CC)) {
+    read_buf[len] = 0;
+    buffer += read_buf;
   }
 
-  // Run this through xhp? Quick heuristic to determine if we can avoid a 2nd parse stage
-  bool maybe_xhp = false;
-  const char* cstr = str.c_str();
-  const char* ii;
-  for (ii = cstr; *ii; ++ii) {
-    if (*ii == '<') { // </a>
-      if (ii[1] == '/') {
-        maybe_xhp = 1;
-        break;
-      }
-    } else if (*ii == '/') { // <a />
-      if (ii[1] == '>') {
-        maybe_xhp = 1;
-        break;
-      }
-    } else if (!memcmp(ii, "element", 7)) {
-      maybe_xhp = 1;
-      break;
-    }
-  }
+  // Process XHP
+  std::string rewrit, error_str;
+  std::string* code_to_give_to_php;
+  uint32_t error_lineno;
+  istringstream ist(buffer);
+  XHPResult result = xhp_preprocess(ist, rewrit, false, error_str, error_lineno);
 
-  // If this file contains xhp run through the xhp parse stage
-  const char* rewrit;
-  if (maybe_xhp) {
-    bool old_in_comp = CG(in_compilation);
+  if (result == XHPErred) {
+    // Bubble error up to PHP
     CG(in_compilation) = true;
-    rewrit = xhp_parse_str(cstr, f->filename ? f->filename : "", 0);
-    if (rewrit == NULL) {
-      zend_bailout();
-    }
-    CG(in_compilation) = old_in_comp;
-    len = strlen(rewrit);
+    CG(zend_lineno) = error_lineno;
+    zend_set_compiled_filename(const_cast<char*>(f->filename) TSRMLS_CC);
+    zend_error(E_PARSE, "%s", error_str.c_str());
+    zend_bailout();
+  } else if (result == XHPRewrote) {
+    code_to_give_to_php = &rewrit;
   } else {
-    rewrit = cstr;
-    len = ii - cstr;
+    code_to_give_to_php = &buffer;
   }
 
   // Create a fake stream
   xhp_stream_t stream_data;
-  stream_data.str = rewrit;
+  stream_data.str = code_to_give_to_php->c_str();
   stream_data.pos = 0;
-  stream_data.len = len;
+  stream_data.len = code_to_give_to_php->size();
 
   zend_file_handle fake_file;
   fake_file.type = ZEND_HANDLE_STREAM;
@@ -141,10 +100,6 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   fake_file.handle.stream.interactive = 0;
 
   zend_op_array* ret = dist_compile_file(&fake_file, type TSRMLS_CC);
-
-  if (maybe_xhp) {
-    efree(const_cast<char*>(rewrit));
-  }
   return ret;
 }
 
@@ -152,30 +107,50 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 
   // Cast to str
   zval tmp;
+  char* val;
   if (str->type != IS_STRING) {
     tmp = *str;
     zval_copy_ctor(&tmp);
     convert_to_string(&tmp);
-    str = &tmp;
+    val = tmp.value.str.val;
+  } else {
+    val = str->value.str.val;; 
   }
 
-  // Rewrite the string
-  char* rewrit = xhp_parse_str(str->value.str.val, "", t_PHP_FAKE_OPEN_TAG);
-  if (str == &tmp) {
+  // Process XHP
+  std::string rewrit, error_str;
+  std::string* code_to_give_to_php;
+  uint32_t error_lineno;
+  istringstream ist(val);
+  XHPResult result = xhp_preprocess(ist, rewrit, true, error_str, error_lineno);
+
+  // Destroy temporary in the case of non-string input (why?)
+  if (str->type != IS_STRING) {
     zval_dtor(&tmp);
   }
-  if (rewrit == NULL) {
-    return NULL;
-  }
 
-  // Create another tmp zval with the rewritten PHP code and pass it to the original function
-  INIT_ZVAL(tmp);
-  tmp.type = IS_STRING;
-  tmp.value.str.val = rewrit;
-  tmp.value.str.len = strlen(rewrit);
-  zend_op_array* ret = dist_compile_string(&tmp, filename TSRMLS_CC);
-  zval_dtor(&tmp);
-  return ret;
+  if (result == XHPErred) {
+
+    // Bubble error up to PHP
+    bool original_in_compilation = CG(in_compilation);
+    CG(in_compilation) = true;
+    CG(zend_lineno) = error_lineno;
+    zend_error(E_PARSE, "%s", error_str.c_str());
+    CG(unclean_shutdown) = 1;
+    CG(in_compilation) = original_in_compilation;
+    return NULL;
+  } else if (result == XHPRewrote) {
+
+    // Create another tmp zval with the rewritten PHP code and pass it to the original function
+    INIT_ZVAL(tmp);
+    tmp.type = IS_STRING;
+    tmp.value.str.val = const_cast<char*>(rewrit.c_str());
+    tmp.value.str.len = rewrit.size();
+    zend_op_array* ret = dist_compile_string(&tmp, filename TSRMLS_CC);
+    return ret;
+  } else {
+    return dist_compile_string(str, filename);
+  }
 }
 
 static PHP_MINIT_FUNCTION(xhp) {

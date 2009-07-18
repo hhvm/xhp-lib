@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
 
     string code, error;
     uint32_t errLine;
-    XHPResult result = xhp_preprocess(*inputStream, code, error, errLine);
+    XHPResult result = xhp_preprocess(*inputStream, code, false, error, errLine);
     inputFile.close();
     if (result == XHPRewrote) {
       if (in_place) {
