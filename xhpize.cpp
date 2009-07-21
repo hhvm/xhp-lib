@@ -59,7 +59,8 @@ int main(int argc, char* argv[]) {
       }
       cerr<< "File `"<<(*ii)<<"` xhpized.\n";
     } else if (result == XHPErred) {
-      cerr<< "Error parsing file `"<<(*ii)<<"`!!\n";
+      cerr<< "Error parsing file `"<<(*ii)<<"`!!\n" << error << " on " <<
+        errLine << endl;;
     }
   }
 

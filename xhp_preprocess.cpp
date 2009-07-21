@@ -43,7 +43,6 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval,
   code_rope buf;
   xhp_extra_type extra;
   extra.firsttoken = isEval ? t_PHP_FAKE_OPEN_TAG : 0;
-  extra.xhp_tag_stack = new stack<string>();
   extra.terminated = false;
   extra.used = false;
   xhplex_init(&scanner);
@@ -54,7 +53,6 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval,
   xhp_scan_buffer(const_cast<char*>(buffer), bufferS.size() + 2, scanner);
   ret = xhpparse(scanner, "", &buf);
   xhplex_destroy(scanner);
-  delete extra.xhp_tag_stack;
   if (!ret && extra.used) {
     result = XHPRewrote;
     out = buf.c_str();

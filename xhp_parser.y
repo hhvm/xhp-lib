@@ -7,7 +7,7 @@
   #ifdef yylineno
   #undef yylineno
   #endif
-  #define yylineno (unsigned int)(yylloc.internal_line)  
+  #define yylineno (unsigned int)(yylloc.internal_line)
   #define yyterminate(s) yyerror(&yylloc, yyscanner, filename, root, s); yy_begin(TERMINATE);
   #define cr(s) code_rope(s, yylineno)
   extern int yydebug;
@@ -22,10 +22,13 @@
     return;
   }
   void replacestr(std::string &source, const std::string &find, const std::string &rep) {
-    size_t j; 
+    size_t j;
     while ((j = source.find(find)) != std::string::npos) {
       source.replace(j, find.length(), rep);
     }
+  }
+  static xhp_extra_type *getExtra(void *yyscanner) {
+    return static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
   }
 %}
 
@@ -226,7 +229,7 @@ while_statement:
   }
 ;
 
-for_statement: 
+for_statement:
   t_FOR t_LPAREN for_expression t_SEMICOLON for_expression t_SEMICOLON for_expression t_RPAREN statement {
     $$ = "for (" + $3 + ";" + $5 + ";" + $7 + ") " + $9;
   }
@@ -242,7 +245,7 @@ for_expression:
 | expression_with_comma
 ;
 
-foreach_statement: 
+foreach_statement:
   t_FOREACH t_LPAREN expression t_AS expression foreach_optional_arg t_RPAREN statement {
     $$ = "foreach (" + $3 + " AS " + $5 + $6 + ") " + $8;
   }
@@ -888,11 +891,14 @@ xhp_children_:
 
 xhp_child:
   xhp_expression
-| t_LCURLY { yy_push_state(PHP); } expression t_RCURLY { yy_pop_state(); } {
+| t_LCURLY { yy_push_state(PHP);
+    getExtra(yyscanner)->pushStack();
+  }
+expression t_RCURLY { getExtra(yyscanner)->popStack(); yy_pop_state(); } {
     yy_begin(XHP_CHILD_START);
     $$ = $3;
   }
-;
+   ;
 
 // attributes
 xhp_attributes:
@@ -931,7 +937,7 @@ xhp_tag_start:
 xhp_singleton:
   xhp_tag_start xhp_attributes t_XHP_DIV t_XHP_GREATER_THAN {
     yy_pop_state(); // XHP_ATTR
-    if (!static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->xhp_tag_stack->empty()) {
+    if (getExtra(yyscanner)->haveTag()) {
       yy_begin(XHP_CHILD_START);
     }
     $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
@@ -942,7 +948,7 @@ xhp_open_tag:
   xhp_tag_start xhp_attributes t_XHP_GREATER_THAN {
     yy_pop_state(); // XHP_ATTR
     yy_push_state(XHP_CHILD_START);
-    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->xhp_tag_stack->push($1.c_str());
+    static_cast<xhp_extra_type*>(xhpget_extra(yyscanner))->pushTag($1.c_str());
     $$ = "new xhp_" + $1 + "(array(" + $2 + "), ";
   }
 ;
@@ -952,9 +958,9 @@ xhp_close_tag:
     yy_pop_state(); // XHP_LABEL
     yy_pop_state(); // XHP_CHILD_START
     xhp_extra_type* ex = static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
-    if (ex->xhp_tag_stack->top() != $3.c_str()) {
+    if (ex->peekTag() != $3.c_str()) {
       std::string e1 = $3.c_str();
-      std::string e2 = ex->xhp_tag_stack->top();
+      std::string e2 = ex->peekTag();
       replacestr(e1, "__", ":");
       replacestr(e1, "_", "-");
       replacestr(e2, "__", ":");
@@ -962,8 +968,8 @@ xhp_close_tag:
       std::string e = std::string("mismatched tag </") + e1 + ">; expecting </" + e2 +">";
       yyterminate(e.c_str());
     }
-    ex->xhp_tag_stack->pop();
-    if (!ex->xhp_tag_stack->empty()) {
+    ex->popTag();
+    if (ex->haveTag()) {
       yy_begin(XHP_CHILD_START);
     }
     $$ = ")";
