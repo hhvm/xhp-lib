@@ -187,6 +187,7 @@ B b?
   (?i:var) return tok(t_VAR);
   (?i:class) return tok(t_CLASS);
   (?i:element) return tok(t_ELEMENT);
+  (?i:elementof) return tok(t_ELEMENTOF);
   (?i:interface) return tok(t_INTERFACE);
   (?i:extends) return tok(t_EXTENDS);
   (?i:implements) return tok(t_IMPLEMENTS);
@@ -201,6 +202,8 @@ B b?
 }
 <PHP,PHP_NO_RESERVED_WORDS>{
   "=" return tok(t_ASSIGN);
+  "-" return tok(t_MINUS);
+  ":" return tok(t_COLON);
 }
 <PHP,PHP_NO_RESERVED_WORDS,XHP_ATTR,XHP_LABEL>{
   "===" return tok(t_STRICT_EQUAL);
@@ -241,10 +244,8 @@ B b?
   "," return tok(t_COMMA);
   ";" return tok(t_SEMICOLON);
   "?" return tok(t_PLING);
-  ":" return tok(t_COLON);
   "<" return tok(t_LESS_THAN);
   "+" return tok(t_PLUS);
-  "-" return tok(t_MINUS);
   "*" return tok(t_MULT);
   "%" return tok(t_MOD);
   "|" return tok(t_BIT_OR);
@@ -408,6 +409,8 @@ B b?
     flex_pop_state(yyg);
     return tok(t_XHP_GREATER_THAN);
   }
+  "-" return tok(t_XHP_HYPHEN);
+  ":" return tok(t_XHP_COLON);
 }
 <XHP_CHILD_START>{
   {WHITESPACE}+ {

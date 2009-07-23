@@ -76,6 +76,7 @@
 %right t_ECHO
 %right t_ASSIGN t_APPEND t_PLUS_ASSIGN t_MINUS_ASSIGN t_DIV_ASSIGN t_MULT_ASSIGN t_MOD_ASSIGN t_BIT_AND_ASSIGN t_BIT_OR_ASSIGN t_BIT_XOR_ASSIGN t_LSHIFT_ASSIGN t_RSHIFT_ASSIGN
 %left t_PLING t_COLON
+%left t_XHP_COLON t_XHP_HYPHEN
 %left t_OR
 %left t_AND
 %left t_BIT_OR
@@ -88,6 +89,7 @@
 %left t_MULT t_DIV t_MOD
 %right t_NOT t_BIT_NOT t_INCR t_DECR // also casting operators and "@"
 %right t_INSTANCEOF
+%right t_ELEMENTOF
 %right t_LBRACKET
 %token t_RBRACKET
 %token t_RCURLY
@@ -990,10 +992,10 @@ xhp_label:
     yy_push_state(XHP_LABEL);
     $$ = $1;
   }
-| xhp_label t_COLON t_IDENTIFIER {
+| xhp_label t_XHP_COLON t_IDENTIFIER {
     $$ = $1 + "__" + $3;
   }
-| xhp_label t_MINUS t_IDENTIFIER {
+| xhp_label t_XHP_HYPHEN t_IDENTIFIER {
     $$ = $1 + "_" + $3;
   }
 ;
@@ -1052,6 +1054,13 @@ xhp_element_implements_list:
   xhp_label xhp_whitespace_hack
 | xhp_element_implements_list t_COMMA xhp_label xhp_whitespace_hack {
     $$ = $1 + "," + $3;
+  }
+;
+
+expression:
+  expression t_ELEMENTOF xhp_label xhp_whitespace_hack {
+    yy_pop_state();
+    $$ = $1 + " instanceof xhp_" + $3;
   }
 ;
 
