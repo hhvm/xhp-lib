@@ -1,7 +1,7 @@
 ifdef DEBUG
-CPPFLAGS = -ggdb -Wall
+CPPFLAGS = -fPIC -ggdb -Wall
 else
-CPPFLAGS = -g -Wall -O3
+CPPFLAGS = -fPIC -g -Wall -O3
 endif
 
 all: libxhp.a
@@ -20,7 +20,7 @@ xhpize: xhpize.o libxhp.a
 
 xhp_preprocess.cpp: xhp_scanner.lex.cpp xhp_parser.yacc.cpp
 
-libxhp.a : xhp_scanner.lex.o xhp_parser.yacc.o xhp_preprocess.o code_rope.o
+libxhp.a: xhp_scanner.lex.o xhp_parser.yacc.o xhp_preprocess.o code_rope.o
 	ar -crs $@ $^
 
 %.o: %.cpp
