@@ -316,7 +316,7 @@ break_statement:
 
 continue_statement:
   t_CONTINUE expression semicolon {
-    $$ = "continue" + $2 + $3;
+    $$ = "continue " + $2 + $3;
   }
 | t_CONTINUE semicolon {
     $$ = "continue" + $2;
