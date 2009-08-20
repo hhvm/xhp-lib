@@ -25,6 +25,9 @@ public:
   size_t heredoc_eom_len;
   char* heredoc_data_start;
   char* heredoc_data_last;
+  char* docblock;
+  int docblock_line;
+  int docblock_line_count;
 
   bool haveTag() { return !xhp_tag_stack.front().empty(); }
   const std::string &peekTag() { return xhp_tag_stack.front().front(); }
@@ -32,6 +35,12 @@ public:
   void popTag() {xhp_tag_stack.front().pop_front(); }
   void pushStack() { xhp_tag_stack.push_front(std::deque<std::string>()); }
   void popStack() { xhp_tag_stack.pop_front(); }
+  void freeDocblock() {
+    if (docblock != NULL) {
+      free(docblock);
+      docblock = NULL;
+    }
+  }
 
 private:
   std::deque<std::deque<std::string> > xhp_tag_stack;

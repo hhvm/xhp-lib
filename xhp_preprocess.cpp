@@ -45,6 +45,7 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval,
   extra.firsttoken = isEval ? t_PHP_FAKE_OPEN_TAG : 0;
   extra.terminated = false;
   extra.used = false;
+  extra.docblock = NULL;
   xhplex_init(&scanner);
   xhpset_extra(&extra, scanner);
 
@@ -53,6 +54,7 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval,
   xhp_scan_buffer(const_cast<char*>(buffer), bufferS.size() + 2, scanner);
   ret = xhpparse(scanner, "", &buf);
   xhplex_destroy(scanner);
+  extra.freeDocblock();
   if (!ret && extra.used) {
     result = XHPRewrote;
     out = buf.c_str();

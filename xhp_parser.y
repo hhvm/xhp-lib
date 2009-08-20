@@ -10,6 +10,11 @@
   #define yylineno (unsigned int)(yylloc.internal_line)
   #define yyterminate(s) yyerror(&yylloc, yyscanner, filename, root, s); yy_begin(TERMINATE);
   #define cr(s) code_rope(s, yylineno)
+  #define docblock_rope (getExtra(yyscanner)->docblock == NULL ? cr("") : code_rope( \
+        getExtra(yyscanner)->docblock, \
+        getExtra(yyscanner)->docblock_line, \
+        getExtra(yyscanner)->docblock_line_count \
+    ))
   extern int yydebug;
   static void yyerror(YYLTYPE* xhplloc, void* yyscanner, const char* _, code_rope* str, const char* error) {
     xhp_extra_type* ex = static_cast<xhp_extra_type*>(xhpget_extra(yyscanner));
@@ -171,7 +176,6 @@ statement:
 | expression_statement
 | class_declaration
 | try_statement
-
 | declaration_statement
 | semicolon
 | xhp_element_declaration
@@ -726,22 +730,37 @@ function_name:
   }
 ;
 
-function_declaration:
-  t_FUNCTION function_name argument_list t_LCURLY statement_list t_RCURLY {
-    $$ = "function " + $2 + $3 + " {" + $5 + cr("}");
+function_declaration_head:
+  t_FUNCTION function_name {
+    $$ = docblock_rope + cr("function ") + $2;
+    getExtra(yyscanner)->freeDocblock();
   }
-| t_FUNCTION function_name argument_list semicolon {
-    $$ = "function " + $2 + $3 + $4;
+;
+
+function_declaration:
+  function_declaration_head argument_list t_LCURLY statement_list t_RCURLY {
+    $$ = $1 + $2 + " {" + $4 + cr("}");
+  }
+| function_declaration_head argument_list semicolon {
+    $$ = $1 + $2 + $3;
   }
 ;
 
 // Classes
-class_declaration:
-  class_entry identifier class_extends class_implements t_LCURLY class_statement_list t_RCURLY {
-    $$ = $1 + " " + $2 + " " + $3 + " " + $4 + "{" + $6 + cr("}");
+class_or_interface_entry:
+  class_entry identifier class_extends class_implements {
+    $$ = docblock_rope + $1 + " " + $2 + " " + $3 + " " + $4;
+    getExtra(yyscanner)->freeDocblock();
   }
-| t_INTERFACE identifier interface_extends t_LCURLY class_statement_list t_RCURLY {
-    $$ = "interface " + $2 + " " + $3 + "{" + $5 + cr("}");
+| t_INTERFACE identifier interface_extends {
+    $$ = docblock_rope + "interface " + $2 + " " + $3;
+    getExtra(yyscanner)->freeDocblock();
+  }
+;
+
+class_declaration:
+  class_or_interface_entry t_LCURLY class_statement_list t_RCURLY {
+    $$ = $1 + "{" + $3 + cr("}");
   }
 ;
 
@@ -829,22 +848,22 @@ class_member_modifiers:
 
 class_member_modifier:
   t_PUBLIC {
-    $$ = cr("public");
+    $$ = "public";
   }
 | t_PROTECTED {
-    $$ = cr("protected");
+    $$ = "protected";
   }
 | t_PRIVATE {
-    $$ = cr("private");
+    $$ = "private";
   }
 | t_STATIC {
-    $$ = cr("static");
+    $$ = "static";
   }
 | t_ABSTRACT {
-    $$ = cr("abstract");
+    $$ = "abstract";
   }
 | t_FINAL {
-    $$ = cr("final");
+    $$ = "final";
   }
 ;
 

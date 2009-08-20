@@ -50,6 +50,8 @@ bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s PHP_NO_RESERVED_WORDS
 %s HEREDOC_LINE_START
 %s HEREDOC_DATA
+%s COMMENT
+%s COMMENT_DOC
 %s XHP_CHILD
 %s XHP_CHILD_START
 %s XHP_AFTER_ENT
@@ -118,29 +120,40 @@ B b?
       }
     }
   }
+  "/**"{WHITESPACE} {
+    flex_push_state(COMMENT_DOC, yyg);
+    yyextra->docblock_line = yylloc->internal_line;
+    yyextra->docblock_line_count = yytext[3] == '\n' ? 1 : 0;
+    yymore();
+  }
   "/*" {
-    char c;
-    for (;;) {
-      while ((c = yyinput(yyscanner)) != '*' && c != EOF) {
-        if (c == '\n') {
-          ++yylloc->internal_line;
-        }
-      }
-      if (c == '*') {
-        while ((c = yyinput(yyscanner)) == '*');
-        if (c == '/') {
-          break;
-        } else if (c == '\n') {
-          ++yylloc->internal_line;
-        }
-      }
-      if (c == EOF) {
-        return tok(0);
-        break;
-      }
-    }
+    flex_push_state(COMMENT, yyg);
+    yymore();
   }
 }
+<COMMENT_DOC,COMMENT>{
+  \r|\r\n|\n {
+    ++yylloc->internal_line;
+    ++yyextra->docblock_line_count;
+    yymore();
+  }
+  [^*\r\n]+|"*" {
+    yymore();
+  }
+}
+<COMMENT>{
+  "*/" {
+    flex_pop_state(yyg);
+  }
+}
+<COMMENT_DOC>{
+  "*/" {
+    flex_pop_state(yyg);
+    yyextra->freeDocblock();
+    yyextra->docblock = strdup(yytext);
+  }
+}
+
 <PHP>{
   (?i:new) return tok(t_NEW);
   (?i:clone) return tok(t_CLONE);
@@ -610,12 +623,18 @@ B b?
 
 inline char* findstate(int s) {
   switch(s) {
+    case TERMINATE:
+      return "TERMINATE";
     case INITIAL:
       return "INITIAL";
     case PHP:
       return "PHP";
     case PHP_NO_RESERVED_WORDS:
       return "PHP_NO_RESERVED_WORDS";
+    case COMMENT:
+      return "COMMENT";
+    case COMMENT_DOC:
+      return "COMMENT_DOC";
     case HEREDOC_LINE_START:
       return "HEREDOC_LINE_START";
     case HEREDOC_DATA:
@@ -660,6 +679,9 @@ static int flex_tok(int t, void* y) {
   yyguts_t* yyg = (yyguts_t*)y;
   if (YY_START == PHP_NO_RESERVED_WORDS) {
     flex_pop_state(yyg);
+  }
+  if (t == t_SEMICOLON || t == t_RCURLY) {
+    yyextra->freeDocblock();
   }
 //  fprintf(stderr, "\ntok:%s\n", yytokname(t));
   return t;
