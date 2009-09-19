@@ -18,7 +18,10 @@ code_rope::code_rope(const code_rope& str, const size_t no /* = 0 */, const size
 }
 
 const char* code_rope::c_str() const {
-  if (this->no > 1) {
+  if (0 && this->no > 1) {
+    return NULL;
+    // lolololololol
+    // this code is clowntown -- returns dealloced memory
     __gnu_cxx::rope<char> whitespace(this->no - 1, '\n');
     whitespace += this->str;
     return whitespace.c_str();

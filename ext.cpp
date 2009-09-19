@@ -1,11 +1,11 @@
 #include "ext.hpp"
-#include "xhp_parser.hpp"
-#include "xhp_preprocess.hpp"
+#include "xhp/xhp_preprocess.hpp"
 #include "zend.h"
 #include "zend_API.h"
 #include "zend_compile.h"
 #include "zend_hash.h"
 #include "zend_extensions.h"
+#include "ext/standard/info.h"
 #include <string>
 #include <sstream>
 #include <iostream>
@@ -22,6 +22,36 @@ typedef struct {
   size_t pos;
   size_t len;
 } xhp_stream_t;
+
+#if PHP_VERSION_ID >= 50300
+ZEND_API int zend_stream_getc(zend_file_handle *file_handle TSRMLS_DC);
+// This function was made static to zend_stream.c in r255174. This an inline copy of that function.
+static size_t zend_stream_read(zend_file_handle *file_handle, char *buf, size_t len TSRMLS_DC) {
+    if (file_handle->type != ZEND_HANDLE_MAPPED && file_handle->handle.stream.isatty) {
+        int c = '*';
+        size_t n;
+
+#ifdef NETWARE
+        /*
+            c != 4 check is there as fread of a character in NetWare LibC gives 4 upon ^D character.
+            Ascii value 4 is actually EOT character which is not defined anywhere in the LibC
+            or else we can use instead of hardcoded 4.
+        */
+        for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != 4 && c != '\n'; ++n) {
+#else
+        for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != '\n'; ++n)  {
+#endif
+            buf[n] = (char)c;
+        }
+        if (c == '\n') {
+            buf[n++] = (char)c;
+        }
+
+        return n;
+    }
+    return file_handle->handle.stream.reader(file_handle->handle.stream.handle, buf, len TSRMLS_CC);
+}
+#endif
 
 size_t xhp_stream_reader(xhp_stream_t* handle, char* buf, size_t len TSRMLS_DC) {
   if (len > handle->len - handle->pos) {
@@ -48,25 +78,32 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
     return dist_compile_file(f, type TSRMLS_CC);
   }
 
-  if (f->type == ZEND_HANDLE_STREAM && f->handle.stream.interactive) {
-	  fprintf(stderr, "Warning: Using PHP + XHP in interactive mode will lead to undesirable behavior; execution will not commence until EOF (^D) is encountered.\n");
+  // Grab code from zend file handle
+  string original_code;
+#if PHP_VERSION_ID >= 50300
+  if (f->type == ZEND_HANDLE_MAPPED) {
+    original_code = f->handle.stream.mmap.buf;
   }
+#else
+  if (0);
+#endif
+  else {
 
-  // Read full program from zend stream
-  std::string buffer;
-  char read_buf[4096];
-  size_t len;
-  while (len = zend_stream_read(f, (char*)&read_buf, 4095 TSRMLS_CC)) {
-    read_buf[len] = 0;
-    buffer += read_buf;
+    // Read full program from zend stream
+    char read_buf[4096];
+    size_t len;
+    while (len = zend_stream_read(f, (char*)&read_buf, 4095 TSRMLS_CC)) {
+      read_buf[len] = 0;
+      original_code += read_buf;
+    }
   }
 
   // Process XHP
-  std::string rewrit, error_str;
-  std::string* code_to_give_to_php;
+  XHPResult result;
+  string rewrit, error_str;
   uint32_t error_lineno;
-  istringstream ist(buffer);
-  XHPResult result = xhp_preprocess(ist, rewrit, false, error_str, error_lineno);
+  string* code_to_give_to_php;
+  result = xhp_preprocess(original_code, rewrit, false, error_str, error_lineno);
 
   if (result == XHPErred) {
     // Bubble error up to PHP
@@ -78,26 +115,40 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   } else if (result == XHPRewrote) {
     code_to_give_to_php = &rewrit;
   } else {
-    code_to_give_to_php = &buffer;
+    code_to_give_to_php = &original_code;
   }
 
-  // Create a fake stream
-  xhp_stream_t stream_data;
-  stream_data.str = code_to_give_to_php->c_str();
-  stream_data.pos = 0;
-  stream_data.len = code_to_give_to_php->size();
-
+  // Create a fake file to give back to PHP to handle
   zend_file_handle fake_file;
-  fake_file.type = ZEND_HANDLE_STREAM;
   fake_file.opened_path = f->opened_path ? estrdup(f->opened_path) : NULL;
   fake_file.filename = f->filename;
   fake_file.free_filename = false;
 
-  fake_file.handle.stream.handle = &stream_data;
-  fake_file.handle.stream.reader = (zend_stream_reader_t)&xhp_stream_reader;
+#if PHP_VERSION_ID >= 50300
+  fake_file.handle.stream.isatty = 0;
+  fake_file.handle.stream.mmap.pos = 0;
+  fake_file.handle.stream.mmap.buf = const_cast<char*>(code_to_give_to_php->c_str());
+  fake_file.handle.stream.mmap.len = code_to_give_to_php->size();
   fake_file.handle.stream.closer = NULL;
+  fake_file.type = ZEND_HANDLE_MAPPED;
+#else
+  // This code works fine in PHP 5.3, but the MMAP method is faster
+  xhp_stream_t stream_handle;
+  stream_handle.str = code_to_give_to_php->c_str();
+  stream_handle.pos = 0;
+  stream_handle.len = code_to_give_to_php->size();
+
+  fake_file.type = ZEND_HANDLE_STREAM;
+  fake_file.handle.stream.handle = &stream_handle;
+  fake_file.handle.stream.reader = (zend_stream_reader_t)&xhp_stream_reader;
+#if PHP_VERSION_ID >= 50300
+  fake_file.handle.stream.fsizer = (zend_stream_fsizer_t)&xhp_stream_fteller;
+#else
   fake_file.handle.stream.fteller = (zend_stream_fteller_t)&xhp_stream_fteller;
+#endif
+  fake_file.handle.stream.closer = NULL;
   fake_file.handle.stream.interactive = 0;
+#endif
 
   zend_op_array* ret = dist_compile_file(&fake_file, type TSRMLS_CC);
   return ret;
@@ -118,11 +169,11 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
   }
 
   // Process XHP
-  std::string rewrit, error_str;
-  std::string* code_to_give_to_php;
+  string rewrit, error_str;
+  string* code_to_give_to_php;
   uint32_t error_lineno;
-  istringstream ist(val);
-  XHPResult result = xhp_preprocess(ist, rewrit, true, error_str, error_lineno);
+  string original_code(val);
+  XHPResult result = xhp_preprocess(original_code, rewrit, true, error_str, error_lineno);
 
   // Destroy temporary in the case of non-string input (why?)
   if (str->type != IS_STRING) {
@@ -156,7 +207,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 static PHP_MINIT_FUNCTION(xhp) {
 
   // APC has this crazy magic api you can use to avoid the race condition for when an extension overwrites
-  // the compile_file function. The desired order here is APC -> xhp -> PHP, that way APC can cache the
+  // the compile_file function. The desired order here is APC -> XHP -> PHP, that way APC can cache the
   // file as usual.
   zend_module_entry *apc_lookup;
   zend_constant *apc_magic;
@@ -176,6 +227,12 @@ static PHP_MINIT_FUNCTION(xhp) {
   return SUCCESS;
 }
 
+static PHP_MINFO_FUNCTION(xhp) {
+  php_info_print_table_start();
+  php_info_print_table_row(2, "Version", PHP_XHP_VERSION);
+  php_info_print_table_end();
+}
+
 zend_module_entry xhp_module_entry = {
 	STANDARD_MODULE_HEADER,
 	PHP_XHP_EXTNAME,
@@ -184,7 +241,7 @@ zend_module_entry xhp_module_entry = {
 	NULL,
 	NULL,
 	NULL,
-	NULL,
+	PHP_MINFO(xhp),
 	PHP_XHP_VERSION,
 	STANDARD_MODULE_PROPERTIES
 };

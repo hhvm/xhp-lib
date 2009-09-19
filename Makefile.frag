@@ -1,6 +1,7 @@
-XHP_SHARED_DEPENDENCIES = libxhp.a
-XHP_SHARED_LIBADD := libxhp.a ${XHP_SHARED_LIBADD}
-$(srcdir)/ext.cpp: libxhp.a
-libxhp.a: force
-	$(MAKE) -f Makefile.xhp $@
-force: ;
+XHP_SHARED_DEPENDENCIES = xhp/libxhp.a
+XHP_SHARED_LIBADD := xhp/libxhp.a ${XHP_SHARED_LIBADD}
+$(srcdir)/ext.cpp: xhp/libxhp.a
+xhp/libxhp.a: FORCE
+	$(MAKE) $(MFLAGS) -C xhp libxhp.a
+
+FORCE:

@@ -6,13 +6,15 @@
 using namespace std;
 
 int main(int argc, char* argv[]) {
-  bool in_place = false;
+  bool in_place = false, dry_run = false;
   vector<string> files;
 
   // Parse args
   for (int ii = 1; ii < argc; ++ii) {
     if (strcmp(argv[ii], "-i") == 0) {
       in_place = true;
+    } else if (strcmp(argv[ii], "-d") == 0) {
+      dry_run = true;
     } else if (strcmp(argv[ii], "-h") == 0 || strcmp(argv[ii], "-?") == 0) {
       cerr<< argv[0] << " -i [files] | " << argv[0] << " [file]\n";
       return 1;
@@ -50,16 +52,18 @@ int main(int argc, char* argv[]) {
     inputFile.close();
     if (result == XHPRewrote) {
       if (in_place) {
-        ofstream outputFile(ii->c_str());
-        outputFile << code;
-        outputFile.close();
+        if (!dry_run) {
+          ofstream outputFile(ii->c_str());
+          outputFile<< code;
+          outputFile.close();
+        }
       } else {
-        cout << code;
+        cout<< code;
         cout.flush();
       }
       cerr<< "File `"<<(*ii)<<"` xhpized.\n";
     } else if (result == XHPErred) {
-      cerr<< "Error parsing file `"<<(*ii)<<"`!!\n" << error << " on " <<
+      cerr<< "Error parsing file `"<<(*ii)<<"`!!\n" << error << " on line " <<
         errLine << endl;;
     }
   }
