@@ -1,8 +1,16 @@
 %{
 #include "xhp.hpp"
 #define YY_USER_ACTION \
-  yyextra->first_lineno = yyextra->lineno;
-#define tok(t) *yylval = code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno); return yy_token(t, yyg)
+  if (!yyg->yy_more_len) \
+    yyextra->first_lineno = yyextra->lineno;
+#define tok(t) \
+  if (yyextra->has_doc_block) { \
+    *yylval = yyextra->doc_block + code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno); \
+    yyextra->has_doc_block = false; \
+  } else { \
+    *yylval = code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno); \
+  } \
+  return yy_token(t, yyg)
 #ifdef DEBUG
   static void yy_log_token(int tok);
   #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); yy_log_token(T_XHP_TEXT); return T_XHP_TEXT;
@@ -184,7 +192,11 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
   [^*\r\n]+|"*" yymore();
 }
-<PHP_DOC_COMMENT>"*/" pop_state();
+<PHP_DOC_COMMENT>"*/" {
+  yyextra->doc_block = code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno);
+  yyextra->has_doc_block = true;
+  pop_state();
+}
 <PHP_COMMENT>"*/" pop_state();
 
  /* Reserved words */
@@ -356,7 +368,6 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 <PHP_HEREDOC_NEWLINE>{
   {LABEL};?{NEWLINE} {
-    ++yyextra->lineno;
     if (strncmp(yyextra->heredoc_label.c_str(), yytext + yyextra->heredoc_yyleng, yyextra->heredoc_label.size()) == 0) {
       switch (yytext[yyextra->heredoc_yyleng + yyextra->heredoc_label.size()]) {
         case ';': case '\n': case '\r':
@@ -365,6 +376,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
           tok(T_HEREDOC);
       }
     }
+    ++yyextra->lineno;
     yyextra->heredoc_yyleng = yyleng;
   }
   [^\r\n]+ {
@@ -412,7 +424,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   {WHITESPACE}+ {
     /* ignore whitespace at the start */
     yy_scan_newlines(yytext, yyg);
-    yyless(yyleng - 1);
+    unput(' ');
     set_state(XHP_CHILD);
   }
   . {
@@ -481,7 +493,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
 <XHP_AFTER_ENT>{
-  [ \t\x0b\x0c\xa0\n]|\r\n|\r {
+  [ \t\x0b\x0c\xa0\r\n]|\r\n {
     if (*yytext == '\r' || *yytext == '\n') {
       ++yyextra->lineno;
     }

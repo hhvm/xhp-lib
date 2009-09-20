@@ -13,6 +13,7 @@ class yy_extra_type {
       used = false;
       short_tags = true;
       asp_tags = false;
+      has_doc_block = false;
       pushStack();
     }
 
@@ -28,6 +29,8 @@ class yy_extra_type {
     size_t heredoc_yyleng; // last length of yytext while scannling
     const char* heredoc_data; // where our heredoc data starts
     std::string heredoc_label; // heredoc sentinel label
+    code_rope doc_block; // last docblock to be scanned
+    bool has_doc_block; // is there a scanned docblock that needs to inserted?
 
     /* Utility functions for checking proper tag closing */
     bool haveTag() {
