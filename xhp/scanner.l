@@ -94,6 +94,7 @@ static bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s XHP_CHILD
 %s XHP_CHILD_START
 %s XHP_INVALID_ENTITY
+%s XHP_ATTR_TYPE_DECL
 %s XHP_CHILDREN_DECL
 
 LNUM [0-9]+
@@ -276,11 +277,17 @@ NEWLINE ("\r\n"|"\n"|"\r")
   __dir__ tok(T_DIR);
   element tok(T_XHP_ELEMENT);
   attribute {
-    tok(T_STRING);
+    if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
+        (yyextra->expecting_xhp_class_statements)) {
+      push_state(PHP_NO_RESERVED_WORDS_STATEMENT);
+      tok(T_XHP_ATTRIBUTE);
+    } else {
+      tok(T_STRING);
+    }
   }
   children {
     if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
-        (yyextra->class_statement_list)) {
+        (yyextra->expecting_xhp_class_statements)) {
       push_state(PHP_NO_RESERVED_WORDS_STATEMENT);
       tok(T_XHP_CHILDREN);
     } else {
@@ -580,6 +587,15 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
 }
 
+<XHP_ATTR_TYPE_DECL>{
+  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
+  boolean tok(T_XHP_BOOLEAN);
+  number tok(T_XHP_NUMBER);
+  array tok(T_XHP_ARRAY);
+  cdata tok(T_XHP_CDATA);
+  "(" tok('(');
+}
+
 <XHP_CHILDREN_DECL>{
   {WHITESPACE}* yy_scan_newlines(yytext, yyg);
   any tok(T_XHP_ANY);
@@ -642,6 +658,8 @@ static const char* yy_state_name(int state) {
       return "XHP_CHILD_START";
     case XHP_INVALID_ENTITY:
       return "XHP_INVALID_ENTITY";
+    case XHP_ATTR_TYPE_DECL:
+      return "XHP_ATTR_TYPE_DECL";
     case XHP_CHILDREN_DECL:
       return "XHP_CHILDREN_DECL";
     default:

@@ -158,11 +158,16 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_TEXT
 %token T_XHP_LESS_THAN_DIV
 %token T_XHP_ELEMENT
+%token T_XHP_ATTRIBUTE
 %token T_XHP_CHILDREN
 %token T_XHP_ANY
 %token T_XHP_EMPTY
 %token T_XHP_COLON
 %token T_XHP_HYPHEN
+%token T_XHP_BOOLEAN
+%token T_XHP_NUMBER
+%token T_XHP_ARRAY
+%token T_XHP_CDATA
 
 %%
 
@@ -697,8 +702,9 @@ class_statement:
 | class_constant_declaration ';' {
     $$ = $1 + $2;
   }
-| method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body {
-    $$ = $1 + $2 + " " + $3 + $4 + $5 + $6 + $7 + $8;
+| method_modifiers function { yyextra->expecting_xhp_class_statements = false; } is_reference T_STRING '(' parameter_list ')' method_body {
+    yyextra->expecting_xhp_class_statements = false;
+    $$ = $1 + $2 + " " + $4 + $5 + $6 + $7 + $8 + $9;
   }
 ;
 
@@ -1596,9 +1602,21 @@ class_declaration_statement:
     $$ = $1;
     yyextra->used = true;
   }
-| class_entry_type ':' xhp_label_immediate extends_from implements_list '{'
-  { yyextra->class_statement_list = true; } class_statement_list { yyextra->class_statement_list = false; } '}' {
-    $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8 + $10;
+| class_entry_type ':' xhp_label_immediate extends_from implements_list '{' {
+    yyextra->expecting_xhp_class_statements = true;
+    yyextra->attribute_decls = "";
+  } class_statement_list {
+    yyextra->expecting_xhp_class_statements = false;
+  } '}' {
+    $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8 +
+      "protected function &__xhpAttributeDescription() {" +
+        "static $_ = -1;" +
+        "if ($_ === -1) {" +
+          "$_ = array_merge(parent::__xhpAttributeDescription(), " + yyextra->attribute_decls + ")" +
+        "}" +
+        "return $_;"
+      "}" +
+     $10;
     yyextra->used = true;
   }
 ;
@@ -1633,9 +1651,76 @@ xhp_element_extends_from:
   }
 ;
 
+// Element attribute declaration
+class_statement:
+  T_XHP_ATTRIBUTE xhp_attribute_decls ';' {
+    yyextra->used = true;
+    $$ = ""; // this will be injected when the class closes
+  }
+;
+
+xhp_attribute_decls:
+  xhp_attribute_decl {}
+| xhp_attribute_decls ',' xhp_attribute_decl {}
+;
+
+xhp_attribute_decl:
+  T_STRING
+  { push_state(XHP_ATTR_TYPE_DECL); } xhp_attribute_decl_type { pop_state(); }
+  xhp_attribute_default {
+    $1.strip_lines();
+    yyextra->attribute_decls = yyextra->attribute_decls +
+      "'" + $1 + "'=>array(" + $3 + "," + $5 + "),"
+  }
+;
+
+xhp_attribute_decl_type:
+  T_XHP_CDATA {
+    $$ = "1";
+  }
+| T_XHP_BOOLEAN {
+    $$ = "2";
+  }
+| T_XHP_NUMBER {
+    $$ = "3";
+  }
+| T_XHP_ARRAY {
+    $$ = "4";
+  }
+| '(' { push_state(PHP); } xhp_attribute_enum { pop_state(); } ')' {
+    $$ = "array(" + $3 + ")";
+  }
+;
+
+xhp_attribute_enum:
+  common_scalar {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| xhp_attribute_enum ',' common_scalar {
+    $3.strip_lines();
+    $$ = $1 + $2 + $3;
+  }
+;
+
+xhp_attribute_default:
+  common_scalar {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| T_STRING {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| /* empty */ {
+    $$ = "null";
+  }
+;
+
 // Element child list
 class_statement:
   T_XHP_CHILDREN xhp_children_decl ';' {
+    yyextra->used = true;
     $$ = "protected function &__xhpChildrenDescription() {" + $2 + "}";
   }
 ;
@@ -1689,7 +1774,7 @@ xhp_children_decl_expr:
   }
 ;
 
-// Make XHP classes behave like real classes
+// Make XHP classes usable anywhere you see a real class
 class_name:
   T_XHP_COLON xhp_label {
     yyextra->used = true;

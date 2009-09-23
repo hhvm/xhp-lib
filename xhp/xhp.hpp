@@ -15,7 +15,7 @@ class yy_extra_type {
       short_tags = true;
       asp_tags = false;
       has_doc_block = false;
-      class_statement_list = false;
+      expecting_xhp_class_statements = false;
       pushStack();
     }
 
@@ -34,7 +34,8 @@ class yy_extra_type {
     code_rope doc_block; // last docblock to be scanned
     bool has_doc_block; // is there a scanned docblock that needs to inserted?
     std::stack<int> curly_stack; // tokens appearing before a {
-    bool class_statement_list;
+    bool expecting_xhp_class_statements;
+    code_rope attribute_decls;
 
     /* Utility functions for checking proper tag closing */
     bool haveTag() {
