@@ -1612,7 +1612,7 @@ class_declaration_statement:
       "protected function &__xhpAttributeDescription() {" +
         "static $_ = -1;" +
         "if ($_ === -1) {" +
-          "$_ = array_merge(parent::__xhpAttributeDescription(), " + yyextra->attribute_decls + ")" +
+          "$_ = array_merge(parent::__xhpAttributeDescription(), array(" + yyextra->attribute_decls + "));" +
         "}" +
         "return $_;"
       "}" +
