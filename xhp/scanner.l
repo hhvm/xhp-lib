@@ -13,9 +13,9 @@
   return yy_token(t, yyg)
 #ifdef DEBUG
   static void yy_log_token(int tok);
-  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); yy_log_token(T_XHP_TEXT); return T_XHP_TEXT;
+  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); yy_log_token(T_XHP_TEXT); return yyextra->last_token = T_XHP_TEXT;
 #else
-  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); return T_XHP_TEXT;
+  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); return yyextra->last_token = T_XHP_TEXT;
 #endif
 #define YY_USER_INIT \
   if (yyextra->insert_token) { \
@@ -27,6 +27,8 @@
 #define push_state(s) xhp_new_push_state(s, yyg)
 #define pop_state() xhp_new_pop_state(yyg)
 #define set_state(s) xhp_set_state(s, yyg)
+#define last_curly_token() (yyextra->curly_stack.empty() ? 0 : yyextra->curly_stack.top())
+#define last_token() yyextra->last_token
 
 using namespace std;
 
@@ -83,13 +85,16 @@ static bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s PHP_HEREDOC_NEWLINE
 %s PHP_HEREDOC_DATA
 %s PHP_NO_RESERVED_WORDS
+%s PHP_NO_RESERVED_WORDS_STATEMENT
 %s XHP_LABEL
+%s XHP_LABEL_WHITESPACE
 %s XHP_ATTRS
 %s XHP_ATTR_VAL
 %s XHP_AFTER_ENT
 %s XHP_CHILD
 %s XHP_CHILD_START
 %s XHP_INVALID_ENTITY
+%s XHP_CHILDREN_DECL
 
 LNUM [0-9]+
 DNUM ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
@@ -144,7 +149,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
     tok(T_INLINE_HTML);
   }
 }
-<PHP,PHP_NO_RESERVED_WORDS>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
   ("?>"|"</script"{WHITESPACE}*">"){NEWLINE}? {
     yy_scan_newlines(yytext + 3, yyg);
     tok(T_CLOSE_TAG);
@@ -160,7 +165,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Comments and whitespace */
-<PHP,PHP_NO_RESERVED_WORDS>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
   "#"|"//" {
     push_state(PHP_EOL_COMMENT);
     yymore();
@@ -270,10 +275,22 @@ NEWLINE ("\r\n"|"\n"|"\r")
   __namespace__ tok(T_NS_C);
   __dir__ tok(T_DIR);
   element tok(T_XHP_ELEMENT);
+  attribute {
+    tok(T_STRING);
+  }
+  children {
+    if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
+        (yyextra->class_statement_list)) {
+      push_state(PHP_NO_RESERVED_WORDS_STATEMENT);
+      tok(T_XHP_CHILDREN);
+    } else {
+      tok(T_STRING);
+    }
+  }
 }
 
  /* Operators */
-<PHP,PHP_NO_RESERVED_WORDS>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
   "+=" tok(T_PLUS_EQUAL);
   "-=" tok(T_MINUS_EQUAL);
   "*=" tok(T_MUL_EQUAL);
@@ -304,7 +321,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Casts */
-<PHP,PHP_NO_RESERVED_WORDS>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
   "("{TABS_AND_SPACES}(int|integer){TABS_AND_SPACES}")" tok(T_INT_CAST);
   "("{TABS_AND_SPACES}(real|double|float){TABS_AND_SPACES}")" tok(T_DOUBLE_CAST);
   "("{TABS_AND_SPACES}string{TABS_AND_SPACES}")" tok(T_STRING_CAST);
@@ -317,7 +334,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Scalars (parsing these doesn't really matter since we just pass them through literally) */
-<PHP,PHP_NO_RESERVED_WORDS>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
   {LNUM}|{HNUM} tok(T_LNUMBER);
   {DNUM}|{EXPONENT_DNUM} tok(T_DNUMBER);
   {LABEL} tok(T_STRING);
@@ -333,7 +350,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* (HERE|NOW)DOC's */
-<PHP,PHP_NO_RESERVED_WORDS>b?"<<<"{TABS_AND_SPACES} {
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>b?"<<<"{TABS_AND_SPACES} {
   push_state(PHP_HEREDOC_START);
   yyextra->heredoc_yyleng = yyleng;
   yymore();
@@ -392,18 +409,21 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* XHP */
-<XHP_LABEL>{
+<XHP_LABEL_WHITESPACE>{
+  {WHITESPACE}+ yy_scan_newlines(yytext, yyg);
+}
+<XHP_LABEL,XHP_LABEL_WHITESPACE>{
   ":"|"-" tok(yytext[0]);
-  "="|"/"|">" {
-    pop_state();
-    tok(yytext[0]);
-  }
   {WHITESPACE} {
     yy_scan_newlines(yytext, yyg);
     pop_state();
     tok(T_XHP_WHITESPACE);
   }
   {LABEL} tok(T_STRING);
+  . {
+    pop_state();
+    tok(yytext[0]);
+  }
 }
 
 <XHP_ATTRS>{
@@ -531,6 +551,16 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
 }
 
+<XHP_CHILDREN_DECL>{
+  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
+  any tok(T_XHP_ANY);
+  empty tok(T_XHP_EMPTY);
+  {LABEL} tok(T_STRING);
+  ";" {
+    pop_state();
+    tok(';');
+  }
+}
 
  /* Other */
 <*>{BYTE} {
@@ -557,14 +587,20 @@ static const char* yy_state_name(int state) {
       return "PHP_DOC_COMMENT";
     case PHP_HEREDOC_START:
       return "PHP_HEREDOC_START";
+    case PHP_HEREDOC_NSTART:
+      return "PHP_HEREDOC_NSTART";
     case PHP_HEREDOC_NEWLINE:
       return "PHP_HEREDOC_NEWLINE";
     case PHP_HEREDOC_DATA:
       return "PHP_HEREDOC_DATA";
     case PHP_NO_RESERVED_WORDS:
       return "PHP_NO_RESERVED_WORDS";
+    case PHP_NO_RESERVED_WORDS_STATEMENT:
+      return "PHP_NO_RESERVED_WORDS_STATEMENT";
     case XHP_LABEL:
       return "XHP_LABEL";
+    case XHP_LABEL_WHITESPACE:
+      return "XHP_LABEL_WHITESPACE";
     case XHP_ATTRS:
       return "XHP_ATTRS";
     case XHP_ATTR_VAL:
@@ -575,6 +611,10 @@ static const char* yy_state_name(int state) {
       return "XHP_CHILD";
     case XHP_CHILD_START:
       return "XHP_CHILD_START";
+    case XHP_INVALID_ENTITY:
+      return "XHP_INVALID_ENTITY";
+    case XHP_CHILDREN_DECL:
+      return "XHP_CHILDREN_DECL";
     default:
       return "???";
   }
@@ -610,11 +650,20 @@ static int yy_token(int tok, yyguts_t* yyg) {
     case T_XHP_ELEMENT:
       push_state(PHP_NO_RESERVED_WORDS);
       break;
+
+    case '{':
+      yyextra->curly_stack.push(tok);
+      break;
+
+    case ';':
+      if (YY_START == PHP_NO_RESERVED_WORDS_STATEMENT) {
+        pop_state();
+      }
   }
 #ifdef DEBUG
   yy_log_token(tok);
 #endif
-  return tok;
+  return yyextra->last_token = tok;
 }
 
 static inline void yy_scan_newlines(const char* text, struct yyguts_t* yyg) {

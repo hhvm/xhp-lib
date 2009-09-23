@@ -2,7 +2,7 @@
 #include "xhp_preprocess.hpp"
 #include <sstream>
 using namespace std;
-extern int yydebug;
+extern int xhpdebug;
 #include <iostream>
 XHPResult xhp_preprocess(istream &in, string &out, bool isEval, string &errDescription, uint32_t &errLineno) {
 
@@ -21,6 +21,7 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   buffer[in.size() + 1] = 0; // need double NULL for scan_buffer
 
   // Does this maybe contain XHP?
+/*
   bool maybe_xhp = false;
   for (const char* jj = buffer; *jj; ++jj) {
     if (*jj == '<') { // </a>
@@ -38,6 +39,8 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
       break;
     }
   }
+*/
+  bool maybe_xhp = true;
 
   // Early bail
   if (!maybe_xhp) {
