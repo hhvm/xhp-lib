@@ -161,6 +161,8 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_CHILDREN
 %token T_XHP_ANY
 %token T_XHP_EMPTY
+%token T_XHP_COLON
+%token T_XHP_HYPHEN
 
 %%
 
@@ -1575,10 +1577,10 @@ xhp_label_:
     push_state(XHP_LABEL);
     $$ = $1;
   }
-| xhp_label_ ':' T_STRING {
+| xhp_label_ T_XHP_COLON T_STRING {
     $$ = $1 + "__" + $3;
   }
-| xhp_label_ '-' T_STRING {
+| xhp_label_ T_XHP_HYPHEN T_STRING {
     $$ = $1 + "_" + $3;
   }
 ;
@@ -1684,6 +1686,21 @@ xhp_children_decl_expr:
   }
 | xhp_children_decl_expr '|' xhp_children_decl_expr {
     $$ = "array(5, " + $1 + "," + $3 + ")"
+  }
+;
+
+// Make XHP classes behave like real classes
+class_name:
+  T_XHP_COLON xhp_label {
+    yyextra->used = true;
+    $$ = "xhp_" + $2;
+  }
+;
+
+fully_qualified_class_name:
+  T_XHP_COLON xhp_label {
+    yyextra->used = true;
+    $$ = "xhp_" + $2;
   }
 ;
 

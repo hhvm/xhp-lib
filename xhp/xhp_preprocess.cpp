@@ -21,7 +21,6 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   buffer[in.size() + 1] = 0; // need double NULL for scan_buffer
 
   // Does this maybe contain XHP?
-/*
   bool maybe_xhp = false;
   for (const char* jj = buffer; *jj; ++jj) {
     if (*jj == '<') { // </a>
@@ -34,13 +33,15 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
         maybe_xhp = true;
         break;
       }
+    } else if (*jj == ':') { // :fb:thing
+      if ((jj[1] >= 'a' && jj[1] <= 'z') || (jj[1] >= 'A' && jj[1] <= 'Z')) {
+        maybe_xhp = true;
+      }
     } else if (!memcmp(jj, "element", 7)) {
       maybe_xhp = true;
       break;
     }
   }
-*/
-  bool maybe_xhp = true;
 
   // Early bail
   if (!maybe_xhp) {

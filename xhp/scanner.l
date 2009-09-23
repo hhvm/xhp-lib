@@ -318,6 +318,26 @@ NEWLINE ("\r\n"|"\n"|"\r")
   "=>" tok(T_DOUBLE_ARROW);
   "::" tok(T_PAAMAYIM_NEKUDOTAYIM);
   "\\" tok(T_NS_SEPARATOR);
+  ":" {
+    switch (yyextra->last_token) {
+      case ',': case '=': case '|': case '^': case '&': case '<': case '>':
+      case '+': case '-': case '%': case '!': case '~': case '[': case '(':
+      case '{':
+      case T_LOGICAL_OR: case T_LOGICAL_XOR: case T_LOGICAL_AND:
+      case T_PLUS_EQUAL: case T_MINUS_EQUAL: case T_MUL_EQUAL:
+      case T_DIV_EQUAL: case T_CONCAT_EQUAL: case T_MOD_EQUAL:
+      case T_AND_EQUAL: case T_OR_EQUAL: case T_XOR_EQUAL:
+      case T_SL_EQUAL: case T_SR_EQUAL: case T_BOOLEAN_OR:
+      case T_BOOLEAN_AND: case T_IS_EQUAL: case T_IS_NOT_EQUAL:
+      case T_IS_IDENTICAL: case T_IS_NOT_IDENTICAL: case T_IS_SMALLER_OR_EQUAL:
+      case T_IS_GREATER_OR_EQUAL: case T_ECHO: case T_RETURN:
+        tok(T_XHP_COLON);
+        break;
+      default:
+        tok(':');
+        break;
+    }
+  }
 }
 
  /* Casts */
@@ -413,7 +433,16 @@ NEWLINE ("\r\n"|"\n"|"\r")
   {WHITESPACE}+ yy_scan_newlines(yytext, yyg);
 }
 <XHP_LABEL,XHP_LABEL_WHITESPACE>{
-  ":"|"-" tok(yytext[0]);
+  ":" tok(T_XHP_COLON);
+  "-" tok(T_XHP_HYPHEN);
+  "::" {
+    pop_state();
+    tok(T_PAAMAYIM_NEKUDOTAYIM);
+  }
+  "--" {
+    pop_state();
+    tok(T_DEC);
+  }
   {WHITESPACE} {
     yy_scan_newlines(yytext, yyg);
     pop_state();
