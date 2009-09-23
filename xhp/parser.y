@@ -1462,7 +1462,7 @@ xhp_tag_open:
 xhp_tag_close:
   T_XHP_LESS_THAN_DIV xhp_label_no_space '>' {
     pop_state(); // XHP_CHILD_START
-    if (yyextra->peekTag() != $3.c_str()) {
+    if (yyextra->peekTag() != $2.c_str()) {
       string e1 = $2.c_str();
       string e2 = yyextra->peekTag();
       replacestr(e1, "__", ":");
@@ -1697,9 +1697,9 @@ xhp_attribute_enum:
     $1.strip_lines();
     $$ = $1;
   }
-| xhp_attribute_enum ',' common_scalar {
+| xhp_attribute_enum '|' common_scalar {
     $3.strip_lines();
-    $$ = $1 + $2 + $3;
+    $$ = $1 + ", " + $3;
   }
 ;
 
