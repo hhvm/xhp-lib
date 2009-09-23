@@ -526,6 +526,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   &blackpawn; tokt("\u265F");
   &bull; tokt("\u2022");
   &times; tokt("\u00D7");
+  &copy; tokt("\u00A9");
   ' tokt("\\'");
   "\\" tokt("\\\\");
 
