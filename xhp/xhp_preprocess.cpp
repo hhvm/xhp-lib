@@ -2,7 +2,7 @@
 #include "xhp_preprocess.hpp"
 #include <sstream>
 using namespace std;
-extern int yydebug;
+extern int xhpdebug;
 #include <iostream>
 XHPResult xhp_preprocess(istream &in, string &out, bool isEval, string &errDescription, uint32_t &errLineno) {
 
@@ -32,6 +32,10 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
       if (jj[1] == '>') {
         maybe_xhp = true;
         break;
+      }
+    } else if (*jj == ':') { // :fb:thing
+      if ((jj[1] >= 'a' && jj[1] <= 'z') || (jj[1] >= 'A' && jj[1] <= 'Z')) {
+        maybe_xhp = true;
       }
     } else if (!memcmp(jj, "element", 7)) {
       maybe_xhp = true;

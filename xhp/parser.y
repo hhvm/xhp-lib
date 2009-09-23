@@ -158,6 +158,16 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_TEXT
 %token T_XHP_LESS_THAN_DIV
 %token T_XHP_ELEMENT
+%token T_XHP_ATTRIBUTE
+%token T_XHP_CHILDREN
+%token T_XHP_ANY
+%token T_XHP_EMPTY
+%token T_XHP_COLON
+%token T_XHP_HYPHEN
+%token T_XHP_BOOLEAN
+%token T_XHP_NUMBER
+%token T_XHP_ARRAY
+%token T_XHP_CDATA
 
 %%
 
@@ -692,8 +702,9 @@ class_statement:
 | class_constant_declaration ';' {
     $$ = $1 + $2;
   }
-| method_modifiers function is_reference T_STRING '(' parameter_list ')' method_body {
-    $$ = $1 + $2 + " " + $3 + $4 + $5 + $6 + $7 + $8;
+| method_modifiers function { yyextra->expecting_xhp_class_statements = false; } is_reference T_STRING '(' parameter_list ')' method_body {
+    yyextra->expecting_xhp_class_statements = false;
+    $$ = $1 + $2 + " " + $4 + $5 + $6 + $7 + $8 + $9;
   }
 ;
 
@@ -1449,11 +1460,10 @@ xhp_tag_open:
 ;
 
 xhp_tag_close:
-  T_XHP_LESS_THAN_DIV { push_state(XHP_LABEL); } xhp_label '>' {
-    pop_state(); // XHP_LABEL
+  T_XHP_LESS_THAN_DIV xhp_label_no_space '>' {
     pop_state(); // XHP_CHILD_START
-    if (yyextra->peekTag() != $3.c_str()) {
-      string e1 = $3.c_str();
+    if (yyextra->peekTag() != $2.c_str()) {
+      string e1 = $2.c_str();
       string e2 = yyextra->peekTag();
       replacestr(e1, "__", ":");
       replacestr(e1, "_", "-");
@@ -1472,10 +1482,8 @@ xhp_tag_close:
 ;
 
 xhp_tag_start:
-  '<' { push_state(XHP_LABEL); } xhp_label xhp_whitespace_hack {
-    // XHP_LABEL is popped in the scanner by the time this code runs
-    pop_state(); // XHP_LABEL (from xhp_label)
-    $$ = $3;
+  '<' xhp_label_immediate {
+    $$ = $2;
   }
 ;
 
@@ -1531,8 +1539,8 @@ xhp_attributes:
 ;
 
 xhp_attribute:
-  xhp_label xhp_whitespace_hack '=' xhp_attribute_value {
-    $$ = "'" + $1 + "' => " + $4;
+  xhp_label '=' xhp_attribute_value {
+    $$ = "'" + $1 + "' => " + $3;
   }
 ;
 
@@ -1547,16 +1555,38 @@ xhp_attribute_value:
 ;
 
 // Misc
+xhp_label_immediate:
+  { push_state(XHP_LABEL); } xhp_label_ xhp_whitespace_hack {
+    pop_state();
+    $$ = $2;
+  }
+;
+
+xhp_label_no_space:
+  { push_state(XHP_LABEL); } xhp_label_ {
+    pop_state();
+    $$ = $2;
+  }
+;
+
+
 xhp_label:
+  { push_state(XHP_LABEL_WHITESPACE); } xhp_label_ xhp_whitespace_hack {
+    pop_state();
+    $$ = $2;
+  }
+;
+
+xhp_label_:
   T_STRING {
     // XHP_LABEL is popped in the scanner on " ", ">", "/", or "="
     push_state(XHP_LABEL);
     $$ = $1;
   }
-| xhp_label ':' T_STRING {
+| xhp_label_ T_XHP_COLON T_STRING {
     $$ = $1 + "__" + $3;
   }
-| xhp_label '-' T_STRING {
+| xhp_label_ T_XHP_HYPHEN T_STRING {
     $$ = $1 + "_" + $3;
   }
 ;
@@ -1572,11 +1602,28 @@ class_declaration_statement:
     $$ = $1;
     yyextra->used = true;
   }
+| class_entry_type ':' xhp_label_immediate extends_from implements_list '{' {
+    yyextra->expecting_xhp_class_statements = true;
+    yyextra->attribute_decls = "";
+  } class_statement_list {
+    yyextra->expecting_xhp_class_statements = false;
+  } '}' {
+    $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8 +
+      "protected function &__xhpAttributeDescription() {" +
+        "static $_ = -1;" +
+        "if ($_ === -1) {" +
+          "$_ = array_merge(parent::__xhpAttributeDescription(), array(" + yyextra->attribute_decls + "));" +
+        "}" +
+        "return $_;"
+      "}" +
+     $10;
+    yyextra->used = true;
+  }
 ;
 
 xhp_element_declaration_statement:
-  xhp_element_entry_type xhp_label xhp_whitespace_hack xhp_element_extends_from implements_list '{' class_statement_list '}' {
-    $$ = $1 + "xhp_" + $2 + $4 + $5 + $6 + $7 + $8;
+  xhp_element_entry_type xhp_label xhp_element_extends_from implements_list '{' class_statement_list '}' {
+    $$ = $1 + "xhp_" + $2 + $3 + $4 + $5 + $6 + $7;
   }
 ;
 
@@ -1599,8 +1646,146 @@ xhp_element_extends_from:
 | T_EXTENDS T_STRING xhp_whitespace_hack {
     $$ = " extends " + $2;
   }
-| T_EXTENDS T_XHP_ELEMENT xhp_label xhp_whitespace_hack {
+| T_EXTENDS T_XHP_ELEMENT xhp_label {
     $$ = " extends xhp_" + $3;
+  }
+;
+
+// Element attribute declaration
+class_statement:
+  T_XHP_ATTRIBUTE xhp_attribute_decls ';' {
+    yyextra->used = true;
+    $$ = ""; // this will be injected when the class closes
+  }
+;
+
+xhp_attribute_decls:
+  xhp_attribute_decl {}
+| xhp_attribute_decls ',' xhp_attribute_decl {}
+;
+
+xhp_attribute_decl:
+  T_STRING
+  { push_state(XHP_ATTR_TYPE_DECL); } xhp_attribute_decl_type { pop_state(); }
+  xhp_attribute_default {
+    $1.strip_lines();
+    yyextra->attribute_decls = yyextra->attribute_decls +
+      "'" + $1 + "'=>array(" + $3 + "," + $5 + "),"
+  }
+;
+
+xhp_attribute_decl_type:
+  T_XHP_CDATA {
+    $$ = "1";
+  }
+| T_XHP_BOOLEAN {
+    $$ = "2";
+  }
+| T_XHP_NUMBER {
+    $$ = "3";
+  }
+| T_XHP_ARRAY {
+    $$ = "4";
+  }
+| '(' { push_state(PHP); } xhp_attribute_enum { pop_state(); } ')' {
+    $$ = "array(" + $3 + ")";
+  }
+;
+
+xhp_attribute_enum:
+  common_scalar {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| xhp_attribute_enum '|' common_scalar {
+    $3.strip_lines();
+    $$ = $1 + ", " + $3;
+  }
+;
+
+xhp_attribute_default:
+  common_scalar {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| T_STRING {
+    $1.strip_lines();
+    $$ = $1;
+  }
+| /* empty */ {
+    $$ = "null";
+  }
+;
+
+// Element child list
+class_statement:
+  T_XHP_CHILDREN xhp_children_decl ';' {
+    yyextra->used = true;
+    $$ = "protected function &__xhpChildrenDescription() {" + $2 + "}";
+  }
+;
+
+xhp_children_decl:
+  xhp_children_paren_expr {
+    $$ = "static $_ = " + $1 + "; return $_;";
+  }
+| T_XHP_ANY {
+    $$ = "return 1;";
+  }
+| T_XHP_EMPTY {
+    $$ = "return 0;";
+  }
+;
+
+xhp_children_paren_expr:
+  '(' xhp_children_decl_expr ')' {
+    $$ = "array(0, " + $2 + ")";
+  }
+| '(' xhp_children_decl_expr ')' '*' {
+    $$ = "array(1, " + $2 + ")";
+  }
+| '(' xhp_children_decl_expr ')' '?' {
+    $$ = "array(2, " + $2 + ")";
+  }
+| '(' xhp_children_decl_expr ')' '+' {
+    $$ = "array(3, " + $2 + ")";
+  }
+;
+
+xhp_children_decl_expr:
+  xhp_children_paren_expr
+| xhp_label {
+    $$ = "array(0, \'xhp_" + $1 + "\')";
+  }
+| xhp_label '*' {
+    $$ = "array(1, \'xhp_" + $1 + "\')";
+  }
+| xhp_label '?' {
+    $$ = "array(2, \'xhp_" + $1 + "\')";
+  }
+| xhp_label '+' {
+    $$ = "array(3, \'xhp_" + $1 + "\')";
+  }
+| xhp_children_decl_expr ',' xhp_children_decl_expr {
+    $$ = "array(4, " + $1 + "," + $3 + ")"
+  }
+| xhp_children_decl_expr '|' xhp_children_decl_expr {
+    $$ = "array(5, " + $1 + "," + $3 + ")"
+  }
+;
+
+// Make XHP classes usable anywhere you see a real class
+class_name:
+  T_XHP_COLON xhp_label {
+    yyextra->used = true;
+    $$ = "xhp_" + $2;
+  }
+;
+
+fully_qualified_class_name:
+  T_XHP_COLON xhp_label {
+    yyextra->used = true;
+    $$ = "xhp_" + $2;
   }
 ;
 

@@ -14,6 +14,7 @@ class code_rope {
     void prepend(const char* str);
     const char back() const;
     void pop_back();
+    void strip_lines();
     code_rope operator+(const code_rope& right) const;
     code_rope operator+(const char*) const;
     code_rope& operator=(const char*);
