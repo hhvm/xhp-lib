@@ -42,10 +42,6 @@ void code_rope::pop_back() {
   this->str.pop_back();
 }
 
-void code_rope::strip_lines() {
-  lf = no = 0;
-}
-
 code_rope code_rope::operator+(const code_rope& right) const {
   size_t diff;
   size_t no, lf;

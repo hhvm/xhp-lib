@@ -10,7 +10,7 @@ clean:
 	-rm libxhp.a xhpize parser.yacc.cpp scanner.lex.cpp scanner.lex.hpp parser.yacc.output parser.yacc.hpp *.o 2>/dev/null
 
 parser.yacc.cpp: parser.y
-	bison --debug --verbose -d -o $@ $<
+	bison --debug -d -o $@ $<
 
 parser.yacc.hpp: parser.yacc.cpp
 

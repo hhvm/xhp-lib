@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <deque>
-#include <stack>
 #include <string>
 #include "code_rope.hpp"
 
@@ -15,7 +14,6 @@ class yy_extra_type {
       short_tags = true;
       asp_tags = false;
       has_doc_block = false;
-      expecting_xhp_class_statements = false;
       pushStack();
     }
 
@@ -33,9 +31,6 @@ class yy_extra_type {
     std::string heredoc_label; // heredoc sentinel label
     code_rope doc_block; // last docblock to be scanned
     bool has_doc_block; // is there a scanned docblock that needs to inserted?
-    std::stack<int> curly_stack; // tokens appearing before a {
-    bool expecting_xhp_class_statements;
-    code_rope attribute_decls;
 
     /* Utility functions for checking proper tag closing */
     bool haveTag() {
