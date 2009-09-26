@@ -111,6 +111,18 @@ NEWLINE ("\r\n"|"\n"|"\r")
 
 %%
 
+<XHP_ATTR_TYPE_DECL>{
+  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
+  bool tok(T_XHP_BOOLEAN);
+  int tok(T_XHP_NUMBER);
+  any tok(T_XHP_ANY);
+  array tok(T_XHP_ARRAY);
+  string tok(T_XHP_STRING);
+  @required tok(T_XHP_REQUIRED);
+  "(" tok('(');
+  ":" tok(T_XHP_COLON);
+}
+
  /* Open / close PHP + inline HTML */
 <INITIAL>{
   "<?php"([ \t]|{NEWLINE}) {
@@ -279,8 +291,15 @@ NEWLINE ("\r\n"|"\n"|"\r")
   attribute {
     if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
         (yyextra->expecting_xhp_class_statements)) {
-      push_state(PHP_NO_RESERVED_WORDS_STATEMENT);
       tok(T_XHP_ATTRIBUTE);
+    } else {
+      tok(T_STRING);
+    }
+  }
+  category {
+    if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
+        (yyextra->expecting_xhp_class_statements)) {
+      tok(T_XHP_CATEGORY);
     } else {
       tok(T_STRING);
     }
@@ -288,7 +307,6 @@ NEWLINE ("\r\n"|"\n"|"\r")
   children {
     if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
         (yyextra->expecting_xhp_class_statements)) {
-      push_state(PHP_NO_RESERVED_WORDS_STATEMENT);
       tok(T_XHP_CHILDREN);
     } else {
       tok(T_STRING);
@@ -297,7 +315,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Operators */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT,XHP_ATTR_TYPE_DECL>{
   "+=" tok(T_PLUS_EQUAL);
   "-=" tok(T_MINUS_EQUAL);
   "*=" tok(T_MUL_EQUAL);
@@ -338,6 +356,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
       case T_BOOLEAN_AND: case T_IS_EQUAL: case T_IS_NOT_EQUAL:
       case T_IS_IDENTICAL: case T_IS_NOT_IDENTICAL: case T_IS_SMALLER_OR_EQUAL:
       case T_IS_GREATER_OR_EQUAL: case T_ECHO: case T_RETURN:
+      case T_XHP_ATTRIBUTE:
         tok(T_XHP_COLON);
         break;
       default:
@@ -361,7 +380,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Scalars (parsing these doesn't really matter since we just pass them through literally) */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT,XHP_ATTR_TYPE_DECL>{
   {LNUM}|{HNUM} tok(T_LNUMBER);
   {DNUM}|{EXPONENT_DNUM} tok(T_DNUMBER);
   {LABEL} tok(T_STRING);
@@ -588,23 +607,18 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
 }
 
-<XHP_ATTR_TYPE_DECL>{
-  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
-  boolean tok(T_XHP_BOOLEAN);
-  number tok(T_XHP_NUMBER);
-  array tok(T_XHP_ARRAY);
-  cdata tok(T_XHP_CDATA);
-  "(" tok('(');
-}
-
 <XHP_CHILDREN_DECL>{
   {WHITESPACE}* yy_scan_newlines(yytext, yyg);
   any tok(T_XHP_ANY);
+  pcdata tok(T_XHP_PCDATA);
   empty tok(T_XHP_EMPTY);
   {LABEL} tok(T_STRING);
   ";" {
     pop_state();
     tok(';');
+  }
+  ":" {
+    tok(T_XHP_COLON);
   }
 }
 
@@ -695,18 +709,12 @@ static int yy_token(int tok, yyguts_t* yyg) {
       return ';';
 
     case T_OBJECT_OPERATOR:
-    case T_XHP_ELEMENT:
       push_state(PHP_NO_RESERVED_WORDS);
       break;
 
     case '{':
       yyextra->curly_stack.push(tok);
       break;
-
-    case ';':
-      if (YY_START == PHP_NO_RESERVED_WORDS_STATEMENT) {
-        pop_state();
-      }
   }
 #ifdef DEBUG
   yy_log_token(tok);

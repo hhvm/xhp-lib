@@ -34,8 +34,9 @@ class yy_extra_type {
     code_rope doc_block; // last docblock to be scanned
     bool has_doc_block; // is there a scanned docblock that needs to inserted?
     std::stack<int> curly_stack; // tokens appearing before a {
-    bool expecting_xhp_class_statements;
-    code_rope attribute_decls;
+    bool expecting_xhp_class_statements; // when we're one level deep in a class
+    code_rope attribute_decls; // array keys and values for __xhpAttributeDescription
+    code_rope attribute_inherit; // from which classes this class should inherit attributes
 
     /* Utility functions for checking proper tag closing */
     bool haveTag() {

@@ -159,15 +159,18 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_LESS_THAN_DIV
 %token T_XHP_ELEMENT
 %token T_XHP_ATTRIBUTE
+%token T_XHP_CATEGORY
 %token T_XHP_CHILDREN
 %token T_XHP_ANY
 %token T_XHP_EMPTY
+%token T_XHP_PCDATA
 %token T_XHP_COLON
 %token T_XHP_HYPHEN
 %token T_XHP_BOOLEAN
 %token T_XHP_NUMBER
 %token T_XHP_ARRAY
-%token T_XHP_CDATA
+%token T_XHP_STRING
+%token T_XHP_REQUIRED
 
 %%
 
@@ -1605,14 +1608,17 @@ class_declaration_statement:
 | class_entry_type ':' xhp_label_immediate extends_from implements_list '{' {
     yyextra->expecting_xhp_class_statements = true;
     yyextra->attribute_decls = "";
+    yyextra->attribute_inherit = "";
   } class_statement_list {
     yyextra->expecting_xhp_class_statements = false;
   } '}' {
     $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8 +
-      "protected function &__xhpAttributeDescription() {" +
+      "protected static function &__xhpAttributeDeclaration() {" +
         "static $_ = -1;" +
         "if ($_ === -1) {" +
-          "$_ = array_merge(parent::__xhpAttributeDescription(), array(" + yyextra->attribute_decls + "));" +
+          "$_ = array_merge(parent::__xhpAttributeDeclaration(), " +
+            yyextra->attribute_inherit +
+            "array(" + yyextra->attribute_decls + "));" +
         "}" +
         "return $_;"
       "}" +
@@ -1653,7 +1659,8 @@ xhp_element_extends_from:
 
 // Element attribute declaration
 class_statement:
-  T_XHP_ATTRIBUTE xhp_attribute_decls ';' {
+  T_XHP_ATTRIBUTE { push_state(XHP_ATTR_TYPE_DECL); } xhp_attribute_decls ';' {
+    pop_state();
     yyextra->used = true;
     $$ = ""; // this will be injected when the class closes
   }
@@ -1665,30 +1672,38 @@ xhp_attribute_decls:
 ;
 
 xhp_attribute_decl:
-  T_STRING
-  { push_state(XHP_ATTR_TYPE_DECL); } xhp_attribute_decl_type { pop_state(); }
-  xhp_attribute_default {
+  T_STRING xhp_attribute_decl_type xhp_attribute_default xhp_attribute_is_required {
     $1.strip_lines();
     yyextra->attribute_decls = yyextra->attribute_decls +
-      "'" + $1 + "'=>array(" + $3 + "," + $5 + "),"
+      "'" + $1 + "'=>array(" + $2 + "," + $3 + ", " + $4 + "),"
+  }
+| T_XHP_COLON xhp_label_immediate {
+    yyextra->attribute_inherit = yyextra->attribute_inherit +
+      "xhp_" + $2 + "::__xhpAttributeDeclaration(),";
   }
 ;
 
 xhp_attribute_decl_type:
-  T_XHP_CDATA {
-    $$ = "1";
+  T_XHP_STRING {
+    $$ = "1, null";
   }
 | T_XHP_BOOLEAN {
-    $$ = "2";
+    $$ = "2, null";
   }
 | T_XHP_NUMBER {
-    $$ = "3";
+    $$ = "3, null";
   }
 | T_XHP_ARRAY {
-    $$ = "4";
+    $$ = "4, null";
+  }
+| class_name {
+    $$ = "5, '" + $1 + "'";
+  }
+| T_XHP_ANY {
+    $$ = "6, null";
   }
 | '(' { push_state(PHP); } xhp_attribute_enum { pop_state(); } ')' {
-    $$ = "array(" + $3 + ")";
+    $$ = "7, array(" + $3 + ")";
   }
 ;
 
@@ -1717,11 +1732,43 @@ xhp_attribute_default:
   }
 ;
 
+xhp_attribute_is_required:
+  T_XHP_REQUIRED {
+    $$ = "1";
+  }
+| /* empty */ {
+    $$ = "0";
+  }
+;
+
+// Element category declaration
+class_statement:
+  T_XHP_CATEGORY { push_state(PHP_NO_RESERVED_WORDS_STATEMENT); } xhp_category_list ';' {
+    pop_state();
+    yyextra->used = true;
+    $$ =
+      "protected function &__xhpCategoryDeclaration() {\
+         static $_ = array(" + $3 + ");" +
+        "return $_;" +
+      "}";
+  }
+;
+
+xhp_category_list:
+  '%' xhp_label_immediate {
+    $$ = "'" + $2 + "' => 1";
+  }
+| xhp_category_list ',' '%' xhp_label_immediate {
+    $$ = $1 + ",'" + $4 + "' => 1";
+  }
+;
+
 // Element child list
 class_statement:
-  T_XHP_CHILDREN xhp_children_decl ';' {
+  T_XHP_CHILDREN { push_state(XHP_CHILDREN_DECL); } xhp_children_decl ';' {
+    // XHP_CHILDREN_DECL is popped in the scanner on ';'
     yyextra->used = true;
-    $$ = "protected function &__xhpChildrenDescription() {" + $2 + "}";
+    $$ = "protected function &__xhpChildrenDeclaration() {" + $3 + "}";
   }
 ;
 
@@ -1739,32 +1786,32 @@ xhp_children_decl:
 
 xhp_children_paren_expr:
   '(' xhp_children_decl_expr ')' {
-    $$ = "array(0, " + $2 + ")";
+    $$ = "array(0, 5, " + $2 + ")";
   }
 | '(' xhp_children_decl_expr ')' '*' {
-    $$ = "array(1, " + $2 + ")";
+    $$ = "array(1, 5, " + $2 + ")";
   }
 | '(' xhp_children_decl_expr ')' '?' {
-    $$ = "array(2, " + $2 + ")";
+    $$ = "array(2, 5, " + $2 + ")";
   }
 | '(' xhp_children_decl_expr ')' '+' {
-    $$ = "array(3, " + $2 + ")";
+    $$ = "array(3, 5, " + $2 + ")";
   }
 ;
 
 xhp_children_decl_expr:
   xhp_children_paren_expr
-| xhp_label {
-    $$ = "array(0, \'xhp_" + $1 + "\')";
+| xhp_children_decl_tag {
+    $$ = "array(0, " + $1 + ")";
   }
-| xhp_label '*' {
-    $$ = "array(1, \'xhp_" + $1 + "\')";
+| xhp_children_decl_tag '*' {
+    $$ = "array(1, " + $1 + ")";
   }
-| xhp_label '?' {
-    $$ = "array(2, \'xhp_" + $1 + "\')";
+| xhp_children_decl_tag '?' {
+    $$ = "array(2, " + $1 + ")";
   }
-| xhp_label '+' {
-    $$ = "array(3, \'xhp_" + $1 + "\')";
+| xhp_children_decl_tag '+' {
+    $$ = "array(3, " + $1 + ")";
   }
 | xhp_children_decl_expr ',' xhp_children_decl_expr {
     $$ = "array(4, " + $1 + "," + $3 + ")"
@@ -1774,16 +1821,31 @@ xhp_children_decl_expr:
   }
 ;
 
+xhp_children_decl_tag:
+  T_XHP_ANY {
+    $$ = "1, null";
+  }
+| T_XHP_PCDATA {
+    $$ = "2, null";
+  }
+| T_XHP_COLON xhp_label {
+    $$ = "3, \'xhp_" + $2 + "\'";
+  }
+| '%' xhp_label {
+    $$ = "4, \'" + $2 + "\'";
+  }
+;
+
 // Make XHP classes usable anywhere you see a real class
 class_name:
-  T_XHP_COLON xhp_label {
+  T_XHP_COLON xhp_label_immediate {
     yyextra->used = true;
     $$ = "xhp_" + $2;
   }
 ;
 
 fully_qualified_class_name:
-  T_XHP_COLON xhp_label {
+  T_XHP_COLON xhp_label_immediate {
     yyextra->used = true;
     $$ = "xhp_" + $2;
   }
