@@ -444,6 +444,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
     }
     ++yyextra->lineno;
     yyextra->heredoc_yyleng = yyleng;
+    yymore();
   }
   [^\r\n]+ {
     set_state(PHP_HEREDOC_DATA);

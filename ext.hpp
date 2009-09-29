@@ -4,7 +4,7 @@
 #endif
 #include "php.h"
 
-#define PHP_XHP_VERSION "1.2.1"
+#define PHP_XHP_VERSION "1.2.2"
 #define PHP_XHP_EXTNAME "xhp"
 
 extern zend_module_entry xhp_module_entry;
