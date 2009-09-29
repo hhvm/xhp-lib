@@ -85,7 +85,7 @@ static bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s PHP_HEREDOC_NEWLINE
 %s PHP_HEREDOC_DATA
 %s PHP_NO_RESERVED_WORDS
-%s PHP_NO_RESERVED_WORDS_STATEMENT
+%s PHP_NO_RESERVED_WORDS_PERSIST
 %s XHP_LABEL
 %s XHP_LABEL_WHITESPACE
 %s XHP_ATTRS
@@ -162,9 +162,9 @@ NEWLINE ("\r\n"|"\n"|"\r")
     tok(T_INLINE_HTML);
   }
 }
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST>{
   ("?>"|"</script"{WHITESPACE}*">"){NEWLINE}? {
-    yy_scan_newlines(yytext + 3, yyg);
+    yy_scan_newlines(yytext + 2, yyg);
     tok(T_CLOSE_TAG);
   }
   "%>" {
@@ -178,7 +178,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Comments and whitespace */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST>{
   "#"|"//" {
     push_state(PHP_EOL_COMMENT);
     yymore();
@@ -200,7 +200,10 @@ NEWLINE ("\r\n"|"\n"|"\r")
     pop_state();
   }
   [^\r\n?]+ yymore();
-  "?>" yyless(2);
+  "?>" {
+    yyless(yyleng - 2);
+    pop_state();
+  }
   . yymore();
 }
 <PHP_DOC_COMMENT,PHP_COMMENT>{
@@ -315,7 +318,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Operators */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT,XHP_ATTR_TYPE_DECL>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST,XHP_ATTR_TYPE_DECL>{
   "+=" tok(T_PLUS_EQUAL);
   "-=" tok(T_MINUS_EQUAL);
   "*=" tok(T_MUL_EQUAL);
@@ -367,7 +370,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Casts */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST>{
   "("{TABS_AND_SPACES}(int|integer){TABS_AND_SPACES}")" tok(T_INT_CAST);
   "("{TABS_AND_SPACES}(real|double|float){TABS_AND_SPACES}")" tok(T_DOUBLE_CAST);
   "("{TABS_AND_SPACES}string{TABS_AND_SPACES}")" tok(T_STRING_CAST);
@@ -380,7 +383,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Scalars (parsing these doesn't really matter since we just pass them through literally) */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT,XHP_ATTR_TYPE_DECL>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST,XHP_ATTR_TYPE_DECL>{
   {LNUM}|{HNUM} tok(T_LNUMBER);
   {DNUM}|{EXPONENT_DNUM} tok(T_DNUMBER);
   {LABEL} tok(T_STRING);
@@ -396,7 +399,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* (HERE|NOW)DOC's */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_STATEMENT>b?"<<<"{TABS_AND_SPACES} {
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST>b?"<<<"{TABS_AND_SPACES} {
   push_state(PHP_HEREDOC_START);
   yyextra->heredoc_yyleng = yyleng;
   yymore();
@@ -655,8 +658,8 @@ static const char* yy_state_name(int state) {
       return "PHP_HEREDOC_DATA";
     case PHP_NO_RESERVED_WORDS:
       return "PHP_NO_RESERVED_WORDS";
-    case PHP_NO_RESERVED_WORDS_STATEMENT:
-      return "PHP_NO_RESERVED_WORDS_STATEMENT";
+    case PHP_NO_RESERVED_WORDS_PERSIST:
+      return "PHP_NO_RESERVED_WORDS_PERSIST";
     case XHP_LABEL:
       return "XHP_LABEL";
     case XHP_LABEL_WHITESPACE:
@@ -709,6 +712,8 @@ static int yy_token(int tok, yyguts_t* yyg) {
       return ';';
 
     case T_OBJECT_OPERATOR:
+    case T_PAAMAYIM_NEKUDOTAYIM:
+    case T_FUNCTION:
       push_state(PHP_NO_RESERVED_WORDS);
       break;
 

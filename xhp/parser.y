@@ -1743,7 +1743,7 @@ xhp_attribute_is_required:
 
 // Element category declaration
 class_statement:
-  T_XHP_CATEGORY { push_state(PHP_NO_RESERVED_WORDS_STATEMENT); } xhp_category_list ';' {
+  T_XHP_CATEGORY { push_state(PHP_NO_RESERVED_WORDS_PERSIST); } xhp_category_list ';' {
     pop_state();
     yyextra->used = true;
     $$ =
