@@ -40,7 +40,9 @@ static void replacestr(string &source, const string &find, const string &rep) {
 
 %}
 
-%expect 2
+%expect 9
+// 2: PHP's if/else grammar
+// 7: expr '[' dim_offset ']' -- shift will default to first grammar
 %name-prefix = "xhp"
 %pure-parser
 %parse-param { void* yyscanner }
@@ -1850,6 +1852,23 @@ fully_qualified_class_name:
     $$ = "xhp_" + $2;
   }
 ;
+
+// Fix the "bug" in PHP's grammar where you can't chain the [] operator on a
+// function call.
+// This introduces some shift/reduce conflicts. We want the shift here to fall
+// back to regular PHP grammar. In the case where it's an extension of the PHP
+// grammar our code gets picked up.
+expr:
+  expr '[' dim_offset ']' {
+    if (yyextra->idx_chain) {
+      yyextra->used = true;
+      $$ = "__xhp_idx(" + $1 + ", " + $3 + ")";
+    } else {
+      $$ = $1 + $2 + $3 + $4;
+    }
+  }
+;
+
 
 %%
 

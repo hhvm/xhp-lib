@@ -3,6 +3,7 @@
 #include "zend.h"
 #include "zend_API.h"
 #include "zend_compile.h"
+#include "zend_operators.h"
 #include "zend_hash.h"
 #include "zend_extensions.h"
 #include "ext/standard/info.h"
@@ -233,17 +234,70 @@ static PHP_MINFO_FUNCTION(xhp) {
   php_info_print_table_end();
 }
 
+ZEND_FUNCTION(__xhp_idx) {
+  zval *dict, *offset;
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &dict, &offset) == FAILURE) {
+    RETURN_NULL();
+  }
+  zval **value;
+  switch (Z_TYPE_P(offset)) {
+    case IS_RESOURCE:
+      zend_error(E_STRICT, "Resource ID#%ld used as offset, casting to integer (%ld)", Z_LVAL_P(offset), Z_LVAL_P(offset));
+      /* Fall Through */
+    case IS_DOUBLE:
+    case IS_BOOL:
+    case IS_LONG:
+      long loffset;
+      if (Z_TYPE_P(offset) == IS_DOUBLE) {
+        loffset = (long)Z_DVAL_P(offset);
+      } else {
+        loffset = Z_LVAL_P(offset);
+      }
+      if (zend_hash_index_find(Z_ARRVAL_P(dict), loffset, (void **) &value) == SUCCESS) {
+        break;
+      }
+      zend_error(E_NOTICE, "Undefined offset: %ld", loffset);
+      RETURN_NULL();
+
+    case IS_STRING:
+      if (zend_symtable_find(Z_ARRVAL_P(dict), offset->value.str.val, offset->value.str.len+1, (void **) &value) == SUCCESS) {
+        break;
+      }
+      zend_error(E_NOTICE, "Undefined index: %s", offset->value.str.val);
+      RETURN_NULL();
+
+    case IS_NULL:
+      if (zend_hash_find(Z_ARRVAL_P(dict), "", sizeof(""), (void **) &value) == SUCCESS) {
+        break;
+      }
+      zend_error(E_NOTICE, "Undefined index: ");
+      RETURN_NULL();
+
+    default:
+      zend_error(E_WARNING, "Illegal offset type");
+      RETURN_NULL();
+      break;
+  }
+  *return_value = **value;
+  zval_copy_ctor(return_value);
+}
+
+zend_function_entry xhp_functions[] = {
+  ZEND_FE(__xhp_idx, NULL)
+  {NULL, NULL, NULL}
+};
+
 zend_module_entry xhp_module_entry = {
-	STANDARD_MODULE_HEADER,
-	PHP_XHP_EXTNAME,
-	NULL,
-	PHP_MINIT(xhp),
-	NULL,
-	NULL,
-	NULL,
-	PHP_MINFO(xhp),
-	PHP_XHP_VERSION,
-	STANDARD_MODULE_PROPERTIES
+  STANDARD_MODULE_HEADER,
+  PHP_XHP_EXTNAME,
+  xhp_functions,
+  PHP_MINIT(xhp),
+  NULL,
+  NULL,
+  NULL,
+  PHP_MINFO(xhp),
+  PHP_XHP_VERSION,
+  STANDARD_MODULE_PROPERTIES
 };
 
 #ifdef COMPILE_DL_XHP

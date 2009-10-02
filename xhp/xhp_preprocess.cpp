@@ -36,10 +36,19 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
     } else if (*jj == ':') { // :fb:thing
       if ((jj[1] >= 'a' && jj[1] <= 'z') || (jj[1] >= 'A' && jj[1] <= 'Z')) {
         maybe_xhp = true;
+        break;
       }
     } else if (!memcmp(jj, "element", 7)) {
       maybe_xhp = true;
       break;
+    } else if (*jj == ')') { // foo()['etc']
+      do {
+        ++jj;
+      } while (*jj == ' ' || *jj == '\r' || *jj == '\n' || *jj == '\t');
+      if (*jj == '[') {
+        maybe_xhp = true;
+        break;
+      }
     }
   }
 
@@ -52,6 +61,7 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   void* scanner;
   code_rope new_code;
   yy_extra_type extra;
+  extra.idx_chain = true;
   extra.insert_token = isEval ? T_OPEN_TAG_FAKE : 0;
   xhplex_init(&scanner);
   xhpset_extra(&extra, scanner);
