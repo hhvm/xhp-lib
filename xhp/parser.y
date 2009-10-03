@@ -1542,7 +1542,7 @@ xhp_attributes:
 ;
 
 xhp_attribute:
-  xhp_label '=' xhp_attribute_value {
+  xhp_label_pass '=' xhp_attribute_value {
     $$ = "'" + $1 + "' => " + $3;
   }
 ;
@@ -1572,6 +1572,12 @@ xhp_label_no_space:
   }
 ;
 
+xhp_label_pass:
+  { push_state(XHP_LABEL_WHITESPACE); } xhp_label_pass_ xhp_whitespace_hack {
+    pop_state();
+    $$ = $2;
+  }
+;
 
 xhp_label:
   { push_state(XHP_LABEL_WHITESPACE); } xhp_label_ xhp_whitespace_hack {
@@ -1591,6 +1597,20 @@ xhp_label_:
   }
 | xhp_label_ T_XHP_HYPHEN T_STRING {
     $$ = $1 + "_" + $3;
+  }
+;
+
+xhp_label_pass_:
+  T_STRING {
+    // XHP_LABEL is popped in the scanner on " ", ">", "/", or "="
+    push_state(XHP_LABEL);
+    $$ = $1;
+  }
+| xhp_label_ T_XHP_COLON T_STRING {
+    $$ = $1 + ":" + $3;
+  }
+| xhp_label_ T_XHP_HYPHEN T_STRING {
+    $$ = $1 + "-" + $3;
   }
 ;
 
