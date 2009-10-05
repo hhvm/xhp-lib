@@ -359,6 +359,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
       case T_BOOLEAN_AND: case T_IS_EQUAL: case T_IS_NOT_EQUAL:
       case T_IS_IDENTICAL: case T_IS_NOT_IDENTICAL: case T_IS_SMALLER_OR_EQUAL:
       case T_IS_GREATER_OR_EQUAL: case T_ECHO: case T_RETURN:
+      case T_EXTENDS:
       case T_XHP_ATTRIBUTE:
         tok(T_XHP_COLON);
         break;
