@@ -112,12 +112,12 @@ NEWLINE ("\r\n"|"\n"|"\r")
 %%
 
 <XHP_ATTR_TYPE_DECL>{
-  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
   bool tok(T_XHP_BOOLEAN);
   int tok(T_XHP_NUMBER);
-  any tok(T_XHP_ANY);
+  var tok(T_VAR);
   array tok(T_XHP_ARRAY);
   string tok(T_XHP_STRING);
+  enum tok(T_XHP_ENUM);
   @required tok(T_XHP_REQUIRED);
   "(" tok('(');
   ":" tok(T_XHP_COLON);
@@ -178,7 +178,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
  /* Comments and whitespace */
-<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST>{
+<PHP,PHP_NO_RESERVED_WORDS,PHP_NO_RESERVED_WORDS_PERSIST,XHP_CHILDREN_DECL,XHP_ATTR_TYPE_DECL>{
   "#"|"//" {
     push_state(PHP_EOL_COMMENT);
     yymore();
@@ -359,7 +359,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
       case T_BOOLEAN_AND: case T_IS_EQUAL: case T_IS_NOT_EQUAL:
       case T_IS_IDENTICAL: case T_IS_NOT_IDENTICAL: case T_IS_SMALLER_OR_EQUAL:
       case T_IS_GREATER_OR_EQUAL: case T_ECHO: case T_RETURN:
-      case T_EXTENDS:
+      case T_EXTENDS: case T_INSTANCEOF:
       case T_XHP_ATTRIBUTE:
         tok(T_XHP_COLON);
         break;
@@ -613,7 +613,6 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
 <XHP_CHILDREN_DECL>{
-  {WHITESPACE}* yy_scan_newlines(yytext, yyg);
   any tok(T_XHP_ANY);
   pcdata tok(T_XHP_PCDATA);
   empty tok(T_XHP_EMPTY);

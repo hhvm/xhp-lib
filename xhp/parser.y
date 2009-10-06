@@ -172,6 +172,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_NUMBER
 %token T_XHP_ARRAY
 %token T_XHP_STRING
+%token T_XHP_ENUM
 %token T_XHP_REQUIRED
 
 %%
@@ -1608,10 +1609,10 @@ xhp_label_pass_:
     push_state(XHP_LABEL);
     $$ = $1;
   }
-| xhp_label_ T_XHP_COLON T_STRING {
+| xhp_label_pass_ T_XHP_COLON T_STRING {
     $$ = $1 + ":" + $3;
   }
-| xhp_label_ T_XHP_HYPHEN T_STRING {
+| xhp_label_pass_ T_XHP_HYPHEN T_STRING {
     $$ = $1 + "-" + $3;
   }
 ;
@@ -1694,10 +1695,10 @@ xhp_attribute_decls:
 ;
 
 xhp_attribute_decl:
-  T_STRING xhp_attribute_decl_type xhp_attribute_default xhp_attribute_is_required {
-    $1.strip_lines();
+  xhp_attribute_decl_type xhp_label_pass xhp_attribute_default xhp_attribute_is_required {
+    $2.strip_lines();
     yyextra->attribute_decls = yyextra->attribute_decls +
-      "'" + $1 + "'=>array(" + $2 + "," + $3 + ", " + $4 + "),"
+      "'" + $2 + "'=>array(" + $1 + "," + $3 + ", " + $4 + "),"
   }
 | T_XHP_COLON xhp_label_immediate {
     yyextra->attribute_inherit = yyextra->attribute_inherit +
@@ -1721,11 +1722,11 @@ xhp_attribute_decl_type:
 | class_name {
     $$ = "5, '" + $1 + "'";
   }
-| T_XHP_ANY {
+| T_VAR {
     $$ = "6, null";
   }
-| '(' { push_state(PHP); } xhp_attribute_enum { pop_state(); } ')' {
-    $$ = "7, array(" + $3 + ")";
+| T_XHP_ENUM '{' { push_state(PHP); } xhp_attribute_enum { pop_state(); } '}' {
+    $$ = "7, array(" + $4 + ")";
   }
 ;
 
@@ -1734,20 +1735,20 @@ xhp_attribute_enum:
     $1.strip_lines();
     $$ = $1;
   }
-| xhp_attribute_enum '|' common_scalar {
+| xhp_attribute_enum ',' common_scalar {
     $3.strip_lines();
     $$ = $1 + ", " + $3;
   }
 ;
 
 xhp_attribute_default:
-  common_scalar {
-    $1.strip_lines();
-    $$ = $1;
+  '=' common_scalar {
+    $2.strip_lines();
+    $$ = $2;
   }
-| T_STRING {
-    $1.strip_lines();
-    $$ = $1;
+| '=' T_STRING {
+    $2.strip_lines();
+    $$ = $2;
   }
 | /* empty */ {
     $$ = "null";
@@ -1799,10 +1800,10 @@ xhp_children_decl:
     $$ = "static $_ = " + $1 + "; return $_;";
   }
 | T_XHP_ANY {
-    $$ = "return 1;";
+    $$ = "static $_ = 1; return $_;";
   }
 | T_XHP_EMPTY {
-    $$ = "return 0;";
+    $$ = "static $_ = 0; return $_;";
   }
 ;
 
