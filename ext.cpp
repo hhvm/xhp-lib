@@ -282,8 +282,33 @@ ZEND_FUNCTION(__xhp_idx) {
   zval_copy_ctor(return_value);
 }
 
+ZEND_FUNCTION(xhp_preprocess_code) {
+  // Parse zend params
+  char *code;
+  size_t code_len;
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &code, &code_len) == FAILURE) {
+    RETURN_NULL();
+  }
+  string rewrit, error;
+  uint32_t error_line;
+
+  // Mangle code
+  string code_str(code, code_len);
+  XHPResult result = xhp_preprocess(code_str, rewrit, false, error, error_line);
+
+  // Build return code
+  array_init(return_value);
+  if (result == XHPErred) {
+    add_assoc_string(return_value, "error", const_cast<char*>(error.c_str()), true);
+    add_assoc_long(return_value, "error_line", error_line);
+  } else if (result == XHPRewrote) {
+    add_assoc_string(return_value, "new_code", const_cast<char*>(rewrit.c_str()), true);
+  }
+}
+
 zend_function_entry xhp_functions[] = {
   ZEND_FE(__xhp_idx, NULL)
+  ZEND_FE(xhp_preprocess_code, NULL)
   {NULL, NULL, NULL}
 };
 
