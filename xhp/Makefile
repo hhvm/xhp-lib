@@ -15,7 +15,8 @@ parser.yacc.cpp: parser.y
 parser.yacc.hpp: parser.yacc.cpp
 
 scanner.lex.cpp: scanner.l
-	flex -C --header-file=scanner.lex.hpp -o $@ -d $<
+	`which flex35 2>/dev/null || which flex 2>/dev/null` \
+	  -C --header-file=scanner.lex.hpp -o $@ -d $<
 
 scanner.lex.hpp: scanner.lex.cpp
 
