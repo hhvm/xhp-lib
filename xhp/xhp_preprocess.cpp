@@ -4,6 +4,7 @@
 using namespace std;
 extern int xhpdebug;
 #include <iostream>
+
 XHPResult xhp_preprocess(istream &in, string &out, bool isEval, string &errDescription, uint32_t &errLineno) {
 
   // Read stream to string
@@ -14,6 +15,14 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval, string &errDescr
 }
 
 XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescription, uint32_t &errLineno) {
+  xhp_flags_t flags;
+  memset(&flags, 0, sizeof(xhp_flags_t));
+  flags.eval = isEval;
+  flags.short_tags = true;
+  return xhp_preprocess(in, out, errDescription, errLineno, flags);
+}
+
+XHPResult xhp_preprocess(std::string &in, std::string &out, std::string &errDescription, uint32_t &errLineno, xhp_flags_t &flags) {
 
   // Does this maybe contain XHP?
   char* buffer = const_cast<char*>(in.c_str());
@@ -67,8 +76,11 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   void* scanner;
   code_rope new_code;
   yy_extra_type extra;
-  extra.idx_chain = true;
-  extra.insert_token = isEval ? T_OPEN_TAG_FAKE : 0;
+  extra.idx_expr = flags.idx_expr;
+  extra.insert_token = flags.eval ? T_OPEN_TAG_FAKE : 0;
+  extra.short_tags = flags.short_tags;
+  extra.asp_tags = flags.asp_tags;
+
   xhplex_init(&scanner);
   xhpset_extra(&extra, scanner);
   xhp_scan_buffer(buffer, in.size() + 2, scanner);

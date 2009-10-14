@@ -1,5 +1,7 @@
 #include "ext.hpp"
 #include "xhp/xhp_preprocess.hpp"
+#include "php.h"
+#include "php_ini.h"
 #include "zend.h"
 #include "zend_API.h"
 #include "zend_compile.h"
@@ -10,9 +12,10 @@
 #include <string>
 #include <sstream>
 #include <iostream>
-
 using namespace std;
 
+//
+// Decls
 typedef zend_op_array* (zend_compile_file_t)(zend_file_handle*, int TSRMLS_DC);
 typedef zend_op_array* (zend_compile_string_t)(zval*, char* TSRMLS_DC);
 static zend_compile_file_t* dist_compile_file;
@@ -24,6 +27,21 @@ typedef struct {
   size_t len;
 } xhp_stream_t;
 
+//
+// Globals
+ZEND_BEGIN_MODULE_GLOBALS(xhp)
+  bool idx_expr;
+ZEND_END_MODULE_GLOBALS(xhp)
+ZEND_DECLARE_MODULE_GLOBALS(xhp)
+
+#ifdef ZTS
+# define XHPG(i) TSRMG(xhp_globals_id, zend_xhp_globals*, i)
+#else
+# define XHPG(i) (xhp_globals.i)
+#endif
+
+//
+// PHP 5.3 helper functions
 #if PHP_VERSION_ID >= 50300
 ZEND_API int zend_stream_getc(zend_file_handle *file_handle TSRMLS_DC);
 // This function was made static to zend_stream.c in r255174. This an inline copy of that function.
@@ -54,6 +72,8 @@ static size_t zend_stream_read(zend_file_handle *file_handle, char *buf, size_t 
 }
 #endif
 
+//
+// XHP Streams
 size_t xhp_stream_reader(xhp_stream_t* handle, char* buf, size_t len TSRMLS_DC) {
   if (len > handle->len - handle->pos) {
     len = handle->len - handle->pos;
@@ -72,6 +92,8 @@ long xhp_stream_fteller(xhp_stream_t* handle TSRMLS_DC) {
   return (long)handle->pos;
 }
 
+//
+// PHP compilation intercepter
 static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) {
 
   if (open_file_for_scanning(f TSRMLS_CC) == FAILURE) {
@@ -101,10 +123,16 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
 
   // Process XHP
   XHPResult result;
+  xhp_flags_t flags;
   string rewrit, error_str;
   uint32_t error_lineno;
   string* code_to_give_to_php;
-  result = xhp_preprocess(original_code, rewrit, false, error_str, error_lineno);
+
+  memset(&flags, 0, sizeof(xhp_flags_t));
+  flags.asp_tags = CG(asp_tags);
+  flags.short_tags = CG(short_tags);
+  flags.idx_expr = XHPG(idx_expr);
+  result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
   if (result == XHPErred) {
     // Bubble error up to PHP
@@ -174,7 +202,14 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
   string* code_to_give_to_php;
   uint32_t error_lineno;
   string original_code(val);
-  XHPResult result = xhp_preprocess(original_code, rewrit, true, error_str, error_lineno);
+  xhp_flags_t flags;
+
+  memset(&flags, 0, sizeof(xhp_flags_t));
+  flags.asp_tags = CG(asp_tags);
+  flags.short_tags = CG(short_tags);
+  flags.idx_expr = XHPG(idx_expr);
+  flags.eval = true;
+  XHPResult result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
   // Destroy temporary in the case of non-string input (why?)
   if (str->type != IS_STRING) {
@@ -205,6 +240,8 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
   }
 }
 
+//
+// Extension entry
 static PHP_MINIT_FUNCTION(xhp) {
 
   // APC has this crazy magic api you can use to avoid the race condition for when an extension overwrites
@@ -228,12 +265,16 @@ static PHP_MINIT_FUNCTION(xhp) {
   return SUCCESS;
 }
 
+//
+// phpinfo();
 static PHP_MINFO_FUNCTION(xhp) {
   php_info_print_table_start();
   php_info_print_table_row(2, "Version", PHP_XHP_VERSION);
   php_info_print_table_end();
 }
 
+//
+// __xhp_idx
 ZEND_FUNCTION(__xhp_idx) {
   zval *dict, *offset;
   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &dict, &offset) == FAILURE) {
@@ -282,6 +323,8 @@ ZEND_FUNCTION(__xhp_idx) {
   zval_copy_ctor(return_value);
 }
 
+//
+// xhp_preprocess_code
 ZEND_FUNCTION(xhp_preprocess_code) {
   // Parse zend params
   char *code;
@@ -306,6 +349,8 @@ ZEND_FUNCTION(xhp_preprocess_code) {
   }
 }
 
+//
+// Module description
 zend_function_entry xhp_functions[] = {
   ZEND_FE(__xhp_idx, NULL)
   ZEND_FE(xhp_preprocess_code, NULL)
@@ -328,3 +373,10 @@ zend_module_entry xhp_module_entry = {
 #ifdef COMPILE_DL_XHP
 ZEND_GET_MODULE(xhp)
 #endif
+
+//
+// ini entry
+PHP_INI_BEGIN()
+  STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
+PHP_INI_END()
+

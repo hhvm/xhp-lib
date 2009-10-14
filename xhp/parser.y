@@ -1881,7 +1881,7 @@ fully_qualified_class_name:
 // grammar our code gets picked up.
 expr:
   expr '[' dim_offset ']' {
-    if (yyextra->idx_chain) {
+    if (yyextra->idx_expr) {
       yyextra->used = true;
       $$ = "__xhp_idx(" + $1 + ", " + $3 + ")";
     } else {
