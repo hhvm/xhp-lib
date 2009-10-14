@@ -15,12 +15,8 @@ XHPResult xhp_preprocess(istream &in, string &out, bool isEval, string &errDescr
 
 XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescription, uint32_t &errLineno) {
 
-  // Create a flex buffer
-  in.reserve(in.size() + 1);
-  char* buffer = const_cast<char*>(in.c_str());
-  buffer[in.size() + 1] = 0; // need double NULL for scan_buffer
-
   // Does this maybe contain XHP?
+  char* buffer = const_cast<char*>(in.c_str());
   bool maybe_xhp = false;
   for (const char* jj = buffer; *jj; ++jj) {
     if (*jj == '<') { // </a>
@@ -34,8 +30,13 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
         break;
       }
     } else if (*jj == ':') { // :fb:thing
-      if ((jj[1] >= 'a' && jj[1] <= 'z') || (jj[1] >= 'A' && jj[1] <= 'Z')) {
+      if ((jj[1] >= 'a' && jj[1] <= 'z') ||
+          (jj[1] >= 'A' && jj[1] <= 'Z') ||
+          (jj[1] >= '0' && jj[1] <= '9')) {
         maybe_xhp = true;
+        break;
+      } else if (jj[1] == ':') {
+        ++jj;
         break;
       }
     } else if (!memcmp(jj, "element", 7)) {
@@ -56,6 +57,11 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   if (!maybe_xhp) {
     return XHPDidNothing;
   }
+
+  // Create a flex buffer
+  in.reserve(in.size() + 1);
+  buffer = const_cast<char*>(in.c_str());
+  buffer[in.size() + 1] = 0; // need double NULL for scan_buffer
 
   // Parse the PHP
   void* scanner;

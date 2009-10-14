@@ -133,7 +133,7 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   fake_file.handle.stream.closer = NULL;
   fake_file.type = ZEND_HANDLE_MAPPED;
 #else
-  // This code works fine in PHP 5.3, but the MMAP method is faster
+  // This code works fine in PHP 5.3, but the mmap method is faster
   xhp_stream_t stream_handle;
   stream_handle.str = code_to_give_to_php->c_str();
   stream_handle.pos = 0;
