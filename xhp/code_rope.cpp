@@ -1,7 +1,7 @@
 #include "code_rope.hpp"
 using namespace std;
 
-code_rope::code_rope(const __gnu_cxx::rope<char> str, const size_t no /* = 0 */, const size_t lf /* = 0 */) : str(str), lf(lf), no(no) {}
+code_rope::code_rope(const _rope_t str, const size_t no /* = 0 */, const size_t lf /* = 0 */) : str(str), lf(lf), no(no) {}
 
 code_rope::code_rope(const code_rope& str, const size_t no /* = 0 */, const size_t lf /* = 0 */) : str(str.str), lf(lf), no(no) {
   if (str.lf || str.no) {
@@ -22,7 +22,7 @@ const char* code_rope::c_str() const {
     return NULL;
     // lolololololol
     // this code is clowntown -- returns dealloced memory
-    __gnu_cxx::rope<char> whitespace(this->no - 1, '\n');
+    _rope_t whitespace(this->no - 1, '\n');
     whitespace += this->str;
     return whitespace.c_str();
   } else {
@@ -31,7 +31,7 @@ const char* code_rope::c_str() const {
 }
 
 void code_rope::prepend(const char* str) {
-  this->str = __gnu_cxx::rope<char>(str) + this->str;
+  this->str = _rope_t(str) + this->str;
 }
 
 const char code_rope::back() const {
@@ -49,13 +49,13 @@ void code_rope::strip_lines() {
 code_rope code_rope::operator+(const code_rope& right) const {
   size_t diff;
   size_t no, lf;
-  __gnu_cxx::rope<char> glue;
+  _rope_t glue;
   if (this->no && right.no) {
     no = this->no;
     if (right.no > this->no + this->lf) {
       diff = right.no - this->no - this->lf;
       lf = this->lf + right.lf + diff;
-      glue = __gnu_cxx::rope<char>(diff, '\n');
+      glue = _rope_t(diff, '\n');
     } else {
       no = this->no;
       lf = this->lf + right.lf;
@@ -67,11 +67,17 @@ code_rope code_rope::operator+(const code_rope& right) const {
     no = this->no;
     lf = this->lf + right.lf;
   }
-  return code_rope(this->str + glue + right.str, no, lf);
+
+  code_rope res(this->str, no, lf);
+  if (!glue.empty()) res.str += glue;
+  res.str += right.str;
+  return res;
 }
 
 code_rope code_rope::operator+(const char* right) const {
-  return code_rope(this->str + right, this->no, this->lf);
+  code_rope res(this->str, this->no, this->lf);
+  res.str += right;
+  return res;
 }
 
 code_rope& code_rope::operator=(const char* str) {
@@ -81,7 +87,7 @@ code_rope& code_rope::operator=(const char* str) {
 }
 
 code_rope operator+(const char* left, const code_rope& right) {
-  code_rope ret(right);
-  ret.prepend(left);
+  code_rope ret(code_rope::_rope_t(left), right.no, right.lf);
+  ret.str += right.str;
   return ret;
 }

@@ -1,7 +1,11 @@
 ifdef DEBUG
 CPPFLAGS = -fPIC -ggdb -Wall -DDEBUG
 else
-CPPFLAGS = -fPIC -g -Wall -O3
+CPPFLAGS = -fPIC -g -Wall -O3 -minline-all-stringops
+endif
+
+ifdef PROFILE
+CPPFLAGS += -pg
 endif
 
 all: libxhp.a libxhp.so
