@@ -46,7 +46,6 @@ XHPResult xhp_preprocess(std::string &in, std::string &out, std::string &errDesc
         break;
       } else if (jj[1] == ':') {
         ++jj;
-        break;
       }
     } else if (!memcmp(jj, "element", 7)) {
       maybe_xhp = true;
