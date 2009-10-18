@@ -1,5 +1,6 @@
 #include "xhp.hpp"
 #include "xhp_preprocess.hpp"
+#include "fastpath.hpp"
 #include <sstream>
 using namespace std;
 extern int xhpdebug;
@@ -22,47 +23,11 @@ XHPResult xhp_preprocess(string &in, string &out, bool isEval, string &errDescri
   return xhp_preprocess(in, out, errDescription, errLineno, flags);
 }
 
-XHPResult xhp_preprocess(std::string &in, std::string &out, std::string &errDescription, uint32_t &errLineno, xhp_flags_t &flags) {
+XHPResult xhp_preprocess(std::string &in, std::string &out, std::string &errDescription, uint32_t &errLineno, const xhp_flags_t &flags) {
 
-  // Does this maybe contain XHP?
+  // Early bail if the code doesn't contain anything that looks like XHP
   char* buffer = const_cast<char*>(in.c_str());
-  bool maybe_xhp = false;
-  for (const char* jj = buffer; *jj; ++jj) {
-    if (*jj == '<') { // </a>
-      if (jj[1] == '/') {
-        maybe_xhp = true;
-        break;
-      }
-    } else if (*jj == '/') { // <a />
-      if (jj[1] == '>') {
-        maybe_xhp = true;
-        break;
-      }
-    } else if (*jj == ':') { // :fb:thing
-      if ((jj[1] >= 'a' && jj[1] <= 'z') ||
-          (jj[1] >= 'A' && jj[1] <= 'Z') ||
-          (jj[1] >= '0' && jj[1] <= '9')) {
-        maybe_xhp = true;
-        break;
-      } else if (jj[1] == ':') {
-        ++jj;
-      }
-    } else if (!memcmp(jj, "element", 7)) {
-      maybe_xhp = true;
-      break;
-    } else if (*jj == ')') { // foo()['etc']
-      do {
-        ++jj;
-      } while (*jj == ' ' || *jj == '\r' || *jj == '\n' || *jj == '\t');
-      if (*jj == '[') {
-        maybe_xhp = true;
-        break;
-      }
-    }
-  }
-
-  // Early bail
-  if (!maybe_xhp) {
+  if (!xhp_fastpath(buffer, in.length(), flags)) {
     return XHPDidNothing;
   }
 

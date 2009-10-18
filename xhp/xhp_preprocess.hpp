@@ -24,4 +24,4 @@ XHPResult xhp_preprocess(std::string &in, std::string &out, bool isEval,
 
 XHPResult xhp_preprocess(std::string &in, std::string &out,
                          std::string &errDescription, uint32_t &errLineno,
-                         xhp_flags_t &flags);
+                         const xhp_flags_t &flags);
