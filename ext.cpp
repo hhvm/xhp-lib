@@ -241,8 +241,16 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 }
 
 //
+// ini entry
+PHP_INI_BEGIN()
+  STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
+PHP_INI_END()
+
+//
 // Extension entry
 static PHP_MINIT_FUNCTION(xhp) {
+
+  REGISTER_INI_ENTRIES();
 
   // APC has this crazy magic api you can use to avoid the race condition for when an extension overwrites
   // the compile_file function. The desired order here is APC -> XHP -> PHP, that way APC can cache the
@@ -262,6 +270,11 @@ static PHP_MINIT_FUNCTION(xhp) {
   // For eval
   dist_compile_string = zend_compile_string;
   zend_compile_string = xhp_compile_string;
+  return SUCCESS;
+}
+
+static PHP_MSHUTDOWN_FUNCTION(xhp) {
+  UNREGISTER_INI_ENTRIES();
   return SUCCESS;
 }
 
@@ -362,7 +375,7 @@ zend_module_entry xhp_module_entry = {
   PHP_XHP_EXTNAME,
   xhp_functions,
   PHP_MINIT(xhp),
-  NULL,
+  PHP_MSHUTDOWN(xhp),
   NULL,
   NULL,
   PHP_MINFO(xhp),
@@ -373,10 +386,3 @@ zend_module_entry xhp_module_entry = {
 #ifdef COMPILE_DL_XHP
 ZEND_GET_MODULE(xhp)
 #endif
-
-//
-// ini entry
-PHP_INI_BEGIN()
-  STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
-PHP_INI_END()
-
