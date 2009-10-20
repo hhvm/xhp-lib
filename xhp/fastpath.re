@@ -1,7 +1,7 @@
 #include "fastpath.hpp"
 #include <stdio.h>
+
 bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
-  const char* eob = yy + len + 1;
   const char* YYMARKER = NULL;
   enum {
     HTML,
@@ -13,7 +13,8 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
   #define YYCURSOR yy
   #define YYCTYPE char
   #define YYGETCONDITION() state
-  #define YYFILL(ii) if (ii + YYCURSOR >= eob) return false
+  #define YYFILL(ii)
+  #define YYDEBUG(s, c) printf("%03d: %c [%d]\n", s, c, c)
 
   for (;;) {
 /*!re2c
@@ -22,6 +23,9 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
 
     NEWLINE = ('\r'|'\n'|'\r\n');
     WHITESPACE = [ \n\r\t]+;
+
+    <*> "\x00" { return false; }
+    <*> [^\x00] { continue; }
 
     <HTML> '<?php'([ \t]|NEWLINE) {
       state = PHP;
@@ -39,7 +43,6 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
       }
       continue;
     }
-    <HTML> [^] { continue; }
 
     <PHP> '?>'|'</script'WHITESPACE*'>' {
       state = HTML;
@@ -51,8 +54,8 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
       }
       continue;
     }
-    <PHP> 'b'?'\''('\\'.|'\\\n'|[^\\']+)*'\''|
-          'b'?'\"'('\\'.|'\\\n'|[^\\"]+)*'\"' { continue; }
+    <PHP> 'b'?'\''('\\'.|'\\\n'|[^\x00\\']+)*'\''|
+          'b'?'\"'('\\'.|'\\\n'|[^\x00\\"]+)*'\"' { continue; }
     <PHP> '#'|'//' {
       state = COMMENT_EOL;
       continue;
@@ -69,7 +72,6 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
           ')'WHITESPACE*'[' {
       return true;
     }
-    <PHP> [^] { continue; }
 
     <COMMENT_EOL> NEWLINE {
       state = PHP;
@@ -79,14 +81,12 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
       state = HTML;
       continue;
     }
-    <COMMENT_EOL> [^] { continue; }
 
-    <COMMENT_BLOCK> [^*] { continue; }
+    <COMMENT_BLOCK> [^*\x00] { continue; }
     <COMMENT_BLOCK> '*/' {
       state = PHP;
       continue;
     }
-    <COMMENT_BLOCK> [^] { continue; }
 */
   }
   return false;

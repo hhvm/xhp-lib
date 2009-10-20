@@ -1879,7 +1879,7 @@ fully_qualified_class_name:
 // This introduces some shift/reduce conflicts. We want the shift here to fall
 // back to regular PHP grammar. In the case where it's an extension of the PHP
 // grammar our code gets picked up.
-expr:
+expr_without_variable:
   expr '[' dim_offset ']' {
     if (yyextra->idx_expr) {
       yyextra->used = true;
