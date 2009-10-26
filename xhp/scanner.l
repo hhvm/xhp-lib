@@ -607,7 +607,11 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
   {WHITESPACE}*"</" {
     yy_scan_newlines(yytext, yyg);
-    tok(T_XHP_LESS_THAN_DIV);
+    tok(T_XHP_LT_DIV);
+  }
+  {WHITESPACE}*"</>" {
+    yy_scan_newlines(yytext, yyg);
+    tok(T_XHP_LT_DIV_GT);
   }
 }
 

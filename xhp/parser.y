@@ -158,7 +158,8 @@ static void replacestr(string &source, const string &find, const string &rep) {
 
 %token T_XHP_WHITESPACE
 %token T_XHP_TEXT
-%token T_XHP_LESS_THAN_DIV
+%token T_XHP_LT_DIV
+%token T_XHP_LT_DIV_GT
 %token T_XHP_ATTRIBUTE
 %token T_XHP_CATEGORY
 %token T_XHP_CHILDREN
@@ -1468,7 +1469,7 @@ xhp_tag_open:
 ;
 
 xhp_tag_close:
-  T_XHP_LESS_THAN_DIV xhp_label_no_space '>' {
+  T_XHP_LT_DIV xhp_label_no_space '>' {
     pop_state(); // XHP_CHILD_START
     if (yyextra->peekTag() != $2.c_str()) {
       string e1 = $2.c_str();
@@ -1481,6 +1482,15 @@ xhp_tag_close:
       yyerror(yyscanner, NULL, e.c_str());
       yyextra->terminated = true;
     }
+    yyextra->popTag();
+    if (yyextra->haveTag()) {
+      set_state(XHP_CHILD_START);
+    }
+    $$ = "))";
+  }
+| T_XHP_LT_DIV_GT {
+    // empty end tag -- SGML SHORTTAG
+    pop_state(); // XHP_CHILD_START
     yyextra->popTag();
     if (yyextra->haveTag()) {
       set_state(XHP_CHILD_START);
