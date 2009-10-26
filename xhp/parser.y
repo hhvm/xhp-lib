@@ -708,8 +708,11 @@ class_statement:
 | class_constant_declaration ';' {
     $$ = $1 + $2;
   }
-| method_modifiers function { yyextra->expecting_xhp_class_statements = false; } is_reference T_STRING '(' parameter_list ')' method_body {
+| method_modifiers function {
+    yyextra->old_expecting_xhp_class_statements = yyextra->expecting_xhp_class_statements;
     yyextra->expecting_xhp_class_statements = false;
+  } is_reference T_STRING '(' parameter_list ')' method_body {
+    yyextra->expecting_xhp_class_statements = yyextra->old_expecting_xhp_class_statements;
     $$ = $1 + $2 + " " + $4 + $5 + $6 + $7 + $8 + $9;
   }
 ;
