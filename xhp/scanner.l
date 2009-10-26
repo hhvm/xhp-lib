@@ -290,7 +290,6 @@ NEWLINE ("\r\n"|"\n"|"\r")
   namespace tok(T_NAMESPACE);
   __namespace__ tok(T_NS_C);
   __dir__ tok(T_DIR);
-  element tok(T_XHP_ELEMENT);
   attribute {
     if ((last_token() == '{' || last_token() == '}' || last_token() == ';') &&
         (yyextra->expecting_xhp_class_statements)) {

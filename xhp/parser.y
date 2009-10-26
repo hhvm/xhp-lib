@@ -159,7 +159,6 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_WHITESPACE
 %token T_XHP_TEXT
 %token T_XHP_LESS_THAN_DIV
-%token T_XHP_ELEMENT
 %token T_XHP_ATTRIBUTE
 %token T_XHP_CATEGORY
 %token T_XHP_CHILDREN
@@ -1627,11 +1626,7 @@ xhp_whitespace_hack:
 
 // Elements
 class_declaration_statement:
-  xhp_element_declaration_statement {
-    $$ = $1;
-    yyextra->used = true;
-  }
-| class_entry_type ':' xhp_label_immediate extends_from implements_list '{' {
+  class_entry_type ':' xhp_label_immediate extends_from implements_list '{' {
     yyextra->expecting_xhp_class_statements = true;
     yyextra->attribute_decls = "";
     yyextra->attribute_inherit = "";
@@ -1650,36 +1645,6 @@ class_declaration_statement:
       "}" +
      $10;
     yyextra->used = true;
-  }
-;
-
-xhp_element_declaration_statement:
-  xhp_element_entry_type xhp_label xhp_element_extends_from implements_list '{' class_statement_list '}' {
-    $$ = $1 + "xhp_" + $2 + $3 + $4 + $5 + $6 + $7;
-  }
-;
-
-xhp_element_entry_type:
-  T_XHP_ELEMENT {
-    $$ = "class ";
-  }
-| T_ABSTRACT T_XHP_ELEMENT {
-    $$ = $1 + " class ";
-  }
-| T_FINAL T_XHP_ELEMENT {
-    $$ = $1 + " class ";
-  }
-;
-
-xhp_element_extends_from:
-  /* empty */ {
-    $$ = " extends XHPCore";
-  }
-| T_EXTENDS T_STRING xhp_whitespace_hack {
-    $$ = " extends " + $2;
-  }
-| T_EXTENDS T_XHP_ELEMENT xhp_label {
-    $$ = " extends xhp_" + $3;
   }
 ;
 

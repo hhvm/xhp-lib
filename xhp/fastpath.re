@@ -68,7 +68,6 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
     <PHP> '</'|
           '/>'|
           ':'[a-zA-Z0-9]|
-          'element'|
           ')'WHITESPACE*'[' {
       return true;
     }
