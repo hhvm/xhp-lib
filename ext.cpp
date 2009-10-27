@@ -31,6 +31,7 @@ typedef struct {
 // Globals
 ZEND_BEGIN_MODULE_GLOBALS(xhp)
   bool idx_expr;
+  bool include_debug;
 ZEND_END_MODULE_GLOBALS(xhp)
 ZEND_DECLARE_MODULE_GLOBALS(xhp)
 
@@ -132,6 +133,7 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   flags.asp_tags = CG(asp_tags);
   flags.short_tags = CG(short_tags);
   flags.idx_expr = XHPG(idx_expr);
+  flags.include_debug = XHPG(include_debug);
   result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
   if (result == XHPErred) {
@@ -208,6 +210,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
   flags.asp_tags = CG(asp_tags);
   flags.short_tags = CG(short_tags);
   flags.idx_expr = XHPG(idx_expr);
+  flags.include_debug = XHPG(include_debug);
   flags.eval = true;
   XHPResult result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
@@ -244,6 +247,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 // ini entry
 PHP_INI_BEGIN()
   STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
+  STD_PHP_INI_BOOLEAN("xhp.include_debug", "1", PHP_INI_PERDIR, OnUpdateBool, include_debug, zend_xhp_globals, xhp_globals)
 PHP_INI_END()
 
 //

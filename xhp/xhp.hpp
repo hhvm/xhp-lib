@@ -15,6 +15,7 @@ class yy_extra_type {
       short_tags = true;
       asp_tags = false;
       idx_expr = false;
+      include_debug = false;
       has_doc_block = false;
       expecting_xhp_class_statements = false;
       pushStack();
@@ -23,6 +24,7 @@ class yy_extra_type {
     bool short_tags; // `short_open_tag` in php.ini
     bool asp_tags; // `asp_tags` in php.ini
     bool idx_expr; // allow code like `foo()['bar']`
+    bool include_debug; // include line numbers and file names in XHP object creation
     size_t first_lineno; // line number before scanning the current token
     size_t lineno; // current line number being scanned.
     std::string error; // description of error (if terminated true)

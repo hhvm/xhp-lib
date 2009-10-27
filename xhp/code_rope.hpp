@@ -18,6 +18,7 @@ class code_rope {
     const char back() const;
     void pop_back();
     void strip_lines();
+    size_t lineno() const;
     code_rope operator+(const code_rope& right) const;
     code_rope operator+(const char*) const;
     code_rope& operator=(const char*);

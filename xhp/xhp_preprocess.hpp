@@ -13,6 +13,7 @@ struct xhp_flags_t {
   bool asp_tags;
   bool short_tags;
   bool idx_expr;
+  bool include_debug;
   bool eval;
 };
 

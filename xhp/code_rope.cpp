@@ -46,6 +46,10 @@ void code_rope::strip_lines() {
   lf = no = 0;
 }
 
+size_t code_rope::lineno() const {
+  return no;
+}
+
 code_rope code_rope::operator+(const code_rope& right) const {
   size_t diff;
   size_t no, lf;

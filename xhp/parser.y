@@ -1448,14 +1448,26 @@ expr_without_variable:
 xhp_tag_expression:
   xhp_singleton
 | xhp_tag_open xhp_children xhp_tag_close {
-    $$ = $1 + $2 + $3;
+    if (yyextra->include_debug) {
+      char line[16];
+      sprintf(line, "%lu", (unsigned long)$1.lineno());
+      $$ = $1 + $2 + "), __FILE__, " + line +")";
+    } else {
+      $$ = $1 + $2 + "))";
+    }
   }
 ;
 
 xhp_singleton:
   xhp_tag_start xhp_attributes '/' '>' {
     pop_state(); // XHP_ATTRS
-    $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
+    if (yyextra->include_debug) {
+      char line[16];
+      sprintf(line, "%lu", (unsigned long)$1.lineno());
+      $$ = "new xhp_" + $1 + "(array(" + $2 + "), array(), __FILE__, " + line + ")";
+    } else {
+      $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
+    }
   }
 ;
 
@@ -1486,7 +1498,6 @@ xhp_tag_close:
     if (yyextra->haveTag()) {
       set_state(XHP_CHILD_START);
     }
-    $$ = "))";
   }
 | T_XHP_LT_DIV_GT {
     // empty end tag -- SGML SHORTTAG
