@@ -1651,20 +1651,24 @@ class_declaration_statement:
     yyextra->expecting_xhp_class_statements = true;
     yyextra->attribute_decls = "";
     yyextra->attribute_inherit = "";
+    yyextra->used_attributes = false;
   } class_statement_list {
     yyextra->expecting_xhp_class_statements = false;
   } '}' {
-    $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8 +
-      "protected static function &__xhpAttributeDeclaration() {" +
-        "static $_ = -1;" +
-        "if ($_ === -1) {" +
-          "$_ = array_merge(parent::__xhpAttributeDeclaration(), " +
-            yyextra->attribute_inherit +
-            "array(" + yyextra->attribute_decls + "));" +
-        "}" +
-        "return $_;"
-      "}" +
-     $10;
+    $$ = $1 + " xhp_" + $3 + $4 + $5 + $6 + $8;
+    if (yyextra->used_attributes) {
+      $$ = $$ +
+        "protected static function &__xhpAttributeDeclaration() {" +
+          "static $_ = -1;" +
+          "if ($_ === -1) {" +
+            "$_ = array_merge(parent::__xhpAttributeDeclaration(), " +
+              yyextra->attribute_inherit +
+              "array(" + yyextra->attribute_decls + "));" +
+          "}" +
+          "return $_;"
+        "}";
+    }
+    $$ = $$ + $10;
     yyextra->used = true;
   }
 ;
@@ -1674,6 +1678,7 @@ class_statement:
   T_XHP_ATTRIBUTE { push_state(XHP_ATTR_TYPE_DECL); } xhp_attribute_decls ';' {
     pop_state();
     yyextra->used = true;
+    yyextra->used_attributes = true;
     $$ = ""; // this will be injected when the class closes
   }
 ;

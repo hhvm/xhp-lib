@@ -40,6 +40,7 @@ class yy_extra_type {
     std::stack<int> curly_stack; // tokens appearing before a {
     bool expecting_xhp_class_statements; // when we're one level deep in a class
     bool old_expecting_xhp_class_statements; // store old value while inside class method
+    bool used_attributes; // did this class use the `attribute` keyword
     code_rope attribute_decls; // array keys and values for __xhpAttributeDescription
     code_rope attribute_inherit; // from which classes this class should inherit attributes
 
