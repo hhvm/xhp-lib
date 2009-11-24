@@ -349,7 +349,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
     switch (yyextra->last_token) {
       case ',': case '=': case '|': case '^': case '&': case '<': case '>':
       case '+': case '-': case '%': case '!': case '~': case '[': case '(':
-      case '{':
+      case '{': case '.':
       case T_LOGICAL_OR: case T_LOGICAL_XOR: case T_LOGICAL_AND:
       case T_PLUS_EQUAL: case T_MINUS_EQUAL: case T_MUL_EQUAL:
       case T_DIV_EQUAL: case T_CONCAT_EQUAL: case T_MOD_EQUAL:

@@ -1856,6 +1856,8 @@ xhp_children_decl_tag:
 // Make XHP classes usable anywhere you see a real class
 class_name:
   T_XHP_COLON xhp_label_immediate {
+    pop_state();
+    push_state(PHP);
     yyextra->used = true;
     $$ = "xhp_" + $2;
   }
@@ -1863,6 +1865,8 @@ class_name:
 
 fully_qualified_class_name:
   T_XHP_COLON xhp_label_immediate {
+    pop_state();
+    push_state(PHP);
     yyextra->used = true;
     $$ = "xhp_" + $2;
   }
