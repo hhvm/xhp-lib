@@ -294,49 +294,125 @@ static PHP_MINFO_FUNCTION(xhp) {
 // __xhp_idx
 ZEND_FUNCTION(__xhp_idx) {
   zval *dict, *offset;
-  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "az", &dict, &offset) == FAILURE) {
+  if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zz", &dict, &offset) == FAILURE) {
     RETURN_NULL();
   }
-  zval **value;
-  switch (Z_TYPE_P(offset)) {
-    case IS_RESOURCE:
-      zend_error(E_STRICT, "Resource ID#%ld used as offset, casting to integer (%ld)", Z_LVAL_P(offset), Z_LVAL_P(offset));
-      /* Fall Through */
-    case IS_DOUBLE:
+
+  switch (Z_TYPE_P(dict)) {
+    //
+    // These are always NULL
+    case IS_NULL:
     case IS_BOOL:
     case IS_LONG:
-      long loffset;
-      if (Z_TYPE_P(offset) == IS_DOUBLE) {
-        loffset = (long)Z_DVAL_P(offset);
-      } else {
-        loffset = Z_LVAL_P(offset);
-      }
-      if (zend_hash_index_find(Z_ARRVAL_P(dict), loffset, (void **) &value) == SUCCESS) {
-        break;
-      }
-      zend_error(E_NOTICE, "Undefined offset: %ld", loffset);
-      RETURN_NULL();
-
-    case IS_STRING:
-      if (zend_symtable_find(Z_ARRVAL_P(dict), offset->value.str.val, offset->value.str.len+1, (void **) &value) == SUCCESS) {
-        break;
-      }
-      zend_error(E_NOTICE, "Undefined index: %s", offset->value.str.val);
-      RETURN_NULL();
-
-    case IS_NULL:
-      if (zend_hash_find(Z_ARRVAL_P(dict), "", sizeof(""), (void **) &value) == SUCCESS) {
-        break;
-      }
-      zend_error(E_NOTICE, "Undefined index: ");
-      RETURN_NULL();
-
+    case IS_DOUBLE:
     default:
-      zend_error(E_WARNING, "Illegal offset type");
       RETURN_NULL();
       break;
+
+    //
+    // array()[] -- Array index
+    case IS_ARRAY:
+      switch (Z_TYPE_P(offset)) {
+        case IS_RESOURCE:
+          zend_error(E_STRICT, "Resource ID#%ld used as offset, casting to integer (%ld)", Z_LVAL_P(offset), Z_LVAL_P(offset));
+          /* Fall Through */
+        case IS_DOUBLE:
+        case IS_BOOL:
+        case IS_LONG:
+          long loffset;
+          zval **value;
+          if (Z_TYPE_P(offset) == IS_DOUBLE) {
+            loffset = (long)Z_DVAL_P(offset);
+          } else {
+            loffset = Z_LVAL_P(offset);
+          }
+          if (zend_hash_index_find(Z_ARRVAL_P(dict), loffset, (void **) &value) == SUCCESS) {
+            *return_value = **value;
+            break;
+          }
+          zend_error(E_NOTICE, "Undefined offset:  %ld", loffset);
+          RETURN_NULL();
+          break;
+
+        case IS_STRING:
+          if (zend_symtable_find(Z_ARRVAL_P(dict), offset->value.str.val, offset->value.str.len+1, (void **) &value) == SUCCESS) {
+            *return_value = **value;
+            break;
+          }
+          zend_error(E_NOTICE, "Undefined index:  %s", offset->value.str.val);
+          RETURN_NULL();
+          break;
+
+        case IS_NULL:
+          if (zend_hash_find(Z_ARRVAL_P(dict), "", sizeof(""), (void **) &value) == SUCCESS) {
+            *return_value = **value;
+            break;
+          }
+          zend_error(E_NOTICE, "Undefined index:  ");
+          RETURN_NULL();
+          break;
+
+        default:
+          zend_error(E_WARNING, "Illegal offset type");
+          RETURN_NULL();
+          break;
+      }
+      break;
+
+    //
+    // 'string'[] -- String offset
+    case IS_STRING:
+      long loffset;
+      switch (Z_TYPE_P(offset)) {
+        case IS_LONG:
+        case IS_BOOL:
+          loffset = Z_LVAL_P(offset);
+          break;
+
+        case IS_DOUBLE:
+          loffset = (long)Z_DVAL_P(offset);
+          break;
+
+        case IS_NULL:
+          loffset = 0;
+          break;
+
+        case IS_STRING:
+          zval tmp = *offset;
+          zval_copy_ctor(&tmp);
+          convert_to_long(&tmp);
+          loffset = Z_LVAL(tmp);
+          zval_dtor(&tmp);
+          break;
+
+        default:
+          zend_error(E_WARNING, "Illegal offset type");
+          RETURN_NULL();
+          break;
+      }
+      if (loffset < 0 || Z_STRLEN_P(dict) <= loffset) {
+        zend_error(E_NOTICE, "Uninitialized string offset: %ld", loffset);
+        RETURN_NULL();
+      }
+      RETURN_STRINGL(Z_STRVAL_P(dict) + loffset, 1, true);
+      break;
+
+    //
+    // (new foo)[] -- Object overload (ArrayAccess)
+    case IS_OBJECT:
+      if (!Z_OBJ_HT_P(dict)->read_dimension) {
+        zend_error_noreturn(E_ERROR, "Cannot use object as array");
+        RETURN_NULL();
+      } else {
+        zval* overloaded_result = Z_OBJ_HT_P(dict)->read_dimension(dict, offset, BP_VAR_R TSRMLS_CC);
+        if (overloaded_result) {
+          *return_value = *overloaded_result;
+        } else {
+          RETURN_NULL();
+        }
+      }
+      break;
   }
-  *return_value = **value;
   zval_copy_ctor(return_value);
 }
 
