@@ -377,13 +377,14 @@ ZEND_FUNCTION(__xhp_idx) {
           loffset = 0;
           break;
 
-        case IS_STRING:
+        case IS_STRING: {
           zval tmp = *offset;
           zval_copy_ctor(&tmp);
           convert_to_long(&tmp);
           loffset = Z_LVAL(tmp);
           zval_dtor(&tmp);
           break;
+        }
 
         default:
           zend_error(E_WARNING, "Illegal offset type");
