@@ -1574,12 +1574,21 @@ xhp_attribute:
 ;
 
 xhp_attribute_value:
-  '"' { push_state(XHP_ATTR_VAL); } xhp_literal_text '"' {
-    // XHP_ATTR_VAL is popped by the time this code runs
-    $$ = "'" + $3 + "'";
+  '"' { push_state(XHP_ATTR_VAL); } xhp_attribute_quoted_value '"' {
+    $$ = $3;
   }
 | '{' { push_state(PHP); } expr { pop_state(); } '}' {
     $$ = $3;
+  }
+;
+
+xhp_attribute_quoted_value:
+  /* empty */ {
+    $$ = "''";
+  }
+| xhp_literal_text {
+    // XHP_ATTR_VAL is popped by the time this code runs
+    $$ = "'" + $1 + "'";
   }
 ;
 

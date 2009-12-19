@@ -1,5 +1,11 @@
 %{
 #include "xhp.hpp"
+#define push_state(s) xhp_new_push_state(s, yyg)
+#define pop_state() xhp_new_pop_state(yyg)
+#define set_state(s) xhp_set_state(s, yyg)
+#define last_curly_token() (yyextra->curly_stack.empty() ? 0 : yyextra->curly_stack.top())
+#define last_token() yyextra->last_token
+
 #define YY_USER_ACTION \
   if (!yyg->yy_more_len) \
     yyextra->first_lineno = yyextra->lineno;
@@ -13,9 +19,9 @@
   return yy_token(t, yyg)
 #ifdef DEBUG
   static void yy_log_token(int tok);
-  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); yy_log_token(T_XHP_TEXT); return yyextra->last_token = T_XHP_TEXT;
+  #define tokt(t) *yylval = t; push_state(XHP_AFTER_ENT); yy_log_token(T_XHP_TEXT); return yyextra->last_token = T_XHP_TEXT;
 #else
-  #define tokt(t) *yylval = t; BEGIN(XHP_AFTER_ENT); return yyextra->last_token = T_XHP_TEXT;
+  #define tokt(t) *yylval = t; push_state(XHP_AFTER_ENT); return yyextra->last_token = T_XHP_TEXT;
 #endif
 #define YY_USER_INIT \
   if (yyextra->insert_token) { \
@@ -24,11 +30,6 @@
     yyextra->insert_token = 0; \
     return yy_token(ft, yyg); \
   }
-#define push_state(s) xhp_new_push_state(s, yyg)
-#define pop_state() xhp_new_pop_state(yyg)
-#define set_state(s) xhp_set_state(s, yyg)
-#define last_curly_token() (yyextra->curly_stack.empty() ? 0 : yyextra->curly_stack.top())
-#define last_token() yyextra->last_token
 
 using namespace std;
 
@@ -804,8 +805,16 @@ NEWLINE ("\r\n"|"\n"|"\r")
 
 <XHP_INVALID_ENTITY>{
   {BYTE}{1,10} {
-    yyextra->error = string("Invalid entity: (") + yytext + ")";
-    yyextra->terminated = true;
+    for (char* ii = yytext; *ii; ++ii) {
+      if (*ii == ';') {
+        ii[1] = 0;
+        break;
+      }
+    }
+    if (!yyextra->terminated) {
+      yyextra->error = string("Invalid entity: (") + yytext + ")";
+      yyextra->terminated = true;
+    }
   }
 }
 
@@ -814,13 +823,13 @@ NEWLINE ("\r\n"|"\n"|"\r")
     if (*yytext == '\r' || *yytext == '\n') {
       ++yyextra->lineno;
     }
-    set_state(XHP_CHILD);
+    pop_state();
     yytext[0] = ' ';
     yytext[1] = 0;
     tok(T_XHP_TEXT);
   }
   . {
-    set_state(XHP_CHILD);
+    pop_state();
     yyless(0);
   }
 }
