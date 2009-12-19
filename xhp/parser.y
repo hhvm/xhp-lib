@@ -1704,6 +1704,7 @@ xhp_attribute_decl:
       "'" + $2 + "'=>array(" + $1 + "," + $3 + ", " + $4 + "),"
   }
 | T_XHP_COLON xhp_label_immediate {
+    $2.strip_lines();
     yyextra->attribute_inherit = yyextra->attribute_inherit +
       "xhp_" + $2 + "::__xhpAttributeDeclaration(),";
   }
