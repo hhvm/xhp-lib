@@ -6,92 +6,73 @@
  * close to spec as possible. Facebook-specific extensions should go into their
  * own elements.
  */
-class XHPHTMLElement extends XHPPrimitive implements JavascriptExpression {
+abstract class :xhp:html-element extends :x:primitive {
+
+  // TODO: Break these out into abstract elements so that elements that need
+  // them can steal the definition. Right now this is an overloaded list of
+  // attributes.
+  attribute
+    // HTML attributes
+    string accesskey, string class, string dir, string id, string lang,
+    string style, string tabindex, string title,
+
+    // Javascript events
+    string onabort, string onblur, string onchange, string onclick,
+    string ondblclick, string onerror, string onfocus, string onkeydown,
+    string onkeypress, string onkeyup, string onload, string onmousedown,
+    string onmousemove, string onmouseout, string onmouseover, string onmouseup,
+    string onreset, string onresize, string onselect, string onsubmit,
+    string onunload,
+
+    // IE only
+    string onmouseenter, string onmouseleave,
+
+    // Joe Hewitt!!
+    // TODO:
+    string selected, string otherButtonLabel, string otherButtonHref,
+    string otherButtonClass, string type, string replaceCaret,
+    string replaceChildren;
+
+
   protected
     $tagName;
 
-  public function js() {
-    return jsprint('$(%s)', $this->requireUniqueId());
-  }
-
-  protected function requireUniqueId() {
+  public function requireUniqueId() {
     // TODO: Implement something on AsyncRequest that returns the number of
     //       requests sent so far so we can remove the microtime(true) thing.
-    static $uniqueId = 0;
-    if (empty($this->attributes['id'])) {
-      $this->attributes['id'] = 'u' . (microtime(true) * 100) . '_' . (++$uniqueId);
+    if (!($id = $this->getAttribute('id'))) {
+      $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
     }
-    return $this->attributes['id'];
+    return $id;
   }
 
   protected final function renderBaseAttrs() {
     $buf = '<'.$this->tagName;
-    if ($this->attributes) {
-
-      if (IS_LITE_SITE) {
-        //  Support for Stratcom event delegation.
-        $attrs = $this->attributes;
-        if (isset($attrs['sigil'])) {
-          $class = idx($attrs, 'class', null);
-          if (isset($attrs['meta'])) {
-            $id = JavelinStratcom::registerData($attrs['meta']);
-            $class = $id.' '.$class;
-            unset($attrs['meta']);
-          }
-          $class = trim(JavelinStratcom::renderName($attrs['sigil']).' '.$class);
-          unset($attrs['sigil']);
-          $attrs['class'] = $class;
-        }
-        
-        if (!empty($attrs['uniqueid']) && empty($attrs['id'])) {
-          unset($attrs['uniqueid']);
-          $attrs['id'] = $this->requireUniqueID();
-        }
-        
-        $this->attributes = $attrs;
-      }
-      
-      foreach ($this->attributes as $key => $val) {
-        if ($val !== null) {
-          $buf .= ' ' . txt2html($key) . '="' . txt2html($val) . '"';
-        }
+    foreach ($this->getAttributes() as $key => $val) {
+      if ($val !== null && $val !== false) {
+        $buf .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($val, true) . '"';
       }
     }
     return $buf;
   }
 
-  protected function render() {
-    // TODO: Is this needed? I don't think so...
+  public function addClass($class) {
+    $class = trim($class);
+
+    $currentClasses = $this->getAttribute('class');
+    $has = strpos(' '.$currentClasses.' ', ' '.$class.' ') !== false;
+    if ($has) {
+      return $this;
+    }
+
+    $this->setAttribute('class', trim($currentClasses.' '.$class));
     return $this;
   }
 
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'accesskey', 'class', 'dir', 'id', 'lang', 'style', 'tabindex', 'title',
-      'onabort', 'onblur', 'onchange', 'onclick', 'ondblclick', 'onerror',
-      'onfocus', 'onkeydown', 'onkeypress', 'onkeyup', 'onload', 'onmousedown',
-      'onmousemove', 'onmouseout', 'onmouseover', 'onmouseup', 'onreset',
-      'onresize', 'onselect', 'onsubmit', 'onunload',
-      
-      //  Javelin/Lite Extensions
-      'sigil', 'meta', 'uniqueid'
-    ), parent::supportedAttributes());
-  }
-
-  public function __toString() {
+  protected function stringify() {
     $buf = $this->renderBaseAttrs() . '>';
-    foreach ($this->children as $child) {
-      if ($child instanceof XHPPrimitive) {
-        $buf .= $child->render();
-      } else if ($child instanceof HTML) {
-        $buf .= $child->__do_not_access_me_or_you_will_be_fired;
-      } else {
-        // TODO: Hack, we can get constructed with an array() as a child?
-        // marcel -> epriestley: what is this?
-        if (!empty($child) || !is_array($child)) {
-          $buf .= txt2html($child);
-        }
-      }
+    foreach ($this->getChildren() as $child) {
+      $buf .= :x:base::renderChild($child);
     }
     $buf .= '</'.$this->tagName.'>';
     return $buf;
@@ -99,700 +80,647 @@ class XHPHTMLElement extends XHPPrimitive implements JavascriptExpression {
 }
 
 /**
- * Subclasses of XHPHTMLSingleton may not contain children. When rendered they
+ * Subclasses of :xhp:html-singleton may not contain children. When rendered they
  * will be in singleton (<img />, <br />) form.
  */
-class XHPHTMLSingleton extends XHPHTMLElement {
-  public function __toString() {
-    if ($this->children) {
-      throw new Exception(
-        'Sub-class of XHPHTMLSingleton ['.get_class($this).'] may not have '.
-        'children.'
-      );
-    }
+abstract class :xhp:html-singleton extends :xhp:html-element {
+  children empty;
+
+  protected function stringify() {
     return $this->renderBaseAttrs() . ' />';
   }
 }
 
 /**
- * Subclasses of XHPHTMLPseudoSingleton may contain exactly zero or one
+ * Subclasses of :xhp:pseudo-singleton may contain exactly zero or one
  * children. When rendered they will be in full open\close form, no matter how
  * many children there are.
  */
-class XHPHTMLPseudoSingleton extends XHPHTMLElement {
+abstract class :xhp:pseudo-singleton extends :xhp:html-element {
+  children (pcdata)*;
+
   protected function escape($txt) {
-    return txt2html($txt);
+    return htmlspecialchars($txt);
   }
 
-  public function __toString() {
-    $buf = $this->renderBaseAttrs();
-    if ($this->children) {
-      $child = $this->children[0];
-      if (isset($this->children[1])) {
-        throw new Exception(
-          'Sub-class of XHPHTMLPseudoSingleton ['.get_class($this).'] must '.
-          'have exactly 0 or 1 children.'
-        );
-      }
-      $buf .= '>' . $this->escape($child);
-    } else {
-      $buf .= '>';
+  protected function stringify() {
+    $buf = $this->renderBaseAttrs() . '>';
+    if ($children = $this->getChildren()) {
+      $buf .= :x:base::renderChild($children[0]);
     }
     return $buf . '</'.$this->tagName.'>';
   }
 }
 
-element a extends XHPHTMLElement {
-  protected
-    $tagName = 'a';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'href', 'name', 'rel', 'target',
-    ), parent::supportedAttributes());
-  }
+/**
+ * Below is a big wall of element definitions. These are the basic building
+ * blocks of XHP pages.
+ */
+class :a extends :xhp:html-element {
+  attribute
+    string href, string name, string rel, string target;
+  category %flow, %phrase, %interactive;
+  // transparent
+  // may not contain %interactive
+  children (pcdata | %flow)*;
+  protected $tagName = 'a';
 }
 
-element abbr extends XHPHTMLElement {
-  protected
-    $tagName = 'abbr';
+class :abbr extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'abbr';
 }
 
-element acronym extends XHPHTMLElement {
-  protected
-    $tagName = 'acronym';
+class :acronym extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'acronym';
 }
 
-element address extends XHPHTMLElement {
-  protected
-    $tagName = 'address';
+class :address extends :xhp:html-element {
+  category %flow;
+  // may not contain h1-h6
+  children (pcdata | %flow)*;
+  protected $tagName = 'address';
 }
 
-element area extends XHPHTMLElement {
-  protected
-    $tagName = 'area';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'alt', 'coords', 'href', 'nohref', 'target',
-    ), parent::supportedAttributes());
-  }
+class :area extends :xhp:html-singleton {
+  attribute string alt, string coords, string href, bool nohref, string target;
+  protected $tagName = 'area';
 }
 
-element b extends XHPHTMLElement {
-  protected
-    $tagName = 'b';
+class :b extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'b';
 }
 
-element base extends XHPHTMLSingleton {
-  protected
-    $tagName = 'base';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'href', 'target',
-    ), parent::supportedAttributes());
-  }
+class :base extends :xhp:html-singleton {
+  attribute string href, string target;
+  // also a member of "metadata", but is not listed here. see comments in :head
+  // for more information
+  protected $tagName = 'base';
 }
 
-element big extends XHPHTMLElement {
-  protected
-    $tagName = 'big';
+class :big extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'big';
 }
 
-element blockquote extends XHPHTMLElement {
-  protected
-    $tagName = 'blockquote';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'cite',
-    ), parent::supportedAttributes());
-  }
+class :blockquote extends :xhp:html-element {
+  attribute string cite;
+  category %flow;
+  children (pcdata | %flow)*;
+  protected $tagName = 'blockquote';
 }
 
-element body extends XHPHTMLElement {
-  protected
-    $tagName = 'body';
+class :body extends :xhp:html-element {
+  children (pcdata | %flow)*;
+  protected $tagName = 'body';
 }
 
-element br extends XHPHTMLSingleton {
-  protected
-    $tagName = 'br';
+class :br extends :xhp:html-singleton {
+  category %flow, %phrase;
+  protected $tagName = 'br';
 }
 
-element button extends XHPHTMLElement {
-  protected
-    $tagName = 'button';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'disabled', 'name', 'type', 'value',
-    ), parent::supportedAttributes());
-  }
+class :button extends :xhp:html-element {
+  attribute
+    bool disabled, string name, enum { "submit", "button", "reset" } type, string value;
+  category %flow, %phrase, %interactive;
+  // may not contain interactive
+  children (pcdata | %phrase)*;
+  protected $tagName = 'button';
 }
 
-element caption extends XHPHTMLElement {
-  protected
-    $tagName = 'caption';
+class :caption extends :xhp:html-element {
+  // may not contain table
+  children (pcdata | %flow)*;
+  protected $tagName = 'caption';
 }
 
-element cite extends XHPHTMLElement {
-  protected
-    $tagName = 'cite';
+class :cite extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'cite';
 }
 
-element code extends XHPHTMLElement {
-  protected
-    $tagName = 'code';
+class :code extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'code';
 }
 
-element col extends XHPHTMLElement {
-  protected
-    $tagName = 'col';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'span', 'valign', 'width',
-    ), parent::supportedAttributes());
-  }
+class :col extends :xhp:html-singleton {
+  attribute
+    enum { "left", "right", "center", "justify", "char" } align, string char,
+    int charoff, int span,
+    enum { "top", "middle", "bottom", "baseline" } valign, string width;
+  protected $tagName = 'col';
 }
 
-element colgroup extends XHPHTMLElement {
-  protected
-    $tagName = 'colgroup';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'span', 'valign', 'width',
-    ), parent::supportedAttributes());
-  }
+class :colgroup extends :xhp:html-element {
+  attribute
+    enum { "left", "right", "center", "justify", "char" } align, string char,
+    int charoff, int span,
+    enum { "top", "middle", "bottom", "baseline" } valign, string width;
+  children (:col)*;
+  protected $tagName = 'colgroup';
 }
 
-element dd extends XHPHTMLElement {
-  protected
-    $tagName = 'dd';
+class :dd extends :xhp:html-element {
+  children (pcdata | %flow)*;
+  protected $tagName = 'dd';
 }
 
-element del extends XHPHTMLElement {
-  protected
-    $tagName = 'del';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'cite', 'datetime',
-    ), parent::supportedAttributes());
-  }
+class :del extends :xhp:html-element {
+  attribute string cite, string datetime;
+  category %flow, %phrase;
+  // transparent
+  children (pcdata | %flow)*;
+  protected $tagName = 'del';
 }
 
-element div extends XHPHTMLElement {
-  protected
-    $tagName = 'div';
+class :div extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %flow)*;
+  protected $tagName = 'div';
 }
 
-element dfn extends XHPHTMLElement {
-  protected
-    $tagName = 'dfn';
+class :dfn extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'dfn';
 }
 
-element dl extends XHPHTMLElement {
-  protected
-    $tagName = 'dl';
+class :dl extends :xhp:html-element {
+  category %flow;
+  children (:dt+, :dd+)*;
+  protected $tagName = 'dl';
 }
 
-element dt extends XHPHTMLElement {
-  protected
-    $tagName = 'dt';
+class :dt extends :xhp:html-element {
+  children (pcdata | %phrase)*;
+  protected $tagName = 'dt';
 }
 
-element em extends XHPHTMLElement {
-  protected
-    $tagName = 'em';
+class :em extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'em';
 }
 
-element fieldset extends XHPHTMLElement {
-  protected
-    $tagName = 'fieldset';
+class :fieldset extends :xhp:html-element {
+  category %flow;
+  children (:legend?, (pcdata | %flow)*);
+  protected $tagName = 'fieldset';
 }
 
-element form extends XHPHTMLElement {
-  protected
-    $tagName = 'form';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'action', 'accept', 'accept-charset', 'enctype', 'method', 'name',
-      'target',
-    ), parent::supportedAttributes());
-  }
+class :form extends :xhp:html-element {
+  attribute
+    string action, string accept, string accept-charset, string enctype,
+    enum { "get", "post" } method, string name, string target, bool ajaxify;
+  category %flow;
+  // may not contain form
+  children (pcdata | %flow)*;
+  protected $tagName = 'form';
 }
 
-element frame extends XHPHTMLElement {
-  protected
-    $tagName = 'frame';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'frameborder', 'longdesc', 'marginheight', 'marginwidth', 'name',
-      'noresize', 'scrolling', 'src',
-    ), parent::supportedAttributes());
-  }
+class :frame extends :xhp:html-singleton {
+  attribute
+    bool frameborder, string longdesc, int marginheight, int marginwidth,
+    string name, bool noresize, enum { "yes", "no", "auto" } scrolling,
+    string src;
+  protected $tagName = 'frame';
 }
 
-element frameset extends XHPHTMLElement {
-  protected
-    $tagName = 'frameset';
+class :frameset extends :xhp:html-element {
+  children (:frame | :frameset | :noframes)*;
+  protected $tagName = 'frameset';
 }
 
-element h1 extends XHPHTMLElement {
-  protected
-    $tagName = 'h1';
+class :h1 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h1';
 }
 
-element h2 extends XHPHTMLElement {
-  protected
-    $tagName = 'h2';
+class :h2 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h2';
 }
 
-element h3 extends XHPHTMLElement {
-  protected
-    $tagName = 'h3';
+class :h3 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h3';
 }
 
-element h4 extends XHPHTMLElement {
-  protected
-    $tagName = 'h4';
+class :h4 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h4';
 }
 
-element h5 extends XHPHTMLElement {
-  protected
-    $tagName = 'h5';
+class :h5 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h5';
 }
 
-element h6 extends XHPHTMLElement {
-  protected
-    $tagName = 'h6';
+class :h6 extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'h6';
 }
 
-element head extends XHPHTMLElement {
-  protected
-    $tagName = 'head';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'profile',
-    ), parent::supportedAttributes());
-  }
+class :head extends :xhp:html-element {
+  attribute string profile;
+  children (%metadata*, :title, %metadata*, :base?, %metadata*);
+  // Note: html/xhtml spec says that there should be exactly 1 <title />, and at
+  // most 1 <base />. These elements can occur in any order, and can be
+  // surrounded by any number of other elements (in %metadata). The problem
+  // here is that XHP's validation does not backtrack, so there's no way to
+  // accurately implement the spec. This is the closest we can get. The only
+  // difference between this and the spec is that in XHP the <title /> must
+  // appear before the <base />.
+  protected $tagName = 'head';
 }
 
-element hr extends XHPHTMLSingleton {
-  protected
-    $tagName = 'hr';
+class :hr extends :xhp:html-singleton {
+  category %flow;
+  protected $tagName = 'hr';
 }
 
-element html extends XHPHTMLElement {
-  protected
-    $tagName = 'html';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'xmlns',
-    ), parent::supportedAttributes());
-  }
+class :html extends :xhp:html-element {
+  attribute string xmlns;
+  children (:head, :body);
+  protected $tagName = 'html';
 }
 
-element i extends XHPHTMLElement {
-  protected
-    $tagName = 'i';
+class :i extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'i';
 }
 
-element iframe extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'iframe';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'frameborder', 'height', 'longdesc', 'marginheight', 'marginwidth',
-      'name', 'scrolling', 'src', 'width',
-    ), parent::supportedAttributes());
-  }
+class :iframe extends :xhp:pseudo-singleton {
+  attribute
+    enum {"1", "0"} frameborder,
+    string height, string longdesc, int marginheight,
+    int marginwidth, string name, enum { "yes", "no", "auto" } scrolling,
+    string src, string width;
+  category %flow, %phrase, %interactive;
+  children empty;
+  protected $tagName = 'iframe';
 }
 
-element img extends XHPHTMLSingleton {
-  protected
-    $tagName = 'img';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'alt', 'src', 'width', 'height',
-    ), parent::supportedAttributes());
-  }
+class :img extends :xhp:html-singleton {
+  attribute
+    // Lite
+    string staticsrc,
+    // HTML
+    string alt, string src, string height, bool ismap, string longdesc,
+    string usemap, string width;
+  category %flow, %phrase;
+  protected $tagName = 'img';
 }
 
-element input extends XHPHTMLSingleton {
-  protected
-    $tagName = 'input';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'accept', 'align', 'alt', 'checked', 'disabled', 'maxlength', 'name',
-      'readonly', 'size', 'src', 'type', 'value', 'autocomplete',
-    ), parent::supportedAttributes());
-  }
+class :input extends :xhp:html-singleton {
+  attribute
+    // Non-standard
+    enum { "on", "off" } autocomplete,
+    string placeholder,
+    // HTML
+    string accept, enum { "left", "right", "top", "middle", "bottom" } align,
+    string alt, bool checked, bool disabled, int maxlength, string name,
+    bool readonly, int size, string src,
+    enum {
+      "button", "checkbox", "file", "hidden", "image", "password", "radio",
+      "reset", "submit", "text"
+    } type,
+    string value;
+  category %flow, %phrase, %interactive;
+  protected $tagName = 'input';
 }
 
-element ins extends XHPHTMLElement {
-  protected
-    $tagName = 'ins';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'cite', 'datetime',
-    ), parent::supportedAttributes());
-  }
+class :ins extends :xhp:html-element {
+  attribute string cite, string datetime;
+  category %flow, %phrase;
+  // transparent
+  children (pcdata | %flow)*;
+  protected $tagName = 'ins';
 }
 
-element kbd extends XHPHTMLElement {
-  protected
-    $tagName = 'kbd';
+class :kbd extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'kbd';
 }
 
-element label extends XHPHTMLElement {
-  protected
-    $tagName = 'label';
-
-  protected function init() {
-    parent::init();
-    if ($for = $this->getAttribute('for', false)) {
-      if ($for instanceof XHPHTMLElement) {
-        $this->setAttribute('for', $for->requireUniqueId());
-      }
-    }
-  }
-
-  public function setAttribute($attr, $val) {
-    if ($attr == 'for' && $val instanceof XHPHTMLElement) {
-      parent::setAttribute('for', $val->requireUniqueId());
-    } else {
-      parent::setAttribute($attr, $val);
-    }
-  }
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'for',
-    ), parent::supportedAttributes());
-  }
+class :label extends :xhp:html-element {
+  attribute string for;
+  category %flow, %phrase, %interactive;
+  // may not contain label
+  children (pcdata | %phrase)*;
+  protected $tagName = 'label';
 }
 
-element legend extends XHPHTMLElement {
-  protected
-    $tagName = 'legend';
+class :legend extends :xhp:html-element {
+  children (pcdata | %phrase)*;
+  protected $tagName = 'legend';
 }
 
-element li extends XHPHTMLElement {
-  protected
-    $tagName = 'li';
+class :li extends :xhp:html-element {
+  children (pcdata | %flow)*;
+  protected $tagName = 'li';
 }
 
-element link extends XHPHTMLSingleton {
-  protected
-    $tagName = 'link';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'charset', 'href', 'hreflang', 'media', 'rel', 'rev', 'target', 'type',
-    ), parent::supportedAttributes());
-  }
+class :link extends :xhp:html-singleton {
+  attribute
+    string charset, string href, string hreflang, string media, string rel,
+    string rev, string target, string type;
+  category %metadata;
+  protected $tagName = 'link';
 }
 
-element map extends XHPHTMLSingleton {
-  protected
-    $tagName = 'map';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'name',
-    ), parent::supportedAttributes());
-  }
+class :map extends :xhp:html-element {
+  attribute string name;
+  category %flow, %phrase;
+  // transparent
+  children ((pcdata | %flow)+ | :area+);
+  protected $tagName = 'map';
 }
 
-element meta extends XHPHTMLSingleton {
-  protected
-    $tagName = 'meta';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'content', 'http-equiv', 'name', 'scheme',
-    ), parent::supportedAttributes());
-  }
+class :meta extends :xhp:html-singleton {
+  attribute
+    string content @required,
+    enum {
+      "content-type", "content-style-type", "expires", "refresh", "set-cookie"
+    } http-equiv,
+    string http-equiv, string name, string scheme;
+  category %metadata;
+  protected $tagName = 'meta';
 }
 
-element noframes extends XHPHTMLElement {
-  protected
-    $tagName = 'noframes';
+class :noframes extends :xhp:html-element {
+  children (%html-body);
+  protected $tagName = 'noframes';
 }
 
-element noscript extends XHPHTMLElement {
-  protected
-    $tagName = 'noscript';
+class :noscript extends :xhp:html-element {
+  // transparent
+  category %flow, %phrase;
+  protected $tagName = 'noscript';
 }
 
-element object extends XHPHTMLSingleton {
-  protected
-    $tagName = 'object';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'archive', 'border', 'classid', 'codebase', 'codetype', 'data',
-      'declare', 'height', 'hspace', 'name', 'standby', 'type', 'usemap',
-      'vspace', 'width',
-    ), parent::supportedAttributes());
-  }
+class :object extends :xhp:html-element {
+  attribute
+    enum { "left", "right", "top", "bottom" } align, string archive, int border,
+    string classid, string codebase, string codetype, string data, bool declare,
+    int height, int hspace, string name, string standby, string type,
+    string usemap, int vspace, int width;
+  category %flow, %phrase;
+  // transparent, after the params
+  children (:param*, (pcdata | %flow)*);
+  protected $tagName = 'object';
 }
 
-element ol extends XHPHTMLElement {
-  protected
-    $tagName = 'ol';
+class :ol extends :xhp:html-element {
+  category %flow;
+  children (:li)*;
+  protected $tagName = 'ol';
 }
 
-element optgroup extends XHPHTMLSingleton {
-  protected
-    $tagName = 'optgroup';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'label', 'disabled',
-    ), parent::supportedAttributes());
-  }
+class :optgroup extends :xhp:html-element {
+  attribute string label, bool disabled;
+  children (:option)*;
+  protected $tagName = 'optgroup';
 }
 
-element option extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'option';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'disabled', 'label', 'selected', 'value',
-    ), parent::supportedAttributes());
-  }
+class :option extends :xhp:pseudo-singleton {
+  attribute bool disabled, string label, bool selected, string value;
+  protected $tagName = 'option';
 }
 
-element p extends XHPHTMLElement {
-  protected
-    $tagName = 'p';
+class :p extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'p';
 }
 
-element param extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'param';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'name', 'type', 'value', 'valuetype',
-    ), parent::supportedAttributes());
-  }
+class :param extends :xhp:pseudo-singleton {
+  attribute
+    string name, string type, string value,
+    enum { "data", "ref", "object" } valuetype;
+  protected $tagName = 'param';
 }
 
-element pre extends XHPHTMLElement {
-  protected
-    $tagName = 'pre';
+class :pre extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'pre';
 }
 
-element q extends XHPHTMLElement {
-  protected
-    $tagName = 'q';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'cite',
-    ), parent::supportedAttributes());
-  }
+class :q extends :xhp:html-element {
+  attribute string cite;
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'q';
 }
 
 // deprecated
-element s extends XHPHTMLElement {
-  protected
-    $tagName = 's';
+class :s extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 's';
 }
 
-element samp extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'samp';
+class :samp extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'samp';
 }
 
-element script extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'script';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'charset', 'defer', 'src', 'type',
-    ), parent::supportedAttributes());
-  }
+class :script extends :xhp:pseudo-singleton {
+  attribute string charset, bool defer, string src, string type;
+  category %flow, %phrase, %metadata;
+  protected $tagName = 'script';
 }
 
-element select extends XHPHTMLElement {
-  protected
-    $tagName = 'select';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'disabled', 'multiple', 'name', 'size',
-    ), parent::supportedAttributes());
-  }
+class :select extends :xhp:html-element {
+  attribute bool disabled, bool multiple, string name, int size;
+  category %flow, %phrase, %interactive;
+  children (:option | :optgroup)*;
+  protected $tagName = 'select';
 }
 
-element small extends XHPHTMLElement {
-  protected
-    $tagName = 'small';
+class :small extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'small';
 }
 
-element span extends XHPHTMLElement {
-  protected
-    $tagName = 'span';
+class :span extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'span';
 }
 
-element strong extends XHPHTMLElement {
-  protected
-    $tagName = 'strong';
+class :strong extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'strong';
 }
 
-element style extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'style';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'media', 'type',
-    ), parent::supportedAttributes());
-  }
+class :style extends :xhp:pseudo-singleton {
+  attribute
+    enum {
+      "screen", "tty", "tv", "projection", "handheld", "print", "braille",
+      "aural", "all"
+    } media, string type;
+  category %metadata;
+  protected $tagName = 'style';
 }
 
-element sub extends XHPHTMLElement {
-  protected
-    $tagName = 'sub';
+class :sub extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase);
+  protected $tagName = 'sub';
 }
 
-element sup extends XHPHTMLElement {
-  protected
-    $tagName = 'sup';
+class :sup extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase);
+  protected $tagName = 'sup';
 }
 
-element table extends XHPHTMLElement {
-  protected
-    $tagName = 'table';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'border', 'cellpadding', 'cellspacing', 'frame', 'rules', 'summary',
-      'width',
-    ), parent::supportedAttributes());
-  }
+class :table extends :xhp:html-element {
+  attribute
+    int border, int cellpadding, int cellspacing,
+    enum {
+      "void", "above", "below", "hsides", "lhs", "rhs", "vsides", "box",
+      "border"
+    } frame,
+    enum { "none", "groups", "rows", "cols", "all" } rules,
+    string summary, string width;
+  category %flow;
+  children (
+    :caption?, :colgroup*,
+    :thead?,
+    (
+      (:tfoot, (:tbody+ | :tr*)) |
+      ((:tbody+ | :tr*), :tfoot?)
+    )
+  );
+  protected $tagName = 'table';
 }
 
-element tbody extends XHPHTMLElement {
-  protected
-    $tagName = 'tbody';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :tbody extends :xhp:html-element {
+  attribute
+    enum { "right", "left", "center", "justify", "char" } align, string char,
+    int charoff, enum { "top", "middle", "bottom", "baseline" } valign;
+  children (:tr)*;
+  protected $tagName = 'tbody';
 }
 
 
-element td extends XHPHTMLElement {
-  protected
-    $tagName = 'td';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'abbr', 'align', 'axis', 'char', 'charoff', 'colspan', 'headers',
-      'rowspan', 'scope', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :td extends :xhp:html-element {
+  attribute
+    string abbr, enum { "left", "right", "center", "justify", "char" } align,
+    string axis, string char, int charoff, int colspan, string headers,
+    int rowspan, enum { "col", "colgroup", "row", "rowgroup" } scope,
+    enum { "top", "middle", "bottom", "baseline" } valign;
+  children (pcdata | %flow)*;
+  protected $tagName = 'td';
 }
 
-element textarea extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'textarea';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'cols', 'rows', 'disabled', 'name', 'readonly',
-    ), parent::supportedAttributes());
-  }
+class :textarea extends :xhp:pseudo-singleton {
+  attribute int cols, int rows, bool disabled, string name, bool readonly;
+  category %flow, %phrase, %interactive;
+  protected $tagName = 'textarea';
 }
 
-element tfoot extends XHPHTMLElement {
-  protected
-    $tagName = 'tfoot';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :tfoot extends :xhp:html-element {
+  attribute
+    enum { "left", "right", "center", "justify", "char" } align, string char,
+    int charoff, enum { "top", "middle", "bottom", "baseline" } valign;
+  children (:tr)*;
+  protected $tagName = 'tfoot';
 }
 
-element th extends XHPHTMLElement {
-  protected
-    $tagName = 'th';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'abbr', 'align', 'axis', 'char', 'charoff', 'colspan', 'headers',
-      'rowspan', 'scope', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :th extends :xhp:html-element {
+  attribute
+    string abbr, enum { "left", "right", "center", "justify", "char" } align,
+    string axis, string char, int charoff, int colspan, int rowspan,
+    enum { "col", "colgroup", "row", "rowgroup" } scope,
+    enum { "top", "middle", "bottom", "baseline" } valign;
+  children (pcdata | %flow)*;
+  protected $tagName = 'th';
 }
 
-element thead extends XHPHTMLElement {
-  protected
-    $tagName = 'thead';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :thead extends :xhp:html-element {
+  attribute
+    enum { "left", "right", "center", "justify", "char" } align, string char,
+    int charoff, enum { "top", "middle", "bottom", "baseline" } valign;
+  children (:tr)*;
+  protected $tagName = 'thead';
 }
 
-element title extends XHPHTMLPseudoSingleton {
-  protected
-    $tagName = 'title';
+class :title extends :xhp:pseudo-singleton {
+  // also a member of "metadata", but is not listed here. see comments in :head
+  // for more information.
+  protected $tagName = 'title';
 }
 
-element tr extends XHPHTMLElement {
-  protected
-    $tagName = 'tr';
-
-  protected function supportedAttributes() {
-    return array_merge(array(
-      'align', 'char', 'charoff', 'valign',
-    ), parent::supportedAttributes());
-  }
+class :tr extends :xhp:html-element {
+  attribute
+    enum { "left", "right", "center", "justify", "char" } align, string char,
+    int charoff, enum { "top", "middle", "bottom", "baseline" } valign;
+  children (:th | :td)*;
+  protected $tagName = 'tr';
 }
 
-element tt extends XHPHTMLElement {
-  protected
-    $tagName = 'tt';
+class :tt extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'tt';
 }
 
 // deprecated
-element u extends XHPHTMLElement {
-  protected
-    $tagName = 'u';
+class :u extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'u';
 }
 
-element ul extends XHPHTMLElement {
-  protected
-    $tagName = 'ul';
+class :ul extends :xhp:html-element {
+  category %flow;
+  children (:li)*;
+  protected $tagName = 'ul';
 }
 
-element var extends XHPHTMLElement {
-  protected
-    $tagName = 'var';
+class :var extends :xhp:html-element {
+  category %flow, %phrase;
+  children (pcdata | %phrase)*;
+  protected $tagName = 'var';
+}
+
+/**
+ * Render an <html /> element with a DOCTYPE, great for dumping a page to a
+ * browser. Choose from a wide variety of flavors like XHTML 1.0 Strict, HTML
+ * 4.01 Transitional, and new and improved HTML 5!
+ *
+ * Note: Some flavors may not be available in your area.
+ */
+class :x:doctype extends :x:primitive {
+  children (:html);
+
+  protected function stringify() {
+    $children = $this->getChildren();
+    return '<!DOCTYPE html>' . (:x:base::renderChild($children[0]));
+  }
 }
