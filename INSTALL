@@ -2,6 +2,9 @@ Building XHP requires:
 
   * PHP 5.2.x or 5.3.x
   * gcc 4.0 or higher
+
+If you are NOT building from a release, you will also need:
+
   * flex 2.5.35 or higher
   * Bison 2.3 or higher
   * re2c 0.13.5 or higher
