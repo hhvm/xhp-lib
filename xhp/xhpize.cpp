@@ -16,7 +16,7 @@
 
 #include "xhp_preprocess.hpp"
 #include <vector>
-#include <string>
+#include <string.h>
 #include <iostream>
 #include <fstream>
 using namespace std;

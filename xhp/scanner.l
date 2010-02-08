@@ -17,6 +17,7 @@
 
 %{
 #include "xhp.hpp"
+#include <string.h>
 #define push_state(s) xhp_new_push_state(s, yyg)
 #define pop_state() xhp_new_pop_state(yyg)
 #define set_state(s) xhp_set_state(s, yyg)

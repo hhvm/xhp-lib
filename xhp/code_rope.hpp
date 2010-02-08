@@ -14,7 +14,6 @@
   +----------------------------------------------------------------------+
 */
 
-#include <string>
 #include <ext/rope>
 #include <ext/pool_allocator.h>
 
