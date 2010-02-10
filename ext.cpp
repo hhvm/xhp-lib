@@ -256,7 +256,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
     zend_op_array* ret = dist_compile_string(&tmp, filename TSRMLS_CC);
     return ret;
   } else {
-    return dist_compile_string(str, filename);
+    return dist_compile_string(str, filename TSRMLS_CC);
   }
 }
 
