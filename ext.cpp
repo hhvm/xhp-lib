@@ -261,6 +261,13 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 }
 
 //
+// globals initialization
+static void php_xhp_init_globals(zend_xhp_globals* xhp_globals) {
+  xhp_globals->idx_expr = false;
+  xhp_globals->include_debug = true;
+}
+
+//
 // ini entry
 PHP_INI_BEGIN()
   STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
@@ -270,6 +277,8 @@ PHP_INI_END()
 //
 // Extension entry
 static PHP_MINIT_FUNCTION(xhp) {
+
+  ZEND_INIT_MODULE_GLOBALS(xhp, php_xhp_init_globals, NULL);
 
   REGISTER_INI_ENTRIES();
 
