@@ -33,3 +33,6 @@ xhp/xhpize
 /mkinstalldirs
 /modules
 /run-tests.php
+*.cmake
+CMakeFiles
+CMakeCache.txt
