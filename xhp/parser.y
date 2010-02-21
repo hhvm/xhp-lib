@@ -1718,7 +1718,7 @@ xhp_attribute_decl:
   xhp_attribute_decl_type xhp_label_pass xhp_attribute_default xhp_attribute_is_required {
     $2.strip_lines();
     yyextra->attribute_decls = yyextra->attribute_decls +
-      "'" + $2 + "'=>array(" + $1 + "," + $3 + ", " + $4 + "),"
+      "'" + $2 + "'=>array(" + $1 + "," + $3 + ", " + $4 + "),";
   }
 | T_XHP_COLON xhp_label_immediate {
     $2.strip_lines();
@@ -1858,10 +1858,10 @@ xhp_children_decl_expr:
     $$ = "array(3, " + $1 + ")";
   }
 | xhp_children_decl_expr ',' xhp_children_decl_expr {
-    $$ = "array(4, " + $1 + "," + $3 + ")"
+    $$ = "array(4, " + $1 + "," + $3 + ")";
   }
 | xhp_children_decl_expr '|' xhp_children_decl_expr {
-    $$ = "array(5, " + $1 + "," + $3 + ")"
+    $$ = "array(5, " + $1 + "," + $3 + ")";
   }
 ;
 
