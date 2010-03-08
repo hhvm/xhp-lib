@@ -133,6 +133,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
 <XHP_ATTR_TYPE_DECL>{
   bool tok(T_XHP_BOOLEAN);
   int tok(T_XHP_NUMBER);
+  float tok(T_XHP_FLOAT);
   var tok(T_VAR);
   array tok(T_XHP_ARRAY);
   string tok(T_XHP_STRING);

@@ -190,6 +190,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_ARRAY
 %token T_XHP_STRING
 %token T_XHP_ENUM
+%token T_XHP_FLOAT
 %token T_XHP_REQUIRED
 
 %%
@@ -1748,6 +1749,9 @@ xhp_attribute_decl_type:
   }
 | T_XHP_ENUM '{' { push_state(PHP); } xhp_attribute_enum { pop_state(); } '}' {
     $$ = "7, array(" + $4 + ")";
+  }
+| T_XHP_FLOAT {
+    $$ = "8, null";
   }
 ;
 
