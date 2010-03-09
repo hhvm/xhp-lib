@@ -486,7 +486,20 @@ NEWLINE ("\r\n"|"\n"|"\r")
   "-" tok(T_XHP_HYPHEN);
   "::" {
     pop_state();
-    tok(T_PAAMAYIM_NEKUDOTAYIM);
+
+    // Hack: Please don't expect this to work: $foo = <a href={Thing::if} />;
+    // PHP will let you use reserved words for member variables and methods, but
+    // they are verboten in XHP classes now.
+    //
+    // We don't use tok() because that pushes PHP_NO_RESERVED_WORDS, which the
+    // scanner expects to pop at some point, but XHP_LABEL (in parser.y) will pop
+    // sooner and then you're left with an imbalanced tag stack and that's when
+    // the fun stops.
+  *yylval = code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno);
+#ifdef DEBUG
+  yy_log_token(T_PAAMAYIM_NEKUDOTAYIM);
+#endif
+    return T_PAAMAYIM_NEKUDOTAYIM;
   }
   "--" {
     pop_state();
