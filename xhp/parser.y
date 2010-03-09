@@ -1481,9 +1481,9 @@ xhp_singleton:
     if (yyextra->include_debug) {
       char line[16];
       sprintf(line, "%lu", (unsigned long)$1.lineno());
-      $$ = "new xhp_" + $1 + "(array(" + $2 + "), array(), __FILE__, " + line + ")";
+      $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(), __FILE__, " + line + ")";
     } else {
-      $$ = "new xhp_" + $1 + "(array(" + $2 + "), array())";
+      $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array())";
     }
   }
 ;
@@ -1493,7 +1493,7 @@ xhp_tag_open:
     pop_state(); // XHP_ATTRS
     push_state(XHP_CHILD_START);
     yyextra->pushTag($1.c_str());
-    $$ = "new xhp_" + $1 + "(array(" + $2 + "), array(";
+    $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(";
   }
 ;
 
@@ -1723,7 +1723,7 @@ xhp_attribute_decl:
 | T_XHP_COLON xhp_label_immediate {
     $2.strip_lines();
     yyextra->attribute_inherit = yyextra->attribute_inherit +
-      "xhp_" + $2 + "::__xhpAttributeDeclaration(),";
+      (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2 + "::__xhpAttributeDeclaration(),";
   }
 ;
 
@@ -1873,7 +1873,7 @@ xhp_children_decl_tag:
     $$ = "2, null";
   }
 | T_XHP_COLON xhp_label {
-    $$ = "3, \'xhp_" + $2 + "\'";
+    $$ = (yyextra->emit_namespaces ? "3, \'\\\\xhp_" + $2 + "\'" : "3, \'xhp_" + $2 + "\'");
   }
 | '%' xhp_label {
     $$ = "4, \'" + $2 + "\'";
@@ -1886,7 +1886,7 @@ class_name:
     pop_state();
     push_state(PHP);
     yyextra->used = true;
-    $$ = "xhp_" + $2;
+    $$ = (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2;
   }
 ;
 
@@ -1895,7 +1895,7 @@ fully_qualified_class_name:
     pop_state();
     push_state(PHP);
     yyextra->used = true;
-    $$ = "xhp_" + $2;
+    $$ = (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2;
   }
 ;
 
@@ -1908,7 +1908,7 @@ expr_without_variable:
   expr '[' dim_offset ']' {
     if (yyextra->idx_expr) {
       yyextra->used = true;
-      $$ = "__xhp_idx(" + $1 + ", " + $3 + ")";
+      $$ = (yyextra->emit_namespaces ? "\\__xhp_idx(" : "__xhp_idx(") + $1 + ", " + $3 + ")";
     } else {
       $$ = $1 + $2 + $3 + $4;
     }

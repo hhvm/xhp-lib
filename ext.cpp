@@ -151,6 +151,11 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   flags.short_tags = CG(short_tags);
   flags.idx_expr = XHPG(idx_expr);
   flags.include_debug = XHPG(include_debug);
+#if PHP_VERSION_ID >= 50300
+  flags.emit_namespaces = true;
+#else
+  flags.emit_namespaces = false;
+#endif
   result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
   if (result == XHPErred) {
