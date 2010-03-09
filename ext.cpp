@@ -61,32 +61,41 @@ ZEND_DECLARE_MODULE_GLOBALS(xhp)
 //
 // PHP 5.3 helper functions
 #if PHP_VERSION_ID >= 50300
-ZEND_API int zend_stream_getc(zend_file_handle *file_handle TSRMLS_DC);
-// This function was made static to zend_stream.c in r255174. This an inline copy of that function.
+
+// These functions wese made static to zend_stream.c in r255174. These an inline copies of those functions.
+static int zend_stream_getc(zend_file_handle *file_handle TSRMLS_DC) {
+  char buf;
+
+  if (file_handle->handle.stream.reader(file_handle->handle.stream.handle, &buf, sizeof(buf) TSRMLS_CC)) {
+    return (int)buf;
+  }
+  return EOF;
+}
+
 static size_t zend_stream_read(zend_file_handle *file_handle, char *buf, size_t len TSRMLS_DC) {
-    if (file_handle->type != ZEND_HANDLE_MAPPED && file_handle->handle.stream.isatty) {
-        int c = '*';
-        size_t n;
+  if (file_handle->type != ZEND_HANDLE_MAPPED && file_handle->handle.stream.isatty) {
+    int c = '*';
+    size_t n;
 
 #ifdef NETWARE
-        /*
-            c != 4 check is there as fread of a character in NetWare LibC gives 4 upon ^D character.
-            Ascii value 4 is actually EOT character which is not defined anywhere in the LibC
-            or else we can use instead of hardcoded 4.
-        */
-        for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != 4 && c != '\n'; ++n) {
+    /*
+      c != 4 check is there as fread of a character in NetWare LibC gives 4 upon ^D character.
+      Ascii value 4 is actually EOT character which is not defined anywhere in the LibC
+      or else we can use instead of hardcoded 4.
+    */
+    for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != 4 && c != '\n'; ++n) {
 #else
-        for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != '\n'; ++n)  {
+    for (n = 0; n < len && (c = zend_stream_getc(file_handle TSRMLS_CC)) != EOF && c != '\n'; ++n)  {
 #endif
-            buf[n] = (char)c;
-        }
-        if (c == '\n') {
-            buf[n++] = (char)c;
-        }
-
-        return n;
+        buf[n] = (char)c;
     }
-    return file_handle->handle.stream.reader(file_handle->handle.stream.handle, buf, len TSRMLS_CC);
+    if (c == '\n') {
+      buf[n++] = (char)c;
+    }
+
+    return n;
+  }
+  return file_handle->handle.stream.reader(file_handle->handle.stream.handle, buf, len TSRMLS_CC);
 }
 #endif
 
