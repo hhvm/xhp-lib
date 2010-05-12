@@ -378,7 +378,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
       case T_BOOLEAN_AND: case T_IS_EQUAL: case T_IS_NOT_EQUAL:
       case T_IS_IDENTICAL: case T_IS_NOT_IDENTICAL: case T_IS_SMALLER_OR_EQUAL:
       case T_IS_GREATER_OR_EQUAL: case T_ECHO: case T_RETURN:
-      case T_EXTENDS: case T_INSTANCEOF:
+      case T_EXTENDS: case T_INSTANCEOF: case T_DOUBLE_ARROW:
       case T_XHP_ATTRIBUTE:
         tok(T_XHP_COLON);
         break;
@@ -426,7 +426,11 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 <PHP_HEREDOC_START>{
   "'"{LABEL}"'"|\"{LABEL}\" {
-    yyextra->heredoc_label = string(yytext + yyextra->heredoc_yyleng, yyleng - 1);
+    // Create a new string for the heredoc label. Since we're using yymore above
+    // yytext will actually start at the "<<<" and not the label. Use of
+    // heredoc_yyleng jumps past that. Then we add 1 to get past the " or '. The
+    // match is similar to calculate length.
+    yyextra->heredoc_label = string(yytext + yyextra->heredoc_yyleng + 1, yyleng - yyextra->heredoc_yyleng - 2);
     set_state(PHP_HEREDOC_NSTART);
     yyextra->heredoc_yyleng = yyleng;
     yymore();
@@ -853,7 +857,12 @@ NEWLINE ("\r\n"|"\n"|"\r")
 <XHP_AFTER_ENT>{
   [ \t\x0b\x0c\xa0\r\n]|\r\n {
     if (*yytext == '\r' || *yytext == '\n') {
+      // Since we rewrite newlines into space we need to increment both line
+      // counters. The first_lineno increment is quite a hack, and makes it so
+      // that this ent is on the wrong line but it doesn't mess up the rest of
+      // the file.
       ++yyextra->lineno;
+      ++yyextra->first_lineno;
     }
     pop_state();
     yytext[0] = ' ';

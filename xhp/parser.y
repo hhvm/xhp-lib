@@ -889,13 +889,13 @@ expr_without_variable:
     $$ = $1 + $2 + $3;
   }
 | expr T_LOGICAL_OR expr {
-    $$ = $1 + $2 + $3;
+    $$ = $1 + " " +  $2 + " " + $3;
   }
 | expr T_LOGICAL_AND expr {
-    $$ = $1 + $2 + $3;
+    $$ = $1 + " " + $2 + " " + $3;
   }
 | expr T_LOGICAL_XOR expr {
-    $$ = $1 + $2 + $3;
+    $$ = $1 + " " + $2 + " " + $3;
   }
 | expr '|' expr {
     $$ = $1 + $2 + $3;
@@ -1536,8 +1536,12 @@ xhp_tag_start:
 
 // Children
 xhp_literal_text:
-  T_XHP_TEXT
+  T_XHP_TEXT {
+    $1.strip_lines();
+    $$ = $1;
+  }
 | xhp_literal_text T_XHP_TEXT {
+    $2.strip_lines();
     $$ = $1 + $2;
   }
 ;
@@ -1717,6 +1721,7 @@ xhp_attribute_decls:
 
 xhp_attribute_decl:
   xhp_attribute_decl_type xhp_label_pass xhp_attribute_default xhp_attribute_is_required {
+    $1.strip_lines();
     $2.strip_lines();
     yyextra->attribute_decls = yyextra->attribute_decls +
       "'" + $2 + "'=>array(" + $1 + "," + $3 + ", " + $4 + "),";
