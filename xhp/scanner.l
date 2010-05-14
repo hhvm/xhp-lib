@@ -876,12 +876,23 @@ NEWLINE ("\r\n"|"\n"|"\r")
 }
 
 <XHP_CHILD>{
-  [^&'<>\\{ \t\x0b\x0c\xa0\r\n]+{WHITESPACE}{0,1} {
+  [^&'<>\\{ \t\x0b\x0c\xa0\r\n]+{WHITESPACE}? {
     yy_scan_newlines(yytext, yyg);
+    // Crunch white space at the end
+    char* ii = yytext + yyleng - 1;
+    while (*ii == ' ' || *ii == '\t' || *ii == '\n' || *ii == '\r') {
+      --ii;
+    }
+   if (ii != yytext + yyleng - 1) {
+      ii[1] = ' ';
+      ii[2] = 0;
+    }
     tok(T_XHP_TEXT);
   }
   {WHITESPACE}* {
     yy_scan_newlines(yytext, yyg);
+    yytext[0] = ' ';
+    yytext[1] = 0;
     tok(T_XHP_TEXT);
   }
   {WHITESPACE}*"{" {
