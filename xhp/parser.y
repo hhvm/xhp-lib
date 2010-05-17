@@ -1636,6 +1636,14 @@ xhp_label_pass:
   }
 ;
 
+xhp_label_pass_immediate:
+  { push_state(XHP_LABEL); } xhp_label_pass_ xhp_whitespace_hack {
+    pop_state();
+    $$ = $2;
+  }
+;
+
+
 xhp_label:
   { push_state(XHP_LABEL_WHITESPACE); } xhp_label_ xhp_whitespace_hack {
     pop_state();
@@ -1800,18 +1808,18 @@ class_statement:
     pop_state();
     yyextra->used = true;
     $$ =
-      "protected function &__xhpCategoryDeclaration() {\
-         static $_ = array(" + $3 + ");" +
+      "protected function &__xhpCategoryDeclaration() {" +
+         code_rope("static $_ = array(") + $3 + ");" +
         "return $_;" +
       "}";
   }
 ;
 
 xhp_category_list:
-  '%' xhp_label_immediate {
+  '%' xhp_label_pass_immediate {
     $$ = "'" + $2 + "' => 1";
   }
-| xhp_category_list ',' '%' xhp_label_immediate {
+| xhp_category_list ',' '%' xhp_label_pass_immediate {
     $$ = $1 + ",'" + $4 + "' => 1";
   }
 ;
