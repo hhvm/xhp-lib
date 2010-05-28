@@ -25,6 +25,8 @@
 #define last_token() yyextra->last_token
 
 #define YY_USER_ACTION \
+  if (yyextra->terminated) \
+    return 0; \
   if (!yyg->yy_more_len) \
     yyextra->first_lineno = yyextra->lineno;
 #define tok(t) \
