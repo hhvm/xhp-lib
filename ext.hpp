@@ -25,4 +25,4 @@
 #define PHP_XHP_EXTNAME "xhp"
 
 extern zend_module_entry xhp_module_entry;
-#define phpext_xhp &xhp_module_entry
+#define phpext_xhp_ptr &xhp_module_entry
