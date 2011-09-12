@@ -442,7 +442,7 @@ ZEND_FUNCTION(__xhp_idx) {
     // (new foo)[] -- Object overload (ArrayAccess)
     case IS_OBJECT:
       if (!Z_OBJ_HT_P(dict)->read_dimension) {
-        zend_error_noreturn(E_ERROR, "Cannot use object as array");
+        zend_error(E_ERROR, "Cannot use object as array");
         RETURN_NULL();
       } else {
         zval* overloaded_result = Z_OBJ_HT_P(dict)->read_dimension(dict, offset, BP_VAR_R TSRMLS_CC);
