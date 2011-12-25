@@ -57,7 +57,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 
 %}
 
-%expect 9
+%expect 10
 // 2: PHP's if/else grammar
 // 7: expr '[' dim_offset ']' -- shift will default to first grammar
 %name-prefix = "xhp"
@@ -945,6 +945,9 @@ expr_without_variable:
   }
 | T_NEW class_name_reference ctor_arguments {
     $$ = $1 + " " + $2 + $3;
+  }
+| '(' T_NEW class_name_reference ctor_arguments ')' variable_property {
+    $$ = $1 + $2 + " " + $3 + $4 + $5 + $6;
   }
 | T_CLONE expr {
     $$ = $1 + " " + $2;
