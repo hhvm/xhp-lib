@@ -71,7 +71,7 @@ abstract class :xhp:html-element extends :x:primitive {
     $buf = '<'.$this->tagName;
     foreach ($this->getAttributes() as $key => $val) {
       if ($val !== null && $val !== false) {
-        $buf .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($val) . '"';
+        $buf .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($val, ENT_QUOTES) . '"';
       }
     }
     return $buf;
