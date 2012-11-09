@@ -205,6 +205,18 @@ abstract class :x:composable-element extends :x:base {
     $this->attributes[$attr] = $val;
     return $this;
   }
+  
+  /**
+   * Sets an attribute in this element's attribute store. Always foregoes
+   * validation.
+   *
+   * @param $attr      attribute to set
+   * @param $val       value
+   */
+  final public function forceAttribute($attr, $value) {
+    $this->attributes[$attr] = $value;
+    return $this;
+  }
 
   final protected function __flushElementChildren() {
 
