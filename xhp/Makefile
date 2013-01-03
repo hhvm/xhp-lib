@@ -28,7 +28,7 @@ fastpath.cpp: fastpath.re
 	re2c -c -o $@ $<
 
 %.o: %.cpp
-	$(CXX) -c $(CPPFLAGS) -o $@ $<
+	g++ -c $(CPPFLAGS) -o $@ $<
 
 xhp_preprocess.o: xhp_preprocess.cpp scanner.lex.hpp parser.yacc.hpp
 parser.yacc.o: scanner.lex.hpp
@@ -41,6 +41,6 @@ libxhp.so: code_rope.o scanner.lex.o parser.yacc.o fastpath.o xhp_preprocess.o
 	g++ -shared -Wl,-soname,libxhp.so -o libxhp.so $^
 
 xhpize: xhpize.cpp libxhp.a
-	$(CXX) $(CPPFLAGS) -o $@ $^
+	g++ $(CPPFLAGS) -o $@ $^
 
 .PHONY: all clean tags
