@@ -571,8 +571,8 @@ abstract class :x:primitive extends :x:composable-element {
     if (:x:base::$ENABLE_VALIDATION) {
       try {
         $this->validateChildren();
-      } catch (Exception $e) {
-        trigger_error($e->getMessage(), E_USER_ERROR);
+      } catch (Exception $error) {
+        trigger_error($error->getMessage(), E_USER_ERROR);
       }
     }
 
@@ -593,17 +593,21 @@ abstract class :x:element extends :x:composable-element {
     $that = $this;
 
     if (:x:base::$ENABLE_VALIDATION) {
-      // Validate the current object
-      $that->validateChildren();
-
-      // And each intermediary object it returns
-      while (($that = $that->render()) instanceof :x:element) {
+      try {
+        // Validate the current object
         $that->validateChildren();
-      }
 
-      // render() must always return XHPPrimitives
-      if (!($that instanceof :x:composable-element)) {
-        throw new XHPCoreRenderException($this, $that);
+        // And each intermediary object it returns
+        while (($that = $that->render()) instanceof :x:element) {
+          $that->validateChildren();
+        }
+
+        // render() must always return XHPPrimitives
+        if (!($that instanceof :x:composable-element)) {
+          throw new XHPCoreRenderException($this, $that);
+        }
+      } catch (Exception $error) {
+        trigger_error($error->getMessage(), E_USER_ERROR);
       }
     } else {
       // Skip the above checks when not validating
