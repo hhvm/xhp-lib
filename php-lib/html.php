@@ -112,12 +112,37 @@ abstract class :xhp:html-singleton extends :xhp:html-element {
 }
 
 /**
- * Subclasses of :xhp:pseudo-singleton may contain exactly zero or one
- * children. When rendered they will be in full open\close form, no matter how
- * many children there are.
+ * Subclasses of :xhp:pcdata-elements may contain only string children.
  */
-abstract class :xhp:pseudo-singleton extends :xhp:html-element {
+abstract class :xhp:pcdata-element extends :xhp:html-element {
   children (pcdata)*;
+}
+
+/**
+ * Subclasses of :xhp:raw-pcdata-element must contain only string children.
+ * However, the strings will not be escaped. This is intended for tags like
+ * <script> or <style> whose content is interpreted literally by the browser.
+ *
+ * From section 6.2 of the HTML 4.01 spec: "Although the STYLE and SCRIPT
+ * elements use CDATA for their data model, for these elements, CDATA must be
+ * handled differently by user agents. Markup and entities must be treated as
+ * raw text and passed to the application as is. The first occurrence of the
+ * character sequence "</" (end-tag open delimiter) is treated as terminating
+ * the end of the s content. In valid documents, this would be the end tag for
+ * the element."
+ */
+abstract class :xhp:raw-pcdata-element extends :xhp:pcdata-element {
+  protected function stringify() {
+    $buf = $this->renderBaseAttrs() . '>';
+    foreach ($this->getChildren() as $child) {
+      if (!is_string($child)) {
+        throw new XHPClassException($this, 'Child must be a string');
+      }
+      $buf .= $child;
+    }
+    $buf .= '</'.$this->tagName.'>';
+    return $buf;
+  }
 }
 
 /**
@@ -462,7 +487,7 @@ class :i extends :xhp:html-element {
   protected $tagName = 'i';
 }
 
-class :iframe extends :xhp:pseudo-singleton {
+class :iframe extends :xhp:pcdata-element {
   attribute
     string name, int height, string sandbox, bool seamless, string src,
     string srcdoc, int width;
@@ -615,7 +640,7 @@ class :optgroup extends :xhp:html-element {
   protected $tagName = 'optgroup';
 }
 
-class :option extends :xhp:pseudo-singleton {
+class :option extends :xhp:pcdata-element {
   attribute bool disabled, string label, bool selected, string value;
   protected $tagName = 'option';
 }
@@ -633,7 +658,7 @@ class :p extends :xhp:html-element {
   protected $tagName = 'p';
 }
 
-class :param extends :xhp:pseudo-singleton {
+class :param extends :xhp:pcdata-element {
   attribute string name, string value;
   protected $tagName = 'param';
 }
@@ -687,7 +712,7 @@ class :samp extends :xhp:html-element {
   protected $tagName = 'samp';
 }
 
-class :script extends :xhp:pseudo-singleton {
+class :script extends :xhp:raw-pcdata-element {
   attribute bool async, string charset, bool defer, string src, string type,
   // Legacy
   string language;
@@ -733,7 +758,7 @@ class :strong extends :xhp:html-element {
   protected $tagName = 'strong';
 }
 
-class :style extends :xhp:pseudo-singleton {
+class :style extends :xhp:raw-pcdata-element {
   attribute
     enum {
       'all', 'aural', 'braille', 'embossed', 'handheld', 'print', 'projection',
@@ -786,7 +811,7 @@ class :td extends :xhp:html-element {
   protected $tagName = 'td';
 }
 
-class :textarea extends :xhp:pseudo-singleton {
+class :textarea extends :xhp:pcdata-element {
   attribute
     bool autofocus, int cols, string dirname, bool disabled, string form,
     int maxlength, string name, string placeholder, bool readonly,
@@ -820,7 +845,7 @@ class :time extends :xhp:html-element {
   protected $tagName = 'time';
 }
 
-class :title extends :xhp:pseudo-singleton {
+class :title extends :xhp:pcdata-element {
   category %metadata;
   protected $tagName = 'title';
 }
