@@ -310,6 +310,40 @@ abstract class :x:composable-element extends :x:base {
     $this->attributes[$attr] = $val;
     return $this;
   }
+
+  /**
+   * Takes an array of key/value pairs and adds each as an attribute.
+   *
+   * @param $attrs    array of attributes
+   */
+  final public function setAttributes(array $attrs) {
+    foreach ($attrs as $key => $value) {
+      $this->setAttribute($key, $value);
+    }
+    return $this;
+  }
+
+  /**
+   * Whether the attribute has been explicitly set to a non-null value by the
+   * caller (vs. using the default set by "attribute" in the class definition).
+   *
+   * @param $attr attribute to check
+   */
+  public function isAttributeSet($attr) {
+    return isset($this->attributes[$attr]);
+  }
+
+  /**
+   * Overridable wrapper for removeDeclaredAttribute($attr).
+   *
+   * @param $attr      attribute to remove
+   * @param $val       value
+   */
+  public function removeAttribute($attr) {
+    $this->validateAttributeValue($attr, $value = null);
+    unset($this->attributes[$attr]);
+    return $this;
+  }
   
   /**
    * Sets an attribute in this element's attribute store. Always foregoes
