@@ -139,26 +139,131 @@ abstract class :x:composable-element extends :x:base {
   }
 
   /**
-   * Fetches all direct children of this element that match a particular tag
-   * name (or all children if no tag is given)
+   * Adds a child to the beginning of this node. If you give an array to this
+   * method then it will behave like a DocumentFragment.
    *
-   * @param $tag_name   tag name (optional)
+   * @param $child     single child or array of children
+   */
+  final public function prependChild($child) {
+    if (is_array($child)) {
+      foreach (array_reverse($child) as $c) {
+        $this->prependChild($c);
+      }
+    } else if ($child instanceof :x:frag) {
+      $this->children = array_merge($child->children, $this->children);
+    } else if ($child !== null) {
+      array_unshift($this->children, $child);
+    }
+    return $this;
+  }
+
+  /**
+   * Replaces all children in this node. You may pass a single array or
+   * multiple parameters.
+   *
+   * @param $children  Single child or array of children
+   */
+  final public function replaceChildren(/* ... */) {
+    // This function has been micro-optimized
+    $args = func_get_args();
+    $new_children = array();
+    foreach ($args as $xhp) {
+      if ($xhp) {
+        if ($xhp instanceof :x:frag) {
+          foreach ($xhp->children as $child) {
+            $new_children[] = $child;
+          }
+        } else if (!is_array($xhp)) {
+          $new_children[] = $xhp;
+        } else {
+          foreach ($xhp as $element) {
+            if ($element instanceof :x:frag) {
+              foreach ($element->children as $child) {
+                $new_children[] = $child;
+              }
+            } else if ($element !== null) {
+              $new_children[] = $element;
+            }
+          }
+        }
+      }
+    }
+    $this->children = $new_children;
+    return $this;
+  }
+
+  /**
+   * Fetches all direct children of this element that match a particular tag
+   * name or category (or all children if none is given)
+   *
+   * @param $selector   tag name or category (optional)
    * @return array
    */
-   final protected function getChildren($tag_name = null) {
-     if (!$tag_name) {
-       return $this->children;
-     }
+  final protected function getChildren($selector = null) {
+    if (!$selector) {
+      return $this->children;
+    }
+    $result = array();
+    if ($selector[0] == '%') {
+      $selector = substr($selector, 1);
+      foreach ($this->children as $child) {
+        if ($child instanceof :x:base && $child->categoryOf($selector)) {
+          $result[] = $child;
+        }
+      }
+    } else {
+      $selector = :x:base::element2class($selector);
+      foreach ($this->children as $child) {
+        if ($child instanceof $selector) {
+          $result[] = $child;
+        }
+      }
+    }
+    return $result;
+  }
 
-     $tag_name = :x:base::element2class($tag_name);
-     $ret = array();
-     foreach ($this->children as $child) {
-       if ($child instanceof $tag_name) {
-         $ret[] = $child;
-       }
-     }
-     return $ret;
-   }
+
+  /**
+   * Fetches the first direct child of the element, or the first child that
+   * matches the tag if one is given
+   *
+   * @param $selector   string   tag name or category (optional)
+   * @return            element  the first child node (with the given selector),
+   *                             false if there are no (matching) children
+   */
+  final protected function getFirstChild($selector = null) {
+    if (!$selector) {
+      return reset($this->children);
+    } else if ($selector[0] == '%') {
+      $selector = substr($selector, 1);
+      foreach ($this->children as $child) {
+        if ($child instanceof :x:base && $child->categoryOf($selector)) {
+          return $child;
+        }
+      }
+    } else {
+      $selector = :x:base::element2class($selector);
+      foreach ($this->children as $child) {
+        if ($child instanceof $selector) {
+          return $child;
+        }
+      }
+    }
+    return null;
+  }
+
+  /**
+   * Fetches the last direct child of the element, or the last child that
+   * matches the tag or category if one is given
+   *
+   * @param $selector  string   tag name or category (optional)
+   * @return           element  the last child node (with the given selector),
+   *                            false if there are no (matching) children
+   */
+  final protected function getLastChild($selector = null) {
+    $temp = $this->getChildren($selector);
+    return end($temp);
+  }
 
   /**
    * Fetches an attribute from this elements attribute store. If $attr is not
