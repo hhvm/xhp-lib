@@ -23,11 +23,8 @@
  */
 abstract class :xhp:html-element extends :x:primitive {
 
-  // TODO: Break these out into abstract elements so that elements that need
-  // them can steal the definition. Right now this is an overloaded list of
-  // attributes.
   attribute
-    // HTML attributes
+    // Global HTML attributes
     string accesskey, string class, bool contenteditable, string contextmenu,
     string dir, bool draggable, string dropzone, bool hidden, string id,
     string lang, bool spellcheck, string style, string tabindex, string title,
@@ -57,10 +54,10 @@ abstract class :xhp:html-element extends :x:primitive {
     $tagName;
 
   public function getID() {
-    return $this->requireUniqueId();
+    return $this->requireUniqueID();
   }
 
-  public function requireUniqueId() {
+  public function requireUniqueID() {
     if (!($id = $this->getAttribute('id'))) {
       $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
     }

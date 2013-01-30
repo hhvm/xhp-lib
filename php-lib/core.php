@@ -62,8 +62,10 @@ abstract class :x:base {
 
 abstract class :x:composable-element extends :x:base {
   private
-    $attributes,
-    $children;
+    $attributes = array(),
+    $children = array();
+
+  private static $specialAttributes = array('data' => true, 'aria' => true);
 
   // Private constants indicating the declared types of attributes
   const TYPE_STRING = 1;
@@ -91,17 +93,10 @@ abstract class :x:composable-element extends :x:base {
    * @param $children      list of children
    */
   final public function __construct($attributes, $children) {
-    if ($attributes) {
-      foreach ($attributes as $key => &$val) {
-        $this->validateAttributeValue($key, $val);
-      }
-      unset($val);
-    }
-    $this->attributes = $attributes;
-    $this->children = array();
     foreach ($children as $child) {
       $this->appendChild($child);
     }
+    $this->setAttributes($attributes);
     if (:x:base::$ENABLE_VALIDATION) {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
@@ -266,48 +261,70 @@ abstract class :x:composable-element extends :x:base {
   }
 
   /**
+   * Returns true if the attribute is a data- or aria- attribute.
+   *
+   * @param $attr      attribute to fetch
+   * @return           bool
+   */
+  final private static function isAttributeSpecial($attr) {
+    // Must be at least 6 characters, with a '-' in the 5th position
+    return
+      isset($attr[5])
+      && $attr[4] == '-'
+      && isset(self::$specialAttributes[substr($attr, 0, 4)]);
+  }
+
+  /**
    * Fetches an attribute from this elements attribute store. If $attr is not
-   * defined in the store, and $default is null an exception will be thrown. An
-   * exception will also be thrown if $attr is not supported -- see
-   * `supportedAttributes`
+   * defined in the store and is not a data- or aria- attribute an exception
+   * will be thrown. An exception will also be thrown if $attr is required and
+   * not set.
    *
    * @param $attr      attribute to fetch
    * @return           value
    */
   final public function getAttribute($attr) {
-
-    // Return attribute if it's there, otherwise default or exception.
+    // Return the attribute if it's there
     if (isset($this->attributes[$attr])) {
       return $this->attributes[$attr];
     }
 
-    // Get the declaration on miss
-    $decl = $this->__xhpAttributeDeclaration();
-
-    if (!isset($decl[$attr])) {
-      throw new XHPAttributeNotSupportedException($this, $attr);
-    } else if (!empty($decl[$attr][3])) {
-      throw new XHPAttributeRequiredException($this, $attr);
-    } else {
+    if (!self::isAttributeSpecial($attr)) {
+      // Get the declaration
       $decl = $this->__xhpAttributeDeclaration();
-      return $decl[$attr][2];
+
+      if (!isset($decl[$attr])) {
+        throw new XHPAttributeNotSupportedException($this, $attr);
+      } else if (!empty($decl[$attr][3])) {
+        throw new XHPAttributeRequiredException($this, $attr);
+      } else {
+        return $decl[$attr][2];
+      }
+    } else {
+      return null;
     }
   }
 
-  final protected function getAttributes() {
+  final public function getAttributes() {
     return $this->attributes;
   }
 
   /**
-   * Sets an attribute in this element's attribute store. An exception will be
-   * thrown if $attr is not supported -- see `supportedAttributes`.
+   * Sets an attribute in this element's attribute store. If the attribute is
+   * not defined in the store and is not a data- or aria- attribute an
+   * exception will be thrown. An exception will also be thrown if the
+   * attribute value is invalid.
    *
    * @param $attr      attribute to set
    * @param $val       value
    */
-  final public function setAttribute($attr, $val) {
-    $this->validateAttributeValue($attr, $val);
-    $this->attributes[$attr] = $val;
+  final public function setAttribute($attr, $value) {
+    if (!self::isAttributeSpecial($attr)) {
+      $this->validateAttributeValue($attr, $value);
+    } else {
+      $value = (string)$value;
+    }
+    $this->attributes[$attr] = $value;
     return $this;
   }
 
@@ -329,7 +346,7 @@ abstract class :x:composable-element extends :x:base {
    *
    * @param $attr attribute to check
    */
-  public function isAttributeSet($attr) {
+  final public function isAttributeSet($attr) {
     return isset($this->attributes[$attr]);
   }
 
@@ -340,8 +357,10 @@ abstract class :x:composable-element extends :x:base {
    * @param $attr      attribute to remove
    * @param $val       value
    */
-  public function removeAttribute($attr) {
-    $this->validateAttributeValue($attr, $value = null);
+  final public function removeAttribute($attr) {
+    if (!self::isAttributeSpecial($attr)) {
+      $this->validateAttributeValue($attr, $value = null);
+    }
     unset($this->attributes[$attr]);
     return $this;
   }
@@ -814,12 +833,11 @@ class XHPRenderArrayException extends XHPException {
 class XHPAttributeNotSupportedException extends XHPException {
   public function __construct($that, $attr) {
     parent::__construct(
-      'Attribute `'.$attr.'` is not supported in class '.
-      '`'.XHPException::getElementName($that)."`.\n\n".
-      "$that->source\n\n".
+      'Attribute "'.$attr.'" is not supported in class '.
+      '"'.XHPException::getElementName($that).'"'.
+      "\n\n".$that->source."\n\n".
       'Please check for typos in your attribute. If you are creating a new '.
-      'attribute on this element please add your attribute to the '.
-      "`supportedAttributes` method.\n\n"
+      'attribute on this element define it with the "attribute" keyword'."\n\n"
     );
   }
 }
