@@ -334,7 +334,8 @@ abstract class :x:composable-element extends :x:base {
   }
 
   /**
-   * Overridable wrapper for removeDeclaredAttribute($attr).
+   * Removes an attribute from this element's attribute store. An exception
+   * will be thrown if $attr is not supported.
    *
    * @param $attr      attribute to remove
    * @param $val       value
