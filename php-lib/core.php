@@ -19,7 +19,7 @@ abstract class :x:base {
   abstract public function __construct($attributes, $children);
   abstract public function appendChild($child);
   abstract public function prependChild($child);
-  abstract public function replaceChildren($child);
+  abstract public function replaceChildren();
   abstract protected function getChildren($selector = null);
   abstract protected function getFirstChild($selector = null);
   abstract protected function getLastChild($selector = null);
