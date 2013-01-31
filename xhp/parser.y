@@ -151,6 +151,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_CLASS_C
 %token T_METHOD_C
 %token T_FUNC_C
+%token T_TRAIT_C
 %token T_LINE
 %token T_FILE
 %token T_COMMENT
@@ -166,12 +167,14 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_DOLLAR_OPEN_CURLY_BRACES /* unused in XHP: `${` in `"${foo}"` */
 %token T_CURLY_OPEN /* unused in XHP: `{$` in `"{$foo}"` */
 %token T_PAAMAYIM_NEKUDOTAYIM
-%token T_BINARY_DOUBLE /* unsused in XHP: `b"` in `b"foo"` */
-%token T_BINARY_HEREDOC /* unsused in XHP: `b<<<` in `b<<<FOO` */
+%token T_BINARY_DOUBLE /* unused in XHP: `b"` in `b"foo"` */
+%token T_BINARY_HEREDOC /* unused in XHP: `b<<<` in `b<<<FOO` */
 %token T_NAMESPACE
 %token T_NS_C
 %token T_DIR
 %token T_NS_SEPARATOR
+%token T_TRAIT
+%token T_INSTEADOF
 
 %token T_XHP_WHITESPACE
 %token T_XHP_TEXT
@@ -446,6 +449,7 @@ class_entry_type:
 | T_ABSTRACT T_CLASS {
     $$ = $1 + " " + $2;
   }
+| T_TRAIT
 | T_FINAL T_CLASS {
     $$ = $1 + " " + $2;
   }
@@ -726,6 +730,7 @@ class_statement:
 | class_constant_declaration ';' {
     $$ = $1 + $2;
   }
+| trait_use_statement
 | method_modifiers function {
     yyextra->old_expecting_xhp_class_statements = yyextra->expecting_xhp_class_statements;
     yyextra->expecting_xhp_class_statements = false;
@@ -733,6 +738,91 @@ class_statement:
     yyextra->expecting_xhp_class_statements = yyextra->old_expecting_xhp_class_statements;
     $$ = $1 + $2 + " " + $4 + $5 + $6 + $7 + $8 + $9;
   }
+;
+
+trait_use_statement:
+  T_USE trait_list trait_adaptions {
+    $$ = $1 + " " + $2 + $3;
+  }
+;
+
+trait_list:
+  fully_qualified_class_name
+| trait_list ',' fully_qualified_class_name {
+    $$ = $1 + $2 + $3;
+  }
+;
+
+trait_adaptions:
+  ';'
+| '{' trait_adaption_list '}' {
+    $$ = $1 + $2 + $3;
+  }
+;
+
+trait_adaption_list:
+  /* empty */ {
+    $$ = "";
+  }
+| non_empty_trait_adaptation_list
+;
+
+non_empty_trait_adaptation_list:
+  trait_adaptation_statement
+| non_empty_trait_adaptation_list trait_adaptation_statement {
+    $$ = $1 + $2;
+  }
+;
+
+trait_adaptation_statement:
+  trait_precedence ';' {
+    $$ = $1 + $2;
+  }
+| trait_alias ';' {
+    $$ = $1 + $2;
+  }
+;
+
+trait_precedence:
+  trait_method_reference_fully_qualified T_INSTEADOF trait_reference_list {
+    $$ = $1 + " " + $2 + " " + $3;
+  }
+;
+
+trait_reference_list:
+  fully_qualified_class_name {
+    $$ = $1;
+  }
+| trait_reference_list ',' fully_qualified_class_name {
+    $$ = $1 + $2 + $3;
+  }
+;
+
+trait_method_reference:
+  T_STRING
+| trait_method_reference_fully_qualified
+;
+
+trait_method_reference_fully_qualified:
+  fully_qualified_class_name T_PAAMAYIM_NEKUDOTAYIM T_STRING {
+    $$ = $1 + $2 + $3;
+  }
+;
+
+trait_alias:
+  trait_method_reference T_AS trait_modifiers T_STRING {
+    $$ = $1 + " " + $2 + " " + $3 + " " + $4;
+  }
+| trait_method_reference T_AS member_modifier {
+    $$ = $1 + " " + $2 + " " + $3;
+  }
+;
+
+trait_modifiers:
+  /* empty */ {
+    $$ = "";
+  }
+| member_modifier
 ;
 
 method_body:
@@ -1156,6 +1246,7 @@ common_scalar:
 | T_FILE
 | T_DIR
 | T_CLASS_C
+| T_TRAIT_C
 | T_METHOD_C
 | T_FUNC_C
 | T_NS_C
@@ -1508,7 +1599,7 @@ xhp_tag_close:
       replacestr(e1, "_", "-");
       replacestr(e2, "__", ":");
       replacestr(e2, "_", "-");
-      string e = "syntax error, mismatched tag </" + e1 + ">, expecting </" + e2 +">";
+      string e = "syntax error, mismatched tag </" + e1 + ">, expecting </" + e2 + ">";
       yyerror(yyscanner, NULL, e.c_str());
       yyextra->terminated = true;
     }

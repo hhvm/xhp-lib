@@ -325,7 +325,10 @@ NEWLINE ("\r\n"|"\n"|"\r")
   __function__ tok(T_FUNC_C);
   __line__ tok(T_LINE);
   __file__ tok(T_FILE);
+  __trait__ tok(T_TRAIT_C);
   namespace tok(T_NAMESPACE);
+  trait tok(T_TRAIT);
+  insteadof tok(T_INSTEADOF);
   __namespace__ tok(T_NS_C);
   __dir__ tok(T_DIR);
   attribute {
@@ -410,7 +413,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
       // we got them all covered though.
       case T_ECHO: case T_RETURN:
       case T_EXTENDS: case T_INSTANCEOF: case T_DOUBLE_ARROW:
-      case T_XHP_ATTRIBUTE:
+      case T_XHP_ATTRIBUTE: case T_IMPLEMENTS:
         tok(T_XHP_COLON);
         break;
       default:
