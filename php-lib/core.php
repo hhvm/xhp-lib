@@ -18,15 +18,22 @@
 abstract class :x:base {
   abstract public function __construct($attributes, $children);
   abstract public function appendChild($child);
+  abstract public function prependChild($child);
+  abstract public function replaceChildren($child);
+  abstract protected function getChildren($selector = null);
+  abstract protected function getFirstChild($selector = null);
+  abstract protected function getLastChild($selector = null);
   abstract public function getAttribute($attr);
+  abstract public function getAttributes();
   abstract public function setAttribute($attr, $val);
+  abstract public function setAttributes(array $attrs);
+  abstract public function isAttributeSet($attr);
+  abstract public function removeAttribute($attr);
   abstract public function categoryOf($cat);
   abstract public function __toString();
-  // PHP Strict Standards define that static function should not be declared
-  // abstract.
-  // abstract protected static function &__xhpAttributeDeclaration();
   abstract protected function &__xhpCategoryDeclaration();
   abstract protected function &__xhpChildrenDeclaration();
+  protected static function &__xhpAttributeDeclaration() {}
 
   /**
    * Enabling validation will give you stricter documents; you won't be able to
