@@ -68,7 +68,11 @@ abstract class :xhp:html-element extends :x:primitive {
     $buf = '<'.$this->tagName;
     foreach ($this->getAttributes() as $key => $val) {
       if ($val !== null && $val !== false) {
-        $buf .= ' ' . htmlspecialchars($key) . '="' . htmlspecialchars($val, ENT_QUOTES) . '"';
+        if ($val === true) {
+          $buf .= ' '.htmlspecialchars($key);
+        } else {
+          $buf .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($val, ENT_QUOTES).'"';
+        }
       }
     }
     return $buf;
@@ -87,7 +91,7 @@ abstract class :xhp:html-element extends :x:primitive {
   }
 
   protected function stringify() {
-    $buf = $this->renderBaseAttrs() . '>';
+    $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
       $buf .= :x:base::renderChild($child);
     }
@@ -104,7 +108,7 @@ abstract class :xhp:html-singleton extends :xhp:html-element {
   children empty;
 
   protected function stringify() {
-    return $this->renderBaseAttrs() . ' />';
+    return $this->renderBaseAttrs().'>';
   }
 }
 
