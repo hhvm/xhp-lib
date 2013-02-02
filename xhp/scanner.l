@@ -329,6 +329,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   namespace tok(T_NAMESPACE);
   trait tok(T_TRAIT);
   insteadof tok(T_INSTEADOF);
+  yield tok(T_YIELD);
   __namespace__ tok(T_NS_C);
   __dir__ tok(T_DIR);
   attribute {

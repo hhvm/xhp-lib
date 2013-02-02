@@ -175,6 +175,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_NS_SEPARATOR
 %token T_TRAIT
 %token T_INSTEADOF
+%token T_YIELD
 
 %token T_XHP_WHITESPACE
 %token T_XHP_TEXT
@@ -380,6 +381,12 @@ unticked_statement:
   }
 | T_GOTO T_STRING ';' {
     $$ = $1 + " " + $2 + $3;
+  }
+| T_YIELD ';' {
+    $$ = $1 + $2;
+  }
+| yield_with_variable ';' {
+    $$ = $1 + $2;
   }
 ;
 
@@ -825,6 +832,15 @@ trait_modifiers:
 | member_modifier
 ;
 
+yield_with_variable:
+  T_YIELD variable {
+    $$ = $1 + " " + $2;
+  }
+| T_YIELD variable T_DOUBLE_ARROW variable {
+    $$ = $1 + " " + $2 + $3 + $4;
+  }
+;
+
 method_body:
   ';' /* abstract method */
 | '{' inner_statement_list '}' {
@@ -920,6 +936,12 @@ expr_without_variable:
   }
 | variable '=' '&' T_NEW class_name_reference ctor_arguments {
     $$ = $1 + $2 + $3 + $4 + " " + $5 + $6;
+  }
+| T_LIST '(' assignment_list ')' '=' '(' yield_with_variable ')' {
+    $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7 + $8;
+  }
+| variable '=' '(' yield_with_variable ')' {
+    $$ = $1 + $2 + $3 + $4 + $5;
   }
 | T_NEW class_name_reference ctor_arguments {
     $$ = $1 + " " + $2 + $3;
