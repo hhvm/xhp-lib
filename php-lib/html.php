@@ -566,6 +566,12 @@ class :link extends :xhp:html-singleton {
   protected $tagName = 'link';
 }
 
+class :main extends :xhp:html-element {
+  category %flow;
+  children (pcdata | %flow)*;
+  protected $tagName = 'main';
+}
+
 class :map extends :xhp:html-element {
   attribute string name;
   category %flow, %phrase;
