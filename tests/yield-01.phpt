@@ -1,5 +1,5 @@
 --TEST--
-PHP5.4 Yield keyword 01
+PHP5.5 Yield keyword 01
 --FILE--
 <?php
 function yieldTest() {
