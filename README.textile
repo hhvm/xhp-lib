@@ -158,3 +158,8 @@ This element would be considered magic because when you print an @<fb:thing />@ 
 
 * Don't use @HTML()@. You should not use @HTML()@ unless you have a very good reason, and you have a very very good understanding of the differences between HTML strings and raw strings. And even then, avoid @HTML()@.
 
+h1. External Resources
+
+Below are a list of external resources about XHP:
+
+"Code Before the Horse":http://codebeforethehorse.tumblr.com - Basic XHP introduction, examples, and lessons learned from Facebook written by one of their UI Engineers.
