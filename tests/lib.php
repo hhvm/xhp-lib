@@ -10,7 +10,7 @@ class :x {
   public function __toString() {
     $head = '<x';
     foreach ($this->attrs as $key => $val) {
-      $head .= htmlspecialchars($key).'='.htmlspecialchars($val);
+      $head .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($val, ENT_QUOTES).'"';
     }
     return $head.'>'.implode('', $this->children).'</x>';
   }

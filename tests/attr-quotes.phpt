@@ -2,8 +2,8 @@
 Quotes in attribute
 --FILE--
 <?php
-class xhp_a {}
+require 'lib.php';
 $quote = '"';
-echo <a b={$quote}>c</a>;
+echo <x b={$quote}>c</x>;
 --EXPECT--
-<a b="&quot;">c</a>
+<x b="&quot;">c</x>
