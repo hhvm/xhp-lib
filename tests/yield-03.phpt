@@ -2,7 +2,7 @@
 PHP5.5 Yield keyword 03
 --SKIPIF--
 <?php 
-if (phpversion() < 5.5) exit("Skip This test is for PHP 5.5 only.");
+if (version_compare(PHP_VERSION, '5.5', '<')) exit("Skip This test is for PHP 5.5 only.");
 ?>
 --FILE--
 <?php
