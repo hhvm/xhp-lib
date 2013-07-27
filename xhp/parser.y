@@ -131,6 +131,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_RETURN
 %token T_TRY
 %token T_CATCH
+%token T_FINALLY
 %token T_THROW
 %token T_USE
 %token T_GLOBAL
@@ -373,8 +374,8 @@ unticked_statement:
     $$ = $1 + $2 + $3 + $4 + $5;
   }
 | ';' /* empty statement */
-| T_TRY '{' inner_statement_list '}' T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches {
-    $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7 + " " + $8 + $9 + $10 + $11 + $12 + $13;
+| T_TRY '{' inner_statement_list '}' T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' additional_catches additional_finally {
+    $$ = $1 + $2 + $3 + $4 + $5 + $6 + $7 + " " + $8 + $9 + $10 + $11 + $12 + $13 + $14;
   }
 | T_THROW expr ';' {
     $$ = $1 + " " + $2 + $3;
@@ -407,6 +408,15 @@ non_empty_additional_catches:
 additional_catch:
   T_CATCH '(' fully_qualified_class_name T_VARIABLE ')' '{' inner_statement_list '}' {
     $$ = $1 + $2 + $3 + " " + $4 + $5 + $6 + $7 + $8;
+  }
+;
+
+additional_finally:
+  T_FINALLY '{' inner_statement_list '}' {
+    $$ = $1 + $2 + $3 + $4;
+  }
+| /* empty */ {
+    $$ = "";
   }
 ;
 

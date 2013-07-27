@@ -300,6 +300,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   return tok(T_RETURN);
   try tok(T_TRY);
   catch tok(T_CATCH);
+  finally tok(T_FINALLY);
   throw tok(T_THROW);
   use tok(T_USE);
   global tok(T_GLOBAL);
