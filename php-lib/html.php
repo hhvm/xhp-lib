@@ -27,8 +27,8 @@ abstract class :xhp:html-element extends :x:primitive {
     // Global HTML attributes
     string accesskey, string class, bool contenteditable, string contextmenu,
     string dir, bool draggable, string dropzone, bool hidden, string id,
-    string lang, bool spellcheck, string style, string tabindex, string title,
-    enum {'yes', 'no'} translate,
+    string lang, enum {'true', 'false'} spellcheck, string style,
+    string tabindex, string title, enum {'yes', 'no'} translate,
 
     // Javascript events
     string onabort, string onblur, string oncanplay, string oncanplaythrough,
