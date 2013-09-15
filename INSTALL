@@ -1,3 +1,11 @@
+You can install XHP with Homebrew by running any of the following commands:
+
+  * brew install php53-xhp
+  * brew install php54-xhp
+  * brew install php55-xhp
+
+To install manually, continue reading.
+
 Building XHP requires:
 
   * PHP 5.2.x or 5.3.x
