@@ -132,6 +132,7 @@ static bool utf8ize(uint32_t v, char* buf /* [5] */) {
 %s XHP_INVALID_ENTITY
 %s XHP_ATTR_TYPE_DECL
 %s XHP_CHILDREN_DECL
+%s XHP_COMMENT
 
 LNUM [0-9]+
 DNUM ([0-9]*"."[0-9]+)|([0-9]+"."[0-9]*)
@@ -951,6 +952,23 @@ NEWLINE ("\r\n"|"\n"|"\r")
   }
 }
 
+<XHP_CHILD>[ \n\r\t]*"<!--" {
+  push_state(XHP_COMMENT);
+  yymore();
+}
+
+<XHP_COMMENT>[^-]+ {
+  yymore();
+}
+
+<XHP_COMMENT>"-->"[ \n\r\t]* {
+  pop_state();
+}
+
+<XHP_COMMENT>"-" {
+  yymore();
+}
+
 <XHP_CHILDREN_DECL>{
   any tok(T_XHP_ANY);
   pcdata tok(T_XHP_PCDATA);
@@ -1020,6 +1038,8 @@ static const char* yy_state_name(int state) {
       return "XHP_ATTR_TYPE_DECL";
     case XHP_CHILDREN_DECL:
       return "XHP_CHILDREN_DECL";
+    case XHP_COMMENT:
+      return "XHP_COMMENT";
     default:
       return "???";
   }
