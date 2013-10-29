@@ -707,6 +707,11 @@ abstract class :x:composable-element extends :x:base {
 
   final public function categoryOf($c) {
     $categories = $this->__xhpCategoryDeclaration();
+    if (isset($categories[$c])) {
+      return true;
+    }
+    // XHP parses the category string
+    $c = str_replace(array(':', '-'), array('__', '_'), $c);
     return isset($categories[$c]);
   }
 }
