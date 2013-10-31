@@ -27,25 +27,26 @@ abstract class :xhp:html-element extends :x:primitive {
     // Global HTML attributes
     string accesskey, string class, bool contenteditable, string contextmenu,
     string dir, bool draggable, string dropzone, bool hidden, string id,
-    string lang, enum {'true', 'false'} spellcheck, string style,
+    string lang, string role, enum {'true', 'false'} spellcheck, string style,
     string tabindex, string title, enum {'yes', 'no'} translate,
 
     // Javascript events
-    string onabort, string onblur, string oncanplay, string oncanplaythrough,
-    string onchange, string onclick, string oncontextmenu, string oncuechange,
-    string ondblclick, string ondrag, string ondragend, string ondragenter,
+    string onabort, string onblur, string oncancel, string oncanplay,
+    string oncanplaythrough, string onchange, string onclick, string onclose,
+    string oncontextmenu, string oncuechange, string ondblclick,
+    string ondrag, string ondragend, string ondragenter, string ondragexit,
     string ondragleave, string ondragover, string ondragstart, string ondrop,
     string ondurationchange, string onemptied, string onended, string onerror,
     string onfocus, string oninput, string oninvalid, string onkeydown,
     string onkeypress, string onkeyup, string onload, string onloadeddata,
     string onloadedmetadata, string onloadstart, string onmousedown,
-    string onmousemove, string onmouseout, string onmouseover, string onmouseup,
-    string onmousewheel, string onpause, string onplay, string onplaying,
-    string onprogress, string onratechange, string onreadystatechange,
-    string onreset, string onscroll, string onseeked, string onseeking,
-    string onselect, string onshow, string oninstalled, string onsubmit,
-    string onsuspend, string ontimeupdate, string onvolumechange,
-    string onwaiting,
+    string onmousemove, string onmouseout, string onmouseover,
+    string onmouseup, string onmousewheel, string onpause, string onplay,
+    string onplaying, string onprogress, string onratechange,
+    string onreadystatechange, string onreset, string onscroll,
+    string onseeked, string onseeking, string onselect, string onshow,
+    string onstalled, string onsubmit, string onsuspend, string ontimeupdate,
+    string onvolumechange, string onwaiting,
 
     // IE only
     string onmouseenter, string onmouseleave;
@@ -152,8 +153,8 @@ abstract class :xhp:raw-pcdata-element extends :xhp:pcdata-element {
  */
 class :a extends :xhp:html-element {
   attribute
-    string href, string hreflang, string media, string rel, string target,
-    string type,
+    string download, string href, string hreflang, string media, string rel,
+    string target, string type,
     // Legacy
     string name;
   category %flow, %phrase, %interactive;
@@ -177,8 +178,8 @@ class :address extends :xhp:html-element {
 
 class :area extends :xhp:html-singleton {
   attribute
-    string alt, string coords, string href, bool hreflang, string media,
-    string rel,
+    string alt, string coords, string download, string href, bool hreflang,
+    string media, string rel,
     enum {
       'circ', 'circle', 'default', 'poly', 'polygon', 'rect', 'rectangle'
     } shape, string target, string type;
@@ -200,8 +201,10 @@ class :aside extends :xhp:html-element {
 
 class :audio extends :xhp:html-element {
   attribute
-    bool autoplay, bool controls, bool loop, string mediagroup, bool muted,
-    enum {'none', 'metadata', 'auto'} preload, string src;
+    bool autoplay, bool controls,
+    enum {'anonymous', 'use-credentials'} crossorigin, bool loop,
+    string mediagroup, bool muted, enum {'none', 'metadata', 'auto'} preload,
+    string src;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
   protected $tagName = 'audio';
@@ -241,11 +244,9 @@ class :blockquote extends :xhp:html-element {
 class :body extends :xhp:html-element {
   attribute
     string onafterprint, string onbeforeprint, string onbeforeunload,
-    string onblur, string onerror, string onfocus, string onhaschange,
-    string onload, string onmessage, string onoffline, string ononline,
-    string onpagehide, string onpageshow, string onpopstate, string onredo,
-    string onresize, string onscroll, string onstorage, string onundo,
-    string onunload;
+    string onhashchange, string onmessage, string onoffline, string ononline,
+    string onpagehide, string onpageshow, string onpopstate, string onresize,
+    string onstorage, string onunload;
   children (pcdata | %flow)*;
   protected $tagName = 'body';
 }
@@ -304,19 +305,11 @@ class :colgroup extends :xhp:html-element {
   protected $tagName = 'colgroup';
 }
 
-class :command extends :xhp:html-element {
-  attribute
-    bool checked, bool disabled, string icon, string label, string radiogroup,
-    enum {'checkbox', 'command', 'radio'} type;
-  category %metadata, %flow, %phrase;
-  children (pcdata | %flow)*;
-  protected $tagName = 'command';
-}
-
-class :datalist extends :xhp:html-element {
+class :data extends :xhp:html-element {
+  attribute string value @required;
   category %flow, %phrase;
-  children (:option* | %phrase*);
-  protected $tagName = 'datalist';
+  children (%phrase*);
+  protected $tagName = 'data';
 }
 
 class :dd extends :xhp:html-element {
@@ -337,6 +330,13 @@ class :details extends :xhp:html-element {
   category %flow, %phrase, %interactive;
   children (:summary, %flow+);
   protected $tagName = 'details';
+}
+
+class :dialog extends :xhp:html-element {
+  attribute bool open;
+  category %flow, %sectioning;
+  children (%flow);
+  protected $tagName = 'dialog';
 }
 
 class :div extends :xhp:html-element {
@@ -498,7 +498,8 @@ class :iframe extends :xhp:pcdata-element {
 
 class :img extends :xhp:html-singleton {
   attribute
-    string alt, int height, bool ismap, string src, string usemap, int width;
+    string alt, enum {'anonymous', 'use-credentials'} crossorigin, int height,
+    bool ismap, string src, string usemap, int width;
   category %flow, %phrase;
   protected $tagName = 'img';
 }
@@ -506,14 +507,16 @@ class :img extends :xhp:html-singleton {
 class :input extends :xhp:html-singleton {
   attribute
     string accept, string alt, enum {'on', 'off'} autocomplete, bool autofocus,
-    bool checked, string dirname, bool disabled, string form, string formaction,
-    string formenctype, enum {'get', 'post'} formmethod, bool formnovalidate,
-    string formtarget, int height, string list, float max, int maxlength,
-    float min, bool multiple, string name, string pattern, string placeholder,
-    bool readonly, bool required, int size, string src, float step, enum {
-      'hidden', 'text', 'search', 'tel', 'url', 'email', 'password', 'datetime',
-      'date', 'month', 'week', 'time', 'datetime-local', 'number', 'range',
-      'color', 'checkbox', 'radio', 'file', 'submit', 'image', 'reset', 'button'
+    bool checked, string dirname, bool disabled, string form,
+    string formaction, string formenctype, enum {'get', 'post'} formmethod,
+    bool formnovalidate, string formtarget, int height, string list,
+    float max, int maxlength, float min, bool multiple, string name,
+    string pattern, string placeholder, bool readonly, bool required,
+    int size, string src, float step, enum {
+      'hidden', 'text', 'search', 'tel', 'url', 'email', 'password',
+      'datetime', 'date', 'month', 'week', 'time', 'datetime-local', 'number',
+      'range', 'color', 'checkbox', 'radio', 'file', 'submit', 'image',
+      'reset', 'button'
     } type, string value, int width;
   category %flow, %phrase, %interactive;
   protected $tagName = 'input';
@@ -560,8 +563,9 @@ class :li extends :xhp:html-element {
 
 class :link extends :xhp:html-singleton {
   attribute
-    string href, string hreflang, string media, string rel @required,
-    string sizes, string type;
+    enum {'anonymous', 'use-credentials'} crossorigin, string href,
+    string hreflang, string media, string rel @required, string sizes,
+    string type;
   category %metadata;
   protected $tagName = 'link';
 }
@@ -585,13 +589,6 @@ class :mark extends :xhp:html-element {
   protected $tagName = 'mark';
 }
 
-class :menu extends :xhp:html-element {
-  attribute string label, enum {'toolbar', 'context'} type;
-  category %flow, %interactive;
-  children (:li* | %flow*);
-  protected $tagName = 'menu';
-}
-
 class :meta extends :xhp:html-singleton {
   attribute
     // The correct definition of http-equiv is an enum, but there are legacy
@@ -605,8 +602,7 @@ class :meta extends :xhp:html-singleton {
 
 class :meter extends :xhp:html-element {
   attribute
-    string form, float high, float low, float max, float min, float optimum,
-    float value;
+    float high, float low, float max, float min, float optimum, float value;
   category %flow, %phrase;
   // Should not contain :meter
   children (pcdata | %phrase)*;
@@ -628,7 +624,7 @@ class :noscript extends :xhp:html-element {
 class :object extends :xhp:html-element {
   attribute
     string data, int height, string form, string name, string type,
-    string usemap, int width;
+    bool typemustmatch, string usemap, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:param*, (pcdata | %flow)*);
   protected $tagName = 'object';
@@ -677,7 +673,7 @@ class :pre extends :xhp:html-element {
 }
 
 class :progress extends :xhp:html-element {
-  attribute string form, float max, float value;
+  attribute float max, float value;
   category %flow, %phrase;
   // Should not contain :progress
   children (pcdata | %phrase)*;
@@ -720,7 +716,9 @@ class :samp extends :xhp:html-element {
 }
 
 class :script extends :xhp:raw-pcdata-element {
-  attribute bool async, string charset, bool defer, string src, string type,
+  attribute bool async, string charset,
+  enum {'anonymous', 'use-credentials'} crossorigin, bool defer, string src,
+  string type,
   // Legacy
   string language;
   category %flow, %phrase, %metadata;
@@ -820,9 +818,10 @@ class :td extends :xhp:html-element {
 
 class :textarea extends :xhp:pcdata-element {
   attribute
-    bool autofocus, int cols, string dirname, bool disabled, string form,
-    int maxlength, string name, string placeholder, bool readonly,
-    bool required, int rows, enum {'soft', 'hard'} wrap;
+    enum {'on', 'off'} autocomplete, bool autofocus, int cols, string dirname,
+    bool disabled, string form, int maxlength, string name,
+    string placeholder, bool readonly, bool required, int rows,
+    enum {'soft', 'hard'} wrap;
   category %flow, %phrase, %interactive;
   protected $tagName = 'textarea';
 }
@@ -834,7 +833,7 @@ class :tfoot extends :xhp:html-element {
 
 class :th extends :xhp:html-element {
   attribute
-    int colspan, string headers, int rowspan,
+    string abbr, int colspan, string headers, int rowspan,
     enum {'col', 'colgroup', 'row', 'rowgroup'} scope;
   children (pcdata | %flow)*;
   protected $tagName = 'th';
@@ -846,7 +845,7 @@ class :thead extends :xhp:html-element {
 }
 
 class :time extends :xhp:html-element {
-  attribute string datetime, bool pubdate;
+  attribute string datetime;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
   protected $tagName = 'time';
@@ -865,8 +864,9 @@ class :tr extends :xhp:html-element {
 class :track extends :xhp:html-singleton {
   attribute
     bool default,
-    enum {'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'} kind,
-    string label, string src, string srclang;
+    enum {
+      'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'
+    } kind, string label, string src, string srclang;
   protected $tagName = 'track';
 }
 
@@ -896,9 +896,10 @@ class :var extends :xhp:html-element {
 
 class :video extends :xhp:html-element {
   attribute
-    bool autoplay, bool controls, int height, bool loop, string mediagroup,
-    bool muted, string poster, enum {'none', 'metadata', 'auto'} preload,
-    string src, int width;
+    bool autoplay, bool controls,
+    enum {'anonymous', 'use-credentials'} crossorigin, int height, bool loop,
+    string mediagroup, bool muted, string poster,
+    enum {'none', 'metadata', 'auto'} preload, string src, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
   protected $tagName = 'video';
