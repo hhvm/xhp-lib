@@ -75,14 +75,15 @@ abstract class :x:composable-element extends :x:base {
   private static $specialAttributes = array('data' => true, 'aria' => true);
 
   // Private constants indicating the declared types of attributes
-  const TYPE_STRING = 1;
-  const TYPE_BOOL   = 2;
-  const TYPE_NUMBER = 3;
-  const TYPE_ARRAY  = 4;
-  const TYPE_OBJECT = 5;
-  const TYPE_VAR    = 6;
-  const TYPE_ENUM   = 7;
-  const TYPE_FLOAT  = 8;
+  const TYPE_STRING   = 1;
+  const TYPE_BOOL     = 2;
+  const TYPE_NUMBER   = 3;
+  const TYPE_ARRAY    = 4;
+  const TYPE_OBJECT   = 5;
+  const TYPE_VAR      = 6;
+  const TYPE_ENUM     = 7;
+  const TYPE_FLOAT    = 8;
+  const TYPE_CALLABLE = 9;
 
   protected function init() {}
 
@@ -484,6 +485,12 @@ abstract class :x:composable-element extends :x:base {
       case self::TYPE_FLOAT:
         if (!is_numeric($val)) {
           $val = (float)$val;
+        }
+        return;
+
+      case self::TYPE_CALLABLE:
+        if (!is_callable($val)) {
+          throw new XHPInvalidAttributeException($this, 'callable', $attr, $val);
         }
         return;
 

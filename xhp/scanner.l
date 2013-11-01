@@ -149,13 +149,14 @@ NEWLINE ("\r\n"|"\n"|"\r")
 %%
 
 <XHP_ATTR_TYPE_DECL>{
-  "bool"   tok(T_XHP_BOOLEAN);
-  "int"    tok(T_XHP_NUMBER);
-  "float"  tok(T_XHP_FLOAT);
-  "var"    tok(T_VAR);
-  "array"  tok(T_XHP_ARRAY);
-  "string" tok(T_XHP_STRING);
-  "enum"   tok(T_XHP_ENUM);
+  "bool"     tok(T_XHP_BOOLEAN);
+  "int"      tok(T_XHP_NUMBER);
+  "float"    tok(T_XHP_FLOAT);
+  "callable" tok(T_XHP_CALLABLE);
+  "var"      tok(T_VAR);
+  "array"    tok(T_XHP_ARRAY);
+  "string"   tok(T_XHP_STRING);
+  "enum"     tok(T_XHP_ENUM);
   @required tok(T_XHP_REQUIRED);
   "(" tok('(');
   ":" tok(T_XHP_COLON);
