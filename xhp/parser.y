@@ -1951,6 +1951,12 @@ xhp_attribute_decl_type:
 | T_XHP_NUMBER {
     $$ = "3, null";
   }
+| T_XHP_ARRAY '<' xhp_attribute_array_key_type T_DOUBLE_ARROW xhp_attribute_array_type '>' {
+    $$ = "4, array(" + $3 + ", " + $5 + ")";
+  }
+| T_XHP_ARRAY '<' xhp_attribute_array_type '>' {
+    $$ = "4, array(null, " + $3 + ")";
+  }
 | T_XHP_ARRAY {
     $$ = "4, null";
   }
@@ -1968,6 +1974,36 @@ xhp_attribute_decl_type:
   }
 | T_XHP_CALLABLE {
     $$ = "9, null";
+  }
+;
+
+xhp_attribute_array_key_type:
+  T_XHP_STRING {
+    $$ = "1";
+  }
+| T_XHP_NUMBER {
+    $$ = "3";
+  }
+;
+
+xhp_attribute_array_type:
+  T_XHP_STRING {
+    $$ = "1";
+  }
+| T_XHP_BOOLEAN {
+    $$ = "2";
+  }
+| T_XHP_NUMBER {
+    $$ = "3";
+  }
+| T_XHP_ARRAY {
+    $$ = "4";
+  }
+| class_name {
+    $$ = "5, '" + $1 + "'";
+  }
+| T_XHP_FLOAT {
+    $$ = "8";
   }
 ;
 

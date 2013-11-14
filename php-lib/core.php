@@ -498,6 +498,54 @@ abstract class :x:composable-element extends :x:base {
         if (!is_array($val)) {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
+        if ($decl[$attr][1]) {
+          if ($decl[$attr][1][0]) {
+            if ($decl[$attr][1][0] == self::TYPE_STRING) {
+              $type = 'string';
+              $func = 'is_string';
+            } else {
+              $type = 'int';
+              $func = 'is_int';
+            }
+            if (count($val) != count(array_filter(array_keys($val), $func))) {
+              $bad = $type == 'string' ? 'int' : 'string';
+              throw new XHPInvalidArrayKeyAttributeException($this, $type, $attr, $bad);
+            }
+          }
+          switch ($decl[$attr][1][1]) {
+            case self::TYPE_STRING:
+              $type = 'string';
+              $func = 'is_string';
+              break;
+            case self::TYPE_BOOL:
+              $type = 'bool';
+              $func = 'is_bool';
+              break;
+            case self::TYPE_NUMBER:
+              $type = 'int';
+              $func = 'is_int';
+              break;
+            case self::TYPE_FLOAT:
+              $type = 'float';
+              $func = 'is_numeric';
+              break;
+            case self::TYPE_ARRAY:
+              $type = 'array';
+              $func = 'is_array';
+              break;
+            case self::TYPE_OBJECT:
+              $type = $decl[$attr][1][2];
+              $func = function($item) use ($type) {
+                return $item instanceof $type;
+              };
+              break;
+          }
+          $filtered = array_filter($val, $func);
+          if (count($val) != count($filtered)) {
+            $bad = array_diff($val, $filtered);
+            throw new XHPInvalidArrayAttributeException($this, $type, $attr, reset($bad));
+          }
+        }
         return;
 
       case self::TYPE_OBJECT:
@@ -847,6 +895,31 @@ class XHPCoreRenderException extends XHPException {
 }
 
 class XHPRenderArrayException extends XHPException {
+}
+
+class XHPInvalidArrayAttributeException extends XHPException {
+  public function __construct($that, $type, $attr, $val) {
+    if (is_object($val)) {
+      $val_type = get_class($val);
+    } else {
+      $val_type = gettype($val);
+    }
+    parent::__construct(
+      "Invalid attribute `$attr` of type array<`$val_type`> supplied to element `".
+      :x:base::class2element(get_class($that))."`, expected array<`$type`>.\n\n".
+      $that->source
+    );
+  }
+}
+
+class XHPInvalidArrayKeyAttributeException extends XHPException {
+  public function __construct($that, $type, $attr, $val_type) {
+    parent::__construct(
+      "Invalid key in attribute `$attr` of type array<$val_type => ?> supplied to element `".
+      :x:base::class2element(get_class($that))."`, expected array<$type => ?>.\n\n".
+      $that->source
+    );
+  }
 }
 
 class XHPAttributeNotSupportedException extends XHPException {
