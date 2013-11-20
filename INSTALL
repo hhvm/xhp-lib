@@ -1,4 +1,10 @@
-You can install XHP with Homebrew by running any of the following commands:
+You can install XHP with Homebrew by first enabling the PHP repository
+(https://github.com/josegonzalez/homebrew-php):
+
+  brew tap homebrew/dupes
+  brew tap josegonzalez/homebrew-php
+
+Once completed, run any of the following commands:
 
   * brew install php53-xhp
   * brew install php54-xhp
