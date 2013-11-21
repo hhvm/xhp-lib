@@ -1,5 +1,5 @@
 You can install XHP with Homebrew by first enabling some required
-repositories (https://github.com/josegonzalez/homebrew-php):
+repositories:
 
   brew tap homebrew/dupes
   brew tap homebrew/versions
