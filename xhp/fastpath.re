@@ -77,7 +77,7 @@ bool xhp_fastpath(const char* yy, const size_t len, const xhp_flags_t &flags) {
     }
     <PHP> '%>' {
       if (flags.asp_tags) {
-        state = PHP;
+        state = HTML;
       }
       continue;
     }
