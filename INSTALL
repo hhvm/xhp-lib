@@ -11,9 +11,9 @@ Once completed, ensure gcc is installed:
 
 Then run any of the following commands:
 
-  * brew install php53-xhp
-  * brew install php54-xhp
-  * brew install php55-xhp
+  * brew install php53-xhp --cc=gcc-4.2
+  * brew install php54-xhp --cc=gcc-4.2
+  * brew install php55-xhp --cc=gcc-4.2
 
 To install manually, continue reading.
 
