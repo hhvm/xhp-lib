@@ -15,7 +15,7 @@
   +----------------------------------------------------------------------+
 */
 
-abstract class :x:base {
+abstract class :xhp {
   abstract public function __construct($attributes, $children);
   abstract public function appendChild($child);
   abstract public function prependChild($child);
@@ -47,7 +47,7 @@ abstract class :x:base {
   public static $ENABLE_VALIDATION = true;
 
   final protected static function renderChild($child) {
-    if ($child instanceof :x:base) {
+    if ($child instanceof :xhp) {
       return $child->__toString();
     } else if ($child instanceof HTML) {
       return $child->render();
@@ -67,6 +67,11 @@ abstract class :x:base {
   }
 }
 
+/**
+ * For backwards compatibility only -- this class really shouldn't exist. Use
+ * :xhp or :x:composable-element as appropriate, but never :x:base.
+ */
+abstract class :x:base extends :xhp {}
 abstract class :x:composable-element extends :x:base {
   private
     $attributes = array(),
@@ -105,7 +110,7 @@ abstract class :x:composable-element extends :x:base {
       $this->appendChild($child);
     }
     $this->setAttributes($attributes);
-    if (:x:base::$ENABLE_VALIDATION) {
+    if (:xhp::$ENABLE_VALIDATION) {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
       $args = func_get_args();
@@ -210,12 +215,12 @@ abstract class :x:composable-element extends :x:base {
     if ($selector[0] == '%') {
       $selector = substr($selector, 1);
       foreach ($this->children as $child) {
-        if ($child instanceof :x:base && $child->categoryOf($selector)) {
+        if ($child instanceof :xhp && $child->categoryOf($selector)) {
           $result[] = $child;
         }
       }
     } else {
-      $selector = :x:base::element2class($selector);
+      $selector = :xhp::element2class($selector);
       foreach ($this->children as $child) {
         if ($child instanceof $selector) {
           $result[] = $child;
@@ -240,12 +245,12 @@ abstract class :x:composable-element extends :x:base {
     } else if ($selector[0] == '%') {
       $selector = substr($selector, 1);
       foreach ($this->children as $child) {
-        if ($child instanceof :x:base && $child->categoryOf($selector)) {
+        if ($child instanceof :xhp && $child->categoryOf($selector)) {
           return $child;
         }
       }
     } else {
-      $selector = :x:base::element2class($selector);
+      $selector = :xhp::element2class($selector);
       foreach ($this->children as $child) {
         if ($child instanceof $selector) {
           return $child;
@@ -387,13 +392,13 @@ abstract class :x:composable-element extends :x:base {
 
   final protected function __flushElementChildren() {
 
-    // Flush all :x:base elements to x:primitive's
+    // Flush all :xhp elements to x:primitive's
     $ln = count($this->children);
     for ($ii = 0; $ii < $ln; ++$ii) {
       $child = $this->children[$ii];
       if ($child instanceof :x:element) {
         do {
-          if (:x:base::$ENABLE_VALIDATION) {
+          if (:xhp::$ENABLE_VALIDATION) {
             $child->validateChildren();
           }
           $child = $child->render();
@@ -649,7 +654,7 @@ abstract class :x:composable-element extends :x:base {
 
       case 2: // pcdata -- pcdata
         if (isset($this->children[$index]) &&
-            !($this->children[$index] instanceof :x:base)) {
+            !($this->children[$index] instanceof :xhp)) {
           ++$index;
           return true;
         }
@@ -665,7 +670,7 @@ abstract class :x:composable-element extends :x:base {
 
       case 4: // element category -- %block
         if (!isset($this->children[$index]) ||
-            !($this->children[$index] instanceof :x:base)) {
+            !($this->children[$index] instanceof :xhp)) {
           return false;
         }
         $categories = $this->children[$index]->__xhpCategoryDeclaration();
@@ -728,7 +733,7 @@ abstract class :x:composable-element extends :x:base {
         return 'pcdata';
 
       case 3:
-        return ':' . :x:base::class2element($rule);
+        return ':' . :xhp::class2element($rule);
 
       case 4:
         return '%' . $rule;
@@ -747,8 +752,8 @@ abstract class :x:composable-element extends :x:base {
   final public function __getChildrenDescription() {
     $desc = array();
     foreach ($this->children as $child) {
-      if ($child instanceof :x:base) {
-        $tmp = ':' . :x:base::class2element(get_class($child));
+      if ($child instanceof :xhp) {
+        $tmp = ':' . :xhp::class2element(get_class($child));
         if ($categories = $child->__xhpCategoryDeclaration()) {
           $tmp .= '[%'. implode(',%', array_keys($categories)) . ']';
         }
@@ -794,7 +799,7 @@ abstract class :x:primitive extends :x:composable-element {
 
     // Validate our children
     $this->__flushElementChildren();
-    if (:x:base::$ENABLE_VALIDATION) {
+    if (:xhp::$ENABLE_VALIDATION) {
       try {
         $this->validateChildren();
       } catch (Exception $error) {
@@ -818,7 +823,7 @@ abstract class :x:element extends :x:composable-element {
   final public function __toString() {
     $that = $this;
 
-    if (:x:base::$ENABLE_VALIDATION) {
+    if (:xhp::$ENABLE_VALIDATION) {
       try {
         // Validate the current object
         $that->validateChildren();
@@ -854,7 +859,7 @@ class :x:frag extends :x:primitive {
   protected function stringify() {
     $buf = '';
     foreach ($this->getChildren() as $child) {
-      $buf .= :x:base::renderChild($child);
+      $buf .= :xhp::renderChild($child);
     }
     return $buf;
   }
@@ -869,7 +874,7 @@ class XHPException extends Exception {
     if (substr($name, 0, 4) !== 'xhp_') {
       return $name;
     } else {
-      return :x:base::class2element($name);
+      return :xhp::class2element($name);
     }
   }
 }
@@ -888,7 +893,7 @@ class XHPCoreRenderException extends XHPException {
   public function __construct($that, $rend) {
     parent::__construct(
       ':x:element::render must reduce an object to an :x:primitive, but `'.
-      :x:base::class2element(get_class($that)).'` reduced into `'.gettype($rend)."`.\n\n".
+      :xhp::class2element(get_class($that)).'` reduced into `'.gettype($rend)."`.\n\n".
       $that->source
     );
   }
@@ -906,7 +911,7 @@ class XHPInvalidArrayAttributeException extends XHPException {
     }
     parent::__construct(
       "Invalid attribute `$attr` of type array<`$val_type`> supplied to element `".
-      :x:base::class2element(get_class($that))."`, expected array<`$type`>.\n\n".
+      :xhp::class2element(get_class($that))."`, expected array<`$type`>.\n\n".
       $that->source
     );
   }
@@ -916,7 +921,7 @@ class XHPInvalidArrayKeyAttributeException extends XHPException {
   public function __construct($that, $type, $attr, $val_type) {
     parent::__construct(
       "Invalid key in attribute `$attr` of type array<$val_type => ?> supplied to element `".
-      :x:base::class2element(get_class($that))."`, expected array<$type => ?>.\n\n".
+      :xhp::class2element(get_class($that))."`, expected array<$type => ?>.\n\n".
       $that->source
     );
   }
@@ -953,7 +958,7 @@ class XHPInvalidAttributeException extends XHPException {
     }
     parent::__construct(
       "Invalid attribute `$attr` of type `$val_type` supplied to element `".
-      :x:base::class2element(get_class($that))."`, expected `$type`.\n\n".
+      :xhp::class2element(get_class($that))."`, expected `$type`.\n\n".
       $that->source
     );
   }

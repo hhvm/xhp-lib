@@ -94,7 +94,7 @@ abstract class :xhp:html-element extends :x:primitive {
   protected function stringify() {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
-      $buf .= :x:base::renderChild($child);
+      $buf .= :xhp::renderChild($child);
     }
     $buf .= '</'.$this->tagName.'>';
     return $buf;
@@ -919,6 +919,6 @@ class :x:doctype extends :x:primitive {
 
   protected function stringify() {
     $children = $this->getChildren();
-    return '<!DOCTYPE html>' . (:x:base::renderChild($children[0]));
+    return '<!DOCTYPE html>' . (:xhp::renderChild($children[0]));
   }
 }
