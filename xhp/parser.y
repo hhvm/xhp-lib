@@ -1951,14 +1951,8 @@ xhp_attribute_decl_type:
 | T_XHP_NUMBER {
     $$ = "3, null";
   }
-| T_XHP_ARRAY '<' xhp_attribute_array_key_type T_DOUBLE_ARROW xhp_attribute_array_type '>' {
-    $$ = "4, array(" + $3 + ", " + $5 + ")";
-  }
-| T_XHP_ARRAY '<' xhp_attribute_array_type '>' {
-    $$ = "4, array(null, " + $3 + ")";
-  }
-| T_XHP_ARRAY {
-    $$ = "4, null";
+| T_XHP_ARRAY xhp_attribute_array_type {
+    $$ = "4, " + $2;
   }
 | class_name {
     $$ = "5, '" + $1 + "'";
@@ -1977,6 +1971,18 @@ xhp_attribute_decl_type:
   }
 ;
 
+xhp_attribute_array_type:
+  '<' xhp_attribute_array_key_type T_DOUBLE_ARROW xhp_attribute_array_value_type '>' {
+    $$ = "array(" + $2 + "," + $4 + ")";
+  }
+| '<' xhp_attribute_array_value_type '>' {
+    $$ = "array(null," + $2 + ")";
+  }
+| /* empty */ {
+    $$ = "null";
+  }
+;
+
 xhp_attribute_array_key_type:
   T_XHP_STRING {
     $$ = "1";
@@ -1986,7 +1992,7 @@ xhp_attribute_array_key_type:
   }
 ;
 
-xhp_attribute_array_type:
+xhp_attribute_array_value_type:
   T_XHP_STRING {
     $$ = "1";
   }
@@ -1996,14 +2002,17 @@ xhp_attribute_array_type:
 | T_XHP_NUMBER {
     $$ = "3";
   }
-| T_XHP_ARRAY {
-    $$ = "4";
+| T_XHP_ARRAY xhp_attribute_array_type {
+    $$ = "4," + $2;
   }
 | class_name {
-    $$ = "5, '" + $1 + "'";
+    $$ = "5,'" + $1 + "'";
   }
 | T_XHP_FLOAT {
     $$ = "8";
+  }
+| T_XHP_CALLABLE {
+    $$ = "9";
   }
 ;
 

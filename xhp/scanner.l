@@ -157,9 +157,13 @@ NEWLINE ("\r\n"|"\n"|"\r")
   "array"    tok(T_XHP_ARRAY);
   "string"   tok(T_XHP_STRING);
   "enum"     tok(T_XHP_ENUM);
-  @required tok(T_XHP_REQUIRED);
-  "(" tok('(');
-  ":" tok(T_XHP_COLON);
+  @required  tok(T_XHP_REQUIRED);
+  "("        tok('(');
+  ":"        tok(T_XHP_COLON);
+  ">>" {
+    yyless(1);
+    tok('>');
+  }
 }
 
  /* Open / close PHP + inline HTML */

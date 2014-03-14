@@ -5,16 +5,19 @@ Types in Array
 class Foo {}
 class :x {
   attribute
-  	array<int> a,
-  	array<float> b,
-  	array<string> c,
-  	array<bool> d,
-  	array<array> e,
-  	array<Foo> f,
-  	array<string => int> g,
-  	array<int => string> h;
+    array a,
+    array<int> b,
+    array<float> c,
+    array<string> d,
+    array<bool> e,
+    array<array> f,
+    array<callable> g,
+    array<Foo> h,
+    array<string => int> i,
+    array<int => string> j,
+    array<array<string => int>> k;
 }
-$x = <x a={array(1)} />;
+
 echo 'pass';
 --EXPECT--
 pass

@@ -504,52 +504,7 @@ abstract class :x:composable-element extends :x:base {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
         if ($decl[$attr][1]) {
-          if ($decl[$attr][1][0]) {
-            if ($decl[$attr][1][0] == self::TYPE_STRING) {
-              $type = 'string';
-              $func = 'is_string';
-            } else {
-              $type = 'int';
-              $func = 'is_int';
-            }
-            if (count($val) != count(array_filter(array_keys($val), $func))) {
-              $bad = $type == 'string' ? 'int' : 'string';
-              throw new XHPInvalidArrayKeyAttributeException($this, $type, $attr, $bad);
-            }
-          }
-          switch ($decl[$attr][1][1]) {
-            case self::TYPE_STRING:
-              $type = 'string';
-              $func = 'is_string';
-              break;
-            case self::TYPE_BOOL:
-              $type = 'bool';
-              $func = 'is_bool';
-              break;
-            case self::TYPE_NUMBER:
-              $type = 'int';
-              $func = 'is_int';
-              break;
-            case self::TYPE_FLOAT:
-              $type = 'float';
-              $func = 'is_numeric';
-              break;
-            case self::TYPE_ARRAY:
-              $type = 'array';
-              $func = 'is_array';
-              break;
-            case self::TYPE_OBJECT:
-              $type = $decl[$attr][1][2];
-              $func = function($item) use ($type) {
-                return $item instanceof $type;
-              };
-              break;
-          }
-          $filtered = array_filter($val, $func);
-          if (count($val) != count($filtered)) {
-            $bad = array_diff($val, $filtered);
-            throw new XHPInvalidArrayAttributeException($this, $type, $attr, reset($bad));
-          }
+          $this->validateArrayAttributeValue($decl[$attr][1], $attr, $val);
         }
         return;
 
@@ -571,6 +526,75 @@ abstract class :x:composable-element extends :x:base {
         }
         $enums = 'enum("' . implode('","', $decl[$attr][1]) . '")';
         throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
+    }
+  }
+
+  final private function validateArrayAttributeValue(array $decl, $attr, &$val) {
+    if ($decl[0]) { // Key declaration
+      if ($decl[0] == self::TYPE_STRING) {
+        $type = 'string';
+        $func = 'is_string';
+      } else {
+        $type = 'int';
+        $func = 'is_int';
+      }
+      if (count($val) != count(array_filter(array_keys($val), $func))) {
+        $bad = $type == 'string' ? 'int' : 'string';
+        throw new XHPInvalidArrayKeyAttributeException(
+          $this,
+          $type,
+          $attr,
+          $bad
+        );
+      }
+    }
+    switch ($decl[1]) { // Value declaration
+      case self::TYPE_STRING:
+        $type = 'string';
+        $func = 'is_string';
+        break;
+      case self::TYPE_BOOL:
+        $type = 'bool';
+        $func = 'is_bool';
+        break;
+      case self::TYPE_NUMBER:
+        $type = 'int';
+        $func = 'is_int';
+        break;
+      case self::TYPE_FLOAT:
+        $type = 'float';
+        $func = 'is_numeric';
+        break;
+      case self::TYPE_CALLABLE:
+        $type = 'callable';
+        $func = 'is_callable';
+        return;
+      case self::TYPE_ARRAY:
+        $type = 'array';
+        $func = 'is_array';
+        break;
+      case self::TYPE_OBJECT:
+        $type = $decl[2];
+        $func = function($item) use ($type) {
+          return $item instanceof $type;
+        };
+        break;
+    }
+    $filtered = array_filter($val, $func);
+    if (count($val) != count($filtered)) {
+      $bad = array_diff($val, $filtered);
+      throw new XHPInvalidArrayAttributeException(
+        $this,
+        $type,
+        $attr,
+        reset($bad)
+      );
+    }
+
+    if (isset($decl[2]) && $decl[1] == self::TYPE_ARRAY) {
+      foreach ($val as &$arrayVal) {
+        $this->validateArrayAttributeValue($decl[2], $attr, $arrayVal);
+      }
     }
   }
 
