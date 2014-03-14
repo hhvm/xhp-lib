@@ -257,7 +257,7 @@ use_declarations:
 use_declaration:
   namespace_name
 | namespace_name T_AS T_STRING {
-    $$ = $1 + $2 + $3;
+    $$ = $1 + " " + $2 + " " + $3;
   }
 | T_NS_SEPARATOR namespace_name {
     $$ = $1 + $2;
