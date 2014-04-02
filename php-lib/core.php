@@ -809,30 +809,18 @@ abstract class :x:composable-element extends :x:base {
 abstract class :x:primitive extends :x:composable-element {
   abstract protected function stringify();
 
-  /**
-   *  This isn't __toString() because throwing an exception out of __toString()
-   *  produces a useless, immediate fatal, and allowing XHP to seamlessly cast
-   *  into strings encourages bad practices, like this real snippet:
-   *
-   *    $links .= <a>...</a>;
-   *    $links .= <a>...</a>;
-   *    return HTML($links);
-   *
-   */
   final public function __toString() {
-
-    // Validate our children
-    $this->__flushElementChildren();
-    if (:xhp::$ENABLE_VALIDATION) {
-      try {
+    try {
+      // Validate our children
+      $this->__flushElementChildren();
+      if (:xhp::$ENABLE_VALIDATION) {
         $this->validateChildren();
-      } catch (Exception $error) {
-        trigger_error($error->getMessage(), E_USER_ERROR);
       }
+      // Render to string
+      return $this->stringify();
+    } catch (Exception $error) {
+      trigger_error($error->getMessage(), E_USER_ERROR);
     }
-
-    // Render to string
-    return $this->stringify();
   }
 }
 
@@ -847,8 +835,8 @@ abstract class :x:element extends :x:composable-element {
   final public function __toString() {
     $that = $this;
 
-    if (:xhp::$ENABLE_VALIDATION) {
-      try {
+    try {
+      if (:xhp::$ENABLE_VALIDATION) {
         // Validate the current object
         $that->validateChildren();
 
@@ -861,15 +849,16 @@ abstract class :x:element extends :x:composable-element {
         if (!($that instanceof :x:composable-element)) {
           throw new XHPCoreRenderException($this, $that);
         }
-      } catch (Exception $error) {
-        trigger_error($error->getMessage(), E_USER_ERROR);
+      } else {
+        // Skip the above checks when not validating
+        while (($that = $that->render()) instanceof :x:element);
       }
-    } else {
-      // Skip the above checks when not validating
-      while (($that = $that->render()) instanceof :x:element);
-    }
 
-    return $that->__toString();
+      return $that->__toString();
+      
+    } catch (Exception $error) {
+      trigger_error($error->getMessage(), E_USER_ERROR);
+    }
   }
 }
 
