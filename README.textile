@@ -55,8 +55,6 @@ echo <div>Hello {$_GET['name']}</div>;
 
 As you can see, using XHP makes safety the default rather than the exception.
 
-If for some reason you need to bypass XHP's escaping you can explicitly upcast a raw-str to an html-str with the @HTML()@ function. For example: @<div>{HTML($html)}</div>@. You should avoid this at all costs, however. See the "Best Practices" section below for more information.
-
 h1. Defining Elements
 
 All elements in XHP are just PHP classes. Even the basic HTML elements like div and span are classes. You define an element just like you do a class, except you use a leading colon to specify that you're creating an XHP element:
@@ -155,8 +153,6 @@ class :fb:thing extends :x:element {
 }
 
 This element would be considered magic because when you print an @<fb:thing />@ it actually returns a div.
-
-* Don't use @HTML()@. You should not use @HTML()@ unless you have a very good reason, and you have a very very good understanding of the differences between HTML strings and raw strings. And even then, avoid @HTML()@.
 
 h1. External Resources
 

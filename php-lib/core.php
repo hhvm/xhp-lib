@@ -49,8 +49,6 @@ abstract class :xhp {
   final protected static function renderChild($child) {
     if ($child instanceof :xhp) {
       return $child->__toString();
-    } else if ($child instanceof HTML) {
-      return $child->render();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -617,11 +615,6 @@ abstract class :x:composable-element extends :x:base {
     $ii = 0;
     if (!$this->validateChildrenExpression($decl, $ii) ||
         $ii < count($this->children)) {
-      // Use of HTML() breaks the content model definition.
-      // Lesson: Don't use HTML().
-      if (isset($this->children[$ii]) && $this->children[$ii] instanceof HTML) {
-        return;
-      }
       throw new XHPInvalidChildrenException($this, $ii);
     }
   }
@@ -855,7 +848,7 @@ abstract class :x:element extends :x:composable-element {
       }
 
       return $that->__toString();
-      
+
     } catch (Exception $error) {
       trigger_error($error->getMessage(), E_USER_ERROR);
     }
