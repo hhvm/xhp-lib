@@ -154,6 +154,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   "float"    tok(T_XHP_FLOAT);
   "callable" tok(T_XHP_CALLABLE);
   "var"      tok(T_VAR);
+  "mixed"    tok(T_XHP_MIXED);
   "array"    tok(T_XHP_ARRAY);
   "string"   tok(T_XHP_STRING);
   "enum"     tok(T_XHP_ENUM);

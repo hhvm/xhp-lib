@@ -193,6 +193,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_XHP_BOOLEAN
 %token T_XHP_NUMBER
 %token T_XHP_ARRAY
+%token T_XHP_MIXED
 %token T_XHP_STRING
 %token T_XHP_ENUM
 %token T_XHP_FLOAT
@@ -1958,6 +1959,9 @@ xhp_attribute_decl_type:
     $$ = "5, '" + $1 + "'";
   }
 | T_VAR {
+    $$ = "6, null";
+  }
+| T_XHP_MIXED {
     $$ = "6, null";
   }
 | T_XHP_ENUM '{' { push_state(PHP); } xhp_attribute_enum { pop_state(); } '}' {
