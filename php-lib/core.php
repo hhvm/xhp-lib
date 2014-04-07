@@ -20,9 +20,9 @@ abstract class :xhp {
   abstract public function appendChild($child);
   abstract public function prependChild($child);
   abstract public function replaceChildren();
-  abstract protected function getChildren($selector = null);
-  abstract protected function getFirstChild($selector = null);
-  abstract protected function getLastChild($selector = null);
+  abstract public function getChildren($selector = null);
+  abstract public function getFirstChild($selector = null);
+  abstract public function getLastChild($selector = null);
   abstract public function getAttribute($attr);
   abstract public function getAttributes();
   abstract public function setAttribute($attr, $val);
