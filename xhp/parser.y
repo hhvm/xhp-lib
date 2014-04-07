@@ -1901,9 +1901,9 @@ class_declaration_statement:
         "protected static function &__xhpAttributeDeclaration() {" +
           "static $_ = -1;" +
           "if ($_ === -1) {" +
-            "$_ = array_merge(parent::__xhpAttributeDeclaration(), " +
+            "$_ = parent::__xhpAttributeDeclaration() + " +
               yyextra->attribute_inherit +
-              "array(" + yyextra->attribute_decls + "));" +
+              "array(" + yyextra->attribute_decls + ");" +
           "}" +
           "return $_;"
         "}";
@@ -1938,7 +1938,7 @@ xhp_attribute_decl:
 | T_XHP_COLON xhp_label_immediate {
     $2.strip_lines();
     yyextra->attribute_inherit = yyextra->attribute_inherit +
-      (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2 + "::__xhpAttributeDeclaration(),";
+      (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2 + "::__xhpAttributeDeclaration() + ";
   }
 ;
 
