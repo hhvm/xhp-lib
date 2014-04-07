@@ -205,7 +205,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $selector   tag name or category (optional)
    * @return array
    */
-  final protected function getChildren($selector = null) {
+  final public function getChildren($selector = null) {
     if (!$selector) {
       return $this->children;
     }
@@ -237,7 +237,7 @@ abstract class :x:composable-element extends :x:base {
    * @return            element  the first child node (with the given selector),
    *                             false if there are no (matching) children
    */
-  final protected function getFirstChild($selector = null) {
+  final public function getFirstChild($selector = null) {
     if (!$selector) {
       return reset($this->children);
     } else if ($selector[0] == '%') {
@@ -266,7 +266,7 @@ abstract class :x:composable-element extends :x:base {
    * @return           element  the last child node (with the given selector),
    *                            false if there are no (matching) children
    */
-  final protected function getLastChild($selector = null) {
+  final public function getLastChild($selector = null) {
     $temp = $this->getChildren($selector);
     return end($temp);
   }
