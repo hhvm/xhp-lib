@@ -1901,9 +1901,9 @@ class_declaration_statement:
         "protected static function &__xhpAttributeDeclaration() {" +
           "static $_ = -1;" +
           "if ($_ === -1) {" +
-            "$_ = parent::__xhpAttributeDeclaration() + " +
+            "$_ = array(" + yyextra->attribute_decls + ") + " +
               yyextra->attribute_inherit +
-              "array(" + yyextra->attribute_decls + ");" +
+              "parent::__xhpAttributeDeclaration();" +
           "}" +
           "return $_;"
         "}";
