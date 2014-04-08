@@ -73,7 +73,8 @@ abstract class :x:base extends :xhp {}
 abstract class :x:composable-element extends :x:base {
   private
     $attributes = array(),
-    $children = array();
+    $children = array(),
+    $context = array();
 
   private static $specialAttributes = array('data' => true, 'aria' => true);
 
@@ -388,23 +389,72 @@ abstract class :x:composable-element extends :x:base {
     return $this;
   }
 
+  /**
+   * Returns all contexts currently set.
+   *
+   * @return array  All contexts
+   */
+  final public function getAllContexts() {
+    return $this->context;
+  }
+
+  /**
+   * Returns a specific context value. Can include a default if not set.
+   *
+   * @param string $key     The context key
+   * @param mixed $default  The value to return if not set (optional)
+   * @return mixed          The context value or $default
+   */
+  final public function getContext($key, $default = null) {
+    if (isset($this->context[$key])) {
+      return $this->context[$key];
+    }
+    return $default;
+  }
+
+  /**
+   * Sets a value that will be automatically passed down through a render chain
+   * and can be referenced by children and composed elements. For instance, if
+   * a root element sets a context of "admin_mode" = true, then all elements
+   * that are rendered as children of that root element will receive this
+   * context WHEN RENDERED. The context will not be available before render.
+   *
+   * @param mixed $key      Either a key, or an array of key/value pairs
+   * @param mixed $default  if $key is a string, the value to set
+   * @return :xhp           $this
+   */
+  final public function setContext($keyOrArray, $value = null) {
+    if (is_array($keyOrArray)) {
+      $this->context = $keyOrArray + $this->context;
+    } else {
+      $this->context[$keyOrArray] = $value;
+    }
+    return $this;
+  }
+
+  /**
+   * Transfers the context but will not overwrite anything. This is done only
+   * for rendering because we don't want a parent's context to replace a
+   * child's context if they have the same key.
+   *
+   * @param array $parentContext  The context to transfer
+   */
+  final private function transferContext(array $parentContext) {
+    $this->context += $parentContext;
+  }
+
   final protected function __flushElementChildren() {
 
     // Flush all :xhp elements to x:primitive's
     $ln = count($this->children);
     for ($ii = 0; $ii < $ln; ++$ii) {
       $child = $this->children[$ii];
-      if ($child instanceof :x:element) {
-        do {
-          if (:xhp::$ENABLE_VALIDATION) {
-            $child->validateChildren();
-          }
-          $child = $child->render();
-        } while ($child instanceof :x:element);
+      if ($child instanceof :x:composable-element) {
+        $child->transferContext($this->context);
+      }
 
-        if (!($child instanceof :x:primitive)) {
-          throw new XHPCoreRenderException($this->children[$ii], $child);
-        }
+      if ($child instanceof :x:element) {
+        $child = $child->__flushRenderedRootElement();
 
         if ($child instanceof :x:frag) {
           array_splice($this->children, $ii, 1, $child->children);
@@ -415,6 +465,26 @@ abstract class :x:composable-element extends :x:base {
         }
       }
     }
+  }
+
+  final protected function __flushRenderedRootElement() {
+    $that = $this;
+    // Flush root elements returned from render() to an :x:primitive
+    while (($composed = $that->render()) instanceof :x:element) {
+      if (:xhp::$ENABLE_VALIDATION) {
+        $composed->validateChildren();
+      }
+      $composed->transferContext($that->context);
+      $that = $composed;
+    }
+
+    if ($composed instanceof :x:composable-element) {
+      $composed->transferContext($that->context);
+    } else if (:xhp::$ENABLE_VALIDATION) {
+      // render() must always return XHPPrimitives
+      throw new XHPCoreRenderException($this, $that);
+    }
+    return $composed;
   }
 
   /**
@@ -830,23 +900,9 @@ abstract class :x:element extends :x:composable-element {
 
     try {
       if (:xhp::$ENABLE_VALIDATION) {
-        // Validate the current object
         $that->validateChildren();
-
-        // And each intermediary object it returns
-        while (($that = $that->render()) instanceof :x:element) {
-          $that->validateChildren();
-        }
-
-        // render() must always return XHPPrimitives
-        if (!($that instanceof :x:composable-element)) {
-          throw new XHPCoreRenderException($this, $that);
-        }
-      } else {
-        // Skip the above checks when not validating
-        while (($that = $that->render()) instanceof :x:element);
       }
-
+      $that = $that->__flushRenderedRootElement();
       return $that->__toString();
 
     } catch (Exception $error) {
