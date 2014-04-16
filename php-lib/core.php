@@ -133,7 +133,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $child     single child or array of children
    */
   final public function appendChild($child) {
-    if (is_array($child)) {
+    if ($child instanceof Traversable) {
       foreach ($child as $c) {
         $this->appendChild($c);
       }
@@ -152,7 +152,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $child     single child or array of children
    */
   final public function prependChild($child) {
-    if (is_array($child)) {
+    if ($child instanceof Traversable) {
       foreach (array_reverse($child) as $c) {
         $this->prependChild($c);
       }
@@ -180,7 +180,7 @@ abstract class :x:composable-element extends :x:base {
           foreach ($xhp->children as $child) {
             $new_children[] = $child;
           }
-        } else if (!is_array($xhp)) {
+        } else if (!$xhp instanceof Traversable) {
           $new_children[] = $xhp;
         } else {
           foreach ($xhp as $element) {
@@ -424,7 +424,7 @@ abstract class :x:composable-element extends :x:base {
    * @return :xhp           $this
    */
   final public function setContext($keyOrArray, $value = null) {
-    if (is_array($keyOrArray)) {
+    if ($keyOrArray instanceof Traversable) {
       $this->context = $keyOrArray + $this->context;
     } else {
       $this->context[$keyOrArray] = $value;
