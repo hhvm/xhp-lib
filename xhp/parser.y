@@ -1683,9 +1683,9 @@ xhp_singleton:
     if (yyextra->include_debug) {
       char line[16];
       sprintf(line, "%lu", (unsigned long)$1.lineno());
-      $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(), __FILE__, " + line + ")";
+      $$ = (yyextra->force_global_namespace ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(), __FILE__, " + line + ")";
     } else {
-      $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array())";
+      $$ = (yyextra->force_global_namespace ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array())";
     }
   }
 ;
@@ -1695,7 +1695,7 @@ xhp_tag_open:
     pop_state(); // XHP_ATTRS
     push_state(XHP_CHILD_START);
     yyextra->pushTag($1.c_str());
-    $$ = (yyextra->emit_namespaces ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(";
+    $$ = (yyextra->force_global_namespace ? "new \\xhp_" : "new xhp_") + $1 + "(array(" + $2 + "), array(";
   }
 ;
 
@@ -1938,7 +1938,7 @@ xhp_attribute_decl:
 | T_XHP_COLON xhp_label_immediate {
     $2.strip_lines();
     yyextra->attribute_inherit = yyextra->attribute_inherit +
-      (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2 + "::__xhpAttributeDeclaration() + ";
+      (yyextra->force_global_namespace ? "\\xhp_" : "xhp_") + $2 + "::__xhpAttributeDeclaration() + ";
   }
 ;
 
@@ -2142,7 +2142,7 @@ xhp_children_decl_tag:
     $$ = "2, null";
   }
 | T_XHP_COLON xhp_label {
-    $$ = (yyextra->emit_namespaces ? "3, \'\\\\xhp_" + $2 + "\'" : "3, \'xhp_" + $2 + "\'");
+    $$ = (yyextra->force_global_namespace ? "3, \'\\\\xhp_" + $2 + "\'" : "3, \'xhp_" + $2 + "\'");
   }
 | '%' xhp_label {
     $$ = "4, \'" + $2 + "\'";
@@ -2155,7 +2155,7 @@ class_name:
     pop_state();
     push_state(PHP);
     yyextra->used = true;
-    $$ = (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2;
+    $$ = (yyextra->force_global_namespace ? "\\xhp_" : "xhp_") + $2;
   }
 ;
 
@@ -2164,7 +2164,7 @@ fully_qualified_class_name:
     pop_state();
     push_state(PHP);
     yyextra->used = true;
-    $$ = (yyextra->emit_namespaces ? "\\xhp_" : "xhp_") + $2;
+    $$ = (yyextra->force_global_namespace ? "\\xhp_" : "xhp_") + $2;
   }
 ;
 
@@ -2177,7 +2177,7 @@ expr_without_variable:
   expr '[' dim_offset ']' {
     if (yyextra->idx_expr) {
       yyextra->used = true;
-      $$ = (yyextra->emit_namespaces ? "\\__xhp_idx(" : "__xhp_idx(") + $1 + ", " + $3 + ")";
+      $$ = (yyextra->force_global_namespace ? "\\__xhp_idx(" : "__xhp_idx(") + $1 + ", " + $3 + ")";
     } else {
       $$ = $1 + $2 + $3 + $4;
     }

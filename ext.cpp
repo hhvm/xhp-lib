@@ -49,6 +49,7 @@ typedef struct {
 ZEND_BEGIN_MODULE_GLOBALS(xhp)
   bool idx_expr;
   bool include_debug;
+  bool force_global_namespace;
 ZEND_END_MODULE_GLOBALS(xhp)
 ZEND_DECLARE_MODULE_GLOBALS(xhp)
 
@@ -161,9 +162,9 @@ static zend_op_array* xhp_compile_file(zend_file_handle* f, int type TSRMLS_DC) 
   flags.idx_expr = XHPG(idx_expr);
   flags.include_debug = XHPG(include_debug);
 #if PHP_VERSION_ID >= 50300
-  flags.emit_namespaces = true;
+  flags.force_global_namespace = XHPG(force_global_namespace);
 #else
-  flags.emit_namespaces = false;
+  flags.force_global_namespace = false;
 #endif
   result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
@@ -242,6 +243,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
   flags.short_tags = CG(short_tags);
   flags.idx_expr = XHPG(idx_expr);
   flags.include_debug = XHPG(include_debug);
+  flags.force_global_namespace = XHPG(force_global_namespace);
   flags.eval = true;
   XHPResult result = xhp_preprocess(original_code, rewrit, error_str, error_lineno, flags);
 
@@ -279,6 +281,7 @@ static zend_op_array* xhp_compile_string(zval* str, char *filename TSRMLS_DC) {
 static void php_xhp_init_globals(zend_xhp_globals* xhp_globals) {
   xhp_globals->idx_expr = false;
   xhp_globals->include_debug = true;
+  xhp_globals->force_global_namespace = true;
 }
 
 //
@@ -286,6 +289,7 @@ static void php_xhp_init_globals(zend_xhp_globals* xhp_globals) {
 PHP_INI_BEGIN()
   STD_PHP_INI_BOOLEAN("xhp.idx_expr", "0", PHP_INI_PERDIR, OnUpdateBool, idx_expr, zend_xhp_globals, xhp_globals)
   STD_PHP_INI_BOOLEAN("xhp.include_debug", "1", PHP_INI_PERDIR, OnUpdateBool, include_debug, zend_xhp_globals, xhp_globals)
+  STD_PHP_INI_BOOLEAN("xhp.force_global_namespace", "1", PHP_INI_PERDIR, OnUpdateBool, force_global_namespace, zend_xhp_globals, xhp_globals)
 PHP_INI_END()
 
 //
@@ -327,6 +331,9 @@ static PHP_MSHUTDOWN_FUNCTION(xhp) {
 static PHP_MINFO_FUNCTION(xhp) {
   php_info_print_table_start();
   php_info_print_table_row(2, "Version", PHP_XHP_VERSION);
+  php_info_print_table_row(2, "Include Debug Info Into XHP Classes", XHPG(include_debug) ? "enabled" : "disabled");
+  php_info_print_table_row(2, "Manual Support For func_call()['key'] Syntax", XHPG(idx_expr) ? "enabled" : "disabled");
+  php_info_print_table_row(2, "Force XHP Into The Global Namespace", XHPG(force_global_namespace) ? "enabled" : "disabled");
   php_info_print_table_end();
 }
 
