@@ -3,7 +3,7 @@ repositories:
 
   brew tap homebrew/dupes
   brew tap homebrew/versions
-  brew tap josegonzalez/homebrew-php
+  brew tap homebrew/homebrew-php
 
 Once completed, ensure gcc is installed:
 
