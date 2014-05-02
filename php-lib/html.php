@@ -1022,3 +1022,26 @@ class :x:doctype extends :x:primitive {
     return '<!DOCTYPE html>' . (:xhp::renderChild($children[0]));
   }
 }
+
+/**
+ * Render an HTML conditional comment. You can choose whatever you like as
+ * the conditional statement.
+ */
+class :x:conditional-comment extends :x:primitive {
+  attribute string if @required;
+  children (pcdata | :xhp)*;
+
+  protected function stringify() {
+    $children = $this->getChildren();
+    $html = '<!--[if '.$this->getAttribute('if').']>';
+    foreach ($children as $child) {
+      if ($child instanceof :xhp) {
+        $html .= :xhp::renderChild($child);
+      } else {
+        $html .= $child;
+      }
+    }
+    $html .= '<![endif]-->';
+    return $html;
+  }
+}
