@@ -1,0 +1,8 @@
+{
+	"name": "facebook/xhp",
+	"description": "XHP is a PHP extension which augments the syntax of the language such that XML document fragments become valid PHP expressions.",
+
+	"autoload": {
+		"classmap": ["php-lib/"]
+	}
+}
