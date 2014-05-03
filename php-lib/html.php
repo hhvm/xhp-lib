@@ -130,7 +130,7 @@ abstract class :xhp:html-element extends :x:primitive {
         if ($val === true) {
           $buf .= ' '.htmlspecialchars($key);
         } else {
-          $buf .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($val, ENT_QUOTES).'"';
+          $buf .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($val, ENT_COMPAT).'"';
         }
       }
     }
