@@ -177,6 +177,7 @@ static void replacestr(string &source, const string &find, const string &rep) {
 %token T_TRAIT
 %token T_INSTEADOF
 %token T_YIELD
+%token T_VARIADIC_PARAMETER
 
 %token T_XHP_WHITESPACE
 %token T_XHP_TEXT
@@ -635,8 +636,17 @@ new_else_single:
 
 parameter_list:
   non_empty_parameter_list
+| non_empty_parameter_list ',' variadic_parameter {
+    $$ = $1 + $2 + $3;
+  }
 | /* empty */ {
     $$ = "";
+  }
+;
+
+variadic_parameter:
+  optional_class_type T_VARIADIC_PARAMETER T_VARIABLE {
+    $$ = $1 + $2 + $3;
   }
 ;
 
@@ -681,6 +691,9 @@ optional_class_type:
 
 function_call_parameter_list:
   non_empty_function_call_parameter_list
+| non_empty_function_call_parameter_list ',' variadic_parameter {
+    $$ = $1 + $2 + $3;
+  }
 | /* empty */ {
     $$ = "";
   }

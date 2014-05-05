@@ -338,6 +338,7 @@ NEWLINE ("\r\n"|"\n"|"\r")
   trait tok(T_TRAIT);
   insteadof tok(T_INSTEADOF);
   yield tok(T_YIELD);
+  "..." tok(T_VARIADIC_PARAMETER);
   __namespace__ tok(T_NS_C);
   __dir__ tok(T_DIR);
   attribute {
