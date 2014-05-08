@@ -16,6 +16,35 @@
 */
 
 /**
+ * Functions used by :xhp:html-element that are also useful if you're making
+ * your own HTML-based UI library.
+ */
+trait xhp_html_element_helpers {
+  public function getID() {
+    return $this->requireUniqueID();
+  }
+
+  public function requireUniqueID() {
+    if (!($id = $this->getAttribute('id'))) {
+      $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
+    }
+    return $id;
+  }
+
+  public function addClass($class) {
+    $this->setAttribute('class', trim($this->getAttribute('class').' '.$class));
+    return $this;
+  }
+
+  public function conditionClass($cond, $class) {
+    if ($cond) {
+      $this->addClass($class);
+    }
+    return $this;
+  }
+}
+
+/**
  * This is the base library of HTML elements for use in XHP. This includes all
  * non-deprecated tags and attributes. Elements in this file should stay as
  * close to spec as possible. Facebook-specific extensions should go into their
@@ -112,16 +141,7 @@ abstract class :xhp:html-element extends :x:primitive {
 
   protected $tagName;
 
-  public function getID() {
-    return $this->requireUniqueID();
-  }
-
-  public function requireUniqueID() {
-    if (!($id = $this->getAttribute('id'))) {
-      $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
-    }
-    return $id;
-  }
+  use xhp_html_element_helpers;
 
   protected final function renderBaseAttrs() {
     $buf = '<'.$this->tagName;
@@ -135,18 +155,6 @@ abstract class :xhp:html-element extends :x:primitive {
       }
     }
     return $buf;
-  }
-
-  public function addClass($class) {
-    $this->setAttribute('class', trim($this->getAttribute('class').' '.$class));
-    return $this;
-  }
-
-  public function conditionClass($cond, $class) {
-    if ($cond) {
-      $this->addClass($class);
-    }
-    return $this;
   }
 
   protected function stringify() {
