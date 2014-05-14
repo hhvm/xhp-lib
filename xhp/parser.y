@@ -1989,7 +1989,7 @@ xhp_attribute_decl_type:
 ;
 
 xhp_attribute_array_type:
-  '<' xhp_attribute_array_key_type T_DOUBLE_ARROW xhp_attribute_array_value_type '>' {
+  '<' xhp_attribute_array_key_type ',' xhp_attribute_array_value_type '>' {
     $$ = "array(" + $2 + "," + $4 + ")";
   }
 | '<' xhp_attribute_array_value_type '>' {

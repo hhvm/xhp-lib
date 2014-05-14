@@ -13,9 +13,9 @@ class :x {
     array<array> f,
     array<callable> g,
     array<Foo> h,
-    array<string => int> i,
-    array<int => string> j,
-    array<array<string => int>> k;
+    array<string, int> i,
+    array<int, string> j,
+    array<array<string, int>> k;
 }
 
 echo 'pass';
