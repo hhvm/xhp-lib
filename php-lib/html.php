@@ -907,7 +907,7 @@ class :template extends :xhp:html-element {
   category %flow, %phrase, %metadata;
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.
-  protected $tagName = 'tbody';
+  protected $tagName = 'template';
 }
 
 class :td extends :xhp:html-element {
