@@ -1,4 +1,5 @@
-<?php
+<?hh
+
 /*
   +----------------------------------------------------------------------+
   | XHP                                                                  |
@@ -110,20 +111,20 @@ abstract class :xhp:html-element extends :x:primitive {
     string onvolumechange,
     string onwaiting;
 
-  protected $tagName;
+  protected string $tagName = '';
 
-  public function getID() {
+  public function getID(): string {
     return $this->requireUniqueID();
   }
 
-  public function requireUniqueID() {
+  public function requireUniqueID(): string {
     if (!($id = $this->getAttribute('id'))) {
       $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
     }
     return $id;
   }
 
-  protected final function renderBaseAttrs() {
+  protected final function renderBaseAttrs(): string {
     $buf = '<'.$this->tagName;
     foreach ($this->getAttributes() as $key => $val) {
       if ($val !== null && $val !== false) {
@@ -137,19 +138,19 @@ abstract class :xhp:html-element extends :x:primitive {
     return $buf;
   }
 
-  public function addClass($class) {
-    $this->setAttribute('class', trim($this->getAttribute('class').' '.$class));
+  public function addClass(string $class): this {
+    $this->setAttribute('class', trim((string)$this->getAttribute('class').' '.$class));
     return $this;
   }
 
-  public function conditionClass($cond, $class) {
+  public function conditionClass(bool $cond, string $class) {
     if ($cond) {
       $this->addClass($class);
     }
     return $this;
   }
 
-  protected function stringify() {
+  protected function stringify(): string {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
       $buf .= :xhp::renderChild($child);
@@ -166,7 +167,7 @@ abstract class :xhp:html-element extends :x:primitive {
 abstract class :xhp:html-singleton extends :xhp:html-element {
   children empty;
 
-  protected function stringify() {
+  protected function stringify(): string {
     return $this->renderBaseAttrs().'>';
   }
 }
@@ -192,7 +193,7 @@ abstract class :xhp:pcdata-element extends :xhp:html-element {
  * the element."
  */
 abstract class :xhp:raw-pcdata-element extends :xhp:pcdata-element {
-  protected function stringify() {
+  protected function stringify(): string {
     $buf = $this->renderBaseAttrs() . '>';
     foreach ($this->getChildren() as $child) {
       if (!is_string($child)) {
@@ -218,20 +219,20 @@ class :a extends :xhp:html-element {
   category %flow, %phrase, %interactive;
   // Should not contain %interactive
   children (pcdata | %flow)*;
-  protected $tagName = 'a';
+  protected string $tagName = 'a';
 }
 
 class :abbr extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'abbr';
+  protected string $tagName = 'abbr';
 }
 
 class :address extends :xhp:html-element {
   category %flow;
   // May not contain %heading, %sectioning, :header, :footer, or :address
   children (pcdata | %flow)*;
-  protected $tagName = 'address';
+  protected string $tagName = 'address';
 }
 
 class :area extends :xhp:html-singleton {
@@ -242,19 +243,19 @@ class :area extends :xhp:html-singleton {
       'circ', 'circle', 'default', 'poly', 'polygon', 'rect', 'rectangle'
     } shape, string target, string type;
   category %flow, %phrase;
-  protected $tagName = 'area';
+  protected string $tagName = 'area';
 }
 
 class :article extends :xhp:html-element {
   category %flow, %sectioning;
   children (pcdata | %flow)*;
-  protected $tagName = 'article';
+  protected string $tagName = 'article';
 }
 
 class :aside extends :xhp:html-element {
   category %flow, %sectioning;
   children (pcdata | %flow)*;
-  protected $tagName = 'aside';
+  protected string $tagName = 'aside';
 }
 
 class :audio extends :xhp:html-element {
@@ -265,38 +266,38 @@ class :audio extends :xhp:html-element {
     string src;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
-  protected $tagName = 'audio';
+  protected string $tagName = 'audio';
 }
 
 class :b extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'b';
+  protected string $tagName = 'b';
 }
 
 class :base extends :xhp:html-singleton {
   attribute string href, string target;
   category %metadata;
-  protected $tagName = 'base';
+  protected string $tagName = 'base';
 }
 
 class :bdi extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'bdi';
+  protected string $tagName = 'bdi';
 }
 
 class :bdo extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'bdo';
+  protected string $tagName = 'bdo';
 }
 
 class :blockquote extends :xhp:html-element {
   attribute string cite;
   category %flow, %sectioning;
   children (pcdata | %flow)*;
-  protected $tagName = 'blockquote';
+  protected string $tagName = 'blockquote';
 }
 
 class :body extends :xhp:html-element {
@@ -306,12 +307,12 @@ class :body extends :xhp:html-element {
     string onpagehide, string onpageshow, string onpopstate, string onstorage,
     string onunload;
   children (pcdata | %flow)*;
-  protected $tagName = 'body';
+  protected string $tagName = 'body';
 }
 
 class :br extends :xhp:html-singleton {
   category %flow, %phrase;
-  protected $tagName = 'br';
+  protected string $tagName = 'br';
 }
 
 class :button extends :xhp:html-element {
@@ -323,13 +324,13 @@ class :button extends :xhp:html-element {
   category %flow, %phrase, %interactive;
   // Should not contain interactive
   children (pcdata | %phrase)*;
-  protected $tagName = 'button';
+  protected string $tagName = 'button';
 }
 
 class :caption extends :xhp:html-element {
   // Should not contain :table
   children (pcdata | %flow)*;
-  protected $tagName = 'caption';
+  protected string $tagName = 'caption';
 }
 
 class :canvas extends :xhp:html-element {
@@ -337,48 +338,48 @@ class :canvas extends :xhp:html-element {
   category %flow, %phrase, %embedded;
   // Should not contain :table
   children (pcdata | %flow)*;
-  protected $tagName = 'canvas';
+  protected string $tagName = 'canvas';
 }
 
 class :cite extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'cite';
+  protected string $tagName = 'cite';
 }
 
 class :code extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'code';
+  protected string $tagName = 'code';
 }
 
 class :col extends :xhp:html-singleton {
   attribute int span;
-  protected $tagName = 'col';
+  protected string $tagName = 'col';
 }
 
 class :colgroup extends :xhp:html-element {
   attribute int span;
   children (:col)*;
-  protected $tagName = 'colgroup';
+  protected string $tagName = 'colgroup';
 }
 
 class :data extends :xhp:html-element {
   attribute string value @required;
   category %flow, %phrase;
   children (%phrase*);
-  protected $tagName = 'data';
+  protected string $tagName = 'data';
 }
 
 class :datalist extends :xhp:html-element {
   category %flow, %phrase;
   children (%phrase+ | :option*);
-  protected $tagName = 'datalist';
+  protected string $tagName = 'datalist';
 }
 
 class :dd extends :xhp:html-element {
   children (pcdata | %flow)*;
-  protected $tagName = 'dd';
+  protected string $tagName = 'dd';
 }
 
 class :del extends :xhp:html-element {
@@ -386,50 +387,50 @@ class :del extends :xhp:html-element {
   category %flow, %phrase;
   // transparent
   children (pcdata | %flow)*;
-  protected $tagName = 'del';
+  protected string $tagName = 'del';
 }
 
 class :details extends :xhp:html-element {
   attribute bool open;
   category %flow, %phrase, %interactive;
   children (:summary, %flow+);
-  protected $tagName = 'details';
+  protected string $tagName = 'details';
 }
 
 class :dialog extends :xhp:html-element {
   attribute bool open;
   category %flow, %sectioning;
   children (%flow);
-  protected $tagName = 'dialog';
+  protected string $tagName = 'dialog';
 }
 
 class :div extends :xhp:html-element {
   category %flow;
   children (pcdata | %flow)*;
-  protected $tagName = 'div';
+  protected string $tagName = 'div';
 }
 
 class :dfn extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'dfn';
+  protected string $tagName = 'dfn';
 }
 
 class :dl extends :xhp:html-element {
   category %flow;
   children (:dt+, :dd+)*;
-  protected $tagName = 'dl';
+  protected string $tagName = 'dl';
 }
 
 class :dt extends :xhp:html-element {
   children (pcdata | %flow)*;
-  protected $tagName = 'dt';
+  protected string $tagName = 'dt';
 }
 
 class :em extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'em';
+  protected string $tagName = 'em';
 }
 
 class :embed extends :xhp:html-element {
@@ -444,31 +445,31 @@ class :embed extends :xhp:html-element {
 
   category %flow, %phrase, %embedded, %interactive;
   children (pcdata | %phrase)*;
-  protected $tagName = 'embed';
+  protected string $tagName = 'embed';
 }
 
 class :fieldset extends :xhp:html-element {
   attribute bool disabled, string form, string name;
   category %flow;
   children (:legend?, (pcdata | %flow)*);
-  protected $tagName = 'fieldset';
+  protected string $tagName = 'fieldset';
 }
 
 class :figcaption extends :xhp:html-element {
   children (pcdata | %flow)*;
-  protected $tagName = 'figcaption';
+  protected string $tagName = 'figcaption';
 }
 
 class :figure extends :xhp:html-element {
   category %flow, %sectioning;
   children ((:figcaption, %flow+) | (%flow+, :figcaption?));
-  protected $tagName = 'figure';
+  protected string $tagName = 'figure';
 }
 
 class :footer extends :xhp:html-element {
   category %flow;
   children (pcdata | %flow)*;
-  protected $tagName = 'footer';
+  protected string $tagName = 'footer';
 }
 
 class :form extends :xhp:html-element {
@@ -479,77 +480,77 @@ class :form extends :xhp:html-element {
   category %flow;
   // Should not contain :form
   children (pcdata | %flow)*;
-  protected $tagName = 'form';
+  protected string $tagName = 'form';
 }
 
 class :h1 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h1';
+  protected string $tagName = 'h1';
 }
 
 class :h2 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h2';
+  protected string $tagName = 'h2';
 }
 
 class :h3 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h3';
+  protected string $tagName = 'h3';
 }
 
 class :h4 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h4';
+  protected string $tagName = 'h4';
 }
 
 class :h5 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h5';
+  protected string $tagName = 'h5';
 }
 
 class :h6 extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'h6';
+  protected string $tagName = 'h6';
 }
 
 class :head extends :xhp:html-element {
   children (%metadata*);
-  protected $tagName = 'head';
+  protected string $tagName = 'head';
 }
 
 class :header extends :xhp:html-element {
   category %flow, %heading;
   children (pcdata | %flow)*;
-  protected $tagName = 'header';
+  protected string $tagName = 'header';
 }
 
 class :hgroup extends :xhp:html-element {
   category %flow, %heading;
   children (:h1 | :h2 | :h3 | :h4 | :h5 | :h6)+;
-  protected $tagName = 'hgroup';
+  protected string $tagName = 'hgroup';
 }
 
 class :hr extends :xhp:html-singleton {
   category %flow;
-  protected $tagName = 'hr';
+  protected string $tagName = 'hr';
 }
 
 class :html extends :xhp:html-element {
   attribute string manifest, string xmlns;
   children (:head, :body);
-  protected $tagName = 'html';
+  protected string $tagName = 'html';
 }
 
 class :i extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'i';
+  protected string $tagName = 'i';
 }
 
 class :iframe extends :xhp:pcdata-element {
@@ -557,7 +558,7 @@ class :iframe extends :xhp:pcdata-element {
     bool allowfullscreen, string name, int height, string sandbox,
     bool seamless, string src, string srcdoc, int width;
   category %flow, %phrase, %embedded, %interactive;
-  protected $tagName = 'iframe';
+  protected string $tagName = 'iframe';
 }
 
 class :img extends :xhp:html-singleton {
@@ -565,7 +566,7 @@ class :img extends :xhp:html-singleton {
     string alt, enum {'anonymous', 'use-credentials'} crossorigin, int height,
     bool ismap, string src, string usemap, int width;
   category %flow, %phrase;
-  protected $tagName = 'img';
+  protected string $tagName = 'img';
 }
 
 class :input extends :xhp:html-singleton {
@@ -586,14 +587,14 @@ class :input extends :xhp:html-singleton {
       'reset', 'button'
     } type, string value, int width;
   category %flow, %phrase, %interactive;
-  protected $tagName = 'input';
+  protected string $tagName = 'input';
 }
 
 class :ins extends :xhp:html-element {
   attribute string cite, string datetime;
   category %flow, %phrase;
   children (pcdata | %flow)*;
-  protected $tagName = 'ins';
+  protected string $tagName = 'ins';
 }
 
 class :keygen extends :xhp:html-singleton {
@@ -601,13 +602,13 @@ class :keygen extends :xhp:html-singleton {
     bool autofocus, string challenge, bool disabled, string form,
     string keytype, string name;
   category %flow, %phrase, %interactive;
-  protected $tagName = 'keygen';
+  protected string $tagName = 'keygen';
 }
 
 class :kbd extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'kbd';
+  protected string $tagName = 'kbd';
 }
 
 class :label extends :xhp:html-element {
@@ -615,17 +616,17 @@ class :label extends :xhp:html-element {
   category %flow, %phrase, %interactive;
   // may not contain label
   children (pcdata | %phrase)*;
-  protected $tagName = 'label';
+  protected string $tagName = 'label';
 }
 
 class :legend extends :xhp:html-element {
   children (pcdata | %phrase)*;
-  protected $tagName = 'legend';
+  protected string $tagName = 'legend';
 }
 
 class :li extends :xhp:html-element {
   children (pcdata | %flow)*;
-  protected $tagName = 'li';
+  protected string $tagName = 'li';
 }
 
 class :link extends :xhp:html-singleton {
@@ -634,33 +635,33 @@ class :link extends :xhp:html-singleton {
     string hreflang, string media, string rel @required, string sizes,
     string type;
   category %metadata;
-  protected $tagName = 'link';
+  protected string $tagName = 'link';
 }
 
 class :main extends :xhp:html-element {
   category %flow;
   children (pcdata | %flow)*;
-  protected $tagName = 'main';
+  protected string $tagName = 'main';
 }
 
 class :map extends :xhp:html-element {
   attribute string name;
   category %flow, %phrase;
   children (pcdata | %flow)*;
-  protected $tagName = 'map';
+  protected string $tagName = 'map';
 }
 
 class :mark extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'mark';
+  protected string $tagName = 'mark';
 }
 
 class :menu extends :xhp:html-element {
   attribute string label, enum {'popup', 'toolbar'} type;
   category %flow;
   children ((:menuitem | :hr | :menu)* | :li* | %flow*);
-  protected $tagName = 'menu';
+  protected string $tagName = 'menu';
 }
 
 class :menuitem extends :xhp:html-singleton {
@@ -668,7 +669,7 @@ class :menuitem extends :xhp:html-singleton {
     bool checked, string command, bool default, bool disabled,
     string label, string icon, string radiogroup,
     enum {'checkbox', 'command', 'radio'} type;
-  protected $tagName = 'menuitem';
+  protected string $tagName = 'menuitem';
 }
 
 class :meta extends :xhp:html-singleton {
@@ -680,7 +681,7 @@ class :meta extends :xhp:html-singleton {
     string property;
   // If itemprop is present, this element is allowed within the <body>.
   category %metadata, %flow, %phrase;
-  protected $tagName = 'meta';
+  protected string $tagName = 'meta';
 }
 
 class :meter extends :xhp:html-element {
@@ -689,19 +690,19 @@ class :meter extends :xhp:html-element {
   category %flow, %phrase;
   // Should not contain :meter
   children (pcdata | %phrase)*;
-  protected $tagName = 'meter';
+  protected string $tagName = 'meter';
 }
 
 class :nav extends :xhp:html-element {
   category %flow;
   children (pcdata | %flow)*;
-  protected $tagName = 'nav';
+  protected string $tagName = 'nav';
 }
 
 class :noscript extends :xhp:html-element {
   children (pcdata)*;
   category %flow, %phrase, %metadata;
-  protected $tagName = 'noscript';
+  protected string $tagName = 'noscript';
 }
 
 class :object extends :xhp:html-element {
@@ -710,49 +711,49 @@ class :object extends :xhp:html-element {
     bool typemustmatch, string usemap, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:param*, (pcdata | %flow)*);
-  protected $tagName = 'object';
+  protected string $tagName = 'object';
 }
 
 class :ol extends :xhp:html-element {
   attribute bool reversed, int start, enum {'1', 'a', 'A', 'i', 'I'} type;
   category %flow;
   children (:li)*;
-  protected $tagName = 'ol';
+  protected string $tagName = 'ol';
 }
 
 class :optgroup extends :xhp:html-element {
   attribute bool disabled, string label;
   children (:option)*;
-  protected $tagName = 'optgroup';
+  protected string $tagName = 'optgroup';
 }
 
 class :option extends :xhp:pcdata-element {
   attribute bool disabled, string label, bool selected, string value;
-  protected $tagName = 'option';
+  protected string $tagName = 'option';
 }
 
 class :output extends :xhp:html-element {
   attribute string for, string form, string name;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'output';
+  protected string $tagName = 'output';
 }
 
 class :p extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'p';
+  protected string $tagName = 'p';
 }
 
 class :param extends :xhp:pcdata-element {
   attribute string name, string value;
-  protected $tagName = 'param';
+  protected string $tagName = 'param';
 }
 
 class :pre extends :xhp:html-element {
   category %flow;
   children (pcdata | %phrase)*;
-  protected $tagName = 'pre';
+  protected string $tagName = 'pre';
 }
 
 class :progress extends :xhp:html-element {
@@ -760,34 +761,34 @@ class :progress extends :xhp:html-element {
   category %flow, %phrase;
   // Should not contain :progress
   children (pcdata | %phrase)*;
-  protected $tagName = 'progress';
+  protected string $tagName = 'progress';
 }
 
 class :q extends :xhp:html-element {
   attribute string cite;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'q';
+  protected string $tagName = 'q';
 }
 
 class :rb extends :xhp:html-element {
   children (pcdata | %phrase)+;
-  protected $tagName = 'rb';
+  protected string $tagName = 'rb';
 }
 
 class :rp extends :xhp:html-element {
   children (pcdata | %phrase)+;
-  protected $tagName = 'rp';
+  protected string $tagName = 'rp';
 }
 
 class :rt extends :xhp:html-element {
   children (pcdata | %phrase)+;
-  protected $tagName = 'rt';
+  protected string $tagName = 'rt';
 }
 
 class :rtc extends :xhp:html-element {
   children (pcdata | %phrase)+;
-  protected $tagName = 'rtc';
+  protected string $tagName = 'rtc';
 }
 
 class :ruby extends :xhp:html-element {
@@ -796,19 +797,19 @@ class :ruby extends :xhp:html-element {
     (pcdata | :rb)+ |
     ((:rp, :rt) | (:rp, :rtc) | (:rt, :rp) | (:rtc, :rp))+
   );
-  protected $tagName = 'ruby';
+  protected string $tagName = 'ruby';
 }
 
 class :s extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 's';
+  protected string $tagName = 's';
 }
 
 class :samp extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'samp';
+  protected string $tagName = 'samp';
 }
 
 class :script extends :xhp:raw-pcdata-element {
@@ -818,13 +819,13 @@ class :script extends :xhp:raw-pcdata-element {
   // Legacy
   string language;
   category %flow, %phrase, %metadata;
-  protected $tagName = 'script';
+  protected string $tagName = 'script';
 }
 
 class :section extends :xhp:html-element {
   category %flow, %sectioning;
   children (pcdata | %flow)*;
-  protected $tagName = 'section';
+  protected string $tagName = 'section';
 }
 
 class :select extends :xhp:html-element {
@@ -833,54 +834,54 @@ class :select extends :xhp:html-element {
     bool required, int size;
   category %flow, %phrase, %interactive;
   children (:option | :optgroup)*;
-  protected $tagName = 'select';
+  protected string $tagName = 'select';
 }
 
 class :small extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'small';
+  protected string $tagName = 'small';
 }
 
 class :source extends :xhp:html-singleton {
   attribute string media, string src, string type;
-  protected $tagName = 'source';
+  protected string $tagName = 'source';
 }
 
 class :span extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'span';
+  protected string $tagName = 'span';
 }
 
 class :strong extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'strong';
+  protected string $tagName = 'strong';
 }
 
 class :style extends :xhp:raw-pcdata-element {
   attribute
     string media, bool scoped, string type;
   category %flow, %metadata;
-  protected $tagName = 'style';
+  protected string $tagName = 'style';
 }
 
 class :sub extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'sub';
+  protected string $tagName = 'sub';
 }
 
 class :summary extends :xhp:html-element {
   children (pcdata | %phrase)*;
-  protected $tagName = 'summary';
+  protected string $tagName = 'summary';
 }
 
 class :sup extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'sup';
+  protected string $tagName = 'sup';
 }
 
 class :table extends :xhp:html-element {
@@ -895,25 +896,25 @@ class :table extends :xhp:html-element {
       ((:tbody+ | :tr*), :tfoot?)
     )
   );
-  protected $tagName = 'table';
+  protected string $tagName = 'table';
 }
 
 class :tbody extends :xhp:html-element {
   children (:tr)*;
-  protected $tagName = 'tbody';
+  protected string $tagName = 'tbody';
 }
 
 class :template extends :xhp:html-element {
   category %flow, %phrase, %metadata;
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.
-  protected $tagName = 'tbody';
+  protected string $tagName = 'tbody';
 }
 
 class :td extends :xhp:html-element {
   attribute int colspan, string headers, int rowspan;
   children (pcdata | %flow)*;
-  protected $tagName = 'td';
+  protected string $tagName = 'td';
 }
 
 class :textarea extends :xhp:pcdata-element {
@@ -923,12 +924,12 @@ class :textarea extends :xhp:pcdata-element {
     string placeholder, bool readonly, bool required, int rows,
     enum {'soft', 'hard'} wrap;
   category %flow, %phrase, %interactive;
-  protected $tagName = 'textarea';
+  protected string $tagName = 'textarea';
 }
 
 class :tfoot extends :xhp:html-element {
   children (:tr)*;
-  protected $tagName = 'tfoot';
+  protected string $tagName = 'tfoot';
 }
 
 class :th extends :xhp:html-element {
@@ -936,29 +937,29 @@ class :th extends :xhp:html-element {
     string abbr, int colspan, string headers, int rowspan,
     enum {'col', 'colgroup', 'row', 'rowgroup'} scope, string sorted;
   children (pcdata | %flow)*;
-  protected $tagName = 'th';
+  protected string $tagName = 'th';
 }
 
 class :thead extends :xhp:html-element {
   children (:tr)*;
-  protected $tagName = 'thead';
+  protected string $tagName = 'thead';
 }
 
 class :time extends :xhp:html-element {
   attribute string datetime;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'time';
+  protected string $tagName = 'time';
 }
 
 class :title extends :xhp:pcdata-element {
   category %metadata;
-  protected $tagName = 'title';
+  protected string $tagName = 'title';
 }
 
 class :tr extends :xhp:html-element {
   children (:th | :td)*;
-  protected $tagName = 'tr';
+  protected string $tagName = 'tr';
 }
 
 class :track extends :xhp:html-singleton {
@@ -967,31 +968,31 @@ class :track extends :xhp:html-singleton {
     enum {
       'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'
     } kind, string label, string src, string srclang;
-  protected $tagName = 'track';
+  protected string $tagName = 'track';
 }
 
 class :tt extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'tt';
+  protected string $tagName = 'tt';
 }
 
 class :u extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'u';
+  protected string $tagName = 'u';
 }
 
 class :ul extends :xhp:html-element {
   category %flow;
   children (:li)*;
-  protected $tagName = 'ul';
+  protected string $tagName = 'ul';
 }
 
 class :var extends :xhp:html-element {
   category %flow, %phrase;
   children (pcdata | %phrase)*;
-  protected $tagName = 'var';
+  protected string $tagName = 'var';
 }
 
 class :video extends :xhp:html-element {
@@ -1002,12 +1003,12 @@ class :video extends :xhp:html-element {
     enum {'none', 'metadata', 'auto'} preload, string src, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
-  protected $tagName = 'video';
+  protected string $tagName = 'video';
 }
 
 class :wbr extends :xhp:html-singleton {
   category %flow, %phrase;
-  protected $tagName = 'wbr';
+  protected string $tagName = 'wbr';
 }
 
 /**
@@ -1017,7 +1018,7 @@ class :wbr extends :xhp:html-singleton {
 class :x:doctype extends :x:primitive {
   children (:html);
 
-  protected function stringify() {
+  protected function stringify(): string {
     $children = $this->getChildren();
     return '<!DOCTYPE html>' . (:xhp::renderChild($children[0]));
   }
@@ -1031,7 +1032,7 @@ class :x:conditional-comment extends :x:primitive {
   attribute string if @required;
   children (pcdata | :xhp)*;
 
-  protected function stringify() {
+  protected function stringify(): string {
     $children = $this->getChildren();
     $html = '<!--[if '.$this->getAttribute('if').']>';
     foreach ($children as $child) {
