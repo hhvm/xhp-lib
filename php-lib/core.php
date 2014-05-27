@@ -79,9 +79,9 @@ abstract class :xhp implements XHPChild {
  */
 abstract class :x:base extends :xhp {}
 abstract class :x:composable-element extends :x:base {
-  private Map<string, mixed> $attributes = Map{};
-  private Vector<XHPChild> $children = Vector{};
-  private Map<string, mixed> $context = Map{};
+  private Map<string, mixed> $attributes = Map {};
+  private Vector<XHPChild> $children = Vector {};
+  private Map<string, mixed> $context = Map {};
 
   private static $specialAttributes = ImmSet {
     'data',
@@ -215,26 +215,27 @@ abstract class :x:composable-element extends :x:base {
    * @return array
    */
   final public function getChildren(?string $selector = null): Vector<XHPChild> {
-    if (!$selector) {
-      return $this->children;
-    }
-    $result = Vector {};
-    if ($selector[0] == '%') {
-      $selector = substr($selector, 1);
-      foreach ($this->children as $child) {
-        if ($child instanceof :xhp && $child->categoryOf($selector)) {
-          $result->add($child);
+    if ($selector) {
+      $children = Vector {};
+      if ($selector[0] == '%') {
+        $selector = substr($selector, 1);
+        foreach ($this->children as $child) {
+          if ($child instanceof :xhp && $child->categoryOf($selector)) {
+            $children->add($child);
+          }
+        }
+      } else {
+        $selector = :xhp::element2class($selector);
+        foreach ($this->children as $child) {
+          if ($child instanceof $selector) {
+            $children->add($child);
+          }
         }
       }
     } else {
-      $selector = :xhp::element2class($selector);
-      foreach ($this->children as $child) {
-        if ($child instanceof $selector) {
-          $result->add($child);
-        }
-      }
+      $children = new Vector($this->children);
     }
-    return $result;
+    return $children;
   }
 
 
@@ -330,7 +331,7 @@ abstract class :x:composable-element extends :x:base {
   }
 
   final public function getAttributes(): Map<string, mixed> {
-    return $this->attributes;
+    return new Map($this->attributes);
   }
 
   /**
@@ -405,8 +406,8 @@ abstract class :x:composable-element extends :x:base {
    *
    * @return array  All contexts
    */
-  final public function getAllContexts(): Map {
-    return $this->context;
+  final public function getAllContexts(): Map<string, mixed> {
+    return new Map($this->context);
   }
 
   /**
