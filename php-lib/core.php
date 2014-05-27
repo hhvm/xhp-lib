@@ -919,8 +919,6 @@ abstract class :x:primitive extends :x:composable-element {
         $this->validateChildren();
       }
     } catch (Exception $error) {
-      Logger::debug('test');
-      //var_log($error->getTrace());
       trigger_error($error->getMessage(), E_USER_ERROR);
     }
     // Render to string
