@@ -220,15 +220,37 @@ abstract class :x:composable-element extends :x:base {
       }
     } else {
       $selector = :xhp::element2class($selector);
-      foreach ($this->children as $child) {
-        if ($child instanceof $selector) {
-          $result[] = $child;
-        }
-      }
+      $result = $this->findChildren($selector, $this->children);
     }
     return $result;
   }
 
+  /**
+   * Find the element inside a xhp tree
+   * 
+   * @param $selector tag name
+   * @param $children array()
+   * @return array
+   */
+    final private function findChildren($selector = null, $children) {
+      $result = array();
+      foreach ($children as $child) {
+        if (gettype($child) === 'object') {
+          if (count($child->children) > 0) {
+            $_result = $this->findChildren($selector, $child->children);
+            if (!empty($_result)) {
+              $result = array_merge($result, $_result);
+            }
+          }
+          
+          if ($child instanceof $selector) {
+            $result[] = $child;
+          }
+        }
+      }
+
+      return $result;
+    }
 
   /**
    * Fetches the first direct child of the element, or the first child that
