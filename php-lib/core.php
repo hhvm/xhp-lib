@@ -451,7 +451,7 @@ abstract class :x:composable-element extends :x:base {
    * @return :xhp         $this
    */
   final public function addContextMap(Map<string, mixed> $context): this {
-    $this->context->add($context);
+    $this->context->addAll($context->items());
     return $this;
   }
 
