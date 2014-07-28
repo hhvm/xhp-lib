@@ -1039,7 +1039,7 @@ class :x:conditional-comment extends :x:primitive {
       if ($child instanceof :xhp) {
         $html .= :xhp::renderChild($child);
       } else {
-        $html .= $child;
+        $html .= (string)$child;
       }
     }
     $html .= '<![endif]-->';

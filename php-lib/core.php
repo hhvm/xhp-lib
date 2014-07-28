@@ -417,7 +417,7 @@ abstract class :x:composable-element extends :x:base {
    * @param mixed $default  The value to return if not set (optional)
    * @return mixed          The context value or $default
    */
-  final public function getContext(string $key, ?mixed $default): mixed {
+  final public function getContext(string $key, mixed $default): mixed {
     if ($this->context->containsKey($key)) {
       return $this->context->get($key);
     }
@@ -435,7 +435,7 @@ abstract class :x:composable-element extends :x:base {
    * @param mixed $default  if $key is a string, the value to set
    * @return :xhp           $this
    */
-  final public function setContext(string $key, ?mixed $value): this {
+  final public function setContext(string $key, mixed $value): this {
     $this->context->set($key, $value);
     return $this;
   }
@@ -451,7 +451,7 @@ abstract class :x:composable-element extends :x:base {
    * @return :xhp         $this
    */
   final public function addContextMap(Map<string, mixed> $context): this {
-    $this->context->add($context);
+    $this->context->addAll($context->items());
     return $this;
   }
 
