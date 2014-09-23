@@ -30,7 +30,7 @@ abstract class :xhp {
   abstract public function isAttributeSet($attr);
   abstract public function removeAttribute($attr);
   abstract public function categoryOf($cat);
-  abstract public function __toString();
+  abstract public function toString();
   abstract protected function &__xhpCategoryDeclaration();
   abstract protected function &__xhpChildrenDeclaration();
   protected static function &__xhpAttributeDeclaration() {}
@@ -46,9 +46,13 @@ abstract class :xhp {
    */
   public static $ENABLE_VALIDATION = true;
 
+  final public function __toString() {
+    return $this->toString();
+  }
+
   final protected static function renderChild($child) {
     if ($child instanceof :xhp) {
-      return $child->__toString();
+      return $child->toString();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -376,7 +380,7 @@ abstract class :x:composable-element extends :x:base {
     unset($this->attributes[$attr]);
     return $this;
   }
-  
+
   /**
    * Sets an attribute in this element's attribute store. Always foregoes
    * validation.
@@ -872,7 +876,7 @@ abstract class :x:composable-element extends :x:base {
 abstract class :x:primitive extends :x:composable-element {
   abstract protected function stringify();
 
-  final public function __toString() {
+  final public function toString() {
     try {
       // Validate our children
       $this->__flushElementChildren();
@@ -895,7 +899,7 @@ abstract class :x:primitive extends :x:composable-element {
  * of markup.
  */
 abstract class :x:element extends :x:composable-element {
-  final public function __toString() {
+  final public function toString() {
     $that = $this;
 
     try {
@@ -903,7 +907,7 @@ abstract class :x:element extends :x:composable-element {
         $that->validateChildren();
       }
       $that = $that->__flushRenderedRootElement();
-      return $that->__toString();
+      return $that->toString();
 
     } catch (Exception $error) {
       trigger_error($error->getMessage(), E_USER_ERROR);
