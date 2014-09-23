@@ -699,7 +699,7 @@ class :nav extends :xhp:html-element {
 }
 
 class :noscript extends :xhp:html-element {
-  children (pcdata)*;
+  children (pcdata | %metadata | %flow)*;
   category %flow, %phrase, %metadata;
   protected $tagName = 'noscript';
 }
