@@ -131,7 +131,8 @@ abstract class :xhp:html-element extends :x:primitive {
         if ($val === true) {
           $buf .= ' '.htmlspecialchars($key);
         } else {
-          $buf .= ' '.htmlspecialchars($key).'="'.htmlspecialchars($val, ENT_COMPAT).'"';
+          $buf .= ' '.htmlspecialchars($key).'="'.
+            htmlspecialchars($val, ENT_COMPAT).'"';
         }
       }
     }
@@ -139,11 +140,14 @@ abstract class :xhp:html-element extends :x:primitive {
   }
 
   public function addClass(string $class): this {
-    $this->setAttribute('class', trim((string)$this->getAttribute('class').' '.$class));
+    $this->setAttribute(
+      'class',
+      trim((string)$this->getAttribute('class').' '.$class),
+    );
     return $this;
   }
 
-  public function conditionClass(bool $cond, string $class) {
+  public function conditionClass(bool $cond, string $class): this {
     if ($cond) {
       $this->addClass($class);
     }
@@ -908,7 +912,7 @@ class :template extends :xhp:html-element {
   category %flow, %phrase, %metadata;
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.
-  protected string $tagName = 'tbody';
+  protected string $tagName = 'template';
 }
 
 class :td extends :xhp:html-element {

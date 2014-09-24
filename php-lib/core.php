@@ -17,10 +17,10 @@
 */
 
 abstract class :xhp implements XHPChild {
-  abstract public function __construct(
+  public function __construct(
     KeyedTraversable<string, mixed> $attributes,
     Traversable<XHPChild> $children,
-  );
+  ): void {}
   abstract public function appendChild(mixed $child): this;
   abstract public function prependChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
@@ -116,6 +116,7 @@ abstract class :x:composable-element extends :x:base {
    */
   final public function __construct(KeyedTraversable<string, mixed> $attributes,
                                     Traversable<XHPChild> $children) {
+    parent::__construct($attributes, $children);
     foreach ($children as $child) {
       $this->appendChild($child);
     }
@@ -214,7 +215,9 @@ abstract class :x:composable-element extends :x:base {
    * @param $selector   tag name or category (optional)
    * @return array
    */
-  final public function getChildren(?string $selector = null): Vector<XHPChild> {
+  final public function getChildren(
+    ?string $selector = null,
+  ): Vector<XHPChild> {
     if ($selector) {
       $children = Vector {};
       if ($selector[0] == '%') {
@@ -331,7 +334,7 @@ abstract class :x:composable-element extends :x:base {
   }
 
   final public function getAttributes(): Map<string, mixed> {
-    return new Map($this->attributes);
+    return $this->attributes->toMap();
   }
 
   /**
@@ -407,7 +410,7 @@ abstract class :x:composable-element extends :x:base {
    * @return array  All contexts
    */
   final public function getAllContexts(): Map<string, mixed> {
-    return new Map($this->context);
+    return $this->context->toMap();
   }
 
   /**
@@ -451,7 +454,7 @@ abstract class :x:composable-element extends :x:base {
    * @return :xhp         $this
    */
   final public function addContextMap(Map<string, mixed> $context): this {
-    $this->context->addAll($context->items());
+    $this->context->setAll($context);
     return $this;
   }
 
@@ -913,16 +916,10 @@ abstract class :x:primitive extends :x:composable-element {
   abstract protected function stringify(): string;
 
   final public function __toString(): string {
-    try {
-      // Validate our children
-      $this->__flushElementChildren();
-      if (:xhp::$ENABLE_VALIDATION) {
-        $this->validateChildren();
-      }
-    } catch (Exception $error) {
-      trigger_error($error->getMessage(), E_USER_ERROR);
+    $this->__flushElementChildren();
+    if (:xhp::$ENABLE_VALIDATION) {
+      $this->validateChildren();
     }
-    // Render to string
     return $this->stringify();
   }
 }
@@ -937,16 +934,10 @@ abstract class :x:primitive extends :x:composable-element {
 abstract class :x:element extends :x:composable-element {
   final public function __toString(): string {
     $that = $this;
-
-    try {
-      if (:xhp::$ENABLE_VALIDATION) {
-        $that->validateChildren();
-      }
-      $that = $that->__flushRenderedRootElement();
-    } catch (Exception $error) {
-      var_log($error->getTrace());
-      trigger_error($error->getMessage(), E_USER_ERROR);
+    if (:xhp::$ENABLE_VALIDATION) {
+      $that->validateChildren();
     }
+    $that = $that->__flushRenderedRootElement();
     return $that->__toString();
   }
 }
@@ -1067,7 +1058,7 @@ class XHPInvalidAttributeException extends XHPException {
 }
 
 class XHPInvalidChildrenException extends XHPException {
-  public function __construct(object $that, int $index) {
+  public function __construct(:xhp $that, int $index) {
     parent::__construct(
       'Element `'.XHPException::getElementName($that).'` was rendered with '.
       "invalid children.\n\n".
