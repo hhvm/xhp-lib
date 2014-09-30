@@ -13,7 +13,7 @@ Take note of the syntax on line 3, this is not a string. This is the major new s
 
 Anything that's in {}'s is interpreted as a full PHP expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
 
-You can define arbitrary elements that can be instantiated in PHP. Under the covers each element you create is an instance of an class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
+You can define arbitrary elements that can be instantiated in PHP. Under the covers each element you create is an instance of a class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
 
 *Important*: Please be sure to include "init.php":http://github.com/facebook/xhp/blob/master/php-lib/init.php which is in the "php-lib":http://github.com/facebook/xhp/tree/master/php-lib/ directory of the repository. The XHP extension only handles adding the XML syntax, the actual elements are defined directly in PHP. Including the core XHP libraries in PHP code means you can customize XHP for your own applications, though it's recommended to avoid large forks which may cause incompatibilities as XHP evolves. _All the examples you see on this page omit the required includes._
 
@@ -114,7 +114,7 @@ This specifies an optional left column followed by a required content and an opt
 
 You can also use the special declarations @any@ or @empty@ to specify that your element can accept any elements, or no elements. If you don't specify a children declaration your parent class's declaration will be inherited. @:x:element@'s children declaration is @children any;@.
 
-Note: The algorithm which checks adherence to a children declaration is greedy with no backtracking. For most children declarations this will make no difference, however if you're defining a complex children declaration you should know how it works. Basically, this declaration is impossible to satisfy: @children (:fb:thing*, :fb:thing);@. The @*@ postfix operator is greedy and will capture all @fb:thing@'s. After that it's impossible to match another @fb:thing@.
+Note: The algorithm which checks adherence to a children declaration is greedy with no backtracking. For most children declarations this will make no difference, but if you're defining a complex children declaration, you should know how it works. Basically, this declaration is impossible to satisfy: @children (:fb:thing*, :fb:thing);@. The @*@ postfix operator is greedy and will capture all @fb:thing@'s. After that it's impossible to match another @fb:thing@.
 
 h1. Element Categories
 
@@ -137,7 +137,7 @@ In XHP, text nodes that contain only whitespace are removed. The expressions @<d
 bc. <?php
 $node = <div><label>Title:</label> <span>{$title}</span></div>;
 
-This will lead to non-desirable results as the space in between the @:@ and @$title@ will be lost. In order to fix this try moving the space into the @<label />@ tag. If you can't do this then just use @{' '}@ which will not be stripped.
+This will lead to non-desirable results as the space between the @:@ and @$title@ will be lost. In order to fix this try moving the space into the @<label />@ tag. If you can't do this then just use @{' '}@ which will not be stripped.
 
 h1. Best Practices
 
