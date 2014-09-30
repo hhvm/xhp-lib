@@ -1218,7 +1218,9 @@ function:
 ;
 
 lexical_vars:
-  /* empty */
+  /* empty */ {
+    $$ = "";
+  }
 | T_USE '(' lexical_var_list ')' {
     $$ = $1 + $2 + $3 + $4;
   }
