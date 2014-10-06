@@ -2,8 +2,8 @@
   +----------------------------------------------------------------------+
   | XHP                                                                  |
   +----------------------------------------------------------------------+
-  | Copyright (c) 1998-2013 Zend Technologies Ltd. (http://www.zend.com) |
-  | Copyright (c) 2009-2013 Facebook, Inc. (http://www.facebook.com)     |
+  | Copyright (c) 1998-2014 Zend Technologies Ltd. (http://www.zend.com) |
+  | Copyright (c) 2009-2014 Facebook, Inc. (http://www.facebook.com)     |
   +----------------------------------------------------------------------+
   | This source file is subject to version 2.00 of the Zend license,     |
   | that is bundled with this package in the file LICENSE.ZEND, and is   |
