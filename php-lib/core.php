@@ -643,6 +643,7 @@ abstract class :x:composable-element extends :x:base {
         $type = 'int';
         $func = 'is_int';
       }
+      $func = func($func);
       if (count($val) != count(array_filter(array_keys($val), $func))) {
         $bad = $type == 'string' ? 'int' : 'string';
         throw new XHPInvalidArrayKeyAttributeException(
@@ -656,27 +657,27 @@ abstract class :x:composable-element extends :x:base {
     switch ((int)$decl[1]) { // Value declaration
       case self::TYPE_STRING:
         $type = 'string';
-        $func = 'is_string';
+        $func = func('is_string');
         break;
       case self::TYPE_BOOL:
         $type = 'bool';
-        $func = 'is_bool';
+        $func = func('is_bool');
         break;
       case self::TYPE_NUMBER:
         $type = 'int';
-        $func = 'is_int';
+        $func = func('is_int');
         break;
       case self::TYPE_FLOAT:
         $type = 'float';
-        $func = 'is_numeric';
+        $func = func('is_numeric');
         break;
       case self::TYPE_CALLABLE:
         $type = 'callable';
-        $func = 'is_callable';
+        $func = func('is_callable');
         return;
       case self::TYPE_ARRAY:
         $type = 'array';
-        $func = 'is_array';
+        $func = func('is_array');
         break;
       case self::TYPE_OBJECT:
         $type = $decl[2];
