@@ -1017,7 +1017,7 @@ expr_without_variable:
     $$ = $1;
   }
 | '(' new_expr ')' instance_call {
-    $$ = $1 + $2 + $4;
+    $$ = $1 + $2 + $3 + $4;
   }
 | T_CLONE expr {
     $$ = $1 + " " + $2;
