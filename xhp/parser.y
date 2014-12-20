@@ -1563,6 +1563,7 @@ object_dim_list:
     $$ = $1 + $2 + $3 + $4;
   }
 | variable_name
+| xhp_attribute_reference
 ;
 
 variable_name:
@@ -1802,6 +1803,13 @@ xhp_attributes:
   }
 | xhp_attributes xhp_attribute {
     $$ = $1 + $2 + ",";
+  }
+;
+
+// Attribute when referenced as an object property ($foo->:attr)
+xhp_attribute_reference:
+  ':' xhp_label_pass {
+    $$ = "getAttribute('" + $2 + "')";
   }
 ;
 
