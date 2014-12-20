@@ -550,6 +550,12 @@ NEWLINE ("\r\n"|"\n"|"\r")
 #endif
     return T_PAAMAYIM_NEKUDOTAYIM;
   }
+  "->" {
+    pop_state();
+    // Hack: Don't use tok() here because of PHP_NO_RESERVED_WORDS. See above.
+    *yylval = code_rope(yytext, yyextra->first_lineno, yyextra->lineno - yyextra->first_lineno);
+    return T_OBJECT_OPERATOR;
+  }
   "--" {
     pop_state();
     tok(T_DEC);
