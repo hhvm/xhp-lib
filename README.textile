@@ -5,6 +5,19 @@ XHP is a PHP extension which augments the syntax of the language such that XML d
 
 This repository contains the PHP class library, which is required to use XHP both under HHVM and PHP5. The PHP5 extension is available at https://github.com/facebookarchive/xhp-php5-extension
 
+If you're using HHVM and want a high-level XHP UI library, you might want to take a look at https://github.com/hhvm/xhp-bootstrap/
+
+h1. Installation
+
+
+"Composer":https://getcomposer.org/ is the recommended installation method. To add XHP to your project, add the following to your @composer.json@ then re-run composer:
+
+<pre><code>
+  "require": {
+    "facebook/xhp-lib": "dev-master"
+  }
+</pre></code>
+
 h1. Simple Example
 
 bc. <?php
