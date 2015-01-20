@@ -109,7 +109,7 @@ You can also steal another element's attributes by specifying only a tag name in
 
 h1. Defining Element Structure
 
-All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an @<input />@ to appear directly inside of a @<body />@ tag (it must be inside a form). XHP allows you to define a content model which documents ".":http://www.overheadmovies.com must adhere to. This is done with the @children@ keyword, which uses a syntax similar to regular expressions. Note, that unlike @attribute@, @children@ may only appear once inside any class.
+All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an @<input />@ to appear directly inside of a @<body />@ tag (it must be inside a form). XHP allows you to define a content model which documents must adhere to. This is done with the @children@ keyword, which uses a syntax similar to regular expressions. Note, that unlike @attribute@, @children@ may only appear once inside any class.
 
 bc. <?php
 class :fb:thing-container extends :x:element {
