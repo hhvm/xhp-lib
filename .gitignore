@@ -36,3 +36,4 @@ xhp/xhpize
 *.cmake
 CMakeFiles
 CMakeCache.txt
+vendor/
