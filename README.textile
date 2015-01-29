@@ -30,8 +30,6 @@ Anything that's in {}'s is interpreted as a full PHP expression. This differs fr
 
 You can define arbitrary elements that can be instantiated in PHP. Under the covers each element you create is an instance of a class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
 
-*Important*: Please be sure to include "init.php":http://github.com/facebook/xhp/blob/master/php-lib/init.php which is in the "php-lib":http://github.com/facebook/xhp/tree/master/php-lib/ directory of the repository. The XHP extension only handles adding the XML syntax, the actual elements are defined directly in PHP. Including the core XHP libraries in PHP code means you can customize XHP for your own applications, though it's recommended to avoid large forks which may cause incompatibilities as XHP evolves. _All the examples you see on this page omit the required includes._
-
 h1. Complex Structures
 
 Note that XHP structures can be arbitrarily complex. This is a valid XHP program:
