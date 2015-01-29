@@ -1,20 +1,14 @@
 <?hh
 
 /*
-  +----------------------------------------------------------------------+
-  | XHP                                                                  |
-  +----------------------------------------------------------------------+
-  | Copyright (c) 2009 - 2013 Facebook, Inc. (http://www.facebook.com)   |
-  +----------------------------------------------------------------------+
-  | This source file is subject to version 3.01 of the PHP license,      |
-  | that is bundled with this package in the file LICENSE.PHP, and is    |
-  | available through the world-wide-web at the following url:           |
-  | http://www.php.net/license/3_01.txt                                  |
-  | If you did not receive a copy of the PHP license and are unable to   |
-  | obtain it through the world-wide-web, please send a note to          |
-  | license@php.net so we can mail you a copy immediately.               |
-  +----------------------------------------------------------------------+
-*/
+ *  Copyright (c) 2015, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the BSD-style license found in the
+ *  LICENSE file in the root directory of this source tree. An additional grant
+ *  of patent rights can be found in the PATENTS file in the same directory.
+ *
+ */
 
 abstract class :xhp implements XHPChild {
   public function __construct(
@@ -34,7 +28,7 @@ abstract class :xhp implements XHPChild {
   abstract public function isAttributeSet(string $attr): bool;
   abstract public function removeAttribute(string $attr): this;
   abstract public function categoryOf(string $cat): bool;
-  abstract public function __toString(): string;
+  abstract public function toString(): string;
   abstract protected function &__xhpCategoryDeclaration(): array<string, int>;
   abstract protected function &__xhpChildrenDeclaration(): mixed;
   protected static function &__xhpAttributeDeclaration(): array<string, array<int, mixed>> {
@@ -54,9 +48,13 @@ abstract class :xhp implements XHPChild {
    */
   public static bool $ENABLE_VALIDATION = true;
 
+  final public function __toString(): string {
+    return $this->toString();
+  }
+
   final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
-      return $child->__toString();
+      return $child->toString();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -145,7 +143,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $child     single child or array of children
    */
   final public function appendChild(mixed $child): this {
-    if ($child instanceof Traversable) {
+    if ($child instanceof Traversable || is_array($child)) {
       foreach ($child as $c) {
         $this->appendChild($c);
       }
@@ -169,7 +167,6 @@ abstract class :x:composable-element extends :x:base {
     $this->children->reverse();
     $this->appendChild($child);
     $this->children->reverse();
-
     return $this;
   }
 
@@ -189,7 +186,7 @@ abstract class :x:composable-element extends :x:base {
           foreach ($xhp->children as $child) {
             $new_children->add($child);
           }
-        } else if (!is_array($xhp)) {
+        } else if (!($xhp instanceof Traversable || is_array($xhp))) {
           $new_children->add($xhp);
         } else {
           foreach ($xhp as $element) {
@@ -915,7 +912,7 @@ abstract class :x:composable-element extends :x:base {
 abstract class :x:primitive extends :x:composable-element {
   abstract protected function stringify(): string;
 
-  final public function __toString(): string {
+  final public function toString(): string {
     $this->__flushElementChildren();
     if (:xhp::$ENABLE_VALIDATION) {
       $this->validateChildren();
@@ -932,7 +929,7 @@ abstract class :x:primitive extends :x:composable-element {
  * of markup.
  */
 abstract class :x:element extends :x:composable-element {
-  final public function __toString(): string {
+  final public function toString(): string {
     $that = $this;
     if (:xhp::$ENABLE_VALIDATION) {
       $that->validateChildren();

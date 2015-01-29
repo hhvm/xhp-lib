@@ -1,0 +1,15 @@
+{
+    "name": "facebook/xhp-lib",
+    "description": "Class library for XHP",
+    "keywords": ["facebook", "xhp", "hhvm", "hack"],
+    "homepage": "https://github.com/facebook/xhp-lib",
+    "license": ["PHP-3.01",  "Zend-2.0"],
+    "require": {
+        "ext-xhp": "*"
+    },
+    "autoload": {
+        "classmap": [
+            "src/"
+        ]
+    }
+}
