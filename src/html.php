@@ -111,10 +111,10 @@ abstract class :xhp:html-element extends :x:primitive {
   }
 
   public function requireUniqueID(): string {
-    if (!($id = $this->getAttribute('id'))) {
+    if (!($id = $this->:id)) {
       $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
     }
-    return $id;
+    return (string) $id;
   }
 
   protected final function renderBaseAttrs(): string {
@@ -135,7 +135,7 @@ abstract class :xhp:html-element extends :x:primitive {
   public function addClass(string $class): this {
     $this->setAttribute(
       'class',
-      trim((string)$this->getAttribute('class').' '.$class),
+      trim($this->:class.' '.$class),
     );
     return $this;
   }
@@ -1031,7 +1031,7 @@ class :x:conditional-comment extends :x:primitive {
 
   protected function stringify(): string {
     $children = $this->getChildren();
-    $html = '<!--[if '.$this->getAttribute('if').']>';
+    $html = '<!--[if '.(string)$this->:if.']>';
     foreach ($children as $child) {
       if ($child instanceof :xhp) {
         $html .= :xhp::renderChild($child);
