@@ -55,8 +55,8 @@ abstract class :xhp implements XHPChild {
   final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
-    } else if (is_array($child)) {
-      throw new XHPRenderArrayException('Can not render array!');
+    } else if ($child instanceof Traversable) {
+      throw new XHPRenderArrayException('Can not render traversables!');
     } else {
       return htmlspecialchars((string)$child);
     }
@@ -143,7 +143,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $child     single child or array of children
    */
   final public function appendChild(mixed $child): this {
-    if ($child instanceof Traversable || is_array($child)) {
+    if ($child instanceof Traversable) {
       foreach ($child as $c) {
         $this->appendChild($c);
       }
@@ -186,7 +186,7 @@ abstract class :x:composable-element extends :x:base {
           foreach ($xhp->children as $child) {
             $new_children->add($child);
           }
-        } else if (!($xhp instanceof Traversable || is_array($xhp))) {
+        } else if (!($xhp instanceof Traversable)) {
           $new_children->add($xhp);
         } else {
           foreach ($xhp as $element) {
