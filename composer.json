@@ -3,7 +3,7 @@
     "description": "Class library for XHP",
     "keywords": ["facebook", "xhp", "hhvm", "hack"],
     "homepage": "https://github.com/facebook/xhp-lib",
-    "license": ["PHP-3.01",  "Zend-2.0"],
+    "license": ["BSD-3-Clause"],
     "require": {
         "ext-xhp": "*"
     },
