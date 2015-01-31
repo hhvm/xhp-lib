@@ -909,7 +909,7 @@ abstract class :x:composable-element extends :x:base {
  * needs to directly implement stringify(). All other elements should subclass
  * from :x:element.
  */
-abstract class :x:primitive extends :x:composable-element {
+abstract class :x:primitive extends :x:composable-element implements XHPRoot {
   abstract protected function stringify(): string;
 
   final public function toString(): string {
@@ -928,7 +928,9 @@ abstract class :x:primitive extends :x:composable-element {
  * This is important because most elements should not be dealing with strings
  * of markup.
  */
-abstract class :x:element extends :x:composable-element {
+abstract class :x:element extends :x:composable-element implements XHPRoot {
+  abstract protected function render(): XHPRoot;
+
   final public function toString(): string {
     $that = $this;
     if (:xhp::$ENABLE_VALIDATION) {
@@ -1055,7 +1057,7 @@ class XHPInvalidAttributeException extends XHPException {
 }
 
 class XHPInvalidChildrenException extends XHPException {
-  public function __construct(:xhp $that, int $index) {
+  public function __construct(:x:composable-element $that, int $index) {
     parent::__construct(
       'Element `'.XHPException::getElementName($that).'` was rendered with '.
       "invalid children.\n\n".
@@ -1065,4 +1067,7 @@ class XHPInvalidChildrenException extends XHPException {
       "Children received:\n".$that->__getChildrenDescription()
     );
   }
+}
+
+interface XHPRoot {
 }
