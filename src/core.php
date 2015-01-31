@@ -148,7 +148,7 @@ abstract class :x:composable-element extends :x:base {
         $this->appendChild($c);
       }
     } else if ($child instanceof :x:frag) {
-      $this->children->addAll($child->children);
+      $this->children->addAll($child->getChildren());
     } else if ($child !== null) {
       assert($child instanceof XHPChild);
       $this->children->add($child);
@@ -484,7 +484,7 @@ abstract class :x:composable-element extends :x:base {
 
         if ($child instanceof :x:frag) {
           $children = $this->children->toValuesArray();
-          array_splice($children, $ii, 1, $child->children);
+          array_splice($children, $ii, 1, $child->getChildren());
           $this->children = new Vector($children);
           $ln = count($this->children);
           --$ii;
