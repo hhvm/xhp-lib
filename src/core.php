@@ -47,6 +47,8 @@ abstract class :xhp {
   final protected static function renderChild($child) {
     if ($child instanceof :xhp) {
       return $child->toString();
+    } else if ($child instanceof XHPUnsafeRenderable) {
+      return $child->toHTMLString();
     } else if (is_array($child)) {
       throw new XHPRenderArrayException('Can not render array!');
     } else {
@@ -683,6 +685,10 @@ abstract class :x:composable-element extends :x:base {
     $ii = 0;
     if (!$this->validateChildrenExpression($decl, $ii) ||
         $ii < count($this->children)) {
+      if (isset($this->children[$ii])
+          && $this->children[$ii] instanceof XHPAlwaysValidChild) {
+        return;
+      }
       throw new XHPInvalidChildrenException($this, $ii);
     }
   }
@@ -1035,4 +1041,27 @@ class XHPInvalidChildrenException extends XHPException {
       "Children received:\n".$that->__getChildrenDescription()
     );
   }
+}
+
+/**
+ * INCREDIBLY DANGEROUS: Marks an object as a valid child of *any* element,
+ * ignoring any child rules.
+ *
+ * This is useful when migrating to XHP as it allows you to embed non-XHP
+ * content, usually in combination with XHPUnsafeRenderable; see MIGRATING.md
+ * for more information.
+ */
+interface XHPAlwaysValidChild {
+}
+
+/**
+ * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
+ * string.
+ *
+ * This is useful when migrating to XHP as it allows you to embed non-XHP
+ * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
+ * for more information.
+ */
+interface XHPUnsafeRenderable {
+  public function toHTMLString();
 }
