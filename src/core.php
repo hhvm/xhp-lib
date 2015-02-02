@@ -55,6 +55,8 @@ abstract class :xhp implements XHPChild {
   final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
+    } else if ($child instanceof XHPUnsafeRenderable) {
+      return $child->toHTMLString();
     } else if ($child instanceof Traversable) {
       throw new XHPRenderArrayException('Can not render traversables!');
     } else {
@@ -700,6 +702,10 @@ abstract class :x:composable-element extends :x:base {
     }
     list($ret, $ii) = $this->validateChildrenExpression((array)$decl, 0);
     if (!$ret || $ii < count($this->children)) {
+      if (isset($this->children[$ii])
+          && $this->children[$ii] instanceof XHPAlwaysValidChild) {
+        return;
+      }
       throw new XHPInvalidChildrenException($this, $ii);
     }
   }
@@ -1071,4 +1077,27 @@ class XHPInvalidChildrenException extends XHPException {
 }
 
 interface XHPRoot {
+}
+
+/**
+ * INCREDIBLY DANGEROUS: Marks an object as a valid child of *any* element,
+ * ignoring any child rules.
+ *
+ * This is useful when migrating to XHP as it allows you to embed non-XHP
+ * content, usually in combination with XHPUnsafeRenderable; see MIGRATING.md
+ * for more information.
+ */
+interface XHPAlwaysValidChild {
+}
+
+/**
+ * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
+ * string.
+ *
+ * This is useful when migrating to XHP as it allows you to embed non-XHP
+ * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
+ * for more information.
+ */
+interface XHPUnsafeRenderable {
+  public function toHTMLString();
 }
