@@ -462,7 +462,9 @@ abstract class :x:composable-element extends :x:base {
    *
    * @param array $parentContext  The context to transfer
    */
-  final private function transferContext(Map<string, mixed> $parentContext): void {
+  final protected function __transferContext(
+    Map<string, mixed> $parentContext,
+  ): void {
     foreach ($parentContext as $key => $value) {
       if (!$this->context->containsKey($key)) {
         $this->context->set($key, $value);
@@ -476,7 +478,7 @@ abstract class :x:composable-element extends :x:base {
     for ($ii = 0; $ii < $ln; ++$ii) {
       $child = $this->children->get($ii);
       if ($child instanceof :x:composable-element) {
-        $child->transferContext($this->context);
+        $child->__transferContext($this->context);
       }
 
       if ($child instanceof :x:element) {
@@ -493,26 +495,6 @@ abstract class :x:composable-element extends :x:base {
         }
       }
     }
-  }
-
-  final protected function __flushRenderedRootElement(): :x:primitive {
-    $that = $this;
-    // Flush root elements returned from render() to an :x:primitive
-    while (($composed = $that->render()) instanceof :x:element) {
-      if (:xhp::$ENABLE_VALIDATION) {
-        $composed->validateChildren();
-      }
-      $composed->transferContext($that->context);
-      $that = $composed;
-    }
-
-    if ($composed instanceof :x:primitive) {
-      $composed->transferContext($that->context);
-    } else if (:xhp::$ENABLE_VALIDATION) {
-      // render() must always return XHPPrimitives
-      throw new XHPCoreRenderException($this, $that);
-    }
-    return $composed;
   }
 
   /**
@@ -938,6 +920,25 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
     }
     $that = $that->__flushRenderedRootElement();
     return $that->__toString();
+  }
+
+  final protected function __flushRenderedRootElement(): :x:primitive {
+    $that = $this;
+    // Flush root elements returned from render() to an :x:primitive
+    while (($composed = $that->render()) instanceof :x:element) {
+      assert($composed instanceof :x:element);
+      if (:xhp::$ENABLE_VALIDATION) {
+        $composed->validateChildren();
+      }
+      $composed->__transferContext($that->getAllContexts());
+      $that = $composed;
+    }
+
+    if ($composed instanceof :x:primitive) {
+      $composed->__transferContext($that->getAllContexts());
+      return $composed;
+    }
+    throw new XHPCoreRenderException($this, $that);
   }
 }
 
