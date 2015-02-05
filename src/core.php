@@ -52,7 +52,7 @@ abstract class :xhp implements XHPChild {
     return $this->toString();
   }
 
-  final protected static function renderChild($child): string {
+  final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
     } else if ($child instanceof XHPUnsafeRenderable) {
@@ -1098,6 +1098,6 @@ interface XHPAlwaysValidChild {
  * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
  * for more information.
  */
-interface XHPUnsafeRenderable {
+interface XHPUnsafeRenderable extends XHPChild {
   public function toHTMLString();
 }
