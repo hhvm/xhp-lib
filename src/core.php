@@ -52,7 +52,7 @@ abstract class :xhp implements XHPChild {
     return $this->toString();
   }
 
-  final protected static function renderChild(XHPChild $child): string {
+  final protected static function renderChild($child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
     } else if ($child instanceof XHPUnsafeRenderable) {
