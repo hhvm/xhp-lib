@@ -1098,6 +1098,6 @@ interface XHPAlwaysValidChild {
  * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
  * for more information.
  */
-interface XHPUnsafeRenderable {
+interface XHPUnsafeRenderable extends XHPChild {
   public function toHTMLString();
 }
