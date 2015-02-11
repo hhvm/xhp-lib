@@ -495,10 +495,10 @@ abstract class :x:composable-element extends :x:base {
     $flushWaitHandles = Vector{};
     do {
       if ($childWaitHandles || $flushWaitHandles) {
-        list($awaitedChildren, $_) = await GenUtils::genList(
-          GenUtils::genIntMap($childWaitHandles),
-          GenUtils::genVector($flushWaitHandles),
-        );
+        list($awaitedChildren, $_) = await GenArrayWaitHandle::create(array(
+          GenMapWaitHandle::create($childWaitHandles),
+          GenVectorWaitHandle::create($flushWaitHandles),
+        ));
         if ($awaitedChildren) {
           foreach ($awaitedChildren as $i => $awaitedChild) {
             $this->children->set($i, $awaitedChild);
@@ -546,7 +546,7 @@ abstract class :x:composable-element extends :x:base {
     } while ($childWaitHandles);
 
     if ($flushWaitHandles) {
-      await GenUtils::genVector($flushWaitHandles);
+      await GenVectorWaitHandle::create($flushWaitHandles);
     }
   }
 
