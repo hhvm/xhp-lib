@@ -355,11 +355,7 @@ abstract class :x:composable-element extends :x:base {
     if (!self::isAttributeSpecial($attr)) {
       $value = $this->validateAttributeValue($attr, $value);
     } else {
-      if ($attr == 'data-meta' && is_array($value)) {
-        $value = JS::registerData($this, $value);
-      } else {
-        $value = (string)$value;
-      }
+      $value = (string)$value;
     }
     $this->attributes->set($attr, $value);
     return $this;
