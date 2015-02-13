@@ -1249,9 +1249,9 @@ interface XHPUnsafeRenderable extends XHPChild {
 /**
  * INCREDIBLY AWESOME: Specify an element as awaitable on render.
  *
- * This allows you to use generators inside your XHP objects. For
- * instance, you could fetch data inside your XHP elements using await and
- * the calls to the DB would be batched together when the element is rendered.
+ * This allows you to use await inside your XHP objects. For instance, you could
+ * fetch data inside your XHP elements using await and the calls to the DB would
+ * be batched together when the element is rendered.
  */
 interface XHPAwaitable {
   // protected function asyncRender(): Awaitable<XHPRoot>
