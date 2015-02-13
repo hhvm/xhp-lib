@@ -92,7 +92,10 @@ abstract class :x:composable-element extends :x:base {
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
 
-  private static $specialAttributes = ImmSet{'data', 'aria'};
+  private static $specialAttributes = ImmSet {
+    'data',
+    'aria',
+  };
 
   // Private constants indicating the declared types of attributes
   const int TYPE_STRING   = 1;
@@ -517,7 +520,7 @@ abstract class :x:composable-element extends :x:base {
           do {
             $loop = false;
             if ($child instanceof XHPAwaitable) {
-              $child = $child->genRender();
+              $child = $child->asyncRender();
             } else {
               $child = $child->render();
             }
@@ -1010,6 +1013,14 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
     }
     return $this->stringify();
   }
+
+  final public async function asyncToString(): Awaitable<string> {
+    await $this->__flushElementChildren();
+    if (:xhp::$ENABLE_VALIDATION) {
+      $this->validateChildren();
+    }
+    return $this->stringify();
+  }
 }
 
 /**
@@ -1023,12 +1034,20 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   abstract protected function render(): XHPRoot;
 
   final public function toString(): string {
-    $that = $this;
     if (:xhp::$ENABLE_VALIDATION) {
-      $that->validateChildren();
+      $this->validateChildren();
     }
-    $that = $that->__flushRenderedRootElement()->join();
-    return $that->__toString();
+    $that = $this->__flushRenderedRootElement()->join();
+    return $that->toString();
+  }
+
+  final public async function asyncToString(): Awaitable<string> {
+    if (:xhp::$ENABLE_VALIDATION) {
+      $this->validateChildren();
+    }
+    $that = await $this->__flushRenderedRootElement();
+    $ret = await $that->asyncToString();
+    return $ret;
   }
 
   final protected async function __flushRenderedRootElement(
@@ -1040,7 +1059,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
         $that->validateChildren();
       }
       if ($that instanceof XHPAwaitable) {
-        $composed = await $that->genRender();
+        $composed = await $that->asyncRender();
       } else {
         $composed = $that->render();
       }
@@ -1235,20 +1254,19 @@ interface XHPUnsafeRenderable extends XHPChild {
  * the calls to the DB would be batched together when the element is rendered.
  */
 interface XHPAwaitable {
-  // protected function genRender(): Awaitable<XHPRoot>
+  // protected function asyncRender(): Awaitable<XHPRoot>
 }
 
-trait XHPGenerator {
+trait XHPAsync {
 
   require extends :x:element;
   require implements XHPAwaitable;
 
-  abstract protected function genRender(): Awaitable<XHPRoot>;
+  abstract protected function asyncRender(): Awaitable<XHPRoot>;
 
   final protected function render(): XHPRoot {
     throw new Exception(
-      'You need to call genRender() on XHP elements that use XHPAwaitable',
+      'You need to call asyncRender() on XHP elements that use XHPAwaitable',
     );
-    return <x:frag />;
   }
 }
