@@ -10,6 +10,9 @@
  *
  */
 
+interface XHPRoot extends XHPChild {
+}
+
 abstract class :xhp implements XHPChild {
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
@@ -99,7 +102,7 @@ abstract class :x:composable-element extends :x:base {
 
   // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
   // addressed
-  protected static function __xhpAsyncRender(
+  protected static async function __xhpAsyncRender(
     XHPAwaitable $child,
   ): Awaitable<XHPRoot> {
     // UNSAFE
@@ -1221,9 +1224,6 @@ class XHPInvalidChildrenException extends XHPException {
       "Children received:\n".$that->__getChildrenDescription()
     );
   }
-}
-
-interface XHPRoot extends XHPChild {
 }
 
 /**
