@@ -97,6 +97,15 @@ abstract class :x:composable-element extends :x:base {
     'aria',
   };
 
+  // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
+  // addressed
+  protected static function __xhpAsyncRender(
+    XHPAwaitable $child,
+  ): Awaitable<XHPRoot> {
+    // UNSAFE
+    return await $child->asyncRender();
+  }
+
   // Private constants indicating the declared types of attributes
   const int TYPE_STRING   = 1;
   const int TYPE_BOOL     = 2;
@@ -518,32 +527,34 @@ abstract class :x:composable-element extends :x:base {
         $child = $this->children->get($i);
         if ($child instanceof :x:element) {
           do {
-            $loop = false;
+            assert($child instanceof :x:element);
             if ($child instanceof XHPAwaitable) {
-              $child = $child->asyncRender();
+              $child = static::__xhpAsyncRender($child)->getWaitHandle();
             } else {
               $child = $child->render();
             }
             if ($child instanceof WaitHandle) {
               $childWaitHandles[$i] = $child;
             } else if ($child instanceof :x:element) {
-              $loop = true;
+              continue;
             } else if ($child instanceof :x:frag) {
               $children = $this->children->toValuesArray();
-              array_splice($children, $i, 1, $child->children);
+              array_splice($children, $i, 1, $child->getChildren());
               $this->children = new Vector($children);
               $ln = count($this->children);
               --$i;
             } else if ($child === null) {
-              $this->children->remove($i);
+              $this->children->removeKey($i);
               $i--;
             } else {
               if ($child instanceof :x:primitive) {
-                $flushWaitHandles[] = $child->__flushElementChildren();
+                $flushWaitHandles[] =
+                  $child->__flushElementChildren()->getWaitHandle();
               }
+              assert($child instanceof XHPChild);
               $this->children[$i] = $child;
             }
-          } while ($loop);
+          } while ($child instanceof :x:element);
         }
       }
     } while ($childWaitHandles);
@@ -1007,11 +1018,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
   abstract protected function stringify(): string;
 
   final public function toString(): string {
-    $this->__flushElementChildren()->join();
-    if (:xhp::$ENABLE_VALIDATION) {
-      $this->validateChildren();
-    }
-    return $this->stringify();
+    return $this->asyncToString()->getWaitHandle()->join();
   }
 
   final public async function asyncToString(): Awaitable<string> {
@@ -1034,11 +1041,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   abstract protected function render(): XHPRoot;
 
   final public function toString(): string {
-    if (:xhp::$ENABLE_VALIDATION) {
-      $this->validateChildren();
-    }
-    $that = $this->__flushRenderedRootElement()->join();
-    return $that->toString();
+    return $this->asyncToString()->getWaitHandle()->join();
   }
 
   final public async function asyncToString(): Awaitable<string> {
@@ -1059,7 +1062,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
         $that->validateChildren();
       }
       if ($that instanceof XHPAwaitable) {
-        $composed = await $that->asyncRender();
+        $composed = await static::__xhpAsyncRender($that);
       } else {
         $composed = $that->render();
       }
@@ -1220,7 +1223,7 @@ class XHPInvalidChildrenException extends XHPException {
   }
 }
 
-interface XHPRoot {
+interface XHPRoot extends XHPChild {
 }
 
 /**
@@ -1254,6 +1257,7 @@ interface XHPUnsafeRenderable extends XHPChild {
  * be batched together when the element is rendered.
  */
 interface XHPAwaitable {
+  require extends :x:element;
   // protected function asyncRender(): Awaitable<XHPRoot>
 }
 
