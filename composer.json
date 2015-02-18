@@ -5,7 +5,7 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["BSD-3-Clause"],
     "require": {
-        "ext-xhp": "*"
+        "hhvm": "*"
     },
     "autoload": {
         "classmap": [

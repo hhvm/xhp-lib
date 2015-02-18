@@ -37,3 +37,4 @@ xhp/xhpize
 CMakeFiles
 CMakeCache.txt
 vendor/
+*.orig
