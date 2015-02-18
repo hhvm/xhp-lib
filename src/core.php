@@ -10,6 +10,9 @@
  *
  */
 
+interface XHPRoot extends XHPChild {
+}
+
 abstract class :xhp implements XHPChild {
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
@@ -18,20 +21,25 @@ abstract class :xhp implements XHPChild {
   abstract public function appendChild(mixed $child): this;
   abstract public function prependChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
-  abstract public function getChildren(?string $selector = null): Vector<XHPChild>;
+  abstract public function getChildren(
+    ?string $selector = null,
+  ): Vector<XHPChild>;
   abstract public function getFirstChild(?string $selector = null): ?XHPChild;
   abstract public function getLastChild(?string $selector = null): ?XHPChild;
   abstract public function getAttribute(string $attr): mixed;
   abstract public function getAttributes(): Map<string, mixed>;
   abstract public function setAttribute(string $attr, mixed $val): this;
-  abstract public function setAttributes(KeyedTraversable<string, mixed> $attrs): this;
+  abstract public function setAttributes(
+    KeyedTraversable<string, mixed> $attrs,
+  ): this;
   abstract public function isAttributeSet(string $attr): bool;
   abstract public function removeAttribute(string $attr): this;
   abstract public function categoryOf(string $cat): bool;
   abstract public function toString(): string;
   abstract protected function &__xhpCategoryDeclaration(): array<string, int>;
   abstract protected function &__xhpChildrenDeclaration(): mixed;
-  protected static function &__xhpAttributeDeclaration(): array<string, array<int, mixed>> {
+  protected static function &__xhpAttributeDeclaration(
+  ): array<string, array<int, mixed>> {
     return array();
   }
 
@@ -69,7 +77,11 @@ abstract class :xhp implements XHPChild {
   }
 
   public static function class2element(string $class): string {
-    return str_replace(array('__', '_'), array(':', '-'), preg_replace('#^xhp_#i', '', $class));
+    return str_replace(
+      array('__', '_'),
+      array(':', '-'),
+      preg_replace('#^xhp_#i', '', $class),
+    );
   }
 }
 
@@ -87,6 +99,15 @@ abstract class :x:composable-element extends :x:base {
     'data',
     'aria',
   };
+
+  // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
+  // addressed
+  protected static async function __xhpAsyncRender(
+    XHPAwaitable $child,
+  ): Awaitable<XHPRoot> {
+    // UNSAFE
+    return await $child->asyncRender();
+  }
 
   // Private constants indicating the declared types of attributes
   const int TYPE_STRING   = 1;
@@ -360,7 +381,9 @@ abstract class :x:composable-element extends :x:base {
    *
    * @param $attrs    array of attributes
    */
-  final public function setAttributes(KeyedTraversable<string, mixed> $attrs): this {
+  final public function setAttributes(
+    KeyedTraversable<string, mixed> $attrs,
+  ): this {
     foreach ($attrs as $key => $value) {
       $this->setAttribute($key, $value);
     }
@@ -474,28 +497,73 @@ abstract class :x:composable-element extends :x:base {
     }
   }
 
-  final protected function __flushElementChildren(): void {
+  final protected async function __flushElementChildren(): Awaitable<void> {
     // Flush all :xhp elements to x:primitive's
-    $ln = count($this->children);
-    for ($ii = 0; $ii < $ln; ++$ii) {
-      $child = $this->children->get($ii);
+
+    foreach ($this->children as $child) {
       if ($child instanceof :x:composable-element) {
         $child->__transferContext($this->context);
       }
+    }
 
-      if ($child instanceof :x:element) {
-        $child = $child->__flushRenderedRootElement();
+    $childWaitHandles = Map{};
+    $flushWaitHandles = Vector{};
+    do {
+      if ($childWaitHandles || $flushWaitHandles) {
+        list($awaitedChildren, $_) = await GenArrayWaitHandle::create(array(
+          GenMapWaitHandle::create($childWaitHandles),
+          GenVectorWaitHandle::create($flushWaitHandles),
+        ));
+        if ($awaitedChildren) {
+          foreach ($awaitedChildren as $i => $awaitedChild) {
+            $this->children->set($i, $awaitedChild);
+          }
+          // Convert <x:frag>s
+          $this->replaceChildren(<x:frag>{$this->children}</x:frag>);
+          $childWaitHandles = Map{};
+        }
+        $flushWaitHandles = Vector{};
+      }
 
-        if ($child instanceof :x:frag) {
-          $children = $this->children->toValuesArray();
-          array_splice($children, $ii, 1, $child->getChildren());
-          $this->children = new Vector($children);
-          $ln = count($this->children);
-          --$ii;
-        } else {
-          $this->children->set($ii, $child);
+      $ln = count($this->children);
+      for ($i = 0; $i < $ln; ++$i) {
+        $child = $this->children->get($i);
+        if ($child instanceof :x:element) {
+          do {
+            assert($child instanceof :x:element);
+            if ($child instanceof XHPAwaitable) {
+              $child = static::__xhpAsyncRender($child)->getWaitHandle();
+            } else {
+              $child = $child->render();
+            }
+            if ($child instanceof WaitHandle) {
+              $childWaitHandles[$i] = $child;
+            } else if ($child instanceof :x:element) {
+              continue;
+            } else if ($child instanceof :x:frag) {
+              $children = $this->children->toValuesArray();
+              array_splice($children, $i, 1, $child->getChildren());
+              $this->children = new Vector($children);
+              $ln = count($this->children);
+              --$i;
+            } else if ($child === null) {
+              $this->children->removeKey($i);
+              $i--;
+            } else {
+              if ($child instanceof :x:primitive) {
+                $flushWaitHandles[] =
+                  $child->__flushElementChildren()->getWaitHandle();
+              }
+              assert($child instanceof XHPChild);
+              $this->children[$i] = $child;
+            }
+          } while ($child instanceof :x:element);
         }
       }
+    } while ($childWaitHandles);
+
+    if ($flushWaitHandles) {
+      await GenVectorWaitHandle::create($flushWaitHandles);
     }
   }
 
@@ -508,7 +576,8 @@ abstract class :x:composable-element extends :x:base {
    *
    * Attribute types are suggested by the TYPE_* constants.
    */
-  protected static function &__xhpAttributeDeclaration(): array<string, array<int, mixed>> {
+  protected static function &__xhpAttributeDeclaration(
+  ): array<string, array<int, mixed>> {
     static $_ = array();
     return $_;
   }
@@ -538,7 +607,10 @@ abstract class :x:composable-element extends :x:base {
    * Throws an exception if $val is not a valid value for the attribute $attr
    * on this element.
    */
-  final protected function validateAttributeValue<T>(string $attr, T $val): mixed {
+  final protected function validateAttributeValue<T>(
+    string $attr,
+    T $val,
+  ): mixed {
     $decl = static::__xhpAttributeDeclaration();
     if (!isset($decl[$attr])) {
       throw new XHPAttributeNotSupportedException($this, $attr);
@@ -575,7 +647,12 @@ abstract class :x:composable-element extends :x:base {
 
       case self::TYPE_CALLABLE:
         if (!is_callable($val)) {
-          throw new XHPInvalidAttributeException($this, 'callable', $attr, $val);
+          throw new XHPInvalidAttributeException(
+            $this,
+            'callable',
+            $attr,
+            $val,
+          );
         }
         break;
 
@@ -584,7 +661,11 @@ abstract class :x:composable-element extends :x:base {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
         if ($decl[$attr][1]) {
-          $this->validateArrayAttributeValue((array)$decl[$attr][1], $attr, $val);
+          $this->validateArrayAttributeValue(
+            (array)$decl[$attr][1],
+            $attr,
+            $val,
+          );
         }
         break;
 
@@ -614,8 +695,11 @@ abstract class :x:composable-element extends :x:base {
     return $val;
   }
 
-  final private function validateArrayAttributeValue(array<int, mixed> $decl, string $attr,
-                                                     array<mixed> $val): void {
+  final private function validateArrayAttributeValue(
+    array<int, mixed> $decl,
+    string $attr,
+    array<mixed> $val,
+  ): void {
     if ($decl[0]) { // Key declaration
       if ($decl[0] == self::TYPE_STRING) {
         $type = 'string';
@@ -679,7 +763,11 @@ abstract class :x:composable-element extends :x:base {
 
     if (isset($decl[2]) && $decl[1] == self::TYPE_ARRAY) {
       foreach ($val as $arrayVal) {
-        $this->validateArrayAttributeValue((array)$decl[2], $attr, (array)$arrayVal);
+        $this->validateArrayAttributeValue(
+          (array)$decl[2],
+          $attr,
+          (array)$arrayVal,
+        );
       }
     }
   }
@@ -718,29 +806,51 @@ abstract class :x:composable-element extends :x:base {
 
       case 1: // Zero or more times -- :fb-thing*
         do {
-          list($ret, $index) = $this->validateChildrenRule((int)$decl[1], $decl[2], $index);
+          list($ret, $index) = $this->validateChildrenRule(
+            (int)$decl[1],
+            $decl[2],
+            $index,
+          );
         } while ($ret);
         return tuple(true, $index);
 
       case 2: // Zero or one times -- :fb-thing?
-        list($_, $index) = $this->validateChildrenRule((int)$decl[1], $decl[2], $index);
+        list($_, $index) = $this->validateChildrenRule(
+          (int)$decl[1],
+          $decl[2],
+          $index,
+        );
         return tuple(true, $index);
 
       case 3: // One or more times -- :fb-thing+
-        list($ret, $index) = $this->validateChildrenRule((int)$decl[1], $decl[2], $index);
+        list($ret, $index) = $this->validateChildrenRule(
+          (int)$decl[1],
+          $decl[2],
+          $index,
+        );
         if (!$ret) {
           return tuple(false, $index);
         }
         do {
-          list($ret, $index) = $this->validateChildrenRule((int)$decl[1], $decl[2], $index);
+          list($ret, $index) = $this->validateChildrenRule(
+            (int)$decl[1],
+            $decl[2],
+            $index,
+          );
         } while ($ret);
         return tuple(true, $index);
 
       case 4: // Specific order -- :fb-thing, :fb-other-thing
         $oindex = $index;
-        list($ret, $index) = $this->validateChildrenExpression((array)$decl[1], $index);
+        list($ret, $index) = $this->validateChildrenExpression(
+          (array)$decl[1],
+          $index,
+        );
         if ($ret) {
-          list($ret, $index) = $this->validateChildrenExpression((array)$decl[2], $index);
+          list($ret, $index) = $this->validateChildrenExpression(
+            (array)$decl[2],
+            $index,
+          );
         }
         if ($ret) {
           return tuple(true, $index);
@@ -749,9 +859,15 @@ abstract class :x:composable-element extends :x:base {
 
       case 5: // Either or -- :fb-thing | :fb-other-thing
         $oindex = $index;
-        list($ret, $index) = $this->validateChildrenExpression((array)$decl[1], $index);
+        list($ret, $index) = $this->validateChildrenExpression(
+          (array)$decl[1],
+          $index,
+        );
         if (!$ret) {
-          list($ret, $index) = $this->validateChildrenExpression((array)$decl[2], $index);
+          list($ret, $index) = $this->validateChildrenExpression(
+            (array)$decl[2],
+            $index,
+          );
         }
         if ($ret) {
           return tuple(true, $index);
@@ -760,7 +876,11 @@ abstract class :x:composable-element extends :x:base {
     }
   }
 
-  final private function validateChildrenRule(int $type, mixed $rule, int $index): (bool, int) {
+  final private function validateChildrenRule(
+    int $type,
+    mixed $rule,
+    int $index,
+  ): (bool, int) {
     switch ($type) {
       case 1: // any element -- any
         if ($this->children->containsKey($index)) {
@@ -795,7 +915,7 @@ abstract class :x:composable-element extends :x:base {
         }
         return tuple(true, $index + 1);
 
-      case 5: // nested rule -- ((:fb-thing, :fb-other-thing)*, :fb:thing-footer)
+      case 5: // nested rule - ((:fb-thing, :fb-other-thing)*, :fb:thing-footer)
         return $this->validateChildrenExpression((array)$rule, $index);
     }
   }
@@ -901,7 +1021,11 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
   abstract protected function stringify(): string;
 
   final public function toString(): string {
-    $this->__flushElementChildren();
+    return $this->asyncToString()->getWaitHandle()->join();
+  }
+
+  final public async function asyncToString(): Awaitable<string> {
+    await $this->__flushElementChildren();
     if (:xhp::$ENABLE_VALIDATION) {
       $this->validateChildren();
     }
@@ -920,31 +1044,42 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   abstract protected function render(): XHPRoot;
 
   final public function toString(): string {
-    $that = $this;
-    if (:xhp::$ENABLE_VALIDATION) {
-      $that->validateChildren();
-    }
-    $that = $that->__flushRenderedRootElement();
-    return $that->__toString();
+    return $this->asyncToString()->getWaitHandle()->join();
   }
 
-  final protected function __flushRenderedRootElement(): :x:primitive {
+  final public async function asyncToString(): Awaitable<string> {
+    if (:xhp::$ENABLE_VALIDATION) {
+      $this->validateChildren();
+    }
+    $that = await $this->__flushRenderedRootElement();
+    $ret = await $that->asyncToString();
+    return $ret;
+  }
+
+  final protected async function __flushRenderedRootElement(
+  ): Awaitable<:x:primitive> {
     $that = $this;
     // Flush root elements returned from render() to an :x:primitive
-    while (($composed = $that->render()) instanceof :x:element) {
-      assert($composed instanceof :x:element);
+    do {
       if (:xhp::$ENABLE_VALIDATION) {
-        $composed->validateChildren();
+        $that->validateChildren();
       }
+      if ($that instanceof XHPAwaitable) {
+        $composed = await static::__xhpAsyncRender($that);
+      } else {
+        $composed = $that->render();
+      }
+      assert($composed instanceof :x:element);
       $composed->__transferContext($that->getAllContexts());
       $that = $composed;
+    } while ($composed instanceof :x:element);
+
+    if (!($composed instanceof :x:primitive)) {
+      // render() must always (eventually) return :x:primitive
+      throw new XHPCoreRenderException($this, $that);
     }
 
-    if ($composed instanceof :x:primitive) {
-      $composed->__transferContext($that->getAllContexts());
-      return $composed;
-    }
-    throw new XHPCoreRenderException($this, $that);
+    return $composed;
   }
 }
 
@@ -992,8 +1127,8 @@ class XHPCoreRenderException extends XHPException {
   public function __construct(:xhp $that, mixed $rend) {
     parent::__construct(
       ':x:element::render must reduce an object to an :x:primitive, but `'.
-      :xhp::class2element(get_class($that)).'` reduced into `'.gettype($rend)."`.\n\n".
-      $that->source
+      :xhp::class2element(get_class($that)).'` reduced into `'.
+      gettype($rend)."`.\n\n".$that->source
     );
   }
 }
@@ -1002,26 +1137,36 @@ class XHPRenderArrayException extends XHPException {
 }
 
 class XHPInvalidArrayAttributeException extends XHPException {
-  public function __construct(:xhp $that, string $type, string $attr, mixed $val) {
+  public function __construct(
+    :xhp $that,
+    string $type,
+    string $attr,
+    mixed $val,
+  ) {
     if (is_object($val)) {
       $val_type = get_class($val);
     } else {
       $val_type = gettype($val);
     }
     parent::__construct(
-      "Invalid attribute `$attr` of type array<`$val_type`> supplied to element `".
-      :xhp::class2element(get_class($that))."`, expected array<`$type`>.\n\n".
-      $that->source
+      "Invalid attribute `$attr` of type array<`$val_type`> supplied to ".
+      "element `".:xhp::class2element(get_class($that))."`, expected ".
+      "array<`$type`>.\n\n".$that->source
     );
   }
 }
 
 class XHPInvalidArrayKeyAttributeException extends XHPException {
-  public function __construct(:xhp $that, string $type, string $attr, string $val_type) {
+  public function __construct(
+    :xhp $that,
+    string $type,
+    string $attr,
+    string $val_type,
+  ) {
     parent::__construct(
-      "Invalid key in attribute `$attr` of type array<$val_type => ?> supplied to element `".
-      :xhp::class2element(get_class($that))."`, expected array<$type => ?>.\n\n".
-      $that->source
+      "Invalid key in attribute `$attr` of type array<$val_type => ?> supplied".
+      " to element `".:xhp::class2element(get_class($that))."`, expected ".
+      "array<$type => ?>.\n\n".$that->source
     );
   }
 }
@@ -1049,7 +1194,12 @@ class XHPAttributeRequiredException extends XHPException {
 }
 
 class XHPInvalidAttributeException extends XHPException {
-  public function __construct(:xhp $that, string $type, string $attr, mixed $val) {
+  public function __construct(
+    :xhp $that,
+    string $type,
+    string $attr,
+    mixed $val,
+  ) {
     if (is_object($val)) {
       $val_type = get_class($val);
     } else {
@@ -1076,9 +1226,6 @@ class XHPInvalidChildrenException extends XHPException {
   }
 }
 
-interface XHPRoot {
-}
-
 /**
  * INCREDIBLY DANGEROUS: Marks an object as a valid child of *any* element,
  * ignoring any child rules.
@@ -1100,4 +1247,30 @@ interface XHPAlwaysValidChild {
  */
 interface XHPUnsafeRenderable extends XHPChild {
   public function toHTMLString();
+}
+
+/**
+ * INCREDIBLY AWESOME: Specify an element as awaitable on render.
+ *
+ * This allows you to use await inside your XHP objects. For instance, you could
+ * fetch data inside your XHP elements using await and the calls to the DB would
+ * be batched together when the element is rendered.
+ */
+interface XHPAwaitable {
+  require extends :x:element;
+  // protected function asyncRender(): Awaitable<XHPRoot>
+}
+
+trait XHPAsync {
+
+  require extends :x:element;
+  require implements XHPAwaitable;
+
+  abstract protected function asyncRender(): Awaitable<XHPRoot>;
+
+  final protected function render(): XHPRoot {
+    throw new Exception(
+      'You need to call asyncRender() on XHP elements that use XHPAwaitable',
+    );
+  }
 }
