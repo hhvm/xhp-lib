@@ -28,4 +28,9 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
     $xhp = <div>{$frag}</div>;
     $this->assertEquals('<div>herpderp</div>', $xhp->toString());
   }
+
+  public function testEscaping() {
+    $xhp = <div>{"foo<SCRIPT>bar"}</div>;
+    $this->assertEquals('<div>foo&lt;SCRIPT&gt;bar</div>', $xhp->toString());
+  }
 }
