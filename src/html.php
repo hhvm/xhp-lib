@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -111,7 +111,8 @@ abstract class :xhp:html-element extends :x:primitive {
   }
 
   public function requireUniqueID(): string {
-    if (!($id = $this->:id)) {
+    $id = $this->:id;
+    if ($id === null || $id === '') {
       $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
     }
     return (string) $id;
