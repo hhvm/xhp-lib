@@ -10,6 +10,11 @@
     "require-dev": {
         "phpunit/phpunit": "4.5.*"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-hack": "2.x-dev"
+        }
+    },
     "autoload": {
         "classmap": [
             "src/"
