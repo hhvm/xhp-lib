@@ -7,8 +7,3 @@ before_script:
   - composer install
 
 script: vendor/bin/phpunit tests/
-
-notifications:
-  irc:
-    channels:
-      - "irc.freenode.org#hhvm"
