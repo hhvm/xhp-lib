@@ -4,8 +4,17 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](http://jekyllrb.com/)
+XHP augments the syntax of PHP and Hack such that XML document fragments become
+valid expressions. This allows you to use PHP or Hack as a stricter templating
+engine and offers much more straightforward implementation of reusable
+components.
 
-You can find the source code for the Jekyll new theme at: [github.com/jglovier/jekyll-new](https://github.com/jglovier/jekyll-new)
+There are two components:
 
-You can find the source code for Jekyll at [github.com/jekyll/jekyll](https://github.com/jekyll/jekyll)
+ - [XHP-Lib](https://github.com/facebook/xhp-lib): This provides a basic
+   class library for working with XHP. The 1.x series supports PHP5 and HHVM,
+   however, the 2.x series is written in Hack, so HHVM is required.
+ - [XHP-PHP5-Extension](https://github.com/facebookarchive/xhp-php5-extension):
+   provides support for the syntax in PHP5. If you are using HHVM, no extension
+   is neccessary - the syntax is supported by default for Hack files, and can
+   be enabled for PHP5 files with the 'hhvm.enable_xhp' INI setting.
