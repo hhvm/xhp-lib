@@ -1,5 +1,6 @@
 # Site settings
 title: XHP-Lib
+logo: images/xhp_logo.png
 description: > # this means to ignore newlines until "baseurl:"
   XHP-Lib provides a set of base classes for XHP, a feature of the Hack language
   (also available as a PHP5 extension) which provides a safe way to construct

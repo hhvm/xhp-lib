@@ -23,6 +23,13 @@
     }
 }
 
+.site-title img {
+  // Total is the 56px line-height
+  height: 48px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
 .site-nav {
     float: right;
     line-height: 56px;
