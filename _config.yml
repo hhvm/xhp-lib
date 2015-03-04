@@ -5,6 +5,7 @@ description: > # this means to ignore newlines until "baseurl:"
   XHP-Lib provides a set of base classes for XHP, a feature of the Hack language
   (also available as a PHP5 extension) which provides a safe way to construct
   markup by embedding an XML-like syntax inside your PHP/Hack code.
+host: facebook.github.io
 baseurl: /xhp-lib # the subpath of your site, e.g. /blog/
 github_username: hhvm
 twitter_username: HipHopVM

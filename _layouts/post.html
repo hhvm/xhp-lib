@@ -21,5 +21,14 @@ layout: default
  <article class="post-content">
    {{ content }}
  </article>
+ <div class="post-comments">
+   <h2 class="post-comments-header">Comments</h2>
+   <div
+    class="fb-comments"
+    data-href="http://{{ site.host }}{{ site.baseurl }}{{ page.url }}"
+    data-numposts="5"
+    data-colorscheme="light">
+  </div>
+ </div>
  {% endif %}
 </div>
