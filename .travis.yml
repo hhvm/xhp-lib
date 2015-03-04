@@ -1,15 +1,12 @@
 language: php
 
-php:
-  - hhvm
-  - hhvm-nightly
+php: hhvm
 
 before_script:
   - composer self-update
   - composer install
 
-script:
-  - vendor/bin/phpunit tests/
+script: vendor/bin/phpunit tests/
 
 notifications:
   irc:
