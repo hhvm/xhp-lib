@@ -1,0 +1,17 @@
+language: php
+
+php:
+  - hhvm
+  - hhvm-nightly
+
+before_script:
+  - composer self-update
+  - composer install
+
+script:
+  - vendor/bin/phpunit tests/
+
+notifications:
+  irc:
+    channels:
+      - "irc.freenode.org#hhvm"
