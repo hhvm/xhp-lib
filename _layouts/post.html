@@ -29,18 +29,26 @@ layout: default
       where it was originally posted.
     </div>
   </article>
- {% else %}
- <article class="post-content">
-   {{ content }}
- </article>
- <div class="post-comments">
-   <h2 class="post-comments-header">Comments</h2>
-   <div
-    class="fb-comments"
-    data-href="http://{{ site.host }}{{ site.baseurl }}{{ page.url }}"
-    data-numposts="5"
-    data-colorscheme="light">
+  {% else %}
+  <article class="post-content">
+    {{ content }}
+  </article>
+  <div
+    class="fb-like"
+    data-href="https://{{ site.host }}{{ site.baseurl }}{{ page.url }}"
+    data-layout="standard"
+    data-actions="like"
+    data-show-faces="true"
+    data-share="true">
   </div>
- </div>
- {% endif %}
+  <div class="post-comments">
+    <h2 class="post-comments-header">Comments</h2>
+    <div
+     class="fb-comments"
+     data-href="https://{{ site.host }}{{ site.baseurl }}{{ page.url }}"
+     data-numposts="5"
+     data-colorscheme="light">
+   </div>
+  </div>
+  {% endif %}
 </div>
