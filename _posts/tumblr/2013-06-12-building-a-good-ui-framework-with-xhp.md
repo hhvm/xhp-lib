@@ -4,6 +4,7 @@ title: Building a Good UI Framework with XHP
 date: '2013-06-12T16:23:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/52824249342/building-a-good-ui-framework-with-xhp
 ---
 This is the article I wanted to write ever since I started this blog. XHP is a really powerful tool, but like any tool you need to know how to use it for it to be really effective. Facebook has built a very powerful UI framework on top of XHP, but we had to change the way we think about object patterns to do it. I’ll get into that in a bit, but first I’m going to jump right into the most important feature of Facebook’s UI library: attribute forwarding.

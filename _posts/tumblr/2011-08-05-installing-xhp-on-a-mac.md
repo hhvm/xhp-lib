@@ -4,6 +4,7 @@ title: Installing XHP on a Mac
 date: '2011-08-05T12:18:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/8523495262/installing-xhp-on-a-mac
 ---
 XHP was built for Unix, and thus can run just fine on a Mac, but sometimes for whatever reason, XHP has a little trouble. Here are the steps to installation that seem to work if you’re getting unknown errors.

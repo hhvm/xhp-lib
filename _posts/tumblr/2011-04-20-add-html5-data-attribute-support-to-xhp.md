@@ -4,6 +4,7 @@ title: Add HTML5 Data Attribute Support to XHP
 date: '2011-04-20T18:18:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/4792658458/add-html5-data-attribute-support-to-xhp
 ---
 UPDATE: I’ve added data- and aria- attribute support into XHP by default. Downloading the latest source will get you this for free.

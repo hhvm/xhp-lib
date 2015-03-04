@@ -4,6 +4,7 @@ title: Why Control Flows Should NOT Be In XHP
 date: '2012-11-19T13:58:00-08:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/36089777404/why-control-flows-should-not-be-in-xhp
 ---
 About every six to nine months or so, an engineer at Facebook tries to add a control structure into XHP. These usually come in up to four flavors per diff: <x:if>, <x:switch>, <x:for>, and <x:foreach> (and occasionally <x:map>, which really is just a different <x:foreach>). A diff is submitted and invariably a long discussion ensues before the diff is eventually abandoned. I have to admit, it is tempting sometimes. I mean, we can keep everything in a single XHP block. How much cleaner is that?

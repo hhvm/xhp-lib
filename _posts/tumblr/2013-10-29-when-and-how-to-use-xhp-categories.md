@@ -4,6 +4,7 @@ title: When and How to Use XHP Categories
 date: '2013-10-29T14:23:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/65461659692/when-and-how-to-use-xhp-categories
 ---
 I remember when we first added the children keyword to XHP. We had the problem that validating them was really cumbersome. Nearly every element was valid inside a <div> but not all (for instance <meta>). Listing out every valid child wasn’t very elegant and certainly would cause problems for custom XHP components. Fortunately, the HTML spec categorized elements just for this purpose. Grouping elements into “block” or “inline” categories made validation far simpler. But if you’ve used XHP you might be wondering, “Why have I never needed to define my elements as inline or block before?” Well, the answer lies in how XHP renders an element tree. First it will render down all your custom elements into their eventual HTML primitives, then it will render the entire HTML primitive tree into a text string. The key here is that there are actually two passes, meaning XHP validates children in two sets: your elements first and then core HTML elements second.

@@ -4,6 +4,7 @@ title: An Introduction to XHP
 date: '2011-02-03T17:25:00-08:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/3096387855/an-introduction-to-xhp
 ---
 There seems to be very little on the web still about XHP. It’s an incredibly powerful tool that I think remains unused mostly because of its lack of documentation. Hopefully this will help get the ball rolling, so to speak, with adoption of XHP as the eventual defacto standard in PHP web programming, as is my opinion it should be.

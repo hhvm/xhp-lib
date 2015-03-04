@@ -4,6 +4,7 @@ title: Abstracting CSS with XHP
 date: '2011-02-25T09:11:00-08:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/3504948746/abstracting-css-with-xhp
 ---
 A good site design uses a consistent palette and reusable styles, but the unavoidable pitfall is the developer will have to remember every classname for every color and format, or redeclare the same values for multiple CSS classes. There are many frameworks and scripts that try to simulate CSS variables to help with this problem, but they actually make the situation worse. You’ll still have to remember all the variables and you’ll also have to put them in multiple CSS classes. XHP provides a new (and perhaps the first real) solution to this problem. By creating a simple element that holds your common formatting and styles, you can both avoid having to remember all the CSS class names as well as stop duplicating the same style in multiple CSS classes.

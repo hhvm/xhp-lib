@@ -4,6 +4,7 @@ title: Rendering as NULL in XHP
 date: '2014-03-20T17:17:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/80212486413/rendering-as-null-in-xhp
 ---
 There are some at Facebook who have argued against returning null when rendering an XHP element. In fact, it’s actually against Facebook’s standards now. Personally, I prefer to structure my code to return null in XHP, but there definitely are pros and cons. I’ll cover the situations in which you might want to return null and what the alternatives could be, and then you can decide for yourself.

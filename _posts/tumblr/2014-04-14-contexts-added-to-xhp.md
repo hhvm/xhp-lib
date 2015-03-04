@@ -4,6 +4,7 @@ title: Contexts Added to XHP
 date: '2014-04-14T18:25:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/82745109442/contexts-added-to-xhp
 ---
 I just added a new feature to XHP to allow you pass data automatically through the hierarchy of an XHP tree being rendered. That’s kind of a mouthful, but what it means is that you can set context (which is just a map of key/value pairs) on some parent element, and that context will be available on all rendered elements and their children. Let’s take a look at some examples to better understand where this would be useful.

@@ -4,6 +4,7 @@ title: Rendering ONLY Children in XHP
 date: '2014-03-27T12:54:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/80902252142/rendering-only-children-in-xhp
 ---
 My last post, Rendering NULL in XHP, surprised a bunch of people by the use of extending :x:primitive to handle children rendering before the parent’s rendering. So I thought I’d quickly discuss another useful trick you can do by extending :x:primitive, this one deals with getting just the children from elements that alter their children before rendering.

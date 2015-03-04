@@ -4,6 +4,7 @@ title: Converting a Project to XHP
 date: '2014-05-30T09:15:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/87306947716/converting-a-project-to-xhp
 ---
 Unless you’re starting from scratch, using XHP is most likely going to take some refactoring of old HTML-as-string code. The problem is that because of XHP’s auto-escaping to prevent XSS holes, you can’t include strings of HTML as children into XHP elements. Fortunately there’s something you can do to allow XHP to ignore certain strings and return them directly as HTML. This is essentially what Facebook had to do when we started converting our entire codebase into XHP in 2009.

@@ -3,6 +3,7 @@ layout: post
 title: Composer, Branches, and 2.0
 date: '2015-03-04T11:41:00-07:00'
 tags: -xhp
+author: fredemmott
 ---
 
 The `hack` branch of XHP-Lib is going to be merged into `master` for 2.0,

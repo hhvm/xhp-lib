@@ -4,6 +4,7 @@ title: Image Spriting in XHP
 date: '2011-10-04T08:28:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/11022211307/image-spriting-in-xhp
 ---
 I want to share with you a quick XHP class you can build that will greatly abstract your image spriting. Image sprites are a great way to reduce the number of resources downloaded from your server, but they can be a hassle to maintain. If you already sprite your images then you might have a class that generates the styles for your images. Your API might look something like this:

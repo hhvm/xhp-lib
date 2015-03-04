@@ -4,6 +4,7 @@ title: Basic XHP Abstractions
 date: '2011-02-13T23:22:00-08:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/3288864699/basic-xhp-abstractions
 ---
 On the surface XHP is nothing more than eye candy, but used correctly it can greatly simplify development. Creating good abstractions has always been smart programming, but it’s very difficult to do that for your HTML components without mucking up your rendering code. Enter XHP to the rescue. Here I’ll show you some basic examples of how XHP can be used to abstract out your rendering logic. These will be pretty basic, but hopefully enough to give you some ideas for your own setups.

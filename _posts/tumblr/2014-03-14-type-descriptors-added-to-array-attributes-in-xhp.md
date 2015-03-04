@@ -4,6 +4,7 @@ title: Type Descriptors Added to Array Attributes in XHP
 date: '2014-03-14T17:23:00-07:00'
 tags:
 - xhp
+author: Swahvay
 tumblr_url: http://codebeforethehorse.tumblr.com/post/79602499732/type-descriptors-added-to-array-attributes-in-xhp
 ---
 A new level of validation has been added to XHP which will allow you to type-check your array attribute keys and values. What this means is that while before this change you were only able to validate attribute types (bool, int, string, etc.), now if the attribute is an array type you can validate its structure as well.
