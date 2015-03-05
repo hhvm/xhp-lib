@@ -539,6 +539,16 @@ abstract class :x:composable-element extends :xhp {
     }
     switch ((int)$decl[$attr][0]) {
       case self::TYPE_STRING:
+        if (is_object($val) || $val instanceof __PHP_Incomplete_Class) {
+          if (!$val instanceof Stringish) {
+            throw new XHPInvalidAttributeException(
+              $this,
+              'callable',
+              $attr,
+              $val,
+            );
+          }
+        }
         $val = (string)$val;
         break;
 
