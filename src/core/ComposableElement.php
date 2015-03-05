@@ -37,7 +37,6 @@ abstract class :x:composable-element extends :xhp {
   const int TYPE_VAR      = 6;
   const int TYPE_ENUM     = 7;
   const int TYPE_FLOAT    = 8;
-  const int TYPE_CALLABLE = 9;
 
   protected function init(): void {}
 
@@ -562,17 +561,6 @@ abstract class :x:composable-element extends :xhp {
         }
         break;
 
-      case self::TYPE_CALLABLE:
-        if (!is_callable($val)) {
-          throw new XHPInvalidAttributeException(
-            $this,
-            'callable',
-            $attr,
-            $val,
-          );
-        }
-        break;
-
       case self::TYPE_ARRAY:
         if (!is_array($val)) {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
@@ -652,10 +640,6 @@ abstract class :x:composable-element extends :xhp {
         $type = 'float';
         $func = fun('is_numeric');
         break;
-      case self::TYPE_CALLABLE:
-        $type = 'callable';
-        $func = fun('is_callable');
-        return;
       case self::TYPE_ARRAY:
         $type = 'array';
         $func = fun('is_array');
