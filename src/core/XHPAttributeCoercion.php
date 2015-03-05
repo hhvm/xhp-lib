@@ -7,21 +7,19 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): string {
     if (
-      is_array($val)
-      || is_object($val)
-      /* HH_FIXME[2049] facebook/hhvm#4960 */
-      || $val instanceof __PHP_Incomplete_Class
-   ) {
-     if (!$val instanceof Stringish) {
-       throw new XHPInvalidAttributeException(
-         $context,
-         'string',
-         $attr,
-         $val,
-         );
-      }
+      is_int($val)
+      || is_float($val)
+      || $val instanceof Stringish
+    ) {
+     return (string)$val;
     }
-    return (string)$val;
+
+    throw new XHPInvalidAttributeException(
+      $context,
+      'string',
+      $attr,
+      $val,
+    );
   }
 
   public static function CoerceToInt(
