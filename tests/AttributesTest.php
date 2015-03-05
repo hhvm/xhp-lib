@@ -162,4 +162,25 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testNumericPrefixStringAsFloat(): void {
     $x = <test:attribute-types myfloat="123derp" />;
   }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testNotAContainerAsArray(): void {
+    $x = <test:attribute-types myarray={new EmptyTestClass()} />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testHackContainerAsArray(): void {
+    $x = <test:attribute-types myarray={Vector { 1,2,3 } } />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testIncompatibleObjectAsObject(): void {
+    $x = <test:attribute-types myobject={new EmptyTestClass()} />;
+  }
 }
