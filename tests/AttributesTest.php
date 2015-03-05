@@ -17,6 +17,24 @@ class :test:attribute-types extends :x:element {
   }
 }
 
+class :test:required-attributes extends :x:element {
+  attribute
+    string mystring @required;
+
+  protected function render(): XHPRoot {
+    return <div>{$this->:mystring}</div>;
+  }
+}
+
+class :test:default-attributes extends :x:element {
+  attribute
+    string mystring = 'mydefault';
+
+  protected function render(): XHPRoot {
+    return <div>{$this->:mystring}</div>;
+  }
+}
+
 class EmptyTestClass {}
 class StringableTestClass { public function __toString() { return __CLASS__; } }
 
@@ -193,5 +211,31 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    */
   public function testPassingArrayAsVector(): void {
     $x = <test:attribute-types myvector={[1,2,3]} />;
+  }
+
+  public function testProvidingRequiredAttributes(): void {
+    $x = <test:required-attributes mystring="herp" />;
+    $this->assertSame('herp', $x->:mystring);
+    $this->assertSame('<div>herp</div>', $x->toString());
+  }
+
+  /**
+   * @expectedException XHPAttributeRequiredException
+   */
+  public function testOmittingRequiredAttributes(): void {
+    $x = <test:required-attributes />;
+    $this->assertNull($x->:mystring);
+  }
+
+  public function testProvidingDefaultAttributes(): void {
+    $x = <test:default-attributes mystring="herp" />;
+    $this->assertSame('herp', $x->:mystring);
+    $this->assertSame('<div>herp</div>', $x->toString());
+  }
+
+  public function testOmittingDefaultAttributes(): void {
+    $x = <test:default-attributes />;
+    $this->assertSame('mydefault', $x->:mystring);
+    $this->assertSame('<div>mydefault</div>', $x->toString());
   }
 }
