@@ -547,7 +547,7 @@ abstract class :x:composable-element extends :xhp {
           if (!$val instanceof Stringish) {
             throw new XHPInvalidAttributeException(
               $this,
-              'callable',
+              'string',
               $attr,
               $val,
             );
@@ -575,7 +575,7 @@ abstract class :x:composable-element extends :xhp {
           ) {
             throw new XHPInvalidAttributeException(
               $this,
-              'callable',
+              'number',
               $attr,
               $val,
             );
