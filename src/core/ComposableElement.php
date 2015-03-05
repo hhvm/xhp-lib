@@ -565,13 +565,6 @@ abstract class :x:composable-element extends :xhp {
         if (!is_array($val)) {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
-        if ($decl[$attr][1]) {
-          $this->validateArrayAttributeValue(
-            (array)$decl[$attr][1],
-            $attr,
-            $val,
-          );
-        }
         break;
 
       case self::TYPE_OBJECT:
@@ -598,79 +591,6 @@ abstract class :x:composable-element extends :xhp {
         }
     }
     return $val;
-  }
-
-  final private function validateArrayAttributeValue(
-    array<int, mixed> $decl,
-    string $attr,
-    array<mixed> $val,
-  ): void {
-    if ($decl[0]) { // Key declaration
-      if ($decl[0] == self::TYPE_STRING) {
-        $type = 'string';
-        $func = fun('is_string');
-      } else {
-        $type = 'int';
-        $func = fun('is_int');
-      }
-      if (count($val) != count(array_filter(array_keys($val), $func))) {
-        $bad = $type == 'string' ? 'int' : 'string';
-        throw new XHPInvalidArrayKeyAttributeException(
-          $this,
-          (string)$type,
-          $attr,
-          $bad
-        );
-      }
-    }
-    switch ((int)$decl[1]) { // Value declaration
-      case self::TYPE_STRING:
-        $type = 'string';
-        $func = fun('is_string');
-        break;
-      case self::TYPE_BOOL:
-        $type = 'bool';
-        $func = fun('is_bool');
-        break;
-      case self::TYPE_INTEGER:
-        $type = 'int';
-        $func = fun('is_int');
-        break;
-      case self::TYPE_FLOAT:
-        $type = 'float';
-        $func = fun('is_numeric');
-        break;
-      case self::TYPE_ARRAY:
-        $type = 'array';
-        $func = fun('is_array');
-        break;
-      case self::TYPE_OBJECT:
-        $type = $decl[2];
-        $func = function($item) use ($type) {
-          return $item instanceof $type;
-        };
-        break;
-    }
-    $filtered = array_filter($val, $func);
-    if (count($val) != count($filtered)) {
-      $bad = array_diff($val, $filtered);
-      throw new XHPInvalidArrayAttributeException(
-        $this,
-        (string)$type,
-        $attr,
-        reset($bad)
-      );
-    }
-
-    if (isset($decl[2]) && $decl[1] == self::TYPE_ARRAY) {
-      foreach ($val as $arrayVal) {
-        $this->validateArrayAttributeValue(
-          (array)$decl[2],
-          $attr,
-          (array)$arrayVal,
-        );
-      }
-    }
   }
 
   /**
