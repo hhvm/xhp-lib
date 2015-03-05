@@ -159,6 +159,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $this->assertSame(true, $x->:mybool);
   }
 
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testInvalidEnumValue(): void {
+    $x = <test:attribute-types myenum="derp" />;
+  }
+
   public function testIntAsFloat(): void {
     $x = <test:attribute-types myfloat={123} />;
     $this->assertSame(123.0, $x->:myfloat);
