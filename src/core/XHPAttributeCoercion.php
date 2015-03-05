@@ -71,4 +71,21 @@ abstract final class XHPAttributeCoercion {
       $val,
     );
   }
+
+  public static function CoerceToFloat(
+    :x:composable-element $context,
+    string $attr,
+    mixed $val,
+  ): float {
+    if (is_numeric($val)) {
+      return (float)$val;
+    }
+
+    throw new XHPInvalidAttributeException(
+      $context,
+      'float',
+      $attr,
+      $val,
+    );
+  }
 }

@@ -98,6 +98,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $x = <test:attribute-types myint={[]} />;
   }
 
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testNumericPrefixStringAsInt(): void {
+    $x = <test:attribute-types myint="123derp" />;
+  }
+
   public function testTrueStringAsBool(): void {
     $x = <test:attribute-types mybool="true" />;
     $this->assertSame(true, $x->:mybool);
@@ -128,5 +135,31 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     // idiomatic - eg checked="checked" 
     $x = <test:attribute-types mybool="mybool" />;
     $this->assertSame(true, $x->:mybool);
+  }
+
+  public function testIntAsFloat(): void {
+    $x = <test:attribute-types myfloat={123} />;
+    $this->assertSame(123.0, $x->:myfloat);
+  }
+
+  public function testNumericStringsAsFloats(): void {
+    $x = <test:attribute-types myfloat="123" />;
+    $this->assertSame(123.0, $x->:myfloat);
+    $x = <test:attribute-types myfloat="1.23" />;
+    $this->assertSame(1.23, $x->:myfloat);
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testNonNumericStringAsFloat(): void {
+    $x = <test:attribute-types myfloat="herpderp" />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testNumericPrefixStringAsFloat(): void {
+    $x = <test:attribute-types myfloat="123derp" />;
   }
 }

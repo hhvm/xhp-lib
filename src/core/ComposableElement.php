@@ -557,8 +557,8 @@ abstract class :x:composable-element extends :xhp {
         break;
 
       case self::TYPE_FLOAT:
-        if (!is_numeric($val)) {
-          $val = (float)$val;
+        if (!is_float($val)) {
+          $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
 
