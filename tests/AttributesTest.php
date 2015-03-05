@@ -8,7 +8,9 @@ class :test:attribute-types extends :x:element {
     array myarray,
     stdClass myobject,
     enum {'foo', 'bar'} myenum,
-    float myfloat;
+    float myfloat,
+    Vector<string> myvector,
+    Map<string, string> mymap;
 
   protected function render(): XHPRoot {
     return <div />;
@@ -28,6 +30,8 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
       myobject={new stdClass()}
       myenum={'foo'}
       myfloat={1.23}
+      myvector={Vector { 1, 2, 3 } }
+      mymap={Map { 'herp' => 'derp'} }
     />;
     $this->assertEquals('<div></div>', $x->toString());
   }
@@ -182,5 +186,12 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    */
   public function testIncompatibleObjectAsObject(): void {
     $x = <test:attribute-types myobject={new EmptyTestClass()} />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testPassingArrayAsVector(): void {
+    $x = <test:attribute-types myvector={[1,2,3]} />;
   }
 }
