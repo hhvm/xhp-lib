@@ -238,4 +238,18 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $this->assertSame('mydefault', $x->:mystring);
     $this->assertSame('<div>mydefault</div>', $x->toString());
   }
+
+  /**
+   * @expectedException XHPAttributeNotSupportedException
+   */
+  public function testBogusAttributes(): void {
+    $x = <test:default-attributes idonotexist="derp" />;
+  }
+
+  public function testSpecialAttributes(): void {
+    $x = <test:default-attributes data-idonotexist="derp" />;
+    $this->assertSame('<div>mydefault</div>', $x->toString());
+    $x = <test:default-attributes aria-idonotexist="derp" />;
+    $this->assertSame('<div>mydefault</div>', $x->toString());
+  }
 }
