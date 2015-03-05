@@ -564,6 +564,14 @@ abstract class :x:composable-element extends :xhp {
 
       case self::TYPE_NUMBER:
         if (!is_int($val)) {
+          if (is_object($val) || $val instanceof __PHP_Incomplete_Class) {
+            throw new XHPInvalidAttributeException(
+              $this,
+              'callable',
+              $attr,
+              $val,
+            );
+          }
           $val = (int)$val;
         }
         break;

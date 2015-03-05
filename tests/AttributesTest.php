@@ -15,7 +15,7 @@ class :test:attribute-types extends :x:element {
   }
 }
 
-class NotAStringableTestClass {}
+class EmptyTestClass {}
 class StringableTestClass { public function __toString() { return __CLASS__; } }
 
 class AttributesTest extends PHPUnit_Framework_TestCase {
@@ -38,13 +38,11 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testStringableObjectAsString(): void {
     $x = <test:attribute-types mystring={new StringableTestClass()} />;
-    $this->assertEquals('<div></div>', $x->toString());
     $this->assertSame('StringableTestClass', $x->:mystring);
   }
 
   public function testIntegerAsString(): void {
     $x = <test:attribute-types mystring={123} />;
-    $this->assertEquals('<div></div>', $x->toString());
     $this->assertSame('123', $x->:mystring);
   }
 
@@ -52,7 +50,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testUnstringableObjectAsString(): void {
-    $x = <test:attribute-types mystring={new NotAStringableTestClass()} />;
+    $x = <test:attribute-types mystring={new EmptyTestClass()} />;
   }
 
   /**
@@ -60,5 +58,29 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    */
   public function testIncompleteObjectAsString(): void {
     $x = <test:attribute-types mystring={new __PHP_Incomplete_Class()} />;
+  }
+
+  public function testIntishStringAsInt(): void {
+    $x = <test:attribute-types myint={'123'} />;
+    $this->assertSame(123, $x->:myint);
+  }
+
+  public function testFloatAsInt(): void {
+    $x = <test:attribute-types myint={1.23} />;
+    $this->assertSame(1, $x->:myint);
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testObjectAsInt(): void {
+    $x = <test:attribute-types myint={new EmptyTestClass()} />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testIncompleteObjectAsInt(): void {
+    $x = <test:attribute-types myint={new __PHP_Incomplete_Class()} />;
   }
 }
