@@ -60,6 +60,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $x = <test:attribute-types mystring={new __PHP_Incomplete_Class()} />;
   }
 
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testArrayAsString(): void {
+    $x = <test:attribute-types mystring={[]} />;
+  }
+
   public function testIntishStringAsInt(): void {
     $x = <test:attribute-types myint={'123'} />;
     $this->assertSame(123, $x->:myint);
@@ -82,5 +89,12 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    */
   public function testIncompleteObjectAsInt(): void {
     $x = <test:attribute-types myint={new __PHP_Incomplete_Class()} />;
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testArrayAsInt(): void {
+    $x = <test:attribute-types myint={[]} />;
   }
 }

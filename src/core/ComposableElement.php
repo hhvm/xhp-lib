@@ -539,7 +539,11 @@ abstract class :x:composable-element extends :xhp {
     }
     switch ((int)$decl[$attr][0]) {
       case self::TYPE_STRING:
-        if (is_object($val) || $val instanceof __PHP_Incomplete_Class) {
+        if (
+          is_array($val)
+          || is_object($val)
+          || $val instanceof __PHP_Incomplete_Class
+        ) {
           if (!$val instanceof Stringish) {
             throw new XHPInvalidAttributeException(
               $this,
@@ -564,7 +568,11 @@ abstract class :x:composable-element extends :xhp {
 
       case self::TYPE_NUMBER:
         if (!is_int($val)) {
-          if (is_object($val) || $val instanceof __PHP_Incomplete_Class) {
+          if (
+            is_object($val)
+            || is_array($val)
+            || $val instanceof __PHP_Incomplete_Class
+          ) {
             throw new XHPInvalidAttributeException(
               $this,
               'callable',
