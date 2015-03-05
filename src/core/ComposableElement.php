@@ -31,7 +31,7 @@ abstract class :x:composable-element extends :xhp {
   // Private constants indicating the declared types of attributes
   const int TYPE_STRING   = 1;
   const int TYPE_BOOL     = 2;
-  const int TYPE_NUMBER   = 3;
+  const int TYPE_INTEGER  = 3;
   const int TYPE_ARRAY    = 4;
   const int TYPE_OBJECT   = 5;
   const int TYPE_VAR      = 6;
@@ -566,7 +566,7 @@ abstract class :x:composable-element extends :xhp {
         }
         break;
 
-      case self::TYPE_NUMBER:
+      case self::TYPE_INTEGER:
         if (!is_int($val)) {
           if (
             is_object($val)
@@ -672,7 +672,7 @@ abstract class :x:composable-element extends :xhp {
         $type = 'bool';
         $func = fun('is_bool');
         break;
-      case self::TYPE_NUMBER:
+      case self::TYPE_INTEGER:
         $type = 'int';
         $func = fun('is_int');
         break;
