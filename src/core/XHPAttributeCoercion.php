@@ -33,9 +33,40 @@ abstract final class XHPAttributeCoercion {
     ) {
       return (int) $val;
     }
+
     throw new XHPInvalidAttributeException(
       $context,
       'int',
+      $attr,
+      $val,
+    );
+  }
+
+  public static function CoerceToBool(
+    :x:composable-element $context,
+    string $attr,
+    mixed $val,
+  ): bool {
+    if (
+      $val === 'true'
+      || $val === 1
+      || $val === '1'
+      || $val === $attr
+    ) {
+      return true;
+    }
+
+    if (
+      $val === 'false'
+      || $val === 0
+      || $val === '0'
+    ) {
+      return false;
+    }
+
+    throw new XHPInvalidAttributeException(
+      $context,
+      'bool',
       $attr,
       $val,
     );

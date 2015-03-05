@@ -546,11 +546,7 @@ abstract class :x:composable-element extends :xhp {
 
       case self::TYPE_BOOL:
         if (!is_bool($val)) {
-          if ($val === "false") {
-            $val = false;
-          } else {
-            $val = (bool)$val;
-          }
+          $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
         }
         break;
 

@@ -97,4 +97,36 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testArrayAsInt(): void {
     $x = <test:attribute-types myint={[]} />;
   }
+
+  public function testTrueStringAsBool(): void {
+    $x = <test:attribute-types mybool="true" />;
+    $this->assertSame(true, $x->:mybool);
+  }
+
+  public function testFalseStringAsBool(): void {
+    $x = <test:attribute-types mybool="false" />;
+    $this->assertSame(false, $x->:mybool);
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testMixedCaseFalseStringAsBool(): void {
+    $x = <test:attribute-types mybool="False" />;
+    // 'False' is actually truthy
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testNoStringAsBool(): void {
+    $x = <test:attribute-types mybool="No" />;
+    // 'No' is actually truthy
+  }
+
+  public function testAttrNameAsBool(): void {
+    // idiomatic - eg checked="checked" 
+    $x = <test:attribute-types mybool="mybool" />;
+    $this->assertSame(true, $x->:mybool);
+  }
 }
