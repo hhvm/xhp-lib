@@ -539,21 +539,9 @@ abstract class :x:composable-element extends :xhp {
     }
     switch ((int)$decl[$attr][0]) {
       case self::TYPE_STRING:
-        if (
-          is_array($val)
-          || is_object($val)
-          || $val instanceof __PHP_Incomplete_Class
-        ) {
-          if (!$val instanceof Stringish) {
-            throw new XHPInvalidAttributeException(
-              $this,
-              'string',
-              $attr,
-              $val,
-            );
-          }
+        if (!is_string($val)) {
+          $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
         }
-        $val = (string)$val;
         break;
 
       case self::TYPE_BOOL:
@@ -568,19 +556,7 @@ abstract class :x:composable-element extends :xhp {
 
       case self::TYPE_INTEGER:
         if (!is_int($val)) {
-          if (
-            is_object($val)
-            || is_array($val)
-            || $val instanceof __PHP_Incomplete_Class
-          ) {
-            throw new XHPInvalidAttributeException(
-              $this,
-              'number',
-              $attr,
-              $val,
-            );
-          }
-          $val = (int)$val;
+          $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
         }
         break;
 
