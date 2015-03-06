@@ -14,7 +14,7 @@ enforce the child declarations at runtimes.
 
 It returns:
 
- * `1: the element accepts any children
+ * `1`: the element accepts any children
  * `0`: the element accepts no children
  * expr: A more complicated restraint; see below 
 
