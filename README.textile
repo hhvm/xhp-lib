@@ -1,11 +1,18 @@
 h1. Introduction
 
+XHP is augments the syntax of Hack such that XML document fragments become valid
+PHP expressions. This allows you to use Hack as a stricter templating engine and
+offers much more straightforward implementation of reusable components.
 
-XHP is a PHP extension which augments the syntax of the language such that XML document fragments become valid PHP expressions. This allows you to use PHP as a stricter templating engine and offers much more straightforward implementation of reusable components.
-
-This repository contains the PHP class library, which is required to use XHP both under HHVM and PHP5. The PHP5 extension is available at https://github.com/facebookarchive/xhp-php5-extension
+This repository contains the class library, which is required to use XHP. 2.0 and
+above require HHVM, however earlier versions will work in both HHVM and PHP5,
+with an extension available from
+https://github.com/facebookarchive/xhp-php5-extension
 
 If you're using HHVM and want a high-level XHP UI library, you might want to take a look at https://github.com/hhvm/xhp-bootstrap/
+
+Announcements are posted to
+"the XHP-Lib blog":https://facebook.github.io/xhp-lib/
 
 h1. Installation
 
@@ -20,11 +27,11 @@ h1. Installation
 
 h1. Simple Example
 
-bc. <?php
+bc. <?hh
 $href = 'http://www.facebook.com';
 echo <a href={$href}>Facebook</a>;
 
-Take note of the syntax on line 3, this is not a string. This is the major new syntax that XHP introduces to PHP.
+Take note of the syntax on line 3, this is not a string. This is the major new syntax that XHP introduces to Hack.
 
 Anything that's in {}'s is interpreted as a full PHP expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
 
@@ -34,7 +41,7 @@ h1. Complex Structures
 
 Note that XHP structures can be arbitrarily complex. This is a valid XHP program:
 
-bc. <?php
+bc. <?hh
 $post =
   <div class="post">
     <h2>{$post}</h2>
@@ -48,7 +55,7 @@ h1. Dynamic Structures
 
 Sometimes it may be useful to create a bunch of elements and dynamically add them as children to an element. All XHP objects support the @appendChild@ method which behaves similarly to the same Javascript method. For example:
 
-bc. <?php
+bc. <?hh
 $list = <ul />;
 foreach ($items as $item) {
   $list->appendChild(<li>{$item}</li>);
@@ -63,7 +70,7 @@ An interesting feature of XHP is the idea of automatic escaping. In vanilla PHP 
 bc. <?php
 echo '<div>Hello '.htmlspecialchars($_GET['name']).'</div>';
 
-bc. <?php
+bc. <?hh
 echo <div>Hello {$_GET['name']}</div>;
 
 As you can see, using XHP makes safety the default rather than the exception.
@@ -72,7 +79,7 @@ h1. Defining Elements
 
 All elements in XHP are just PHP classes. Even the basic HTML elements like div and span are classes. You define an element just like you do a class, except you use a leading colon to specify that you're creating an XHP element:
 
-bc. <?php
+bc. <?hh
 class :fb:thing extends :x:element {
   ...
 }
@@ -81,10 +88,10 @@ After we define @fb:thing@ we can instantiate it with the expression @<fb:thing 
 
 You can also use the leading-colon syntax to use an XHP element where you would normally use a class name, for instance while referencing class constants or typehinting:
 
-bc. <?php
+bc. <?hh
 echo :fb:thing::someConstant;
 
-bc. <?php
+bc. <?hh
 function giveMeAThing(:fb:thing $thing) {
 }
 
@@ -92,7 +99,7 @@ h1. Defining Attributes
 
 Most elements will take some number of attributes which affect its behavior. You define attributes in an element with the @attribute@ keyword.
 
-bc. <?php
+bc. <?hh
 class :fb:thing extends :x:element {
   attribute
     string title = "No Title",
@@ -109,7 +116,7 @@ h1. Defining Element Structure
 
 All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an @<input />@ to appear directly inside of a @<body />@ tag (it must be inside a form). XHP allows you to define a content model which documents must adhere to. This is done with the @children@ keyword, which uses a syntax similar to regular expressions. Note, that unlike @attribute@, @children@ may only appear once inside any class.
 
-bc. <?php
+bc. <?hh
 class :fb:thing-container extends :x:element {
   children (:fb:thing1 | :fb:thing2)*;
 }
@@ -147,7 +154,7 @@ h1. Whitespace
 
 In XHP, text nodes that contain only whitespace are removed. The expressions @<div> </div>@ and @<div />@ are identical. Text nodes that contain non-whitespace are trimmed on the left and right to at most 1 space. This is worth noting because you may want to do something like:
 
-bc. <?php
+bc. <?hh
 $node = <div><label>Title:</label> <span>{$title}</span></div>;
 
 This will lead to non-desirable results as the space between the @:@ and @$title@ will be lost. In order to fix this try moving the space into the @<label />@ tag. If you can't do this then just use @{' '}@ which will not be stripped.
@@ -158,7 +165,7 @@ There are certain conventions that you should comply with while using XHP.
 
 * Don't pollute the global XHP namespace with namespace-less elements. Most elements you define should use some namespace. Elements that use no namespace should not be "magic" at all. For instance,
 
-bc. <?php
+bc. <?hh
 class :fb:thing extends :x:element {
   protected function render() {
     return <div class="thing">thing</div>;
