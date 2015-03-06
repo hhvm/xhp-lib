@@ -14,7 +14,7 @@ h1. Installation
 
 <pre><code>
   "require": {
-    "facebook/xhp-lib": "dev-master"
+    "facebook/xhp-lib": "2.x-dev"
   }
 </pre></code>
 
