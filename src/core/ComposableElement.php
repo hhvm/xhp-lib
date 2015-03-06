@@ -568,11 +568,16 @@ abstract class :x:composable-element extends :xhp {
         break;
 
       case self::TYPE_OBJECT:
-        if (!($val instanceof $decl[$attr][1])) {
-          throw new XHPInvalidAttributeException(
-            $this, (string)$decl[$attr][1], $attr, $val
-          );
+        $class = (string) $decl[$attr][1];
+        if ($val instanceof $class) {
+          break;
         }
+        if (enum_exists($class) && $class::isValid($val)) {
+          break;
+        }
+        throw new XHPInvalidAttributeException(
+          $this, $class, $attr, $val
+        );
         break;
 
       // case self::TYPE_VAR: `var` (any type)
