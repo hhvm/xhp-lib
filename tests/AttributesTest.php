@@ -99,6 +99,11 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $this->assertSame(1, $x->:myint);
   }
 
+  public function testFloatishStringAsInt(): void {
+    $x = <test:attribute-types myint="1.23" />;
+    $this->assertSame(1, $x->:myint);
+  }
+
   /**
    * @expectedException XHPInvalidAttributeException
    */

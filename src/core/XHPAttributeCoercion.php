@@ -28,7 +28,7 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): int {
     if (
-      (is_string($val) && ctype_digit($val) && $val !== '')
+      (is_string($val) && is_numeric($val) && $val !== '')
       || is_float($val)
     ) {
       return (int) $val;
