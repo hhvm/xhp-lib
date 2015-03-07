@@ -39,6 +39,10 @@ class EmptyTestClass {}
 class StringableTestClass { public function __toString() { return __CLASS__; } }
 
 class AttributesTest extends PHPUnit_Framework_TestCase {
+  public function setUp(): void {
+    error_reporting(error_reporting() & ~E_USER_DEPRECATED);
+  }
+
   public function testValidTypes(): void {
     $x = <test:attribute-types
       mystring="foo"
