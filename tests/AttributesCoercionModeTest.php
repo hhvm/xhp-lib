@@ -39,7 +39,7 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
     $this->assertSame(3, $x->:myint);
     $this->assertSame(1.23, $x->:myfloat);
     $this->assertSame('foo', $x->:mystring);
-    $this->assertsame(true, $x->:mybool);
+    $this->assertSame(true, $x->:mybool);
   }
 
   /**
