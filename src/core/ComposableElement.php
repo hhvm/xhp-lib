@@ -9,6 +9,9 @@
  *
  */
 
+// Composer doesn't support autoloading enums, and we need XHPAttributeType
+require_once('ReflectionXHPAttribute.php');
+
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
@@ -27,16 +30,6 @@ abstract class :x:composable-element extends :xhp {
     // UNSAFE
     return await $child->asyncRender();
   }
-
-  // Private constants indicating the declared types of attributes
-  const int TYPE_STRING   = 1;
-  const int TYPE_BOOL     = 2;
-  const int TYPE_INTEGER  = 3;
-  const int TYPE_ARRAY    = 4;
-  const int TYPE_OBJECT   = 5;
-  const int TYPE_VAR      = 6;
-  const int TYPE_ENUM     = 7;
-  const int TYPE_FLOAT    = 8;
 
   protected function init(): void {}
 
@@ -227,20 +220,6 @@ abstract class :x:composable-element extends :xhp {
   }
 
   /**
-   * Returns true if the attribute is a data- or aria- attribute.
-   *
-   * @param $attr      attribute to fetch
-   * @return           bool
-   */
-  final private static function isAttributeSpecial(string $attr): bool {
-    // Must be at least 6 characters, with a '-' in the 5th position
-    return
-      isset($attr[5])
-      && $attr[4] == '-'
-      && self::$specialAttributes->contains(substr($attr, 0, 4));
-  }
-
-  /**
    * Fetches an attribute from this elements attribute store. If $attr is not
    * defined in the store and is not a data- or aria- attribute an exception
    * will be thrown. An exception will also be thrown if $attr is required and
@@ -255,20 +234,40 @@ abstract class :x:composable-element extends :xhp {
       return $this->attributes->get($attr);
     }
 
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       // Get the declaration
-      $decl = static::__xhpAttributeDeclaration();
+      $decl = static::__xhpReflectionAttribute($attr);
 
-      if (!isset($decl[$attr])) {
+      if ($decl === null) {
         throw new XHPAttributeNotSupportedException($this, $attr);
-      } else if (!empty($decl[$attr][3])) {
+      } else if ($decl->isRequired()) {
         throw new XHPAttributeRequiredException($this, $attr);
       } else {
-        return $decl[$attr][2];
+        return $decl->getDefaultValue();
       }
     } else {
       return null;
     }
+  }
+
+  final protected static function __xhpReflectionAttribute(
+    string $attr,
+  ): ?ReflectionXHPAttribute {
+    static $cache = Map { };
+    $class = static::class;
+    if (!$cache->containsKey($class)) {
+      $cache[$class] = Map { };
+    }
+    if (!$cache[$class]->containsKey($attr)) {
+      $decl = static::__xhpAttributeDeclaration();
+      if (!array_key_exists($attr, $decl)) {
+        $ret  = null;
+      } else {
+        $ret = new ReflectionXHPAttribute($attr, $decl[$attr]);
+      }
+      $cache[$class][$attr] = $ret;
+    }
+    return $cache[$class][$attr];
   }
 
   final public function getAttributes(): Map<string, mixed> {
@@ -285,7 +284,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function setAttribute(string $attr, mixed $value): this {
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       $value = $this->validateAttributeValue($attr, $value);
     } else {
       $value = (string)$value;
@@ -326,7 +325,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       $value = $this->validateAttributeValue($attr, null);
     }
     $this->attributes->removeKey($attr);
@@ -529,46 +528,46 @@ abstract class :x:composable-element extends :xhp {
     string $attr,
     T $val,
   ): mixed {
-    $decl = static::__xhpAttributeDeclaration();
-    if (!isset($decl[$attr])) {
+    $decl = static::__xhpReflectionAttribute($attr);
+    if ($decl === null) {
       throw new XHPAttributeNotSupportedException($this, $attr);
     }
     if ($val === null) {
       return null;
     }
-    switch ((int)$decl[$attr][0]) {
-      case self::TYPE_STRING:
+    switch ($decl->getValueType()) {
+      case XHPAttributeType::TYPE_STRING:
         if (!is_string($val)) {
           $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_BOOL:
+      case XHPAttributeType::TYPE_BOOL:
         if (!is_bool($val)) {
           $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_INTEGER:
+      case XHPAttributeType::TYPE_INTEGER:
         if (!is_int($val)) {
           $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_FLOAT:
+      case XHPAttributeType::TYPE_FLOAT:
         if (!is_float($val)) {
           $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_ARRAY:
+      case XHPAttributeType::TYPE_ARRAY:
         if (!is_array($val)) {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
         break;
 
-      case self::TYPE_OBJECT:
-        $class = (string) $decl[$attr][1];
+      case XHPAttributeType::TYPE_OBJECT:
+        $class = $decl->getValueClass();
         if ($val instanceof $class) {
           break;
         }
@@ -580,20 +579,15 @@ abstract class :x:composable-element extends :xhp {
         );
         break;
 
-      // case self::TYPE_VAR: `var` (any type)
+      case XHPAttributeType::TYPE_VAR:
+        break;
 
-      case self::TYPE_ENUM:
-        $found = false;
-        foreach ((array)$decl[$attr][1] as $enum) {
-          if ($enum === $val) {
-            $found = true;
-            break;
-          }
-        }
-        if (!$found) {
-          $enums = 'enum("' . implode('","', (array)$decl[$attr][1]) . '")';
+      case XHPAttributeType::TYPE_ENUM:
+        if (!(is_string($val) && $decl->getEnumValues()->contains($val))) {
+          $enums = 'enum("' . implode('","', $decl->getEnumValues()) . '")';
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }
+        break;
     }
     return $val;
   }
