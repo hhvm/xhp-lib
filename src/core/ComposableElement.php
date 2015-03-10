@@ -1,5 +1,4 @@
 <?hh
-
 /*
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -10,87 +9,10 @@
  *
  */
 
-interface XHPRoot extends XHPChild {
-}
+// Composer doesn't support autoloading enums, and we need XHPAttributeType
+require_once('ReflectionXHPAttribute.php');
 
-abstract class :xhp implements XHPChild {
-  public function __construct(
-    KeyedTraversable<string, mixed> $attributes,
-    Traversable<XHPChild> $children,
-  ): void {}
-  abstract public function appendChild(mixed $child): this;
-  abstract public function prependChild(mixed $child): this;
-  abstract public function replaceChildren(...): this;
-  abstract public function getChildren(
-    ?string $selector = null,
-  ): Vector<XHPChild>;
-  abstract public function getFirstChild(?string $selector = null): ?XHPChild;
-  abstract public function getLastChild(?string $selector = null): ?XHPChild;
-  abstract public function getAttribute(string $attr): mixed;
-  abstract public function getAttributes(): Map<string, mixed>;
-  abstract public function setAttribute(string $attr, mixed $val): this;
-  abstract public function setAttributes(
-    KeyedTraversable<string, mixed> $attrs,
-  ): this;
-  abstract public function isAttributeSet(string $attr): bool;
-  abstract public function removeAttribute(string $attr): this;
-  abstract public function categoryOf(string $cat): bool;
-  abstract public function toString(): string;
-  abstract protected function &__xhpCategoryDeclaration(): array<string, int>;
-  abstract protected function &__xhpChildrenDeclaration(): mixed;
-  protected static function &__xhpAttributeDeclaration(
-  ): array<string, array<int, mixed>> {
-    return array();
-  }
-
-  public ?string $source;
-
-  /**
-   * Enabling validation will give you stricter documents; you won't be able to
-   * do many things that violate the XHTML 1.0 Strict spec. It is recommend that
-   * you leave this on because otherwise things like the `children` keyword will
-   * do nothing. This validation comes at some CPU cost, however, so if you are
-   * running a high-traffic site you will probably want to disable this in
-   * production. You should still leave it on while developing new features,
-   * though.
-   */
-  public static bool $ENABLE_VALIDATION = true;
-
-  final public function __toString(): string {
-    return $this->toString();
-  }
-
-  final protected static function renderChild(XHPChild $child): string {
-    if ($child instanceof :xhp) {
-      return $child->toString();
-    } else if ($child instanceof XHPUnsafeRenderable) {
-      return $child->toHTMLString();
-    } else if ($child instanceof Traversable) {
-      throw new XHPRenderArrayException('Can not render traversables!');
-    } else {
-      return htmlspecialchars((string)$child);
-    }
-  }
-
-  public static function element2class(string $element): string {
-    return 'xhp_'.str_replace(array(':', '-'), array('__', '_'), $element);
-  }
-
-  public static function class2element(string $class): string {
-    return str_replace(
-      array('__', '_'),
-      array(':', '-'),
-      preg_replace('#^xhp_#i', '', $class),
-    );
-  }
-}
-
-/**
- * For backwards compatibility only -- this class really shouldn't exist. Use
- * :xhp or :x:composable-element as appropriate, but never :x:base.
- */
-abstract class :x:base extends :xhp {}
-abstract class :x:composable-element extends :x:base {
+abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
@@ -108,17 +30,6 @@ abstract class :x:composable-element extends :x:base {
     // UNSAFE
     return await $child->asyncRender();
   }
-
-  // Private constants indicating the declared types of attributes
-  const int TYPE_STRING   = 1;
-  const int TYPE_BOOL     = 2;
-  const int TYPE_NUMBER   = 3;
-  const int TYPE_ARRAY    = 4;
-  const int TYPE_OBJECT   = 5;
-  const int TYPE_VAR      = 6;
-  const int TYPE_ENUM     = 7;
-  const int TYPE_FLOAT    = 8;
-  const int TYPE_CALLABLE = 9;
 
   protected function init(): void {}
 
@@ -309,20 +220,6 @@ abstract class :x:composable-element extends :x:base {
   }
 
   /**
-   * Returns true if the attribute is a data- or aria- attribute.
-   *
-   * @param $attr      attribute to fetch
-   * @return           bool
-   */
-  final private static function isAttributeSpecial(string $attr): bool {
-    // Must be at least 6 characters, with a '-' in the 5th position
-    return
-      isset($attr[5])
-      && $attr[4] == '-'
-      && self::$specialAttributes->contains(substr($attr, 0, 4));
-  }
-
-  /**
    * Fetches an attribute from this elements attribute store. If $attr is not
    * defined in the store and is not a data- or aria- attribute an exception
    * will be thrown. An exception will also be thrown if $attr is required and
@@ -337,20 +234,45 @@ abstract class :x:composable-element extends :x:base {
       return $this->attributes->get($attr);
     }
 
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       // Get the declaration
-      $decl = static::__xhpAttributeDeclaration();
+      $decl = static::__xhpReflectionAttribute($attr);
 
-      if (!isset($decl[$attr])) {
+      if ($decl === null) {
         throw new XHPAttributeNotSupportedException($this, $attr);
-      } else if (!empty($decl[$attr][3])) {
+      } else if ($decl->isRequired()) {
         throw new XHPAttributeRequiredException($this, $attr);
       } else {
-        return $decl[$attr][2];
+        return $decl->getDefaultValue();
       }
     } else {
       return null;
     }
+  }
+
+  final protected static function __xhpReflectionAttribute(
+    string $attr,
+  ): ?ReflectionXHPAttribute {
+    $map = static::__xhpReflectionAttributes();
+    if ($map->containsKey($attr)) {
+      return $map[$attr];
+    }
+    return null;
+  }
+
+  final public static function __xhpReflectionAttributes(
+  ): Map<string, ReflectionXHPAttribute> {
+    static $cache = Map { };
+    $class = static::class;
+    if (!$cache->containsKey($class)) {
+      $map = Map { };
+      $decl = static::__xhpAttributeDeclaration();
+      foreach ($decl as $name => $attr_decl) {
+        $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
+      }
+      $cache[$class] = $map;
+    }
+    return $cache[$class];
   }
 
   final public function getAttributes(): Map<string, mixed> {
@@ -367,7 +289,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $val       value
    */
   final public function setAttribute(string $attr, mixed $value): this {
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       $value = $this->validateAttributeValue($attr, $value);
     } else {
       $value = (string)$value;
@@ -408,7 +330,7 @@ abstract class :x:composable-element extends :x:base {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
-    if (!self::isAttributeSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       $value = $this->validateAttributeValue($attr, null);
     }
     $this->attributes->removeKey($attr);
@@ -611,165 +533,68 @@ abstract class :x:composable-element extends :x:base {
     string $attr,
     T $val,
   ): mixed {
-    $decl = static::__xhpAttributeDeclaration();
-    if (!isset($decl[$attr])) {
+    $decl = static::__xhpReflectionAttribute($attr);
+    if ($decl === null) {
       throw new XHPAttributeNotSupportedException($this, $attr);
     }
     if ($val === null) {
       return null;
     }
-    switch ((int)$decl[$attr][0]) {
-      case self::TYPE_STRING:
-        $val = (string)$val;
+    switch ($decl->getValueType()) {
+      case XHPAttributeType::TYPE_STRING:
+        if (!is_string($val)) {
+          $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
+        }
         break;
 
-      case self::TYPE_BOOL:
+      case XHPAttributeType::TYPE_BOOL:
         if (!is_bool($val)) {
-          if ($val === "false") {
-            $val = false;
-          } else {
-            $val = (bool)$val;
-          }
+          $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_NUMBER:
+      case XHPAttributeType::TYPE_INTEGER:
         if (!is_int($val)) {
-          $val = (int)$val;
+          $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_FLOAT:
-        if (!is_numeric($val)) {
-          $val = (float)$val;
+      case XHPAttributeType::TYPE_FLOAT:
+        if (!is_float($val)) {
+          $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
 
-      case self::TYPE_CALLABLE:
-        if (!is_callable($val)) {
-          throw new XHPInvalidAttributeException(
-            $this,
-            'callable',
-            $attr,
-            $val,
-          );
-        }
-        break;
-
-      case self::TYPE_ARRAY:
+      case XHPAttributeType::TYPE_ARRAY:
         if (!is_array($val)) {
           throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
         }
-        if ($decl[$attr][1]) {
-          $this->validateArrayAttributeValue(
-            (array)$decl[$attr][1],
-            $attr,
-            $val,
-          );
-        }
         break;
 
-      case self::TYPE_OBJECT:
-        if (!($val instanceof $decl[$attr][1])) {
-          throw new XHPInvalidAttributeException(
-            $this, (string)$decl[$attr][1], $attr, $val
-          );
+      case XHPAttributeType::TYPE_OBJECT:
+        $class = $decl->getValueClass();
+        if ($val instanceof $class) {
+          break;
         }
+        if (enum_exists($class) && $class::isValid($val)) {
+          break;
+        }
+        throw new XHPInvalidAttributeException(
+          $this, $class, $attr, $val
+        );
         break;
 
-      // case self::TYPE_VAR: `var` (any type)
+      case XHPAttributeType::TYPE_VAR:
+        break;
 
-      case self::TYPE_ENUM:
-        $found = false;
-        foreach ((array)$decl[$attr][1] as $enum) {
-          if ($enum === $val) {
-            $found = true;
-            break;
-          }
-        }
-        if (!$found) {
-          $enums = 'enum("' . implode('","', (array)$decl[$attr][1]) . '")';
+      case XHPAttributeType::TYPE_ENUM:
+        if (!(is_string($val) && $decl->getEnumValues()->contains($val))) {
+          $enums = 'enum("' . implode('","', $decl->getEnumValues()) . '")';
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }
+        break;
     }
     return $val;
-  }
-
-  final private function validateArrayAttributeValue(
-    array<int, mixed> $decl,
-    string $attr,
-    array<mixed> $val,
-  ): void {
-    if ($decl[0]) { // Key declaration
-      if ($decl[0] == self::TYPE_STRING) {
-        $type = 'string';
-        $func = fun('is_string');
-      } else {
-        $type = 'int';
-        $func = fun('is_int');
-      }
-      if (count($val) != count(array_filter(array_keys($val), $func))) {
-        $bad = $type == 'string' ? 'int' : 'string';
-        throw new XHPInvalidArrayKeyAttributeException(
-          $this,
-          (string)$type,
-          $attr,
-          $bad
-        );
-      }
-    }
-    switch ((int)$decl[1]) { // Value declaration
-      case self::TYPE_STRING:
-        $type = 'string';
-        $func = fun('is_string');
-        break;
-      case self::TYPE_BOOL:
-        $type = 'bool';
-        $func = fun('is_bool');
-        break;
-      case self::TYPE_NUMBER:
-        $type = 'int';
-        $func = fun('is_int');
-        break;
-      case self::TYPE_FLOAT:
-        $type = 'float';
-        $func = fun('is_numeric');
-        break;
-      case self::TYPE_CALLABLE:
-        $type = 'callable';
-        $func = fun('is_callable');
-        return;
-      case self::TYPE_ARRAY:
-        $type = 'array';
-        $func = fun('is_array');
-        break;
-      case self::TYPE_OBJECT:
-        $type = $decl[2];
-        $func = function($item) use ($type) {
-          return $item instanceof $type;
-        };
-        break;
-    }
-    $filtered = array_filter($val, $func);
-    if (count($val) != count($filtered)) {
-      $bad = array_diff($val, $filtered);
-      throw new XHPInvalidArrayAttributeException(
-        $this,
-        (string)$type,
-        $attr,
-        reset($bad)
-      );
-    }
-
-    if (isset($decl[2]) && $decl[1] == self::TYPE_ARRAY) {
-      foreach ($val as $arrayVal) {
-        $this->validateArrayAttributeValue(
-          (array)$decl[2],
-          $attr,
-          (array)$arrayVal,
-        );
-      }
-    }
   }
 
   /**
@@ -1011,266 +836,3 @@ abstract class :x:composable-element extends :x:base {
   }
 }
 
-/**
- * :x:primitive lays down the foundation for very low-level elements. You
- * should directly :x:primitive only if you are creating a core element that
- * needs to directly implement stringify(). All other elements should subclass
- * from :x:element.
- */
-abstract class :x:primitive extends :x:composable-element implements XHPRoot {
-  abstract protected function stringify(): string;
-
-  final public function toString(): string {
-    return $this->asyncToString()->getWaitHandle()->join();
-  }
-
-  final public async function asyncToString(): Awaitable<string> {
-    await $this->__flushElementChildren();
-    if (:xhp::$ENABLE_VALIDATION) {
-      $this->validateChildren();
-    }
-    return $this->stringify();
-  }
-}
-
-/**
- * :x:element defines an interface that all user-land elements should subclass
- * from. The main difference between :x:element and :x:primitive is that
- * subclasses of :x:element should implement `render()` instead of `stringify`.
- * This is important because most elements should not be dealing with strings
- * of markup.
- */
-abstract class :x:element extends :x:composable-element implements XHPRoot {
-  abstract protected function render(): XHPRoot;
-
-  final public function toString(): string {
-    return $this->asyncToString()->getWaitHandle()->join();
-  }
-
-  final public async function asyncToString(): Awaitable<string> {
-    if (:xhp::$ENABLE_VALIDATION) {
-      $this->validateChildren();
-    }
-    $that = await $this->__flushRenderedRootElement();
-    $ret = await $that->asyncToString();
-    return $ret;
-  }
-
-  final protected async function __flushRenderedRootElement(
-  ): Awaitable<:x:primitive> {
-    $that = $this;
-    // Flush root elements returned from render() to an :x:primitive
-    do {
-      if (:xhp::$ENABLE_VALIDATION) {
-        $that->validateChildren();
-      }
-      if ($that instanceof XHPAwaitable) {
-        $composed = await static::__xhpAsyncRender($that);
-      } else {
-        $composed = $that->render();
-      }
-      assert($composed instanceof :x:element);
-      $composed->__transferContext($that->getAllContexts());
-      $that = $composed;
-    } while ($composed instanceof :x:element);
-
-    if (!($composed instanceof :x:primitive)) {
-      // render() must always (eventually) return :x:primitive
-      throw new XHPCoreRenderException($this, $that);
-    }
-
-    return $composed;
-  }
-}
-
-/**
- * An <x:frag /> is a transparent wrapper around any number of elements. When
- * you render it just the children will be rendered. When you append it to an
- * element the <x:frag /> will disappear and each child will be sequentially
- * appended to the element.
- */
-class :x:frag extends :x:primitive {
-  protected function stringify(): string {
-    $buf = '';
-    foreach ($this->getChildren() as $child) {
-      $buf .= :xhp::renderChild($child);
-    }
-    return $buf;
-  }
-}
-
-/**
- * Exceptions are neat.
- */
-class XHPException extends Exception {
-  protected static function getElementName(:xhp $that): string {
-    $name = get_class($that);
-    if (substr($name, 0, 4) !== 'xhp_') {
-      return $name;
-    } else {
-      return :xhp::class2element($name);
-    }
-  }
-}
-
-class XHPClassException extends XHPException {
-  public function __construct(:xhp $that, string $msg) {
-    parent::__construct(
-      'Exception in class `' . XHPException::getElementName($that) . "`\n\n".
-      "$that->source\n\n".
-      $msg
-    );
-  }
-}
-
-class XHPCoreRenderException extends XHPException {
-  public function __construct(:xhp $that, mixed $rend) {
-    parent::__construct(
-      ':x:element::render must reduce an object to an :x:primitive, but `'.
-      :xhp::class2element(get_class($that)).'` reduced into `'.
-      gettype($rend)."`.\n\n".$that->source
-    );
-  }
-}
-
-class XHPRenderArrayException extends XHPException {
-}
-
-class XHPInvalidArrayAttributeException extends XHPException {
-  public function __construct(
-    :xhp $that,
-    string $type,
-    string $attr,
-    mixed $val,
-  ) {
-    if (is_object($val)) {
-      $val_type = get_class($val);
-    } else {
-      $val_type = gettype($val);
-    }
-    parent::__construct(
-      "Invalid attribute `$attr` of type array<`$val_type`> supplied to ".
-      "element `".:xhp::class2element(get_class($that))."`, expected ".
-      "array<`$type`>.\n\n".$that->source
-    );
-  }
-}
-
-class XHPInvalidArrayKeyAttributeException extends XHPException {
-  public function __construct(
-    :xhp $that,
-    string $type,
-    string $attr,
-    string $val_type,
-  ) {
-    parent::__construct(
-      "Invalid key in attribute `$attr` of type array<$val_type => ?> supplied".
-      " to element `".:xhp::class2element(get_class($that))."`, expected ".
-      "array<$type => ?>.\n\n".$that->source
-    );
-  }
-}
-
-class XHPAttributeNotSupportedException extends XHPException {
-  public function __construct(:xhp $that, string $attr) {
-    parent::__construct(
-      'Attribute "'.$attr.'" is not supported in class '.
-      '"'.XHPException::getElementName($that).'"'.
-      "\n\n".$that->source."\n\n".
-      'Please check for typos in your attribute. If you are creating a new '.
-      'attribute on this element define it with the "attribute" keyword'."\n\n"
-    );
-  }
-}
-
-class XHPAttributeRequiredException extends XHPException {
-  public function __construct(:xhp $that, string $attr) {
-    parent::__construct(
-      'Required attribute `'.$attr.'` was not specified in element '.
-      '`'.XHPException::getElementName($that)."`.\n\n".
-      $that->source
-    );
-  }
-}
-
-class XHPInvalidAttributeException extends XHPException {
-  public function __construct(
-    :xhp $that,
-    string $type,
-    string $attr,
-    mixed $val,
-  ) {
-    if (is_object($val)) {
-      $val_type = get_class($val);
-    } else {
-      $val_type = gettype($val);
-    }
-    parent::__construct(
-      "Invalid attribute `$attr` of type `$val_type` supplied to element `".
-      :xhp::class2element(get_class($that))."`, expected `$type`.\n\n".
-      $that->source
-    );
-  }
-}
-
-class XHPInvalidChildrenException extends XHPException {
-  public function __construct(:x:composable-element $that, int $index) {
-    parent::__construct(
-      'Element `'.XHPException::getElementName($that).'` was rendered with '.
-      "invalid children.\n\n".
-      "$that->source\n\n".
-      "Verified $index children before failing.\n\n".
-      "Children expected:\n".$that->__getChildrenDeclaration()."\n\n".
-      "Children received:\n".$that->__getChildrenDescription()
-    );
-  }
-}
-
-/**
- * INCREDIBLY DANGEROUS: Marks an object as a valid child of *any* element,
- * ignoring any child rules.
- *
- * This is useful when migrating to XHP as it allows you to embed non-XHP
- * content, usually in combination with XHPUnsafeRenderable; see MIGRATING.md
- * for more information.
- */
-interface XHPAlwaysValidChild {
-}
-
-/**
- * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
- * string.
- *
- * This is useful when migrating to XHP as it allows you to embed non-XHP
- * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
- * for more information.
- */
-interface XHPUnsafeRenderable extends XHPChild {
-  public function toHTMLString();
-}
-
-/**
- * INCREDIBLY AWESOME: Specify an element as awaitable on render.
- *
- * This allows you to use await inside your XHP objects. For instance, you could
- * fetch data inside your XHP elements using await and the calls to the DB would
- * be batched together when the element is rendered.
- */
-interface XHPAwaitable {
-  require extends :x:element;
-  // protected function asyncRender(): Awaitable<XHPRoot>
-}
-
-trait XHPAsync {
-
-  require extends :x:element;
-  require implements XHPAwaitable;
-
-  abstract protected function asyncRender(): Awaitable<XHPRoot>;
-
-  final protected function render(): XHPRoot {
-    throw new Exception(
-      'You need to call asyncRender() on XHP elements that use XHPAwaitable',
-    );
-  }
-}
