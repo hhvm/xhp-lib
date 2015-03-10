@@ -17,6 +17,8 @@
  */
 abstract class :xhp:html-element extends :x:primitive {
 
+  use XHPHelpers;
+
   attribute
     // Global HTML attributes
     Stringish accesskey,
@@ -106,18 +108,6 @@ abstract class :xhp:html-element extends :x:primitive {
 
   protected string $tagName = '';
 
-  public function getID(): string {
-    return $this->requireUniqueID();
-  }
-
-  public function requireUniqueID(): string {
-    $id = $this->:id;
-    if ($id === null || $id === '') {
-      $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
-    }
-    return (string) $id;
-  }
-
   protected final function renderBaseAttrs(): string {
     $buf = '<'.$this->tagName;
     foreach ($this->getAttributes() as $key => $val) {
@@ -131,21 +121,6 @@ abstract class :xhp:html-element extends :x:primitive {
       }
     }
     return $buf;
-  }
-
-  public function addClass(string $class): this {
-    $this->setAttribute(
-      'class',
-      trim($this->:class.' '.$class),
-    );
-    return $this;
-  }
-
-  public function conditionClass(bool $cond, string $class): this {
-    if ($cond) {
-      $this->addClass($class);
-    }
-    return $this;
   }
 
   protected function stringify(): string {
