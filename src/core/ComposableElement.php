@@ -253,21 +253,26 @@ abstract class :x:composable-element extends :xhp {
   final protected static function __xhpReflectionAttribute(
     string $attr,
   ): ?ReflectionXHPAttribute {
+    $map = static::__xhpReflectionAttributes();
+    if ($map->containsKey($attr)) {
+      return $map[$attr];
+    }
+    return null;
+  }
+
+  final public static function __xhpReflectionAttributes(
+  ): Map<string, ReflectionXHPAttribute> {
     static $cache = Map { };
     $class = static::class;
     if (!$cache->containsKey($class)) {
-      $cache[$class] = Map { };
-    }
-    if (!$cache[$class]->containsKey($attr)) {
+      $map = Map { };
       $decl = static::__xhpAttributeDeclaration();
-      if (!array_key_exists($attr, $decl)) {
-        $ret  = null;
-      } else {
-        $ret = new ReflectionXHPAttribute($attr, $decl[$attr]);
+      foreach ($decl as $name => $attr_decl) {
+        $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
       }
-      $cache[$class][$attr] = $ret;
+      $cache[$class] = $map;
     }
-    return $cache[$class][$attr];
+    return $cache[$class];
   }
 
   final public function getAttributes(): Map<string, mixed> {
