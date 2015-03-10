@@ -9,7 +9,7 @@
  *
  */
 
-// Composer doesn't support autoloading enums, and we need XHPAttributeType
+// Composer didn't support autoloading enums until recently (2015-03-09)
 require_once('ReflectionXHPAttribute.php');
 require_once('ReflectionXHPChildrenDeclaration.php');
 
@@ -767,56 +767,63 @@ abstract class :x:composable-element extends :xhp {
    * source code.
    */
   final public function __getChildrenDeclaration(): string {
-    $decl = $this->__xhpChildrenDeclaration();
-    if ($decl === 1) {
+    $decl = $this->__xhpReflectionChildrenDeclaration();
+    if ($decl->getType() === XHPChildrenDeclarationType::ANY_CHILDREN) {
       return 'any';
     }
-    if ($decl === 0) {
+    if ($decl->getType() === XHPChildrenDeclarationType::NO_CHILDREN) {
       return 'empty';
     }
-    return $this->renderChildrenDeclaration((array)$decl);
+    return $this->renderChildrenExpression($decl->getExpression());
   }
 
-  final private function renderChildrenDeclaration(array $decl): string {
-    switch ($decl[0]) {
-      case 0:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]);
+  final private function renderChildrenExpression(
+    ReflectionXHPChildrenExpression $decl,
+  ): string {
+    switch ($decl->getType()) {
+      case XHPChildrenExpressionType::SINGLE:
+        return $this->renderChildrenRule($decl);
 
-      case 1:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '*';
+      case XHPChildrenExpressionType::ANY_NUMBER:
+        return $this->renderChildrenRule($decl).'*';
 
-      case 2:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '?';
+      case XHPChildrenExpressionType::ZERO_OR_ONE:
+        return $this->renderChildrenRule($decl).'?';
 
-      case 3:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '+';
+      case XHPChildrenExpressionType::ONE_OR_MORE:
+        return $this->renderChildrenRule($decl).'+';
 
-      case 4:
-        return $this->renderChildrenDeclaration($decl[1]) . ',' .
-          $this->renderChildrenDeclaration($decl[2]);
+      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
+        list($e1, $e2) = $decl->getSubExpressions();
+        return $this->renderChildrenExpression($e1).','.
+          $this->renderChildrenExpression($e2);
 
-      case 5:
-        return $this->renderChildrenDeclaration($decl[1]) . '|' .
-          $this->renderChildrenDeclaration($decl[2]);
+      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
+        list($e1, $e2) = $decl->getSubExpressions();
+        return $this->renderChildrenExpression($e1).'|'.
+          $this->renderChildrenExpression($e2);
     }
   }
 
-  final private function renderChildrenRule(int $type, mixed $rule): string {
-    switch ($type) {
-      case 1:
+  final private function renderChildrenRule(
+    ReflectionXHPChildrenExpression $rule,
+  ): string {
+    switch ($rule->getConstraintType()) {
+      case XHPChildrenConstraintType::ANY:
         return 'any';
 
-      case 2:
+      case XHPChildrenConstraintType::PCDATA:
         return 'pcdata';
 
-      case 3:
-        return ':' . :xhp::class2element((string)$rule);
+      case XHPChildrenConstraintType::ELEMENT:
+        return ':' . :xhp::class2element($rule->getConstraintString());
 
-      case 4:
-        return '%' . (string)$rule;
+      case XHPChildrenConstraintType::CATEGORY:
+        return '%' . $rule->getConstraintString();
 
-      case 5:
-        return '(' . $this->renderChildrenDeclaration((array)$rule) . ')';
+      case XHPChildrenConstraintType::SUB_EXPR:
+        return '('.
+          $this->renderChildrenExpression($rule->getSubExpression()).')';
     }
   }
 
