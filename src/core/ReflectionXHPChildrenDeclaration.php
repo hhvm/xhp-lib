@@ -61,6 +61,16 @@ class ReflectionXHPChildrenDeclaration {
       $data,
     );
   }
+
+  public function __toString(): string {
+    if ($this->getType() === XHPChildrenDeclarationType::ANY_CHILDREN) {
+      return 'any';
+    }
+    if ($this->getType() === XHPChildrenDeclarationType::NO_CHILDREN) {
+      return 'empty';
+    }
+    return (string) $this->getExpression();
+  }
 }
 
 class ReflectionXHPChildrenExpression {
@@ -142,5 +152,48 @@ class ReflectionXHPChildrenExpression {
       $this->context,
       $data,
     );
+  }
+
+  public function __toString(): string {
+    switch ($this->getType()) {
+      case XHPChildrenExpressionType::SINGLE:
+        return $this->__constraintToString();
+
+      case XHPChildrenExpressionType::ANY_NUMBER:
+        return $this->__constraintToString().'*';
+
+      case XHPChildrenExpressionType::ZERO_OR_ONE:
+        return $this->__constraintToString().'?';
+
+      case XHPChildrenExpressionType::ONE_OR_MORE:
+        return $this->__constraintToString().'+';
+
+      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
+        list($e1, $e2) = $this->getSubExpressions();
+        return $e1.','.$e2;
+
+      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
+        list($e1, $e2) = $this->getSubExpressions();
+        return $e1.'|'.$e2;
+    }
+  }
+
+  private function __constraintToString(): string {
+    switch ($this->getConstraintType()) {
+      case XHPChildrenConstraintType::ANY:
+        return 'any';
+
+      case XHPChildrenConstraintType::PCDATA:
+        return 'pcdata';
+
+      case XHPChildrenConstraintType::ELEMENT:
+        return ':' . :xhp::class2element($this->getConstraintString());
+
+      case XHPChildrenConstraintType::CATEGORY:
+        return '%' . $this->getConstraintString();
+
+      case XHPChildrenConstraintType::SUB_EXPR:
+        return '('.$this->getSubExpression().')';
+    }
   }
 }

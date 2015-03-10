@@ -767,66 +767,12 @@ abstract class :x:composable-element extends :xhp {
   /**
    * Returns the human-readable `children` declaration as seen in this class's
    * source code.
+   *
+   * Keeping this wrapper around reflection, as it fits well with
+   * __getChildrenDescription.
    */
-  final public function __getChildrenDeclaration(): string {
-    $decl = self::__xhpReflectionChildrenDeclaration();
-    if ($decl->getType() === XHPChildrenDeclarationType::ANY_CHILDREN) {
-      return 'any';
-    }
-    if ($decl->getType() === XHPChildrenDeclarationType::NO_CHILDREN) {
-      return 'empty';
-    }
-    return $this->renderChildrenExpression($decl->getExpression());
-  }
-
-  final private function renderChildrenExpression(
-    ReflectionXHPChildrenExpression $decl,
-  ): string {
-    switch ($decl->getType()) {
-      case XHPChildrenExpressionType::SINGLE:
-        return $this->renderChildrenRule($decl);
-
-      case XHPChildrenExpressionType::ANY_NUMBER:
-        return $this->renderChildrenRule($decl).'*';
-
-      case XHPChildrenExpressionType::ZERO_OR_ONE:
-        return $this->renderChildrenRule($decl).'?';
-
-      case XHPChildrenExpressionType::ONE_OR_MORE:
-        return $this->renderChildrenRule($decl).'+';
-
-      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
-        list($e1, $e2) = $decl->getSubExpressions();
-        return $this->renderChildrenExpression($e1).','.
-          $this->renderChildrenExpression($e2);
-
-      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
-        list($e1, $e2) = $decl->getSubExpressions();
-        return $this->renderChildrenExpression($e1).'|'.
-          $this->renderChildrenExpression($e2);
-    }
-  }
-
-  final private function renderChildrenRule(
-    ReflectionXHPChildrenExpression $rule,
-  ): string {
-    switch ($rule->getConstraintType()) {
-      case XHPChildrenConstraintType::ANY:
-        return 'any';
-
-      case XHPChildrenConstraintType::PCDATA:
-        return 'pcdata';
-
-      case XHPChildrenConstraintType::ELEMENT:
-        return ':' . :xhp::class2element($rule->getConstraintString());
-
-      case XHPChildrenConstraintType::CATEGORY:
-        return '%' . $rule->getConstraintString();
-
-      case XHPChildrenConstraintType::SUB_EXPR:
-        return '('.
-          $this->renderChildrenExpression($rule->getSubExpression()).')';
-    }
+  public function __getChildrenDeclaration(): string {
+    return (string) self::__xhpReflectionChildrenDeclaration();
   }
 
   /**
