@@ -64,6 +64,22 @@ class :test:nested-rule extends :x:element {
   }
 }
 
+class :test:pcdata-child extends :x:element {
+  children (pcdata);
+
+  protected function render(): XHPRoot {
+    return <div>{$this->getChildren()}</div>;
+  }
+}
+
+class :test:category-child extends :x:element {
+  children (%flow);
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
 class ChildRuleTest extends PHPUnit_Framework_TestCase {
   public function testNoChild(): void {
     $elems = Vector {
@@ -94,6 +110,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
        <test:at-least-one-child />,
        <test:either-of-two-children />,
        <test:nested-rule />,
+       <test:category-child />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
@@ -107,6 +124,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
        <test:at-least-one-child />,
        <test:either-of-two-children />,
        <test:nested-rule />,
+       <test:pcdata-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -126,6 +144,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       <test:two-children />,
       <test:either-of-two-children />,
       <test:nested-rule />,
+      <test:category-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -147,10 +166,11 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       <test:at-least-one-child />,
       <test:either-of-two-children />,
       <test:nested-rule />,
+      <test:category-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
-      $elem->appendChild(<span />);
+      $elem->appendChild(<thead />);
       try {
         $elem->toString();
       } catch (Exception $e) {
@@ -195,5 +215,12 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     $this->assertSame('<div></div>', $x->toString());
     $x = <test:nested-rule><code /><code /></test:nested-rule>;
     $this->assertSame('<div></div>', $x->toString());
+  }
+
+  public function testPCDataChild(): void {
+    $x = <test:pcdata-child>herp derp</test:pcdata-child>;
+    $this->assertSame('<div>herp derp</div>', $x->toString());
+    $x = <test:pcdata-child>{123}</test:pcdata-child>;
+    $this->assertSame('<div>123</div>', $x->toString());
   }
 }
