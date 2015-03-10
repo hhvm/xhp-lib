@@ -246,7 +246,7 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final protected static function __xhpReflectionAttribute(
+  final public static function __xhpReflectionAttribute(
     string $attr,
   ): ?ReflectionXHPAttribute {
     $map = static::__xhpReflectionAttributes();
@@ -271,14 +271,16 @@ abstract class :x:composable-element extends :xhp {
     return $cache[$class];
   }
 
-  final protected function __xhpReflectionChildrenDeclaration(
+  final public static function __xhpReflectionChildrenDeclaration(
   ): ReflectionXHPChildrenDeclaration {
     static $cache = Map { };
     $class = static::class;
     if (!$cache->containsKey($class)) {
       $cache[$class] = new ReflectionXHPChildrenDeclaration(
         :xhp::class2element($class),
-        $this->__xhpChildrenDeclaration(),
+        /* UNSAFE_EXPR: This isn't a static method for some reason - but it
+         * always returns a static array, and is safe to call statically */
+        static::__xhpChildrenDeclaration(),
       );
     }
     return $cache[$class];
@@ -611,7 +613,7 @@ abstract class :x:composable-element extends :xhp {
    * throws an exception if that's not the case.
    */
   final protected function validateChildren(): void {
-    $decl = $this->__xhpReflectionChildrenDeclaration();
+    $decl = self::__xhpReflectionChildrenDeclaration();
     $type = $decl->getType();
     if ($type === XHPChildrenDeclarationType::ANY_CHILDREN) {
       return;
@@ -772,7 +774,7 @@ abstract class :x:composable-element extends :xhp {
    * source code.
    */
   final public function __getChildrenDeclaration(): string {
-    $decl = $this->__xhpReflectionChildrenDeclaration();
+    $decl = self::__xhpReflectionChildrenDeclaration();
     if ($decl->getType() === XHPChildrenDeclarationType::ANY_CHILDREN) {
       return 'any';
     }
