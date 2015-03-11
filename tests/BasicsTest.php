@@ -33,4 +33,18 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
     $this->assertEquals('<div>foo&lt;SCRIPT&gt;bar</div>', $xhp->toString());
   }
+
+  public function testElement2Class(): void {
+    $this->assertSame(
+      :div::class,
+      :xhp::element2class('div'),
+    );
+  }
+
+  public function testClass2Element(): void {
+    $this->assertSame(
+      'div',
+      :xhp::class2element(:div::class),
+    );
+  }
 }
