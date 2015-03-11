@@ -118,6 +118,35 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     }
   }
 
+  /**
+   * @dataProvider toStringProvider 
+   */
+  public function testToString(
+    :x:composable-element $elem,
+    string $expected,
+  ): void {
+    $this->assertSame(
+      $expected,
+      $elem->__getChildrenDeclaration(),
+    );
+  }
+
+  public function toStringProvider() {
+    return [
+      [<test:any-children />, 'any'],
+      [<test:no-children />, 'empty'],
+      [<test:single-child />, '(:div)'],
+      [<test:optional-child />, '(:div?)'],
+      [<test:any-number-of-child />, '(:div*)'],
+      [<test:at-least-one-child />, '(:div+)'],
+      [<test:two-children />, '(:div,:div)'],
+      [<test:either-of-two-children />, '(:div|:code)'],
+      [<test:nested-rule />, '(:div|(:code+))'],
+      [<test:pcdata-child />, '(pcdata)'],
+      [<test:category-child />, '(%flow)'],
+    ];
+  }
+
   public function testExpectedChild(): void {
     $elems = Vector {
        <test:single-child />,

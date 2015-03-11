@@ -9,18 +9,14 @@
  *
  */
 
-// Composer doesn't support autoloading enums, and we need XHPAttributeType
+// Composer didn't support autoloading enums until recently (2015-03-09)
 require_once('ReflectionXHPAttribute.php');
+require_once('ReflectionXHPChildrenDeclaration.php');
 
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
-
-  private static $specialAttributes = ImmSet {
-    'data',
-    'aria',
-  };
 
   // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
   // addressed
@@ -250,7 +246,7 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final protected static function __xhpReflectionAttribute(
+  final public static function __xhpReflectionAttribute(
     string $attr,
   ): ?ReflectionXHPAttribute {
     $map = static::__xhpReflectionAttributes();
@@ -271,6 +267,21 @@ abstract class :x:composable-element extends :xhp {
         $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
       }
       $cache[$class] = $map;
+    }
+    return $cache[$class];
+  }
+
+  final public static function __xhpReflectionChildrenDeclaration(
+  ): ReflectionXHPChildrenDeclaration {
+    static $cache = Map { };
+    $class = static::class;
+    if (!$cache->containsKey($class)) {
+      $cache[$class] = new ReflectionXHPChildrenDeclaration(
+        :xhp::class2element($class),
+        /* UNSAFE_EXPR: This isn't a static method for some reason - but it
+         * always returns a static array, and is safe to call statically */
+        static::__xhpChildrenDeclaration(),
+      );
     }
     return $cache[$class];
   }
@@ -602,18 +613,22 @@ abstract class :x:composable-element extends :xhp {
    * throws an exception if that's not the case.
    */
   final protected function validateChildren(): void {
-    $decl = $this->__xhpChildrenDeclaration();
-    if ($decl === 1) { // Any children allowed
+    $decl = self::__xhpReflectionChildrenDeclaration();
+    $type = $decl->getType();
+    if ($type === XHPChildrenDeclarationType::ANY_CHILDREN) {
       return;
     }
-    if ($decl === 0) { // No children allowed
+    if ($type === XHPChildrenDeclarationType::NO_CHILDREN) {
       if ($this->children) {
         throw new XHPInvalidChildrenException($this, 0);
       } else {
         return;
       }
     }
-    list($ret, $ii) = $this->validateChildrenExpression((array)$decl, 0);
+    list($ret, $ii) = $this->validateChildrenExpression(
+      $decl->getExpression(),
+      0
+    );
     if (!$ret || $ii < count($this->children)) {
       if (isset($this->children[$ii])
           && $this->children[$ii] instanceof XHPAlwaysValidChild) {
@@ -623,34 +638,36 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final private function validateChildrenExpression(array<int, mixed> $decl,
-                                                    int $index): (bool, int) {
-    switch ((int)$decl[0]) {
-      case 0: // Exactly once -- :fb-thing
-        return $this->validateChildrenRule((int)$decl[1], $decl[2], $index);
-
-      case 1: // Zero or more times -- :fb-thing*
+  final private function validateChildrenExpression(
+    ReflectionXHPChildrenExpression $expr,
+    int $index,
+  ): (bool, int) {
+    switch ($expr->getType()) {
+      case XHPChildrenExpressionType::SINGLE:
+        // Exactly once -- :fb-thing
+        return $this->validateChildrenRule($expr, $index);
+      case XHPChildrenExpressionType::ANY_NUMBER: 
+        // Zero or more times -- :fb-thing*
         do {
           list($ret, $index) = $this->validateChildrenRule(
-            (int)$decl[1],
-            $decl[2],
+            $expr,
             $index,
           );
         } while ($ret);
         return tuple(true, $index);
 
-      case 2: // Zero or one times -- :fb-thing?
+      case XHPChildrenExpressionType::ZERO_OR_ONE:
+        // Zero or one times -- :fb-thing?
         list($_, $index) = $this->validateChildrenRule(
-          (int)$decl[1],
-          $decl[2],
+          $expr,
           $index,
         );
         return tuple(true, $index);
 
-      case 3: // One or more times -- :fb-thing+
+      case XHPChildrenExpressionType::ONE_OR_MORE:
+        // One or more times -- :fb-thing+
         list($ret, $index) = $this->validateChildrenRule(
-          (int)$decl[1],
-          $decl[2],
+          $expr,
           $index,
         );
         if (!$ret) {
@@ -658,22 +675,23 @@ abstract class :x:composable-element extends :xhp {
         }
         do {
           list($ret, $index) = $this->validateChildrenRule(
-            (int)$decl[1],
-            $decl[2],
+            $expr,
             $index,
           );
         } while ($ret);
         return tuple(true, $index);
 
-      case 4: // Specific order -- :fb-thing, :fb-other-thing
+      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
+        // Specific order -- :fb-thing, :fb-other-thing
         $oindex = $index;
+        list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
         list($ret, $index) = $this->validateChildrenExpression(
-          (array)$decl[1],
+          $sub_expr_1,
           $index,
         );
         if ($ret) {
           list($ret, $index) = $this->validateChildrenExpression(
-            (array)$decl[2],
+            $sub_expr_2,
             $index,
           );
         }
@@ -682,15 +700,17 @@ abstract class :x:composable-element extends :xhp {
         }
         return tuple(false, $oindex);
 
-      case 5: // Either or -- :fb-thing | :fb-other-thing
+      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
+        // Either or -- :fb-thing | :fb-other-thing
         $oindex = $index;
+        list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
         list($ret, $index) = $this->validateChildrenExpression(
-          (array)$decl[1],
+          $sub_expr_1,
           $index,
         );
         if (!$ret) {
           list($ret, $index) = $this->validateChildrenExpression(
-            (array)$decl[2],
+            $sub_expr_2,
             $index,
           );
         }
@@ -702,32 +722,33 @@ abstract class :x:composable-element extends :xhp {
   }
 
   final private function validateChildrenRule(
-    int $type,
-    mixed $rule,
+    ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
-    switch ($type) {
-      case 1: // any element -- any
+    switch ($expr->getConstraintType()) {
+      case XHPChildrenConstraintType::ANY:
         if ($this->children->containsKey($index)) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case 2: // pcdata -- pcdata
+      case XHPChildrenConstraintType::PCDATA:
         if ($this->children->containsKey($index) &&
             !($this->children->get($index) instanceof :xhp)) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case 3: // specific element -- :fb-thing
+      case XHPChildrenConstraintType::ELEMENT:
+        $class = $expr->getConstraintString();
         if ($this->children->containsKey($index) &&
-            $this->children->get($index) instanceof $rule) {
+            $this->children->get($index) instanceof $class) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case 4: // element category -- %block
+      case XHPChildrenConstraintType::CATEGORY:
+        $category = $expr->getConstraintString();
         if (!$this->children->containsKey($index) ||
             !($this->children->get($index) instanceof :xhp)) {
           return tuple(false, $index);
@@ -735,72 +756,28 @@ abstract class :x:composable-element extends :xhp {
         $child = $this->children->get($index);
         assert($child instanceof :xhp);
         $categories = $child->__xhpCategoryDeclaration();
-        if (empty($categories[(string)$rule])) {
+        if (empty($categories[$category])) {
           return tuple(false, $index);
         }
         return tuple(true, $index + 1);
 
-      case 5: // nested rule - ((:fb-thing, :fb-other-thing)*, :fb:thing-footer)
-        return $this->validateChildrenExpression((array)$rule, $index);
+      case XHPChildrenConstraintType::SUB_EXPR:
+        return $this->validateChildrenExpression(
+          $expr->getSubExpression(),
+          $index,
+        );
     }
   }
 
   /**
    * Returns the human-readable `children` declaration as seen in this class's
    * source code.
+   *
+   * Keeping this wrapper around reflection, as it fits well with
+   * __getChildrenDescription.
    */
-  final public function __getChildrenDeclaration(): string {
-    $decl = $this->__xhpChildrenDeclaration();
-    if ($decl === 1) {
-      return 'any';
-    }
-    if ($decl === 0) {
-      return 'empty';
-    }
-    return $this->renderChildrenDeclaration((array)$decl);
-  }
-
-  final private function renderChildrenDeclaration(array $decl): string {
-    switch ($decl[0]) {
-      case 0:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]);
-
-      case 1:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '*';
-
-      case 2:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '?';
-
-      case 3:
-        return $this->renderChildrenRule((int)$decl[1], $decl[2]) . '+';
-
-      case 4:
-        return $this->renderChildrenDeclaration($decl[1]) . ',' .
-          $this->renderChildrenDeclaration($decl[2]);
-
-      case 5:
-        return $this->renderChildrenDeclaration($decl[1]) . '|' .
-          $this->renderChildrenDeclaration($decl[2]);
-    }
-  }
-
-  final private function renderChildrenRule(int $type, mixed $rule): string {
-    switch ($type) {
-      case 1:
-        return 'any';
-
-      case 2:
-        return 'pcdata';
-
-      case 3:
-        return ':' . :xhp::class2element((string)$rule);
-
-      case 4:
-        return '%' . (string)$rule;
-
-      case 5:
-        return '(' . $this->renderChildrenDeclaration((array)$rule) . ')';
-    }
+  public function __getChildrenDeclaration(): string {
+    return (string) self::__xhpReflectionChildrenDeclaration();
   }
 
   /**
