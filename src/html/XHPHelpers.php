@@ -56,7 +56,7 @@ trait XHPHelpers {
    * Copies all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public static function copyAllAttributes(
+  final public function copyAllAttributes(
     :xhp $target,
   ): void {
     $this->transferAttributesImpl($target, Set{});
@@ -66,7 +66,7 @@ trait XHPHelpers {
    * Copies only the non-HTML attributes that are set on $this and valid on
    * $target to $target.
    */
-  final public static function copyCustomAttributes(
+  final public function copyCustomAttributes(
     :xhp $target,
   ): void {
     $this->transferAttributesImpl($target);
@@ -76,7 +76,7 @@ trait XHPHelpers {
    * Copies all attributes except those specified that are set on $this and
    * valid on $target to $target.
    */
-  final public static function copyAttributesExcept(
+  final public function copyAttributesExcept(
     :xhp $target,
     Set<string> $ignore,
   ): void {
@@ -87,7 +87,7 @@ trait XHPHelpers {
    * Transfers all attributes that are set on $this and valid on $target to
    * $target. This will unset all transfered attributes from $this.
    */
-  final public static function transferAllAttributes(
+  final public function transferAllAttributes(
     :xhp $target,
   ): void {
     $this->transferAttributesImpl($target, Set{}, true);
@@ -97,7 +97,7 @@ trait XHPHelpers {
    * Transfers only the non-HTML attributes that are set on $this and valid on
    * $target to $target. This will unset all transfered attributes from $this.
    */
-  final public static function transferCustomAttributes(
+  final public function transferCustomAttributes(
     :xhp $target,
   ): void {
     $this->transferAttributesImpl($target, null, true);
@@ -108,7 +108,7 @@ trait XHPHelpers {
    * valid on $target to $target. This will unset all transfered attributes from
    * $this.
    */
-  final public static function transferAttributesExcept(
+  final public function transferAttributesExcept(
     :xhp $target,
     Set<string> $ignore,
   ): void {
