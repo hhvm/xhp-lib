@@ -757,11 +757,11 @@ abstract class :x:composable-element extends :xhp {
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::CATEGORY:
-        $category = $expr->getConstraintString();
         if (!$this->children->containsKey($index) ||
             !($this->children->get($index) instanceof :xhp)) {
           return tuple(false, $index);
         }
+        $category = :xhp::class2element($expr->getConstraintString());
         $child = $this->children->get($index);
         assert($child instanceof :xhp);
         $categories = $child->__xhpCategoryDeclaration();
