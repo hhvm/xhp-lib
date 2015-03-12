@@ -286,6 +286,15 @@ abstract class :x:composable-element extends :xhp {
     return $cache[$class];
   }
 
+  final public static function __xhpReflectionCategoryDeclaration(
+  ): Set<string> {
+    return new Set(
+      /* UNSAFE_EXPR: This isn't a static method for some reason - but it
+       * always returns a static array, and is safe to call statically */
+       array_keys(static::__xhpCategoryDeclaration())
+    );
+  }
+
   final public function getAttributes(): Map<string, mixed> {
     return $this->attributes->toMap();
   }

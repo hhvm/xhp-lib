@@ -53,6 +53,6 @@ class ReflectionXHPClass {
 
   public function getCategories(): Set<string> {
     $class = $this->getClassName();
-    return new Set($class::__xhpCategoryDeclaration());
+    return $class::__xhpReflectionCategoryDeclaration();
   }
 }

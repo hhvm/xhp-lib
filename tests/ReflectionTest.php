@@ -74,4 +74,11 @@ class ReflectionTest extends PHPUnit_Framework_TestCase {
     );
   }
 
+  public function testGetCategories(): void {
+    $categories = $this->rxc?->getCategories();
+    $this->assertEquals(
+      Set { 'herp', 'derp' },
+      $categories,
+    );
+  }
 }
