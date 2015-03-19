@@ -23,6 +23,7 @@ class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testValidRawValues(): void {
+    // UNSAFE
     $x = <test:hack-enum-attribute foo={1} />;
     $this->assertSame('<div>HERP</div>', $x->toString());
     $x = <test:hack-enum-attribute foo={2} />;
@@ -33,6 +34,7 @@ class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testInvalidValue(): void {
+    // UNSAFE
     $x = <test:hack-enum-attribute foo={0} />;
   }
 }
