@@ -10,7 +10,7 @@
  */
 
 class :label extends :xhp:html-element {
-  attribute string for, string form;
+  attribute Stringish for, Stringish form;
   category %flow, %phrase, %interactive;
   // may not contain label
   children (pcdata | %phrase)*;

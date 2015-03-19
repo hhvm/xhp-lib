@@ -10,7 +10,7 @@
  */
 
 class :q extends :xhp:html-element {
-  attribute string cite;
+  attribute Stringish cite;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
   protected string $tagName = 'q';

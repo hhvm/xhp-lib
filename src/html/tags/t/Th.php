@@ -11,8 +11,8 @@
 
 class :th extends :xhp:html-element {
   attribute
-    string abbr, int colspan, string headers, int rowspan,
-    enum {'col', 'colgroup', 'row', 'rowgroup'} scope, string sorted;
+    Stringish abbr, int colspan, Stringish headers, int rowspan,
+    enum {'col', 'colgroup', 'row', 'rowgroup'} scope, Stringish sorted;
   children (pcdata | %flow)*;
   protected string $tagName = 'th';
 }

@@ -10,11 +10,11 @@
  */
 
 class :script extends :xhp:raw-pcdata-element {
-  attribute bool async, string charset,
-  enum {'anonymous', 'use-credentials'} crossorigin, bool defer, string src,
-  string type,
+  attribute bool async, Stringish charset,
+  enum {'anonymous', 'use-credentials'} crossorigin, bool defer, Stringish src,
+  Stringish type,
   // Legacy
-  string language;
+  Stringish language;
   category %flow, %phrase, %metadata;
   protected string $tagName = 'script';
 }
