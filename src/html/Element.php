@@ -41,6 +41,7 @@ abstract class :xhp:html-element extends :x:primitive {
     Stringish tabindex,
     Stringish title,
     enum {'yes', 'no'} translate,
+    bool unresolved,
 
     // Javascript events
     Stringish onabort,
