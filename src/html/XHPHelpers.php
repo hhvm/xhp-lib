@@ -23,7 +23,16 @@ trait XHPHelpers {
    * Appends a string to the "class" attribute (space separated).
    */
   public function addClass(string $class): this {
-    return $this->setAttribute('class', trim($this->:class.' '.$class));
+    try {
+      return $this->setAttribute('class', trim($this->:class.' '.$class));
+    } catch (XHPInvalidAttributeException $error) {
+      throw new XHPException(
+        'You are trying to add an HTML class to a(n) '.
+        :xhp::class2element(static::class).' element, but it does not support '.
+        'the "class" attribute. The best way to do this is to inherit '.
+        'the HTML attributes from the element your component will render into.',
+      );
+    }
   }
 
   /*
@@ -40,7 +49,17 @@ trait XHPHelpers {
   public function requireUniqueID(): string {
     $id = $this->:id;
     if ($id === null || $id === '') {
-      $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
+      try {
+        $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
+      } catch (XHPInvalidAttributeException $error) {
+        throw new XHPException(
+          'You are trying to add an HTML id to a(n) '.
+          :xhp::class2element(static::class).' element, but it does not '.
+          'support the "id" attribute. The best way to do this is to inherit '.
+          'the HTML attributes from the element your component will render '.
+          'into.',
+        );
+      }
     }
     return (string)$id;
   }
@@ -130,12 +149,30 @@ trait XHPHelpers {
       $ignore = array_fill_keys($ignore->toArray(), true);
     }
 
-    $compatible = $target->__xhpAttributeDeclaration();
+    $compatible = new Map($target::__xhpAttributeDeclaration());
     $transferAttributes = array_diff_key($this->getAttributes(), $ignore);
     foreach ($transferAttributes as $attribute => $value) {
-      if (isset($compatible[$attribute])
+      if ($compatible->containsKey($attribute))
           || ReflectionXHPAttribute::IsSpecial($attribute)) {
-        $target->setAttribute($attribute, $value);
+        try {
+          $target->setAttribute($attribute, $value);
+        } catch (XHPInvalidAttributeException $error) {
+          // This only happens when an attribute name collision occurs but the
+          // two have different data types or different possible enum values.
+          // This can be dangerous because the result when validation is off
+          // will be different than when validation is on, so you should fix
+          // this by renaming one of the attributes.
+          $target = get_class($target);
+          throw new XHPException(
+            :xhp::class2element(static::class).' and '.
+            :xhp::class2element($target).' both support the "'.$attribute.'" '.
+            'attribute, but they have different signatures. This is a '.
+            'problem because the behavior when transfering or copying '.
+            'attributes while validation is on will be different than while '.
+            'validation is off. Rename the attribute on at least one of these '.
+            'elements to fix this.',
+          );
+        }
         if ($remove) {
           $this->removeAttribute($attribute);
         }
