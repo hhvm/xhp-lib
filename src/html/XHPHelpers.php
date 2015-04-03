@@ -77,7 +77,7 @@ trait XHPHelpers {
    * $target.
    */
   final public function copyAllAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, Set{});
   }
@@ -87,7 +87,7 @@ trait XHPHelpers {
    * $target to $target.
    */
   final public function copyCustomAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target);
   }
@@ -97,7 +97,7 @@ trait XHPHelpers {
    * valid on $target to $target.
    */
   final public function copyAttributesExcept(
-    :xhp $target,
+    :x:composable-element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -108,7 +108,7 @@ trait XHPHelpers {
    * $target. This will unset all transfered attributes from $this.
    */
   final public function transferAllAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, Set{}, true);
   }
@@ -118,7 +118,7 @@ trait XHPHelpers {
    * $target to $target. This will unset all transfered attributes from $this.
    */
   final public function transferCustomAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, null, true);
   }
@@ -129,7 +129,7 @@ trait XHPHelpers {
    * $this.
    */
   final public function transferAttributesExcept(
-    :xhp $target,
+    :x:composable-element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore, true);
@@ -140,7 +140,7 @@ trait XHPHelpers {
    * directly. Instead, use one of the transfer/copy flavors above.
    */
   final private function transferAttributesImpl(
-    :xhp $target,
+    :x:composable-element $target,
     ?Set<string> $ignore = null,
     bool $remove = false,
   ): void {
