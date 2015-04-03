@@ -9,13 +9,17 @@
  *
  */
 
+interface HasXHPHelpers {
+  require extends :x:composable-element;
+};
+
 /*
  * Use of this trait assumes you have inherited attributes from an HTML element.
  * For the bare minimum, use:
  *
  * attribute :xhp:html-element;
  */
-trait XHPHelpers {
+trait XHPHelpers implements HasXHPHelpers {
 
   require extends :x:composable-element;
 
