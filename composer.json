@@ -13,7 +13,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-hack": "2.x-dev"
+            "dev-master": "2.x-dev"
         }
     },
     "autoload": {
