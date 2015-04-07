@@ -20,5 +20,10 @@
         "classmap": [
             "src/"
         ]
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "hhvm bin/generate-autoload-map.php > autoload-map.php"
+        ]
     }
 }
