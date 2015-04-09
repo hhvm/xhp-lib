@@ -384,7 +384,7 @@ abstract class :x:composable-element extends :xhp {
    * @param mixed $default  The value to return if not set (optional)
    * @return mixed          The context value or $default
    */
-  final public function getContext(string $key, mixed $default): mixed {
+  final public function getContext(string $key, mixed $default = null): mixed {
     if ($this->context->containsKey($key)) {
       return $this->context->get($key);
     }
