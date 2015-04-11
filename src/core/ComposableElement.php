@@ -449,13 +449,9 @@ abstract class :x:composable-element extends :xhp {
     }
 
     $childWaitHandles = Map{};
-    $flushWaitHandles = Vector{};
     do {
-      if ($childWaitHandles || $flushWaitHandles) {
-        list($awaitedChildren, $_) = await GenArrayWaitHandle::create(array(
-          GenMapWaitHandle::create($childWaitHandles),
-          GenVectorWaitHandle::create($flushWaitHandles),
-        ));
+      if ($childWaitHandles) {
+        $awaitedChildren = await GenMapWaitHandle::create($childWaitHandles);
         if ($awaitedChildren) {
           foreach ($awaitedChildren as $i => $awaitedChild) {
             $this->children->set($i, $awaitedChild);
@@ -464,7 +460,6 @@ abstract class :x:composable-element extends :xhp {
           $this->replaceChildren(<x:frag>{$this->children}</x:frag>);
           $childWaitHandles = Map{};
         }
-        $flushWaitHandles = Vector{};
       }
 
       $ln = count($this->children);
@@ -492,10 +487,6 @@ abstract class :x:composable-element extends :xhp {
               $this->children->removeKey($i);
               $i--;
             } else {
-              if ($child instanceof :x:primitive) {
-                $flushWaitHandles[] =
-                  $child->__flushElementChildren()->getWaitHandle();
-              }
               assert($child instanceof XHPChild);
               $this->children[$i] = $child;
             }
@@ -503,6 +494,13 @@ abstract class :x:composable-element extends :xhp {
         }
       }
     } while ($childWaitHandles);
+
+    $flushWaitHandles = Vector{};
+    foreach ($this->children as $child) {
+      if ($child instanceof :x:primitive) {
+        $flushWaitHandles[] = $child->__flushElementChildren()->getWaitHandle();
+      }
+    }
 
     if ($flushWaitHandles) {
       await GenVectorWaitHandle::create($flushWaitHandles);
@@ -655,7 +653,7 @@ abstract class :x:composable-element extends :xhp {
       case XHPChildrenExpressionType::SINGLE:
         // Exactly once -- :fb-thing
         return $this->validateChildrenRule($expr, $index);
-      case XHPChildrenExpressionType::ANY_NUMBER: 
+      case XHPChildrenExpressionType::ANY_NUMBER:
         // Zero or more times -- :fb-thing*
         do {
           list($ret, $index) = $this->validateChildrenRule(
