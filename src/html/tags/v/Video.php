@@ -13,8 +13,8 @@ class :video extends :xhp:html-element {
   attribute
     bool autoplay, bool controls,
     enum {'anonymous', 'use-credentials'} crossorigin, int height, bool loop,
-    string mediagroup, bool muted, string poster,
-    enum {'none', 'metadata', 'auto'} preload, string src, int width;
+    Stringish mediagroup, bool muted, Stringish poster,
+    enum {'none', 'metadata', 'auto'} preload, Stringish src, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
   protected string $tagName = 'video';

@@ -11,8 +11,8 @@
 
 class :object extends :xhp:html-element {
   attribute
-    string data, int height, string form, string name, string type,
-    bool typemustmatch, string usemap, int width;
+    Stringish data, int height, Stringish form, Stringish name, Stringish type,
+    bool typemustmatch, Stringish usemap, int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:param*, (pcdata | %flow)*);
   protected string $tagName = 'object';

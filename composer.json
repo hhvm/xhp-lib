@@ -13,12 +13,17 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-hack": "2.x-dev"
+            "dev-master": "2.x-dev"
         }
     },
     "autoload": {
         "classmap": [
             "src/"
+        ]
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "hhvm bin/generate-autoload-map.php > autoload-map.php"
         ]
     }
 }

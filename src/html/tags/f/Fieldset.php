@@ -10,7 +10,7 @@
  */
 
 class :fieldset extends :xhp:html-element {
-  attribute bool disabled, string form, string name;
+  attribute bool disabled, Stringish form, Stringish name;
   category %flow;
   children (:legend?, (pcdata | %flow)*);
   protected string $tagName = 'fieldset';

@@ -1,4 +1,4 @@
-<?hh // strict
+<?hh
 /*
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -9,8 +9,7 @@
  *
  */
 
-class :base extends :xhp:html-singleton {
-  attribute Stringish href, Stringish target;
-  category %metadata;
-  protected string $tagName = 'base';
-}
+// IF YOU ARE USING COMPOSER: use Composer's autoload, and ignore this file.
+
+require_once(__DIR__.'/autoload-map.php');
+spl_autoload_register('Facebook\XHPLib\Autoloader\autoload');

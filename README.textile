@@ -1,6 +1,6 @@
 h1. Introduction
 
-XHP is augments the syntax of Hack such that XML document fragments become valid
+XHP augments the syntax of Hack such that XML document fragments become valid
 PHP expressions. This allows you to use Hack as a stricter templating engine and
 offers much more straightforward implementation of reusable components.
 

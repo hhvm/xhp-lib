@@ -10,7 +10,7 @@
  */
 
 class :menu extends :xhp:html-element {
-  attribute string label, enum {'popup', 'toolbar'} type;
+  attribute Stringish label, enum {'popup', 'toolbar'} type;
   category %flow;
   children ((:menuitem | :hr | :menu)* | :li* | %flow*);
   protected string $tagName = 'menu';

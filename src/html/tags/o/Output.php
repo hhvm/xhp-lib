@@ -10,7 +10,7 @@
  */
 
 class :output extends :xhp:html-element {
-  attribute string for, string form, string name;
+  attribute Stringish for, Stringish form, Stringish name;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
   protected string $tagName = 'output';

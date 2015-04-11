@@ -80,6 +80,22 @@ class :test:category-child extends :x:element {
   }
 }
 
+class :test:has-comma-category extends :x:element {
+  category %foo:bar;
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
+class :test:needs-comma-category extends :x:element {
+  children (%foo:bar);
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
 class ChildRuleTest extends PHPUnit_Framework_TestCase {
   public function testNoChild(): void {
     $elems = Vector {
@@ -116,6 +132,35 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       $elem->appendChild(<div>Foo</div>);
       $this->assertSame('<div></div>', (string) $elem);
     }
+  }
+
+  /**
+   * @dataProvider toStringProvider 
+   */
+  public function testToString(
+    :x:composable-element $elem,
+    string $expected,
+  ): void {
+    $this->assertSame(
+      $expected,
+      $elem->__getChildrenDeclaration(),
+    );
+  }
+
+  public function toStringProvider() {
+    return [
+      [<test:any-children />, 'any'],
+      [<test:no-children />, 'empty'],
+      [<test:single-child />, '(:div)'],
+      [<test:optional-child />, '(:div?)'],
+      [<test:any-number-of-child />, '(:div*)'],
+      [<test:at-least-one-child />, '(:div+)'],
+      [<test:two-children />, '(:div,:div)'],
+      [<test:either-of-two-children />, '(:div|:code)'],
+      [<test:nested-rule />, '(:div|(:code+))'],
+      [<test:pcdata-child />, '(pcdata)'],
+      [<test:category-child />, '(%flow)'],
+    ];
   }
 
   public function testExpectedChild(): void {
@@ -222,5 +267,13 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     $this->assertSame('<div>herp derp</div>', $x->toString());
     $x = <test:pcdata-child>{123}</test:pcdata-child>;
     $this->assertSame('<div>123</div>', $x->toString());
+  }
+
+  public function testCommaCategory(): void {
+    $x =
+      <test:needs-comma-category>
+        <test:has-comma-category />
+      </test:needs-comma-category>;
+    $this->assertSame('<div></div>', $x->toString());
   }
 }

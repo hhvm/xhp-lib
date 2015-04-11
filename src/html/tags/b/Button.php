@@ -11,10 +11,10 @@
 
 class :button extends :xhp:html-element {
   attribute
-    bool autofocus, bool disabled, string form, string formaction,
-    string formenctype, enum {'get', 'post'} formmethod, bool formnovalidate,
-    string formtarget, string menu, string name,
-    enum {'submit', 'button', 'reset'} type, string value;
+    bool autofocus, bool disabled, Stringish form, Stringish formaction,
+    Stringish formenctype, enum {'get', 'post'} formmethod, bool formnovalidate,
+    Stringish formtarget, Stringish menu, Stringish name,
+    enum {'submit', 'button', 'reset'} type, Stringish value;
   category %flow, %phrase, %interactive;
   // Should not contain interactive
   children (pcdata | %phrase)*;

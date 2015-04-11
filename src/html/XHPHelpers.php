@@ -1,4 +1,4 @@
-<?hh // strict
+<?hh
 /*
  *  Copyright (c) 2015, Facebook, Inc.
  *  All rights reserved.
@@ -9,13 +9,17 @@
  *
  */
 
+interface HasXHPHelpers {
+  require extends :x:composable-element;
+};
+
 /*
  * Use of this trait assumes you have inherited attributes from an HTML element.
  * For the bare minimum, use:
  *
  * attribute :xhp:html-element;
  */
-trait XHPHelpers {
+trait XHPHelpers implements HasXHPHelpers {
 
   require extends :x:composable-element;
 
@@ -24,7 +28,8 @@ trait XHPHelpers {
    */
   public function addClass(string $class): this {
     try {
-      return $this->setAttribute('class', trim($this->:class.' '.$class));
+      $current_class = /* UNSAFE_EXPR */ $this->:class;
+      return $this->setAttribute('class', trim($current_class.' '.$class));
     } catch (XHPInvalidAttributeException $error) {
       throw new XHPException(
         'You are trying to add an HTML class to a(n) '.
@@ -47,7 +52,7 @@ trait XHPHelpers {
    * will only be generated if one has not already been set.
    */
   public function requireUniqueID(): string {
-    $id = $this->:id;
+    $id = /* UNSAFE_EXPR */ $this->:id;
     if ($id === null || $id === '') {
       try {
         $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
@@ -76,7 +81,7 @@ trait XHPHelpers {
    * $target.
    */
   final public function copyAllAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, Set{});
   }
@@ -86,7 +91,7 @@ trait XHPHelpers {
    * $target to $target.
    */
   final public function copyCustomAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target);
   }
@@ -96,7 +101,7 @@ trait XHPHelpers {
    * valid on $target to $target.
    */
   final public function copyAttributesExcept(
-    :xhp $target,
+    :x:composable-element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -107,7 +112,7 @@ trait XHPHelpers {
    * $target. This will unset all transfered attributes from $this.
    */
   final public function transferAllAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, Set{}, true);
   }
@@ -117,7 +122,7 @@ trait XHPHelpers {
    * $target to $target. This will unset all transfered attributes from $this.
    */
   final public function transferCustomAttributes(
-    :xhp $target,
+    :x:composable-element $target,
   ): void {
     $this->transferAttributesImpl($target, null, true);
   }
@@ -128,7 +133,7 @@ trait XHPHelpers {
    * $this.
    */
   final public function transferAttributesExcept(
-    :xhp $target,
+    :x:composable-element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore, true);
@@ -139,7 +144,7 @@ trait XHPHelpers {
    * directly. Instead, use one of the transfer/copy flavors above.
    */
   final private function transferAttributesImpl(
-    :xhp $target,
+    :x:composable-element $target,
     ?Set<string> $ignore = null,
     bool $remove = false,
   ): void {
@@ -152,8 +157,10 @@ trait XHPHelpers {
     $compatible = new Map($target::__xhpAttributeDeclaration());
     $transferAttributes = array_diff_key($this->getAttributes(), $ignore);
     foreach ($transferAttributes as $attribute => $value) {
-      if ($compatible->containsKey($attribute))
-          || ReflectionXHPAttribute::IsSpecial($attribute)) {
+      if (
+        $compatible->containsKey($attribute)
+        || ReflectionXHPAttribute::IsSpecial($attribute)
+      ) {
         try {
           $target->setAttribute($attribute, $value);
         } catch (XHPInvalidAttributeException $error) {

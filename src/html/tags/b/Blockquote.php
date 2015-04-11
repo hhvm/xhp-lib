@@ -10,7 +10,7 @@
  */
 
 class :blockquote extends :xhp:html-element {
-  attribute string cite;
+  attribute Stringish cite;
   category %flow, %sectioning;
   children (pcdata | %flow)*;
   protected string $tagName = 'blockquote';

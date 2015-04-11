@@ -11,9 +11,9 @@
 
 class :form extends :xhp:html-element {
   attribute
-    string action, string accept-charset, enum {'on', 'off'} autocomplete,
-    string enctype, enum {'get', 'post'} method, string name, bool novalidate,
-    string target;
+    Stringish action, Stringish accept-charset, enum {'on', 'off'} autocomplete,
+    Stringish enctype, enum {'get', 'post'} method, Stringish name, bool novalidate,
+    Stringish target;
   category %flow;
   // Should not contain :form
   children (pcdata | %flow)*;
