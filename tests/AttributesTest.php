@@ -1,4 +1,6 @@
-<?hh
+<?hh // decl
+// Using decl because this test intentional passes the wrong types for
+// attributes
 
 class :test:attribute-types extends :x:element {
   attribute

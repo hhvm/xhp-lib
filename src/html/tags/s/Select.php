@@ -11,7 +11,7 @@
 
 class :select extends :xhp:html-element {
   attribute
-    bool autofocus, bool disabled, string form, bool multiple, string name,
+    bool autofocus, bool disabled, Stringish form, bool multiple, Stringish name,
     bool required, int size;
   category %flow, %phrase, %interactive;
   children (:option | :optgroup)*;

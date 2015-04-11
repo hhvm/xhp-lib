@@ -11,8 +11,8 @@
 
 class :img extends :xhp:html-singleton {
   attribute
-    string alt, enum {'anonymous', 'use-credentials'} crossorigin, int height,
-    bool ismap, string src, string usemap, int width;
+    Stringish alt, enum {'anonymous', 'use-credentials'} crossorigin, int height,
+    bool ismap, Stringish src, Stringish usemap, int width;
   category %flow, %phrase;
   protected string $tagName = 'img';
 }

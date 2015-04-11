@@ -10,7 +10,7 @@
  */
 
 class :map extends :xhp:html-element {
-  attribute string name;
+  attribute Stringish name;
   category %flow, %phrase;
   children (pcdata | %flow)*;
   protected string $tagName = 'map';

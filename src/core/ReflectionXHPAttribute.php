@@ -113,4 +113,43 @@ class ReflectionXHPAttribute {
       && $attr[4] === '-'
       && self::$specialAttributes->contains(substr($attr, 0, 4));
   }
+
+  public function __toString(): string {
+    switch ($this->getValueType()) {
+      case XHPAttributeType::TYPE_STRING:
+        $out = 'string';
+        break;
+      case XHPAttributeType::TYPE_BOOL:
+        $out = 'bool';
+        break;
+      case XHPAttributeType::TYPE_INTEGER:
+        $out = 'int';
+        break;
+      case XHPAttributeType::TYPE_ARRAY:
+        $out = 'array';
+        break;
+      case XHPAttributeType::TYPE_OBJECT:
+        $out = $this->getValueClass();
+        break;
+      case XHPAttributeType::TYPE_VAR:
+        $out = 'mixed';
+        break;
+      case XHPAttributeType::TYPE_ENUM:
+        $out = 'enum {';
+        $out .= implode(', ', $this->getEnumValues()->map($x ==> "'".$x."'"));
+        $out .= '}';
+        break;
+      case XHPAttributeType::TYPE_FLOAT:
+        $out = 'float';
+        break;
+    }
+    $out .= ' '.$this->getName();
+    if ($this->hasDefaultValue()) {
+      $out .=  ' = '.var_export($this->getDefaultValue(), true);
+    }
+    if ($this->isRequired()) {
+      $out .= ' @required';
+    }
+    return $out;
+  }
 }

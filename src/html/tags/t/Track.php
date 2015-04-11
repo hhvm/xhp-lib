@@ -14,6 +14,6 @@ class :track extends :xhp:html-singleton {
     bool default,
     enum {
       'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'
-    } kind, string label, string src, string srclang;
+    } kind, Stringish label, Stringish src, Stringish srclang;
   protected string $tagName = 'track';
 }

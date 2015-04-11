@@ -11,10 +11,10 @@
 
 class :body extends :xhp:html-element {
   attribute
-    string onafterprint, string onbeforeprint, string onbeforeunload,
-    string onhashchange, string onmessage, string onoffline, string ononline,
-    string onpagehide, string onpageshow, string onpopstate, string onstorage,
-    string onunload;
+    Stringish onafterprint, Stringish onbeforeprint, Stringish onbeforeunload,
+    Stringish onhashchange, Stringish onmessage, Stringish onoffline, Stringish ononline,
+    Stringish onpagehide, Stringish onpageshow, Stringish onpopstate, Stringish onstorage,
+    Stringish onunload;
   children (pcdata | %flow)*;
   protected string $tagName = 'body';
 }
