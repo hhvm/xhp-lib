@@ -9,10 +9,8 @@
  *
  */
 
-trait XHPAsync {
-
+trait XHPAsync implements XHPAwaitable {
   require extends :x:element;
-  require implements XHPAwaitable;
 
   abstract protected function asyncRender(): Awaitable<XHPRoot>;
 

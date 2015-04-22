@@ -1,6 +1,6 @@
 <?hh
 
-class :async:test extends :x:element implements XHPAwaitable {
+class :async:test extends :x:element {
   use XHPAsync;
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
@@ -38,5 +38,10 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
   public function testNestedWithNonAsyncChild() {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
     $this->assertEquals('<div><b>BE BOLD</b></div>', $xhp->toString());
+  }
+
+  public function testInstanceOfInterface() {
+    $xhp = <async:test><b>BE BOLD</b></async:test>;
+    $this->assertInstanceOf(XHPAwaitable::class, $xhp);
   }
 }
