@@ -42,7 +42,7 @@ class StringableTestClass { public function __toString() { return __CLASS__; } }
 
 class AttributesTest extends PHPUnit_Framework_TestCase {
   public function setUp(): void {
-    error_reporting(error_reporting() & ~E_USER_DEPRECATED);
+    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
   }
 
   public function testValidTypes(): void {

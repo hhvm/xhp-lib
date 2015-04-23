@@ -1,14 +1,14 @@
 <?hh // strict
 
 enum XHPAttributeCoercionMode: int {
-  SILENT = 1;
-  LOG_DEPRECATION = 2; // Default for 2.0
-  THROW_EXCEPTION = 3; // Planned default for 2.1
+  SILENT = 1; // You're a bad person
+  LOG_DEPRECATION = 2; // Default in 2.0
+  THROW_EXCEPTION = 3; // Default for 2.1
 }
 
 abstract final class XHPAttributeCoercion {
   private static XHPAttributeCoercionMode $mode =
-    XHPAttributeCoercionMode::LOG_DEPRECATION;
+    XHPAttributeCoercionMode::THROW_EXCEPTION;
 
   public static function GetMode(): XHPAttributeCoercionMode {
     return self::$mode;
