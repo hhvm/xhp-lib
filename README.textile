@@ -150,6 +150,42 @@ class :fb:thing-container extends :x:element {
   children (%fb:thing)*;
 }
 
+h1. Asynchronous data fetching
+
+XHP supports Hack's 'async' functionality, allowing you to build components that
+efficiently fetch the data that they require:
+
+bc. class :async-thing extends :x:element {
+  use XHPAsync;
+
+  protected async function asyncRender(): Awaitable<XHPRoot> {
+    $db = await AsyncMysqlClient::connect(...);
+    $result = await $db->queryf(
+      'SELECT id2 FROM %T WHERE id1 %=d',
+      'friends',
+      $this->getContext('viewer')->getUserID(),
+    );
+    $rows = $result->mapRowsTyped();
+
+    $friend_ids = $rows->map($row ==> $row['id2']);
+    $friend_data = await HH\Asio\mm(
+      $friend_ids,
+      $id ==> User::get($id),
+    );
+
+    $out = <ul />;
+    foreach ($friend_ids as $id) {
+      $out->appendChild(<li>.... </li>);
+    }
+    return $out;
+  }
+} 
+
+When an XHP tree is rendered, asyncRender() is called for all XHPAsync children,
+and data fetching happens in parrallel. This allows the data dependencies of
+your components to efficiently be an implementation detail instead of having
+to have it as part of the API and passed by the user (eg in an attribute).
+
 h1. Whitespace
 
 In XHP, text nodes that contain only whitespace are removed. The expressions @<div> </div>@ and @<div />@ are identical. Text nodes that contain non-whitespace are trimmed on the left and right to at most 1 space. This is worth noting because you may want to do something like:
