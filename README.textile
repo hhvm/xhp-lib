@@ -157,7 +157,6 @@ efficiently fetch the data that they require:
 
 bc. class :async-thing extends :x:element {
   use XHPAsync;
-
   protected async function asyncRender(): Awaitable<XHPRoot> {
     $db = await AsyncMysqlClient::connect(...);
     $result = await $db->queryf(
@@ -166,20 +165,18 @@ bc. class :async-thing extends :x:element {
       $this->getContext('viewer')->getUserID(),
     );
     $rows = $result->mapRowsTyped();
-
     $friend_ids = $rows->map($row ==> $row['id2']);
     $friend_data = await HH\Asio\mm(
       $friend_ids,
       $id ==> User::get($id),
     );
-
     $out = <ul />;
     foreach ($friend_ids as $id) {
       $out->appendChild(<li>.... </li>);
     }
     return $out;
   }
-} 
+}
 
 When an XHP tree is rendered, asyncRender() is called for all XHPAsync children,
 and data fetching happens in parrallel. This allows the data dependencies of
