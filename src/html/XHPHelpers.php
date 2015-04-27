@@ -141,8 +141,7 @@ trait XHPHelpers implements HasXHPHelpers {
       if (!($root instanceof HasXHPHelpers)) {
         throw new XHPClassException(
           $this,
-          'compose() must return an :xhp:html-element or :bootstrap:base '.
-          'instance.'
+          'render() must return an object using the XHPHelpers trait.'
         );
       }
 
