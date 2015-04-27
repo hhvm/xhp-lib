@@ -11,6 +11,7 @@ namespace Facebook\XHPLib\Autoloader;
 
 function autoload($class): bool {
   $classmap = Map {
+    'HasXHPBaseHTMLHelpers' => '/src/html/HasXHPBaseHTMLHelpers.php',
     'HasXHPHelpers' => '/src/html/XHPHelpers.php',
     'ReflectionXHPAttribute' => '/src/core/ReflectionXHPAttribute.php',
     'ReflectionXHPChildrenDeclaration' => '/src/core/ReflectionXHPChildrenDeclaration.php',
@@ -24,12 +25,14 @@ function autoload($class): bool {
     'XHPAttributeRequiredException' => '/src/exceptions/AttributeRequiredException.php',
     'XHPAttributeType' => '/src/core/ReflectionXHPAttribute.php',
     'XHPAwaitable' => '/src/core/XHPAwaitable.php',
+    'XHPBaseHTMLHelpers' => '/src/html/XHPBaseHTMLHelpers.php',
     'XHPChildrenConstraintType' => '/src/core/ReflectionXHPChildrenDeclaration.php',
     'XHPChildrenDeclarationType' => '/src/core/ReflectionXHPChildrenDeclaration.php',
     'XHPChildrenExpressionType' => '/src/core/ReflectionXHPChildrenDeclaration.php',
     'XHPClassException' => '/src/exceptions/ClassException.php',
     'XHPCoreRenderException' => '/src/exceptions/CoreRenderException.php',
     'XHPException' => '/src/exceptions/Exception.php',
+    'XHPHasTransferAttributes' => '/src/core/XHPHasTransferAttributes.php',
     'XHPHelpers' => '/src/html/XHPHelpers.php',
     'XHPInvalidArrayAttributeException' => '/src/exceptions/InvalidArrayAttributeException.php',
     'XHPInvalidArrayKeyAttributeException' => '/src/exceptions/InvalidArrayKeyAttributeException.php',

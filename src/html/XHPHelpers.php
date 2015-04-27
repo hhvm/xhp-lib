@@ -9,8 +9,7 @@
  *
  */
 
-interface HasXHPHelpers {
-  require extends :x:composable-element;
+interface HasXHPHelpers extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
 };
 
 /*
@@ -20,61 +19,9 @@ interface HasXHPHelpers {
  * attribute :xhp:html-element;
  */
 trait XHPHelpers implements HasXHPHelpers {
-
   require extends :x:composable-element;
 
-  /*
-   * Appends a string to the "class" attribute (space separated).
-   */
-  public function addClass(string $class): this {
-    try {
-      $current_class = /* UNSAFE_EXPR */ $this->:class;
-      return $this->setAttribute('class', trim($current_class.' '.$class));
-    } catch (XHPInvalidAttributeException $error) {
-      throw new XHPException(
-        'You are trying to add an HTML class to a(n) '.
-        :xhp::class2element(static::class).' element, but it does not support '.
-        'the "class" attribute. The best way to do this is to inherit '.
-        'the HTML attributes from the element your component will render into.',
-      );
-    }
-  }
-
-  /*
-   * Conditionally adds a class to the "class" attribute.
-   */
-  public function conditionClass(bool $cond, string $class): this {
-    return $cond ? $this->addClass($class) : $this;
-  }
-
-  /*
-   * Generates a unique ID (and sets it) on the "id" attribute. A unique ID
-   * will only be generated if one has not already been set.
-   */
-  public function requireUniqueID(): string {
-    $id = /* UNSAFE_EXPR */ $this->:id;
-    if ($id === null || $id === '') {
-      try {
-        $this->setAttribute('id', $id = substr(md5(mt_rand(0, 100000)), 0, 10));
-      } catch (XHPInvalidAttributeException $error) {
-        throw new XHPException(
-          'You are trying to add an HTML id to a(n) '.
-          :xhp::class2element(static::class).' element, but it does not '.
-          'support the "id" attribute. The best way to do this is to inherit '.
-          'the HTML attributes from the element your component will render '.
-          'into.',
-        );
-      }
-    }
-    return (string)$id;
-  }
-
-  /*
-   * Fetches the "id" attribute, will generate a unique value if not set.
-   */
-  final public function getID(): string {
-    return $this->requireUniqueID();
-  }
+  use XHPBaseHTMLHelpers;
 
   /*
    * Copies all attributes that are set on $this and valid on $target to
@@ -187,4 +134,59 @@ trait XHPHelpers implements HasXHPHelpers {
     }
   }
 
+  protected function getAttributeNamesThatAppendValuesOnTransfer(): ImmSet<string> {
+    return ImmSet { 'class' };
+  }
+
+  final public function transferAttributesToRenderedRoot(
+    :x:composable-element $root,
+  ): void {
+    if (:xhp::$ENABLE_VALIDATION && $root instanceof :x:element) {
+      if (!($root instanceof HasXHPHelpers)) {
+        throw new XHPClassException(
+          $this,
+          'render() must return an object using the XHPHelpers trait.'
+        );
+      }
+
+      $rootID = $root->getAttribute('id') ?: null;
+      $thisID = $this->getAttribute('id') ?: null;
+
+      if ($rootID && $thisID && $rootID != $thisID) {
+        throw new XHPException(
+          'ID Collision. '.(:xhp::class2element(self::class)).' has an ID '.
+          'of "'.$thisID.'" but it renders into a(n) '.
+          (:xhp::class2element(get_class($root))).
+          ' which has an ID of "'.$rootID.'". The latter will get '.
+          'overwritten (most often unexpectedly). If you are intending for '.
+          'this behavior consider calling $this->removeAttribute(\'id\') '.
+          'before returning your node from compose().'
+        );
+      }
+    }
+    assert($root instanceof HasXHPHelpers);
+
+    $attributes = $this->getAttributes();
+
+    // We want to append classes to the root node, instead of replace them,
+    // so do this attribute manually and then remove it.
+    foreach ($this->getAttributeNamesThatAppendValuesOnTransfer() as $attr) {
+      if (array_key_exists($attr, $attributes)) {
+        $rootAttributes = $root->getAttributes();
+        if (
+          array_key_exists($attr, $rootAttributes)
+          && ($rootValue = (string) $rootAttributes[$attr]) !== ''
+        ) {
+          $thisValue = (string) $attributes[$attr];
+          if ($thisValue !== '') {
+            $root->setAttribute($attr, $rootValue.' '.$thisValue);
+          }
+          $this->removeAttribute($attr);
+        }
+      }
+    }
+
+    // Transfer all valid attributes to the returned node.
+    $this->transferAllAttributes($root);
+  }
 }
