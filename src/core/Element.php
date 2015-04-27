@@ -58,7 +58,6 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
       throw new XHPCoreRenderException($this, $that);
     }
 
-
     return $composed;
   }
 }
