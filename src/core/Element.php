@@ -47,6 +47,9 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
       }
       assert($composed instanceof :x:element);
       $composed->__transferContext($that->getAllContexts());
+      if ($that instanceof XHPHasTransferAttributes) {
+        $that->transferAttributesToRenderedRoot($composed);
+      }
       $that = $composed;
     } while ($composed instanceof :x:element);
 
@@ -54,6 +57,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
       // render() must always (eventually) return :x:primitive
       throw new XHPCoreRenderException($this, $that);
     }
+
 
     return $composed;
   }

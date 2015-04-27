@@ -16,8 +16,7 @@
  * own elements.
  */
 abstract class :xhp:html-element extends :x:primitive {
-
-  use XHPHelpers;
+  use XHPBaseHTMLHelpers;
 
   attribute
     // Global HTML attributes
