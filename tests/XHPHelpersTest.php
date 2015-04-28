@@ -106,4 +106,9 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
       $x->toString(),
     );
   }
+
+  public function testRootClassesNotOverridenByEmptyString(): void {
+    $x = <test:with-class-on-root class="" />;
+    $this->assertSame('<div class="rootClass"></div>', $x->toString());
+  }
 }
