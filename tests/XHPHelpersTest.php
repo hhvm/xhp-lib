@@ -38,6 +38,15 @@ class :test:async:xhphelpers extends :x:element {
   }
 }
 
+class :test:with-class-on-root extends :x:element {
+  use XHPHelpers;
+  attribute :xhp:html-element;
+
+  protected function render(): XHPRoot {
+    return <div class="rootClass" />;
+  }
+}
+
 class XHPHelpersTest extends PHPUnit_Framework_TestCase {
   public function testTransferAttributesWithoutHelpers(): void {
     $x = <test:no-xhphelpers data-foo="bar" />;
@@ -83,5 +92,18 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
     $x->conditionClass(false, "derp");
     $this->assertSame('foo bar herp', $x->:class);
     $this->assertSame('<div class="foo bar herp"></div>', $x->toString());
+  }
+
+  public function testRootClassPreserved(): void {
+    $x = <test:with-class-on-root />;
+    $this->assertSame('<div class="rootClass"></div>', $x->toString());
+  }
+
+  public function testTransferedClassesAppended(): void {
+    $x = <test:with-class-on-root class="extraClass" />;
+    $this->assertSame(
+      '<div class="rootClass extraClass"></div>',
+      $x->toString(),
+    );
   }
 }
