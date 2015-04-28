@@ -175,8 +175,10 @@ trait XHPHelpers implements HasXHPHelpers {
       $thisValue = array_key_exists($attr, $attributes)
         ? (string) $attributes[$attr]
         : '';
-      if ($rootValue !== '' && $thisValue !== '') {
-        $root->setAttribute($attr, $rootValue.' '.$thisValue);
+      if ($rootValue !== '') {
+        if ($thisValue !== '') {
+          $root->setAttribute($attr, $rootValue.' '.$thisValue);
+        }
         $this->removeAttribute($attr);
       }
     }
