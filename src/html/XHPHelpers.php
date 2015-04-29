@@ -134,7 +134,7 @@ trait XHPHelpers implements HasXHPHelpers {
     }
   }
 
-  protected function getAttributesThatAppendValuesOnTransfer(): ImmSet<string> {
+  protected function getAttributeNamesThatAppendValuesOnTransfer(): ImmSet<string> {
     return ImmSet { 'class' };
   }
 
@@ -170,16 +170,19 @@ trait XHPHelpers implements HasXHPHelpers {
 
     // We want to append classes to the root node, instead of replace them,
     // so do this attribute manually and then remove it.
-    foreach ($this->getAttributesThatAppendValuesOnTransfer() as $attr) {
-      $rootValue = (string) $root->getAttribute($attr);
-      $thisValue = array_key_exists($attr, $attributes)
-        ? (string) $attributes[$attr]
-        : '';
-      if ($rootValue !== '') {
-        if ($thisValue !== '') {
-          $root->setAttribute($attr, $rootValue.' '.$thisValue);
+    foreach ($this->getAttributeNamesThatAppendValuesOnTransfer() as $attr) {
+      if (array_key_exists($attr, $attributes)) {
+        $rootAttributes = $root->getAttributes();
+        if (
+          array_key_exists($attr, $rootAttributes)
+          && ($rootValue = (string) $rootAttributes[$attr]) !== ''
+        ) {
+          $thisValue = (string) $attributes[$attr];
+          if ($thisValue !== '') {
+            $root->setAttribute($attr, $rootValue.' '.$thisValue);
+          }
+          $this->removeAttribute($attr);
         }
-        $this->removeAttribute($attr);
       }
     }
 
