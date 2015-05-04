@@ -11,7 +11,7 @@ https://github.com/facebookarchive/xhp-php5-extension
 
 If you're using HHVM and want a high-level XHP UI library, you might want to take a look at https://github.com/hhvm/xhp-bootstrap/
 
-Announcements are posted to
+Announcements and articles are posted to
 "the XHP-Lib blog":https://facebook.github.io/xhp-lib/
 
 h1. Installation
