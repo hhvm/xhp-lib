@@ -1,5 +1,11 @@
 <?hh
 
+class :test:renders-primitive extends :x:element {
+  protected function render(): XHPRoot {
+    return <x:frag><div>123</div></x:frag>;
+  }
+}
+
 class BasicsTest extends PHPUnit_Framework_TestCase {
   public function testDivWithString() {
     $xhp =
@@ -46,5 +52,10 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
       'div',
       :xhp::class2element(:div::class),
     );
+  }
+
+  public function testRendersPrimitive(): void {
+    $xhp = <test:renders-primitive />;
+    $this->assertSame('<div>123</div>', $xhp->toString());
   }
 }

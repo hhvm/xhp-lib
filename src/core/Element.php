@@ -43,9 +43,16 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
       if ($that instanceof XHPAwaitable) {
         $composed = await static::__xhpAsyncRender($that);
       } else {
+        invariant(
+          $that instanceof :x:element,
+          "Trying to render something that isn't an element",
+        );
         $composed = $that->render();
       }
-      assert($composed instanceof :x:element);
+      invariant(
+        $composed instanceof :x:composable-element,
+        'Did not get an :x:element from render()',
+      );
       $composed->__transferContext($that->getAllContexts());
       if ($that instanceof XHPHasTransferAttributes) {
         $that->transferAttributesToRenderedRoot($composed);
