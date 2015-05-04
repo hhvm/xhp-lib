@@ -14,7 +14,7 @@ class :test:xhphelpers extends :x:element {
   attribute :xhp:html-element;
 
   protected function render(): XHPRoot {
-    return <div />;
+    return <div>{$this->getChildren() }</div>;
   }
 }
 
@@ -110,5 +110,13 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
   public function testRootClassesNotOverridenByEmptyString(): void {
     $x = <test:with-class-on-root class="" />;
     $this->assertSame('<div class="rootClass"></div>', $x->toString());
+  }
+
+  public function testNested(): void {
+    $x =
+      <test:xhphelpers class="herp">
+        <test:xhphelpers class="derp" />
+      </test:xhphelpers>;
+    $this->assertSame('<div class="herp"><div class="derp"></div></div>', $x->toString());
   }
 }
