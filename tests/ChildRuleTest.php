@@ -281,4 +281,12 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     $x = <div><x:frag>{'foo'}{'bar'}</x:frag></div>;
     $this->assertSame('<div>foobar</div>', $x->toString());
   }
+
+  /**
+   * @expectedException XHPInvalidChildrenException
+   */
+  public function testNested(): void {
+    $x = <div><test:at-least-one-child /></div>;
+    $x->toString();
+  }
 }
