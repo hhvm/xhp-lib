@@ -15,6 +15,11 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
     $this->assertEquals('<div> Hello, world. </div>', $xhp->toString());
   }
 
+  public function testFragWithString() {
+    $xhp = <x:frag>Derp</x:frag>;
+    $this->assertSame('Derp', $xhp->toString());
+  }
+
   public function testDivWithChild() {
     $xhp = <div><div>Herp</div></div>;
     $this->assertEquals('<div><div>Herp</div></div>', $xhp->toString());

@@ -84,14 +84,26 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $this->assertInstanceOf(XHPAwaitable::class, $xhp);
   }
 
+  public function parallelizationContainersProvider() {
+    return [
+      [<test:xfrag-wrap />],
+      [<test:async-xfrag-wrap />],
+    ];
+  }
 
-  public function testParallelization() {
+  /**
+   * @dataProvider parallelizationContainersProvider
+   */
+  public function testParallelization(:x:element $container) {
     :async:par-test::$log = Vector { };
 
     $a = <async:par-test label="a" />;
     $b = <async:par-test label="b" />;
     $c = <async:par-test label="c" />;
-    $tree = <async:test>{$a}<test:xfrag-wrap>{$b}{$c}</test:xfrag-wrap></async:test>;
+
+    $container->replaceChildren([$b, $c]);
+
+    $tree = <async:test>{$a}{$container}</async:test>;
     $this->assertSame('<div><div>a</div><div>b</div><div>c</div></div>', $tree->toString());
 
     $log = :async:par-test::$log;
@@ -107,30 +119,8 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $max_mid = max($by_node->map($x ==> $x['mid']));
     $min_finish = min($by_node->map($x ==> $x['finish']));
 
-    $this->assertGreaterThan($max_start, $min_mid);
-    $this->assertGreaterThan($max_mid, $min_finish);
-  }
-
-  public function testParallelizationWithAsyncFragWrap() {
-    :async:par-test::$log = Vector { };
-
-    $a = <async:par-test label="a" />;
-    $b = <async:par-test label="b" />;
-    $c = <async:par-test label="c" />;
-    $tree = <async:test>{$a}<test:async-xfrag-wrap>{$b}{$c}</test:async-xfrag-wrap></async:test>;
-    $this->assertSame('<div><div>a</div><div>b</div><div>c</div></div>', $tree->toString());
-
-    $log = :async:par-test::$log;
-    $by_node = Map { 'a' => Map { }, 'b' => Map { }, 'c' => Map { } };
-
-    foreach ($log as $idx => $data) {
-      list($label, $action) = $data;
-      $by_node[$label][$action] = $idx;
-    }
-
-    $max_start = max($by_node->map($x ==> $x['start']));
-    $min_finish = min($by_node->map($x ==> $x['finish']));
-
-    $this->assertGreaterThan($max_start, $min_finish);
+    $this->assertGreaterThan($max_start, $min_mid, 'all should be started before any get continued');
+    $this->assertGreaterThan($max_mid, $min_finish, 'all should have reached stage two before any finish');
+    $this->assertGreaterThan($max_start, $min_finish, 'sanity check: all have started before any finish');
   }
 }

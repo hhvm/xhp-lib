@@ -14,7 +14,7 @@ class :test:xhphelpers extends :x:element {
   attribute :xhp:html-element;
 
   protected function render(): XHPRoot {
-    return <div>{$this->getChildren() }</div>;
+    return <div>{$this->getChildren()}</div>;
   }
 }
 
