@@ -466,31 +466,8 @@ abstract class :x:composable-element extends :xhp {
       for ($i = 0; $i < $ln; ++$i) {
         $child = $this->children->get($i);
         if ($child instanceof :x:element) {
-          do {
-            assert($child instanceof :x:element);
-            if ($child instanceof XHPAwaitable) {
-              $child = static::__xhpAsyncRender($child)->getWaitHandle();
-            } else {
-              $child = $child->render();
-            }
-            if ($child instanceof WaitHandle) {
-              $childWaitHandles[$i] = $child;
-            } else if ($child instanceof :x:element) {
-              continue;
-            } else if ($child instanceof :x:frag) {
-              $children = $this->children->toValuesArray();
-              array_splice($children, $i, 1, $child->getChildren());
-              $this->children = new Vector($children);
-              $ln = count($this->children);
-              --$i;
-            } else if ($child === null) {
-              $this->children->removeKey($i);
-              $i--;
-            } else {
-              assert($child instanceof XHPChild);
-              $this->children[$i] = $child;
-            }
-          } while ($child instanceof :x:element);
+          $child = $child->__renderAndProcess()->getWaitHandle();
+          $childWaitHandles[$i] = $child;
         }
       }
     } while ($childWaitHandles);
