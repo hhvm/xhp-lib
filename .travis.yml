@@ -2,13 +2,10 @@ language: php
 
 php:
   - hhvm
-  - hhvm-nightly
-
-matrix:
-  allow_failures:
-    - php: hhvm-nightly
 
 before_script:
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install hhvm
   - composer self-update
   - composer install
 
