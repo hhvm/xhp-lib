@@ -18,15 +18,6 @@ abstract class :x:composable-element extends :xhp {
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
 
-  // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
-  // addressed
-  protected static async function __xhpAsyncRender(
-    XHPAwaitable $child,
-  ): Awaitable<XHPRoot> {
-    // UNSAFE
-    return await $child->asyncRender();
-  }
-
   protected function init(): void {}
 
   /**
@@ -439,73 +430,7 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final protected async function __flushElementChildren(): Awaitable<void> {
-    // Flush all :xhp elements to x:primitive's
-
-    foreach ($this->children as $child) {
-      if ($child instanceof :x:composable-element) {
-        $child->__transferContext($this->context);
-      }
-    }
-
-    $childWaitHandles = Map{};
-    do {
-      if ($childWaitHandles) {
-        $awaitedChildren = await GenMapWaitHandle::create($childWaitHandles);
-        if ($awaitedChildren) {
-          foreach ($awaitedChildren as $i => $awaitedChild) {
-            $this->children->set($i, $awaitedChild);
-          }
-          // Convert <x:frag>s
-          $this->replaceChildren(<x:frag>{$this->children}</x:frag>);
-          $childWaitHandles = Map{};
-        }
-      }
-
-      $ln = count($this->children);
-      for ($i = 0; $i < $ln; ++$i) {
-        $child = $this->children->get($i);
-        if ($child instanceof :x:element) {
-          do {
-            assert($child instanceof :x:element);
-            if ($child instanceof XHPAwaitable) {
-              $child = static::__xhpAsyncRender($child)->getWaitHandle();
-            } else {
-              $child = $child->render();
-            }
-            if ($child instanceof WaitHandle) {
-              $childWaitHandles[$i] = $child;
-            } else if ($child instanceof :x:element) {
-              continue;
-            } else if ($child instanceof :x:frag) {
-              $children = $this->children->toValuesArray();
-              array_splice($children, $i, 1, $child->getChildren());
-              $this->children = new Vector($children);
-              $ln = count($this->children);
-              --$i;
-            } else if ($child === null) {
-              $this->children->removeKey($i);
-              $i--;
-            } else {
-              assert($child instanceof XHPChild);
-              $this->children[$i] = $child;
-            }
-          } while ($child instanceof :x:element);
-        }
-      }
-    } while ($childWaitHandles);
-
-    $flushWaitHandles = Vector{};
-    foreach ($this->children as $child) {
-      if ($child instanceof :x:primitive) {
-        $flushWaitHandles[] = $child->__flushElementChildren()->getWaitHandle();
-      }
-    }
-
-    if ($flushWaitHandles) {
-      await GenVectorWaitHandle::create($flushWaitHandles);
-    }
-  }
+  abstract protected function __flushSubtree(): Awaitable<:x:primitive>;
 
   /**
    * Defined in elements by the `attribute` keyword. The declaration is simple.

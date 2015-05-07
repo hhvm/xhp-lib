@@ -10,4 +10,5 @@
  */
 
 interface XHPRoot extends XHPChild {
+  require extends :x:composable-element;
 }

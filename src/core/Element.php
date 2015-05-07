@@ -24,47 +24,49 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   }
 
   final public async function asyncToString(): Awaitable<string> {
-    if (:xhp::$ENABLE_VALIDATION) {
-      $this->validateChildren();
-    }
     $that = await $this->__flushRenderedRootElement();
     $ret = await $that->asyncToString();
     return $ret;
+  }
+
+  final protected async function __flushSubtree(): Awaitable<:x:primitive> {
+    $that = await $this->__flushRenderedRootElement();
+    return await $that->__flushSubtree();
+  }
+
+  protected async function __renderAndProcess(): Awaitable<XHPRoot> {
+    if (:xhp::$ENABLE_VALIDATION) {
+      $this->validateChildren();
+    }
+
+    if ($this instanceof XHPAwaitable) {
+      // UNSAFE - interfaces don't support 'protected': facebook/hhvm#4830
+      $composed = await $this->asyncRender();
+    } else {
+      $composed = $this->render();
+    }
+
+    $composed->__transferContext($this->getAllContexts());
+    if ($this instanceof XHPHasTransferAttributes) {
+      $this->transferAttributesToRenderedRoot($composed);
+    }
+
+    return $composed;
   }
 
   final protected async function __flushRenderedRootElement(
   ): Awaitable<:x:primitive> {
     $that = $this;
     // Flush root elements returned from render() to an :x:primitive
-    do {
-      if (:xhp::$ENABLE_VALIDATION) {
-        $that->validateChildren();
-      }
-      if ($that instanceof XHPAwaitable) {
-        $composed = await static::__xhpAsyncRender($that);
-      } else {
-        invariant(
-          $that instanceof :x:element,
-          "Trying to render something that isn't an element",
-        );
-        $composed = $that->render();
-      }
-      invariant(
-        $composed instanceof :x:composable-element,
-        'Did not get an :x:element from render()',
-      );
-      $composed->__transferContext($that->getAllContexts());
-      if ($that instanceof XHPHasTransferAttributes) {
-        $that->transferAttributesToRenderedRoot($composed);
-      }
-      $that = $composed;
-    } while ($composed instanceof :x:element);
-
-    if (!($composed instanceof :x:primitive)) {
-      // render() must always (eventually) return :x:primitive
-      throw new XHPCoreRenderException($this, $that);
+    while ($that instanceof :x:element) {
+      $that = await $that->__renderAndProcess();
     }
 
-    return $composed;
+    if ($that instanceof :x:primitive) {
+      return $that;
+    }
+
+    // render() must always (eventually) return :x:primitive
+    throw new XHPCoreRenderException($this, $that);
   }
 }

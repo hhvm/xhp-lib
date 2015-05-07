@@ -23,10 +23,33 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
   }
 
   final public async function asyncToString(): Awaitable<string> {
+    $that = await $this->__flushSubtree();
+    return $that->stringify();
+  }
+
+  final private async function __flushElementChildren(): Awaitable<void> {
+    $children = $this->getChildren();
+    $awaitables = Map { };
+    foreach ($children as $idx => $child) {
+      if ($child instanceof :x:composable-element) {
+        $child->__transferContext($this->getAllContexts());
+        $awaitables[$idx] = $child->__flushSubtree();
+      }
+    }
+    if ($awaitables) {
+      $awaited = await HH\Asio\m($awaitables);
+      foreach ($awaited as $idx => $child) {
+        $children[$idx] = $child;
+      }
+    }
+    $this->replaceChildren($children);
+  }
+
+  final protected async function __flushSubtree(): Awaitable<:x:primitive> {
     await $this->__flushElementChildren();
     if (:xhp::$ENABLE_VALIDATION) {
       $this->validateChildren();
     }
-    return $this->stringify();
+    return $this;
   }
 }
