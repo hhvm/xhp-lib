@@ -18,15 +18,6 @@ abstract class :x:composable-element extends :xhp {
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
 
-  // Helper to put all the UNSAFE in one place until facebook/hhvm#4830 is
-  // addressed
-  protected static async function __xhpAsyncRender(
-    XHPAwaitable $child,
-  ): Awaitable<XHPRoot> {
-    // UNSAFE
-    return await $child->asyncRender();
-  }
-
   protected function init(): void {}
 
   /**

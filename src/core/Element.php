@@ -40,7 +40,8 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
     }
 
     if ($this instanceof XHPAwaitable) {
-      $composed = await static::__xhpAsyncRender($this);
+      // UNSAFE - interfaces don't support 'protected': facebook/hhvm#4830
+      $composed = await $this->asyncRender();
     } else {
       $composed = $this->render();
     }
