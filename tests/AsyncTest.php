@@ -8,6 +8,45 @@ class :async:test extends :x:element {
   }
 }
 
+class :test:xfrag-wrap extends :x:element {
+
+  protected function render(): XHPRoot {
+    return <x:frag>{$this->getChildren()}</x:frag>;
+  }
+}
+
+class :test:async-xfrag-wrap extends :x:element {
+  use XHPAsync;
+
+  protected async function asyncRender(): Awaitable<XHPRoot> {
+    return <x:frag>{$this->getChildren()}</x:frag>;
+  }
+}
+
+class :async:par-test extends :x:element {
+  use XHPAsync;
+
+  attribute string label @required;
+
+  public static $log = Vector { };
+
+  protected async function asyncRender(): Awaitable<XHPRoot> {
+    $label = $this->:label;
+    self::$log[] = [$label, 'start'];
+    await RescheduleWaitHandle::create(
+      RescheduleWaitHandle::QUEUE_DEFAULT,
+      0,
+    );
+    self::$log[] = [$label, 'mid'];
+    await RescheduleWaitHandle::create(
+      RescheduleWaitHandle::QUEUE_DEFAULT,
+      0,
+    );
+    self::$log[] = [$label, 'finish'];
+    return <div>{$label}</div>;
+  }
+}
+
 class AsyncTest extends PHPUnit_Framework_TestCase {
   public function testDiv() {
     $xhp = <async:test>Herp</async:test>;
@@ -43,5 +82,55 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
   public function testInstanceOfInterface() {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
     $this->assertInstanceOf(XHPAwaitable::class, $xhp);
+  }
+
+
+  public function testParallelization() {
+    :async:par-test::$log = Vector { };
+
+    $a = <async:par-test label="a" />;
+    $b = <async:par-test label="b" />;
+    $c = <async:par-test label="c" />;
+    $tree = <async:test>{$a}<test:xfrag-wrap>{$b}{$c}</test:xfrag-wrap></async:test>;
+    $this->assertSame('<div><div>a</div><div>b</div><div>c</div></div>', $tree->toString());
+
+    $log = :async:par-test::$log;
+    $by_node = Map { 'a' => Map { }, 'b' => Map { }, 'c' => Map { } };
+
+    foreach ($log as $idx => $data) {
+      list($label, $action) = $data;
+      $by_node[$label][$action] = $idx;
+    }
+
+    $max_start = max($by_node->map($x ==> $x['start']));
+    $min_mid = min($by_node->map($x ==> $x['mid']));
+    $max_mid = max($by_node->map($x ==> $x['mid']));
+    $min_finish = min($by_node->map($x ==> $x['finish']));
+
+    $this->assertGreaterThan($max_start, $min_mid);
+    $this->assertGreaterThan($max_mid, $min_finish);
+  }
+
+  public function testParallelizationWithAsyncFragWrap() {
+    :async:par-test::$log = Vector { };
+
+    $a = <async:par-test label="a" />;
+    $b = <async:par-test label="b" />;
+    $c = <async:par-test label="c" />;
+    $tree = <async:test>{$a}<test:async-xfrag-wrap>{$b}{$c}</test:async-xfrag-wrap></async:test>;
+    $this->assertSame('<div><div>a</div><div>b</div><div>c</div></div>', $tree->toString());
+
+    $log = :async:par-test::$log;
+    $by_node = Map { 'a' => Map { }, 'b' => Map { }, 'c' => Map { } };
+
+    foreach ($log as $idx => $data) {
+      list($label, $action) = $data;
+      $by_node[$label][$action] = $idx;
+    }
+
+    $max_start = max($by_node->map($x ==> $x['start']));
+    $min_finish = min($by_node->map($x ==> $x['finish']));
+
+    $this->assertGreaterThan($max_start, $min_finish);
   }
 }
