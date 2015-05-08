@@ -276,4 +276,9 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       </test:needs-comma-category>;
     $this->assertSame('<div></div>', $x->toString());
   }
+
+  public function testFrags(): void {
+    $x = <div><x:frag>{'foo'}{'bar'}</x:frag></div>;
+    $this->assertSame('<div>foobar</div>', $x->toString());
+  }
 }
