@@ -41,6 +41,7 @@ function autoload($class): bool {
     'XHPRenderArrayException' => '/src/exceptions/RenderArrayException.php',
     'XHPRoot' => '/src/core/XHPRoot.php',
     'XHPUnsafeRenderable' => '/src/core/XHPUnsafeRenderable.php',
+    'XHPUnsupportedAttributeTypeException' => '/src/exceptions/UnsupportedAttributeTypeException.php',
     'xhp_a' => '/src/html/tags/a/A.php',
     'xhp_abbr' => '/src/html/tags/a/Abbr.php',
     'xhp_address' => '/src/html/tags/a/Address.php',

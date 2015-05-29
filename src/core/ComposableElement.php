@@ -536,6 +536,14 @@ abstract class :x:composable-element extends :xhp {
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }
         break;
+
+      case XHPAttributeType::TYPE_UNSUPPORTED_LEGACY_CALLABLE:
+        throw new XHPUnsupportedAttributeTypeException(
+          $this,
+          'callable',
+          $attr,
+          'not supported in XHP-Lib 2.0 or higher.',
+        );
     }
     return $val;
   }

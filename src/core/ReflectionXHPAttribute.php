@@ -10,14 +10,15 @@
  */
 
 enum XHPAttributeType: int {
-  TYPE_STRING   = 1;
-  TYPE_BOOL     = 2;
-  TYPE_INTEGER  = 3;
-  TYPE_ARRAY    = 4;
-  TYPE_OBJECT   = 5;
-  TYPE_VAR      = 6;
-  TYPE_ENUM     = 7;
-  TYPE_FLOAT    = 8;
+  TYPE_STRING = 1;
+  TYPE_BOOL = 2;
+  TYPE_INTEGER = 3;
+  TYPE_ARRAY = 4;
+  TYPE_OBJECT = 5;
+  TYPE_VAR = 6;
+  TYPE_ENUM = 7;
+  TYPE_FLOAT = 8;
+  TYPE_UNSUPPORTED_LEGACY_CALLABLE = 9;
 }
 
 class ReflectionXHPAttribute {
@@ -141,6 +142,9 @@ class ReflectionXHPAttribute {
         break;
       case XHPAttributeType::TYPE_FLOAT:
         $out = 'float';
+        break;
+      case XHPAttributeType::TYPE_UNSUPPORTED_LEGACY_CALLABLE:
+        $out = '<UNSUPPORTED: legacy callable>';
         break;
     }
     $out .= ' '.$this->getName();

@@ -37,6 +37,15 @@ class :test:default-attributes extends :x:element {
   }
 }
 
+class :test:callable-attribute extends :x:element {
+  attribute
+    callable foo; // unsupported in 2.0+
+  protected function render(): XHPRoot {
+    $x = $this->getAttribute('foo');
+    return <div />;
+  }
+}
+
 class EmptyTestClass {}
 class StringableTestClass { public function __toString() { return __CLASS__; } }
 
@@ -269,5 +278,21 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     $this->assertSame('<div>mydefault</div>', $x->toString());
     $x = <test:default-attributes aria-idonotexist="derp" />;
     $this->assertSame('<div>mydefault</div>', $x->toString());
+  }
+
+  /**
+   * @expectedException XHPUnsupportedAttributeTypeException
+   */
+  public function testRenderCallableAttribute(): void {
+    $x = <test:callable-attribute foo={function(){}} />;
+  }
+
+  public function testReflectOnCallableAttribute(): void {
+    $rxhp = new ReflectionXHPClass(:test:callable-attribute::class);
+    $rattr = $rxhp->getAttribute('foo');
+    $this->assertTrue(
+      strstr((string) $rattr, "<UNSUPPORTED: legacy callable>") !== false,
+      "Incorrect reflection for unsupported `callable` attribute type",
+    );
   }
 }
