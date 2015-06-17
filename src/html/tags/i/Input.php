@@ -17,7 +17,7 @@ class :input extends :xhp:html-singleton {
     bool formnovalidate, Stringish formtarget, int height, enum {
       'email', 'full-width-latin', 'kana', 'katakana', 'latin', 'latin-name',
       'latin-prose', 'numeric', 'tel', 'url', 'verbatim'
-    } inputmode, Stringish list, float max, int maxlength, float min,
+    } inputmode, Stringish list, Stringish max, int maxlength, Stringish min,
     int minlength, bool multiple, Stringish name, Stringish pattern,
     Stringish placeholder, bool readonly, bool required, int size, Stringish src,
     float step, enum {
