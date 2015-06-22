@@ -521,7 +521,7 @@ abstract class :x:composable-element extends :xhp {
         }
         if (enum_exists($class) && $class::isValid($val)) {
           break;
-        }
+        } elseif(is_array($val)) break;
         throw new XHPInvalidAttributeException(
           $this, $class, $attr, $val
         );
