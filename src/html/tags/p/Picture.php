@@ -9,12 +9,8 @@
  *
  */
 
-class :source extends :xhp:html-singleton {
-  attribute
-    Stringish media,
-    Stringish sizes,
-    Stringish src,
-    Stringish srcset,
-    Stringish type;
-  protected string $tagName = 'source';
+class :picture extends :xhp:html-element {
+  category %flow, %phrase;
+  children (:source*, :img);
+  protected string $tagName = 'picture';
 }
