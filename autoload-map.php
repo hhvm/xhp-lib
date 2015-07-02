@@ -118,6 +118,7 @@ function autoload($class): bool {
     'xhp_output' => '/src/html/tags/o/Output.php',
     'xhp_p' => '/src/html/tags/p/P.php',
     'xhp_param' => '/src/html/tags/p/Param.php',
+    'xhp_picture' => '/src/html/tags/p/Picture.php',
     'xhp_pre' => '/src/html/tags/p/Pre.php',
     'xhp_progress' => '/src/html/tags/p/Progress.php',
     'xhp_q' => '/src/html/tags/q/Q.php',
