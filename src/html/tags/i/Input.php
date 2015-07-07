@@ -11,7 +11,7 @@
 
 class :input extends :xhp:html-singleton {
   attribute
-    Stringish accept, Stringish alt, enum {'on', 'off'} autocomplete, bool autofocus,
+    Stringish accept, Stringish alt, Stringish autocomplete, bool autofocus,
     bool checked, Stringish dirname, bool disabled, Stringish form,
     Stringish formaction, Stringish formenctype, enum {'get', 'post'} formmethod,
     bool formnovalidate, Stringish formtarget, int height, enum {
