@@ -12,7 +12,9 @@ class :test:attribute-types extends :x:element {
     enum {'foo', 'bar'} myenum,
     float myfloat,
     Vector<string> myvector,
-    Map<string, string> mymap;
+    Map<string, string> mymap,
+    arraykey myarraykey,
+    num mynum;
 
   protected function render(): XHPRoot {
     return <div />;
@@ -67,6 +69,36 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
       mymap={Map { 'herp' => 'derp'} }
     />;
     $this->assertEquals('<div></div>', $x->toString());
+  }
+
+  public function testValidArrayKeys(): void {
+    $x = <test:attribute-types myarraykey="foo" />;
+    $this->assertSame('<div></div>', $x->toString());
+    $x = <test:attribute-types myarraykey={123} />;
+    $this->assertSame('<div></div>', $x->toString());
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testInvalidArrayKeys(): void {
+    $x = <test:attribute-types myarraykey={1.23} />;
+    $x->toString();
+  }
+
+  public function testValidNum(): void {
+    $x = <test:attribute-types mynum={123} />;
+    $this->assertSame('<div></div>', $x->toString());
+    $x = <test:attribute-types mynum={1.23} />;
+    $this->assertSame('<div></div>', $x->toString());
+  }
+
+  /**
+   * @expectedException XHPInvalidAttributeException
+   */
+  public function testInvalidNum(): void {
+    $x = <test:attribute-types mynum="123" />;
+    $x->toString();
   }
 
   public function testNoAttributes(): void {
