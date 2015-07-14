@@ -522,6 +522,17 @@ abstract class :x:composable-element extends :xhp {
         if (enum_exists($class) && $class::isValid($val)) {
           break;
         }
+        // Things that are a valid array key without any coercion
+        if ($class === 'HH\arraykey') {
+          if (is_int($val) || is_string($val)) {
+            break;
+          }
+        }
+        if ($class === 'HH\num') {
+          if (is_int($val) || is_float($val)) {
+            break;
+          }
+        }
         throw new XHPInvalidAttributeException(
           $this, $class, $attr, $val
         );
