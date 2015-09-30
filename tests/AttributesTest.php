@@ -41,6 +41,7 @@ class :test:default-attributes extends :x:element {
 
 class :test:callable-attribute extends :x:element {
   attribute
+    /* HH_FIXME[2049]: callable is an invalid Hack type */
     callable foo; // unsupported in 2.0+
   protected function render(): XHPRoot {
     $x = $this->getAttribute('foo');
