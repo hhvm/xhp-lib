@@ -8,8 +8,8 @@
         "hhvm": "~3.6"
     },
     "require-dev": {
-        "phpunit/phpunit": "4.5.*",
-        "91carriage/phpunit-hhi": "4.5.*"
+        "phpunit/phpunit": "^5.1.0",
+        "91carriage/phpunit-hhi": "^5.1.0"
     },
     "extra": {
         "branch-alias": {
