@@ -164,7 +164,6 @@ trait XHPHelpers implements HasXHPHelpers {
         );
       }
     }
-    assert($root instanceof HasXHPHelpers);
 
     $attributes = $this->getAttributes();
 
