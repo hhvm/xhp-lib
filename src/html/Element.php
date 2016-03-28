@@ -18,14 +18,19 @@
 abstract class :xhp:html-element extends :x:primitive {
   use XHPBaseHTMLHelpers;
 
+  // enum { 'true', 'false' } attributes: these are actually tri-state -
+  // the implied third value is usually 'auto' or 'inherit'; for example,
+  // contenteditable defaults to 'inherit' if unspecified, so
+  // contenteditable=false is valid ans has meaning
+
   attribute
     // Global HTML attributes
     Stringish accesskey,
     Stringish class,
-    bool contenteditable,
+    enum { 'true', 'false' } contenteditable,
     Stringish contextmenu,
     Stringish dir,
-    bool draggable,
+    enum { 'true', 'false' } draggable,
     Stringish dropzone,
     bool hidden,
     Stringish id,
