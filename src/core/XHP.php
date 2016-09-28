@@ -9,7 +9,7 @@
  *
  */
 
-abstract class :xhp implements XHPChild {
+abstract class :xhp implements XHPChild, JsonSerializable {
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
     Traversable<XHPChild> $children,
@@ -57,6 +57,10 @@ abstract class :xhp implements XHPChild {
     return $this->toString();
   }
 
+  final public function jsonSerialize(): string {
+    return $this->toString();
+  }
+
   final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
@@ -65,7 +69,7 @@ abstract class :xhp implements XHPChild {
     } else if ($child instanceof Traversable) {
       throw new XHPRenderArrayException('Can not render traversables!');
     } else {
-      return htmlspecialchars((string)$child);
+      return htmlspecialchars((string) $child);
     }
   }
 
