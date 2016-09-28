@@ -10,4 +10,4 @@ php:
 install: composer install
 script:
  - hh_client
- - hhvm vendor/bin/phpunit
+ - hhvm vendor/bin/phpunit tests
