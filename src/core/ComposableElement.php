@@ -269,9 +269,7 @@ abstract class :x:composable-element extends :xhp {
     if (!$cache->containsKey($class)) {
       $cache[$class] = new ReflectionXHPChildrenDeclaration(
         :xhp::class2element($class),
-        /* UNSAFE_EXPR: This isn't a static method for some reason - but it
-         * always returns a static array, and is safe to call statically */
-        static::__xhpChildrenDeclaration(),
+        self::emptyInstance()->__xhpChildrenDeclaration(),
       );
     }
     return $cache[$class];
@@ -280,10 +278,14 @@ abstract class :x:composable-element extends :xhp {
   final public static function __xhpReflectionCategoryDeclaration(
   ): Set<string> {
     return new Set(
-      /* UNSAFE_EXPR: This isn't a static method for some reason - but it
-       * always returns a static array, and is safe to call statically */
-       array_keys(static::__xhpCategoryDeclaration())
+       array_keys(self::emptyInstance()->__xhpCategoryDeclaration())
     );
+  }
+
+  // Work-around to call methods that should be static without a real
+  // instance.
+  private static function emptyInstance(): this {
+    return hphp_create_object_without_constructor(static::class);
   }
 
   final public function getAttributes(): Map<string, mixed> {
@@ -763,4 +765,3 @@ abstract class :x:composable-element extends :xhp {
     return isset($categories[$c]);
   }
 }
-
