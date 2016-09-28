@@ -46,21 +46,20 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testElement2Class(): void {
-    $this->assertSame(
-      :div::class,
-      :xhp::element2class('div'),
-    );
+    $this->assertSame(:div::class, :xhp::element2class('div'));
   }
 
   public function testClass2Element(): void {
-    $this->assertSame(
-      'div',
-      :xhp::class2element(:div::class),
-    );
+    $this->assertSame('div', :xhp::class2element(:div::class));
   }
 
   public function testRendersPrimitive(): void {
     $xhp = <test:renders-primitive />;
     $this->assertSame('<div>123</div>', $xhp->toString());
+  }
+
+  public function testJsonSerialize(): void {
+    $xhp = <div>Hello world.</div>;
+    $this->assertSame('["<div>Hello world.<\/div>"]', json_encode([$xhp]));
   }
 }
