@@ -25,6 +25,10 @@ h1. Installation
   }
 </pre></code>
 
+Run Composer commands using HHVM like so:
+
+bc. $ hhvm $(which composer) install;
+
 h1. Simple Example
 
 bc. <?hh
