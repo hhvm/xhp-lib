@@ -2,6 +2,7 @@
 // Using decl because this test intentional passes the wrong types for
 // attributes
 
+type TMyTestShape = shape('foo' => string, 'bar' => ?string);
 class :test:attribute-types extends :x:element {
   attribute
     string mystring,
@@ -14,6 +15,7 @@ class :test:attribute-types extends :x:element {
     Vector<string> myvector,
     Map<string, string> mymap,
     arraykey myarraykey,
+    TMyTestShape myshape,
     num mynum;
 
   protected function render(): XHPRoot {
@@ -68,8 +70,33 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
       myfloat={1.23}
       myvector={Vector { 1, 2, 3 } }
       mymap={Map { 'herp' => 'derp'} }
+      myshape={shape('foo' => 'herp', 'bar' => 'derp')}
     />;
     $this->assertEquals('<div></div>', $x->toString());
+  }
+
+  public function testShapeWithExtraKey(): void {
+    $x =
+      <test:attribute-types
+        myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
+      />;
+    $this->assertEquals('<div></div>', $x->toString());
+  }
+
+  public function testShapeWithMissingOptionalKey(): void {
+    $x =
+      <test:attribute-types
+        myshape={shape('foo' => 'herp')}
+      />;
+    $this->assertEquals('<div></div>', $x->toString());
+  }
+
+  public function testShapeWithMissingRequiredKey(): void {
+    $this->expectException(XHPInvalidAttributeException::class);
+    $x =
+      <test:attribute-types
+        myshape={shape()}
+      />;
   }
 
   public function testValidArrayKeys(): void {
@@ -207,7 +234,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testAttrNameAsBool(): void {
-    // idiomatic - eg checked="checked" 
+    // idiomatic - eg checked="checked"
     $x = <test:attribute-types mybool="mybool" />;
     $this->assertSame(true, $x->:mybool);
   }

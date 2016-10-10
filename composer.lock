@@ -4,9 +4,48 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "5898c9e5e6ee421e178232fff3d478fc",
-    "content-hash": "3a510b90f2836c1ed55405327a48ece7",
-    "packages": [],
+    "hash": "2e97ffa062a696946939e1d10e3e44de",
+    "content-hash": "c23e2e5b43aab60dbc86557c61d071f8",
+    "packages": [
+        {
+            "name": "fredemmott/type-assert",
+            "version": "v0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/fredemmott/type-assert.git",
+                "reference": "e3fe89ada31110a8f092661236f769674a9a1fd6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/fredemmott/type-assert/zipball/e3fe89ada31110a8f092661236f769674a9a1fd6",
+                "reference": "e3fe89ada31110a8f092661236f769674a9a1fd6",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "~3.12"
+            },
+            "require-dev": {
+                "91carriage/phpunit-hhi": "~5.1",
+                "phpunit/phpunit": "~5.1"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "description": "Convert untyped data to typed data",
+            "keywords": [
+                "TypeAssert",
+                "hack"
+            ],
+            "time": "2016-09-28 04:21:05"
+        }
+    ],
     "packages-dev": [
         {
             "name": "91carriage/phpunit-hhi",
@@ -1363,7 +1402,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "hhvm": "~3.6"
+        "hhvm": "~3.12"
     },
     "platform-dev": []
 }

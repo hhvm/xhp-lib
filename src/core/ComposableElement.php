@@ -9,6 +9,9 @@
  *
  */
 
+use FredEmmott\TypeAssert\IncorrectTypeException;
+use FredEmmott\TypeAssert\TypeAssert;
+
 // Composer didn't support autoloading enums until recently (2015-03-09)
 require_once('ReflectionXHPAttribute.php');
 require_once('ReflectionXHPChildrenDeclaration.php');
@@ -533,6 +536,20 @@ abstract class :x:composable-element extends :xhp {
         if ($class === 'HH\num') {
           if (is_int($val) || is_float($val)) {
             break;
+          }
+        }
+        if (is_array($val)) {
+          try {
+            $type_structure = (new ReflectionTypeAlias($class))
+              ->getResolvedTypeStructure();
+            /* HH_FIXME[4110] $type_structure is an array, but should be a
+             * TypeStructure<T> */
+            TypeAssert::matchesTypeStructure($type_structure, $val);
+            break;
+          } catch (ReflectionException $_) {
+            // handled below
+          } catch (IncorrectTypeException $_) {
+            // handled below
           }
         }
         throw new XHPInvalidAttributeException(

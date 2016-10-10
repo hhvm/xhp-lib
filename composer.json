@@ -5,7 +5,8 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["BSD-3-Clause"],
     "require": {
-        "hhvm": "~3.6"
+        "hhvm": "~3.12",
+        "fredemmott/type-assert": "^0.2.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.1.0",
