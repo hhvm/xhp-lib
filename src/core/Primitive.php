@@ -19,7 +19,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
   abstract protected function stringify(): string;
 
   final public function toString(): string {
-    return $this->asyncToString()->getWaitHandle()->join();
+    return \HH\Asio\join($this->asyncToString());
   }
 
   final public async function asyncToString(): Awaitable<string> {
