@@ -4,21 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2e97ffa062a696946939e1d10e3e44de",
-    "content-hash": "c23e2e5b43aab60dbc86557c61d071f8",
+    "hash": "b857d01992f00932479443b55b65b425",
+    "content-hash": "26d43651bf5d16e274520150e42e4f17",
     "packages": [
         {
             "name": "fredemmott/type-assert",
-            "version": "v0.2",
+            "version": "v1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/fredemmott/type-assert.git",
-                "reference": "e3fe89ada31110a8f092661236f769674a9a1fd6"
+                "reference": "4b6ccc8b6abb503308472c440f30a3e2d5e5d2e0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fredemmott/type-assert/zipball/e3fe89ada31110a8f092661236f769674a9a1fd6",
-                "reference": "e3fe89ada31110a8f092661236f769674a9a1fd6",
+                "url": "https://api.github.com/repos/fredemmott/type-assert/zipball/4b6ccc8b6abb503308472c440f30a3e2d5e5d2e0",
+                "reference": "4b6ccc8b6abb503308472c440f30a3e2d5e5d2e0",
                 "shasum": ""
             },
             "require": {
@@ -43,7 +43,7 @@
                 "TypeAssert",
                 "hack"
             ],
-            "time": "2016-09-28 04:21:05"
+            "time": "2016-12-04 19:05:17"
         }
     ],
     "packages-dev": [

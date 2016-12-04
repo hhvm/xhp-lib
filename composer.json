@@ -6,7 +6,7 @@
     "license": ["BSD-3-Clause"],
     "require": {
         "hhvm": "~3.12",
-        "fredemmott/type-assert": "^0.2.0"
+        "fredemmott/type-assert": "^0.2.0 || ^1.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.1.0",
