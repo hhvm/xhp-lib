@@ -11,8 +11,9 @@
 
 class :iframe extends :xhp:pcdata-element {
   attribute
-    bool allowfullscreen, Stringish name, int height, Stringish sandbox,
-    bool seamless, Stringish src, Stringish srcdoc, int width;
+    bool allowfullscreen,  bool allowtransparency, Stringish name,
+    int frameBorder, Stringish height, Stringish scrolling, Stringish sandbox,
+    bool seamless, Stringish src, Stringish srcdoc, Stringish width;
   category %flow, %phrase, %embedded, %interactive;
   protected string $tagName = 'iframe';
 }
