@@ -183,7 +183,7 @@ bc. class :async-thing extends :x:element {
 }
 
 When an XHP tree is rendered, asyncRender() is called for all XHPAsync children,
-and data fetching happens in parrallel. This allows the data dependencies of
+and data fetching happens in parallel. This allows the data dependencies of
 your components to efficiently be an implementation detail instead of having
 to have it as part of the API and passed by the user (eg in an attribute).
 
