@@ -1,5 +1,6 @@
 #!/bin/sh
 set -ex
+hhvm --version
 apt-get update -y
 apt-get install -y wget curl git
 curl https://getcomposer.org/installer | hhvm -d hhvm.jit=0 --php -- /dev/stdin --install-dir=/usr/local/bin --filename=composer
