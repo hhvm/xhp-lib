@@ -1,3 +1,5 @@
+!https://travis-ci.org/facebook/xhp-lib.svg?branch=master!:https://travis-ci.org/facebook/xhp-lib
+
 h1. Introduction
 
 XHP augments the syntax of Hack such that XML document fragments become valid
