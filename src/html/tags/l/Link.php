@@ -11,6 +11,7 @@
 
 class :link extends :xhp:html-singleton {
   attribute
+    Stringish as,
     enum {'anonymous', 'use-credentials'} crossorigin, Stringish href,
     Stringish hreflang, Stringish media, Stringish rel @required, Stringish sizes,
     Stringish type;
