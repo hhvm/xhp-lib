@@ -12,10 +12,6 @@
 use FredEmmott\TypeAssert\IncorrectTypeException;
 use FredEmmott\TypeAssert\TypeAssert;
 
-// Composer didn't support autoloading enums until recently (2015-03-09)
-require_once('ReflectionXHPAttribute.php');
-require_once('ReflectionXHPChildrenDeclaration.php');
-
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
