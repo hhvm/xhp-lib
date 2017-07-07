@@ -13,7 +13,8 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
     Traversable<XHPChild> $children,
-  ): void {}
+  ): void {
+  }
   abstract public function appendChild(mixed $child): this;
   abstract public function prependChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
@@ -69,7 +70,7 @@ abstract class :xhp implements XHPChild, JsonSerializable {
     } else if ($child instanceof Traversable) {
       throw new XHPRenderArrayException('Can not render traversables!');
     } else {
-      return htmlspecialchars((string) $child);
+      return htmlspecialchars((string)$child);
     }
   }
 

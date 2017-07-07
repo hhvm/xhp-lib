@@ -11,8 +11,13 @@
 
 class :menuitem extends :xhp:html-singleton {
   attribute
-    bool checked, Stringish command, bool default, bool disabled,
-    Stringish label, Stringish icon, Stringish radiogroup,
+    bool checked,
+    Stringish command,
+    bool default,
+    bool disabled,
+    Stringish label,
+    Stringish icon,
+    Stringish radiogroup,
     enum {'checkbox', 'command', 'radio'} type;
   protected string $tagName = 'menuitem';
 }

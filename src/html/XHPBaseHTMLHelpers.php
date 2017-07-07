@@ -23,7 +23,8 @@ trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
     } catch (XHPInvalidAttributeException $error) {
       throw new XHPException(
         'You are trying to add an HTML class to a(n) '.
-        :xhp::class2element(static::class).' element, but it does not support '.
+        :xhp::class2element(static::class).
+        ' element, but it does not support '.
         'the "class" attribute. The best way to do this is to inherit '.
         'the HTML attributes from the element your component will render into.',
       );
@@ -49,7 +50,8 @@ trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
       } catch (XHPInvalidAttributeException $error) {
         throw new XHPException(
           'You are trying to add an HTML id to a(n) '.
-          :xhp::class2element(static::class).' element, but it does not '.
+          :xhp::class2element(static::class).
+          ' element, but it does not '.
           'support the "id" attribute. The best way to do this is to inherit '.
           'the HTML attributes from the element your component will render '.
           'into.',

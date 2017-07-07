@@ -17,8 +17,9 @@ class XHPUnsupportedAttributeTypeException extends XHPException {
     string $reason,
   ) {
     parent::__construct(
-      "Attribute `$attr` in element `".:xhp::class2element(get_class($that)).
-      "` has unsupported type `$type`: $reason"
+      "Attribute `$attr` in element `".
+      :xhp::class2element(get_class($that)).
+      "` has unsupported type `$type`: $reason",
     );
   }
 }

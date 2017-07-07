@@ -11,8 +11,12 @@
 
 class :link extends :xhp:html-singleton {
   attribute
-    enum {'anonymous', 'use-credentials'} crossorigin, Stringish href,
-    Stringish hreflang, Stringish media, Stringish rel @required, Stringish sizes,
+    enum {'anonymous', 'use-credentials'} crossorigin,
+    Stringish href,
+    Stringish hreflang,
+    Stringish media,
+    Stringish rel @required,
+    Stringish sizes,
     Stringish type;
   category %metadata;
   protected string $tagName = 'link';

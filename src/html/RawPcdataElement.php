@@ -24,7 +24,7 @@
  */
 abstract class :xhp:raw-pcdata-element extends :xhp:pcdata-element {
   protected function stringify(): string {
-    $buf = $this->renderBaseAttrs() . '>';
+    $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
       if (!is_string($child)) {
         throw new XHPClassException($this, 'Child must be a string');

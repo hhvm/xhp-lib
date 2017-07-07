@@ -11,8 +11,13 @@
 
 class :form extends :xhp:html-element {
   attribute
-    Stringish action, Stringish accept-charset, enum {'on', 'off'} autocomplete,
-    Stringish enctype, enum {'get', 'post'} method, Stringish name, bool novalidate,
+    Stringish action,
+    Stringish accept-charset,
+    enum {'on', 'off'} autocomplete,
+    Stringish enctype,
+    enum {'get', 'post'} method,
+    Stringish name,
+    bool novalidate,
     Stringish target;
   category %flow;
   // Should not contain :form

@@ -9,8 +9,10 @@
  *
  */
 
-interface HasXHPHelpers extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
-};
+interface HasXHPHelpers
+  extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
+}
+;
 
 /*
  * Use of this trait assumes you have inherited attributes from an HTML element.
@@ -27,10 +29,8 @@ trait XHPHelpers implements HasXHPHelpers {
    * Copies all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public function copyAllAttributes(
-    :x:composable-element $target,
-  ): void {
-    $this->transferAttributesImpl($target, Set{});
+  final public function copyAllAttributes(:x:composable-element $target): void {
+    $this->transferAttributesImpl($target, Set {});
   }
 
   /*
@@ -61,7 +61,7 @@ trait XHPHelpers implements HasXHPHelpers {
   final public function transferAllAttributes(
     :x:composable-element $target,
   ): void {
-    $this->transferAttributesImpl($target, Set{}, true);
+    $this->transferAttributesImpl($target, Set {}, true);
   }
 
   /*
@@ -105,8 +105,8 @@ trait XHPHelpers implements HasXHPHelpers {
     $transferAttributes = array_diff_key($this->getAttributes(), $ignore);
     foreach ($transferAttributes as $attribute => $value) {
       if (
-        $compatible->containsKey($attribute)
-        || ReflectionXHPAttribute::IsSpecial($attribute)
+        $compatible->containsKey($attribute) ||
+        ReflectionXHPAttribute::IsSpecial($attribute)
       ) {
         try {
           $target->setAttribute($attribute, $value);
@@ -118,8 +118,12 @@ trait XHPHelpers implements HasXHPHelpers {
           // this by renaming one of the attributes.
           $target = get_class($target);
           throw new XHPException(
-            :xhp::class2element(static::class).' and '.
-            :xhp::class2element($target).' both support the "'.$attribute.'" '.
+            :xhp::class2element(static::class).
+            ' and '.
+            :xhp::class2element($target).
+            ' both support the "'.
+            $attribute.
+            '" '.
             'attribute, but they have different signatures. This is a '.
             'problem because the behavior when transfering or copying '.
             'attributes while validation is on will be different than while '.
@@ -134,7 +138,8 @@ trait XHPHelpers implements HasXHPHelpers {
     }
   }
 
-  protected function getAttributeNamesThatAppendValuesOnTransfer(): ImmSet<string> {
+  protected function getAttributeNamesThatAppendValuesOnTransfer(
+  ): ImmSet<string> {
     return ImmSet { 'class' };
   }
 
@@ -145,7 +150,7 @@ trait XHPHelpers implements HasXHPHelpers {
       if (!($root instanceof HasXHPHelpers)) {
         throw new XHPClassException(
           $this,
-          'render() must return an object using the XHPHelpers trait.'
+          'render() must return an object using the XHPHelpers trait.',
         );
       }
 
@@ -154,13 +159,19 @@ trait XHPHelpers implements HasXHPHelpers {
 
       if ($rootID && $thisID && $rootID != $thisID) {
         throw new XHPException(
-          'ID Collision. '.(:xhp::class2element(self::class)).' has an ID '.
-          'of "'.$thisID.'" but it renders into a(n) '.
+          'ID Collision. '.
+          (:xhp::class2element(self::class)).
+          ' has an ID '.
+          'of "'.
+          $thisID.
+          '" but it renders into a(n) '.
           (:xhp::class2element(get_class($root))).
-          ' which has an ID of "'.$rootID.'". The latter will get '.
+          ' which has an ID of "'.
+          $rootID.
+          '". The latter will get '.
           'overwritten (most often unexpectedly). If you are intending for '.
           'this behavior consider calling $this->removeAttribute(\'id\') '.
-          'before returning your node from compose().'
+          'before returning your node from compose().',
         );
       }
     }
@@ -173,10 +184,10 @@ trait XHPHelpers implements HasXHPHelpers {
       if (array_key_exists($attr, $attributes)) {
         $rootAttributes = $root->getAttributes();
         if (
-          array_key_exists($attr, $rootAttributes)
-          && ($rootValue = (string) $rootAttributes[$attr]) !== ''
+          array_key_exists($attr, $rootAttributes) &&
+          ($rootValue = (string)$rootAttributes[$attr]) !== ''
         ) {
-          $thisValue = (string) $attributes[$attr];
+          $thisValue = (string)$attributes[$attr];
           if ($thisValue !== '') {
             $root->setAttribute($attr, $rootValue.' '.$thisValue);
           }

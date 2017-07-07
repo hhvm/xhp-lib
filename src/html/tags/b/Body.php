@@ -11,9 +11,17 @@
 
 class :body extends :xhp:html-element {
   attribute
-    Stringish onafterprint, Stringish onbeforeprint, Stringish onbeforeunload,
-    Stringish onhashchange, Stringish onmessage, Stringish onoffline, Stringish ononline,
-    Stringish onpagehide, Stringish onpageshow, Stringish onpopstate, Stringish onstorage,
+    Stringish onafterprint,
+    Stringish onbeforeprint,
+    Stringish onbeforeunload,
+    Stringish onhashchange,
+    Stringish onmessage,
+    Stringish onoffline,
+    Stringish ononline,
+    Stringish onpagehide,
+    Stringish onpageshow,
+    Stringish onpopstate,
+    Stringish onstorage,
     Stringish onunload;
   children (pcdata | %flow)*;
   protected string $tagName = 'body';

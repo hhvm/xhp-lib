@@ -11,9 +11,19 @@
 
 class :textarea extends :xhp:pcdata-element {
   attribute
-    enum {'on', 'off'} autocomplete, bool autofocus, int cols, Stringish dirname,
-    bool disabled, Stringish form, int maxlength, int minlength, Stringish name,
-    Stringish placeholder, bool readonly, bool required, int rows,
+    enum {'on', 'off'} autocomplete,
+    bool autofocus,
+    int cols,
+    Stringish dirname,
+    bool disabled,
+    Stringish form,
+    int maxlength,
+    int minlength,
+    Stringish name,
+    Stringish placeholder,
+    bool readonly,
+    bool required,
+    int rows,
     enum {'soft', 'hard'} wrap;
   category %flow, %phrase, %interactive;
   protected string $tagName = 'textarea';

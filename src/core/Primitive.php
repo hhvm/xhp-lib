@@ -29,7 +29,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
 
   final private async function __flushElementChildren(): Awaitable<void> {
     $children = $this->getChildren();
-    $awaitables = Map { };
+    $awaitables = Map {};
     foreach ($children as $idx => $child) {
       if ($child instanceof :x:composable-element) {
         $child->__transferContext($this->getAllContexts());

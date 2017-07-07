@@ -12,8 +12,7 @@
 class :ruby extends :xhp:html-element {
   category %flow, %phrase;
   children (
-    (pcdata | :rb)+ |
-    ((:rp, :rt) | (:rp, :rtc) | (:rt, :rp) | (:rtc, :rp))+
+    (pcdata | :rb)+ | ((:rp, :rt) | (:rp, :rtc) | (:rt, :rp) | (:rtc, :rp))+
   );
   protected string $tagName = 'ruby';
 }

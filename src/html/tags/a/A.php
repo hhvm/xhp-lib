@@ -11,8 +11,13 @@
 
 class :a extends :xhp:html-element {
   attribute
-    Stringish download, Stringish href, Stringish hreflang, Stringish media, Stringish rel,
-    Stringish target, Stringish type,
+    Stringish download,
+    Stringish href,
+    Stringish hreflang,
+    Stringish media,
+    Stringish rel,
+    Stringish target,
+    Stringish type,
     // Legacy
     Stringish name;
   category %flow, %phrase, %interactive;

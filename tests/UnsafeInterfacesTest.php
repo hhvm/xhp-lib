@@ -4,7 +4,8 @@
 // practice; please don't create/use classes as unsafe as these examples.
 
 class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
-  public function __construct(public string $htmlString) {}
+  public function __construct(public string $htmlString) {
+  }
 
   public function toHTMLString() {
     return $this->htmlString;
@@ -12,7 +13,7 @@ class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
 }
 
 class ExampleVeryUnsafeRenderable extends ExampleUnsafeRenderable
-implements XHPUnsafeRenderable, XHPAlwaysValidChild {
+  implements XHPUnsafeRenderable, XHPAlwaysValidChild {
 }
 
 class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
@@ -37,9 +38,6 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
   public function testAlwaysValidChild() {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
-    $this->assertEquals(
-      '<html>foo<body></body></html>',
-      $xhp->toString(),
-    );
+    $this->assertEquals('<html>foo<body></body></html>', $xhp->toString());
   }
 }

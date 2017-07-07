@@ -11,12 +11,16 @@
 
 class :embed extends :xhp:html-element {
   attribute
-    int height, Stringish src, Stringish type, int width,
+    int height,
+    Stringish src,
+    Stringish type,
+    int width,
     /**
      * The following attributes are Flash specific.
      * Most notable use: youtube video embedding
      */
-    bool allowfullscreen, enum {'always', 'never'} allowscriptaccess,
+    bool allowfullscreen,
+    enum {'always', 'never'} allowscriptaccess,
     Stringish wmode;
 
   category %flow, %phrase, %embedded, %interactive;

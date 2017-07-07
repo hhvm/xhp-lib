@@ -23,8 +23,9 @@ class XHPInvalidAttributeException extends XHPException {
     }
     parent::__construct(
       "Invalid attribute `$attr` of type `$val_type` supplied to element `".
-      :xhp::class2element(get_class($that))."`, expected `$type`.\n\n".
-      $that->source
+      :xhp::class2element(get_class($that)).
+      "`, expected `$type`.\n\n".
+      $that->source,
     );
   }
 }

@@ -24,8 +24,7 @@ class :test:attribute-types extends :x:element {
 }
 
 class :test:required-attributes extends :x:element {
-  attribute
-    string mystring @required;
+  attribute string mystring @required;
 
   protected function render(): XHPRoot {
     return <div>{$this->:mystring}</div>;
@@ -33,8 +32,7 @@ class :test:required-attributes extends :x:element {
 }
 
 class :test:default-attributes extends :x:element {
-  attribute
-    string mystring = 'mydefault';
+  attribute string mystring = 'mydefault';
 
   protected function render(): XHPRoot {
     return <div>{$this->:mystring}</div>;
@@ -51,8 +49,13 @@ class :test:callable-attribute extends :x:element {
   }
 }
 
-class EmptyTestClass {}
-class StringableTestClass { public function __toString() { return __CLASS__; } }
+class EmptyTestClass {
+}
+class StringableTestClass {
+  public function __toString() {
+    return __CLASS__;
+  }
+}
 
 class AttributesTest extends PHPUnit_Framework_TestCase {
   public function setUp(): void {
@@ -60,18 +63,19 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testValidTypes(): void {
-    $x = <test:attribute-types
-      mystring="foo"
-      mybool={true}
-      myint={123}
-      myarray={[1,2,3]}
-      myobject={new stdClass()}
-      myenum={'foo'}
-      myfloat={1.23}
-      myvector={Vector { 1, 2, 3 } }
-      mymap={Map { 'herp' => 'derp'} }
-      myshape={shape('foo' => 'herp', 'bar' => 'derp')}
-    />;
+    $x =
+      <test:attribute-types
+        mystring="foo"
+        mybool={true}
+        myint={123}
+        myarray={[1, 2, 3]}
+        myobject={new stdClass()}
+        myenum={'foo'}
+        myfloat={1.23}
+        myvector={Vector { 1, 2, 3 }}
+        mymap={Map { 'herp' => 'derp' }}
+        myshape={shape('foo' => 'herp', 'bar' => 'derp')}
+      />;
     $this->assertEquals('<div></div>', $x->toString());
   }
 
@@ -84,19 +88,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testShapeWithMissingOptionalKey(): void {
-    $x =
-      <test:attribute-types
-        myshape={shape('foo' => 'herp')}
-      />;
+    $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
     $this->assertEquals('<div></div>', $x->toString());
   }
 
   public function testShapeWithMissingRequiredKey(): void {
     $this->expectException(XHPInvalidAttributeException::class);
-    $x =
-      <test:attribute-types
-        myshape={shape()}
-      />;
+    $x = <test:attribute-types myshape={shape()} />;
   }
 
   public function testValidArrayKeys(): void {
@@ -283,7 +281,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testHackContainerAsArray(): void {
-    $x = <test:attribute-types myarray={Vector { 1,2,3 } } />;
+    $x = <test:attribute-types myarray={Vector { 1, 2, 3 }} />;
   }
 
   /**
@@ -297,7 +295,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testPassingArrayAsVector(): void {
-    $x = <test:attribute-types myvector={[1,2,3]} />;
+    $x = <test:attribute-types myvector={[1, 2, 3]} />;
   }
 
   public function testProvidingRequiredAttributes(): void {
@@ -344,14 +342,18 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPUnsupportedAttributeTypeException
    */
   public function testRenderCallableAttribute(): void {
-    $x = <test:callable-attribute foo={function(){}} />;
+    $x =
+      <test:callable-attribute
+        foo={function() {
+        }}
+      />;
   }
 
   public function testReflectOnCallableAttribute(): void {
     $rxhp = new ReflectionXHPClass(:test:callable-attribute::class);
     $rattr = $rxhp->getAttribute('foo');
     $this->assertTrue(
-      strstr((string) $rattr, "<UNSUPPORTED: legacy callable>") !== false,
+      strstr((string)$rattr, "<UNSUPPORTED: legacy callable>") !== false,
       "Incorrect reflection for unsupported `callable` attribute type",
     );
   }

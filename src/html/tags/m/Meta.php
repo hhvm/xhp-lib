@@ -13,7 +13,10 @@ class :meta extends :xhp:html-singleton {
   attribute
     // The correct definition of http-equiv is an enum, but there are legacy
     // values still used and any strictness here would only be frustrating.
-    Stringish charset, Stringish content @required, Stringish http-equiv, Stringish name,
+    Stringish charset,
+    Stringish content @required,
+    Stringish http-equiv,
+    Stringish name,
     // Facebook OG
     Stringish property;
   // If itemprop is present, this element is allowed within the <body>.

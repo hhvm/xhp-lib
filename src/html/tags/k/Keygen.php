@@ -11,8 +11,12 @@
 
 class :keygen extends :xhp:html-singleton {
   attribute
-    bool autofocus, Stringish challenge, bool disabled, Stringish form,
-    Stringish keytype, Stringish name;
+    bool autofocus,
+    Stringish challenge,
+    bool disabled,
+    Stringish form,
+    Stringish keytype,
+    Stringish name;
   category %flow, %phrase, %interactive;
   protected string $tagName = 'keygen';
 }

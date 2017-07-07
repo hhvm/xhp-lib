@@ -117,6 +117,9 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
       <test:xhphelpers class="herp">
         <test:xhphelpers class="derp" />
       </test:xhphelpers>;
-    $this->assertSame('<div class="herp"><div class="derp"></div></div>', $x->toString());
+    $this->assertSame(
+      '<div class="herp"><div class="derp"></div></div>',
+      $x->toString(),
+    );
   }
 }

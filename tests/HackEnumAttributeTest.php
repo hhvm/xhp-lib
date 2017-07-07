@@ -6,8 +6,7 @@ enum TestEnum: int {
 }
 
 class :test:hack-enum-attribute extends :x:element {
-  attribute
-    TestEnum foo @required;
+  attribute TestEnum foo @required;
   protected function render(): XHPRoot {
     $foo = TestEnum::getNames()[$this->:foo];
     return <div>{$foo}</div>;

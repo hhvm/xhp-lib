@@ -18,6 +18,6 @@ class :x:doctype extends :x:primitive {
 
   protected function stringify(): string {
     $children = $this->getChildren();
-    return '<!DOCTYPE html>' . (:xhp::renderChild($children[0]));
+    return '<!DOCTYPE html>'.(:xhp::renderChild($children[0]));
   }
 }

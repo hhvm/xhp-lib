@@ -58,7 +58,7 @@ class :test:either-of-two-children extends :x:element {
 }
 
 class :test:nested-rule extends :x:element {
-  children ( :div | (:code+));
+  children (:div | (:code+));
   protected function render(): XHPRoot {
     return <div />;
   }
@@ -98,14 +98,11 @@ class :test:needs-comma-category extends :x:element {
 
 class ChildRuleTest extends PHPUnit_Framework_TestCase {
   public function testNoChild(): void {
-    $elems = Vector {
-      <test:no-children />,
-      <test:any-children />,
-      <test:optional-child />,
-      <test:any-number-of-child />,
+    $elems = Vector { <test:no-children />, <test:any-children />,
+    <test:optional-child />, <test:any-number-of-child />,
     };
     foreach ($elems as $elem) {
-      $this->assertSame('<div></div>', (string) $elem);
+      $this->assertSame('<div></div>', (string)$elem);
     }
   }
 
@@ -118,19 +115,14 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testSingleChild(): void {
-    $elems = Vector {
-       <test:any-children />,
-       <test:single-child />,
-       <test:optional-child />,
-       <test:any-number-of-child />,
-       <test:at-least-one-child />,
-       <test:either-of-two-children />,
-       <test:nested-rule />,
-       <test:category-child />,
+    $elems = Vector { <test:any-children />, <test:single-child />,
+    <test:optional-child />, <test:any-number-of-child />,
+    <test:at-least-one-child />, <test:either-of-two-children />,
+    <test:nested-rule />, <test:category-child />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
-      $this->assertSame('<div></div>', (string) $elem);
+      $this->assertSame('<div></div>', (string)$elem);
     }
   }
 
@@ -141,10 +133,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     :x:composable-element $elem,
     string $expected,
   ): void {
-    $this->assertSame(
-      $expected,
-      $elem->__getChildrenDeclaration(),
-    );
+    $this->assertSame($expected, $elem->__getChildrenDeclaration());
   }
 
   public function toStringProvider() {
@@ -164,12 +153,9 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testExpectedChild(): void {
-    $elems = Vector {
-       <test:single-child />,
-       <test:at-least-one-child />,
-       <test:either-of-two-children />,
-       <test:nested-rule />,
-       <test:pcdata-child />,
+    $elems = Vector { <test:single-child />, <test:at-least-one-child />,
+    <test:either-of-two-children />, <test:nested-rule />,
+    <test:pcdata-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -183,13 +169,9 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testTooManyChildren(): void {
-    $elems = Vector {
-      <test:single-child />,
-      <test:optional-child />,
-      <test:two-children />,
-      <test:either-of-two-children />,
-      <test:nested-rule />,
-      <test:category-child />,
+    $elems = Vector { <test:single-child />, <test:optional-child />,
+    <test:two-children />, <test:either-of-two-children />,
+    <test:nested-rule />, <test:category-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -204,14 +186,10 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testIncorrectChild(): void {
-    $elems = Vector {
-      <test:single-child />,
-      <test:optional-child />,
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
-      <test:either-of-two-children />,
-      <test:nested-rule />,
-      <test:category-child />,
+    $elems = Vector { <test:single-child />, <test:optional-child />,
+    <test:any-number-of-child />, <test:at-least-one-child />,
+    <test:either-of-two-children />, <test:nested-rule />,
+    <test:category-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -226,10 +204,8 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testTwoChildren(): void {
-    $elems = Vector {
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
-      <test:two-children />,
+    $elems = Vector { <test:any-number-of-child />, <test:at-least-one-child />,
+    <test:two-children />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
@@ -238,9 +214,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testThreeChildren(): void {
-    $elems = Vector {
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
+    $elems = Vector { <test:any-number-of-child />, <test:at-least-one-child />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);

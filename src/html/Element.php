@@ -27,10 +27,10 @@ abstract class :xhp:html-element extends :x:primitive {
     // Global HTML attributes
     Stringish accesskey,
     Stringish class,
-    enum { 'true', 'false' } contenteditable,
+    enum {'true', 'false'} contenteditable,
     Stringish contextmenu,
     Stringish dir,
-    enum { 'true', 'false' } draggable,
+    enum {'true', 'false'} draggable,
     Stringish dropzone,
     bool hidden,
     Stringish id,
@@ -119,8 +119,11 @@ abstract class :xhp:html-element extends :x:primitive {
         if ($val === true) {
           $buf .= ' '.htmlspecialchars($key);
         } else {
-          $buf .= ' '.htmlspecialchars($key).'="'.
-            htmlspecialchars($val, ENT_COMPAT).'"';
+          $buf .= ' '.
+            htmlspecialchars($key).
+            '="'.
+            htmlspecialchars($val, ENT_COMPAT).
+            '"';
         }
       }
     }

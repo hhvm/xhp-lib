@@ -33,10 +33,7 @@ enum XHPChildrenConstraintType: int {
 }
 
 class ReflectionXHPChildrenDeclaration {
-  public function __construct(
-    private string $context,
-    private mixed $data,
-  ) {
+  public function __construct(private string $context, private mixed $data) {
   }
 
   <<__Memoize>>
@@ -56,10 +53,7 @@ class ReflectionXHPChildrenDeclaration {
       "have an expression.",
       :xhp::class2element(get_class($this->context)),
     );
-    return new ReflectionXHPChildrenExpression(
-      $this->context,
-      $data,
-    );
+    return new ReflectionXHPChildrenExpression($this->context, $data);
   }
 
   public function __toString(): string {
@@ -69,7 +63,7 @@ class ReflectionXHPChildrenDeclaration {
     if ($this->getType() === XHPChildrenDeclarationType::NO_CHILDREN) {
       return 'empty';
     }
-    return (string) $this->getExpression();
+    return (string)$this->getExpression();
   }
 }
 
@@ -90,8 +84,8 @@ class ReflectionXHPChildrenExpression {
   ): (ReflectionXHPChildrenExpression, ReflectionXHPChildrenExpression) {
     $type = $this->getType();
     invariant(
-      $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE
-      || $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
+      $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
+      $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -112,8 +106,8 @@ class ReflectionXHPChildrenExpression {
   public function getConstraintType(): XHPChildrenConstraintType {
     $type = $this->getType();
     invariant(
-      $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE
-      && $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
+      $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
+      $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -124,8 +118,8 @@ class ReflectionXHPChildrenExpression {
   public function getConstraintString(): string {
     $type = $this->getConstraintType();
     invariant(
-      $type === XHPChildrenConstraintType::ELEMENT
-      || $type === XHPChildrenConstraintType::CATEGORY,
+      $type === XHPChildrenConstraintType::ELEMENT ||
+      $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -148,10 +142,7 @@ class ReflectionXHPChildrenExpression {
       is_object($data) ? get_class($data) : gettype($data),
       $this->context,
     );
-    return new ReflectionXHPChildrenExpression(
-      $this->context,
-      $data,
-    );
+    return new ReflectionXHPChildrenExpression($this->context, $data);
   }
 
   public function __toString(): string {
@@ -187,10 +178,10 @@ class ReflectionXHPChildrenExpression {
         return 'pcdata';
 
       case XHPChildrenConstraintType::ELEMENT:
-        return ':' . :xhp::class2element($this->getConstraintString());
+        return ':'.:xhp::class2element($this->getConstraintString());
 
       case XHPChildrenConstraintType::CATEGORY:
-        return '%' . $this->getConstraintString();
+        return '%'.$this->getConstraintString();
 
       case XHPChildrenConstraintType::SUB_EXPR:
         return '('.$this->getSubExpression().')';

@@ -32,19 +32,13 @@ class ReflectionXHPAttribute {
   private mixed $defaultValue;
   private bool $required;
 
-  private static ImmSet<string> $specialAttributes = ImmSet {
-    'data',
-    'aria',
-  };
+  private static ImmSet<string> $specialAttributes = ImmSet { 'data', 'aria', };
 
-  public function __construct(
-    private string $name,
-    array<int, mixed> $decl,
-  ) {
+  public function __construct(private string $name, array<int, mixed> $decl) {
     $this->type = XHPAttributeType::assert($decl[0]);
     $this->extraType = $decl[1];
     $this->defaultValue = $decl[2];
-    $this->required = (bool) $decl[3];
+    $this->required = (bool)$decl[3];
   }
 
   public function getName(): string {
@@ -72,8 +66,7 @@ class ReflectionXHPAttribute {
     $t = $this->getValueType();
     invariant(
       $this->getValueType() === XHPAttributeType::TYPE_OBJECT,
-      'Tried to get value class for attribute %s of type %s - needed '.
-      'OBJECT',
+      'Tried to get value class for attribute %s of type %s - needed '.'OBJECT',
       $this->getName(),
       XHPAttributeType::getNames()[$this->getValueType()],
     );
@@ -81,7 +74,7 @@ class ReflectionXHPAttribute {
     invariant(
       is_string($v),
       'Class name for attribute %s is not a string',
-      $this->getName()
+      $this->getName(),
     );
     return $v;
   }
@@ -91,8 +84,7 @@ class ReflectionXHPAttribute {
     $t = $this->getValueType();
     invariant(
       $this->getValueType() === XHPAttributeType::TYPE_ENUM,
-      'Tried to get enum values for attribute %s of type %s - needed '.
-      'ENUM',
+      'Tried to get enum values for attribute %s of type %s - needed '.'ENUM',
       $this->getName(),
       XHPAttributeType::getNames()[$this->getValueType()],
     );
@@ -100,7 +92,7 @@ class ReflectionXHPAttribute {
     invariant(
       is_array($v),
       'Class name for attribute %s is not a string',
-      $this->getName()
+      $this->getName(),
     );
     return new Set($v);
   }
@@ -110,9 +102,9 @@ class ReflectionXHPAttribute {
    */
   <<__Memoize>>
   public static function IsSpecial(string $attr): bool {
-    return strlen($attr) >= 6
-      && $attr[4] === '-'
-      && self::$specialAttributes->contains(substr($attr, 0, 4));
+    return strlen($attr) >= 6 &&
+      $attr[4] === '-' &&
+      self::$specialAttributes->contains(substr($attr, 0, 4));
   }
 
   public function __toString(): string {
@@ -149,7 +141,7 @@ class ReflectionXHPAttribute {
     }
     $out .= ' '.$this->getName();
     if ($this->hasDefaultValue()) {
-      $out .=  ' = '.var_export($this->getDefaultValue(), true);
+      $out .= ' = '.var_export($this->getDefaultValue(), true);
     }
     if ($this->isRequired()) {
       $out .= ' @required';

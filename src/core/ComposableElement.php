@@ -17,7 +17,8 @@ abstract class :x:composable-element extends :xhp {
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
 
-  protected function init(): void {}
+  protected function init(): void {
+  }
 
   /**
    * A new :x:composable-element is instantiated for every literal tag
@@ -32,8 +33,10 @@ abstract class :x:composable-element extends :xhp {
    * @param $attributes    map of attributes to values
    * @param $children      list of children
    */
-  final public function __construct(KeyedTraversable<string, mixed> $attributes,
-                                    Traversable<XHPChild> $children) {
+  final public function __construct(
+    KeyedTraversable<string, mixed> $attributes,
+    Traversable<XHPChild> $children,
+  ) {
     parent::__construct($attributes, $children);
     foreach ($children as $child) {
       $this->appendChild($child);
@@ -47,9 +50,9 @@ abstract class :x:composable-element extends :xhp {
         $this->source = "$args[2]:$args[3]";
       } else {
         $this->source =
-          'You have ENABLE_VALIDATION on, but debug information is not being ' .
-          'passed to XHP objects correctly. Ensure xhp.include_debug is on ' .
-          'in your PHP configuration. Without this option enabled, ' .
+          'You have ENABLE_VALIDATION on, but debug information is not being '.
+          'passed to XHP objects correctly. Ensure xhp.include_debug is on '.
+          'in your PHP configuration. Without this option enabled, '.
           'validation errors will be painful to debug at best.';
       }
     }
@@ -248,10 +251,10 @@ abstract class :x:composable-element extends :xhp {
 
   final public static function __xhpReflectionAttributes(
   ): Map<string, ReflectionXHPAttribute> {
-    static $cache = Map { };
+    static $cache = Map {};
     $class = static::class;
     if (!$cache->containsKey($class)) {
-      $map = Map { };
+      $map = Map {};
       $decl = static::__xhpAttributeDeclaration();
       foreach ($decl as $name => $attr_decl) {
         $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
@@ -263,7 +266,7 @@ abstract class :x:composable-element extends :xhp {
 
   final public static function __xhpReflectionChildrenDeclaration(
   ): ReflectionXHPChildrenDeclaration {
-    static $cache = Map { };
+    static $cache = Map {};
     $class = static::class;
     if (!$cache->containsKey($class)) {
       $cache[$class] = new ReflectionXHPChildrenDeclaration(
@@ -276,9 +279,8 @@ abstract class :x:composable-element extends :xhp {
 
   final public static function __xhpReflectionCategoryDeclaration(
   ): Set<string> {
-    return new Set(
-       array_keys(self::emptyInstance()->__xhpCategoryDeclaration())
-    );
+    return
+      new Set(array_keys(self::emptyInstance()->__xhpCategoryDeclaration()));
   }
 
   // Work-around to call methods that should be static without a real
@@ -536,8 +538,9 @@ abstract class :x:composable-element extends :xhp {
         }
         if (is_array($val)) {
           try {
-            $type_structure = (new ReflectionTypeAlias($class))
-              ->getResolvedTypeStructure();
+            $type_structure = (
+              new ReflectionTypeAlias($class)
+            )->getResolvedTypeStructure();
             /* HH_FIXME[4110] $type_structure is an array, but should be a
              * TypeStructure<T> */
             TypeAssert::matchesTypeStructure($type_structure, $val);
@@ -548,9 +551,7 @@ abstract class :x:composable-element extends :xhp {
             // handled below
           }
         }
-        throw new XHPInvalidAttributeException(
-          $this, $class, $attr, $val
-        );
+        throw new XHPInvalidAttributeException($this, $class, $attr, $val);
         break;
 
       case XHPAttributeType::TYPE_VAR:
@@ -558,7 +559,7 @@ abstract class :x:composable-element extends :xhp {
 
       case XHPAttributeType::TYPE_ENUM:
         if (!(is_string($val) && $decl->getEnumValues()->contains($val))) {
-          $enums = 'enum("' . implode('","', $decl->getEnumValues()) . '")';
+          $enums = 'enum("'.implode('","', $decl->getEnumValues()).'")';
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }
         break;
@@ -593,11 +594,13 @@ abstract class :x:composable-element extends :xhp {
     }
     list($ret, $ii) = $this->validateChildrenExpression(
       $decl->getExpression(),
-      0
+      0,
     );
     if (!$ret || $ii < count($this->children)) {
-      if (isset($this->children[$ii])
-          && $this->children[$ii] instanceof XHPAlwaysValidChild) {
+      if (
+        isset($this->children[$ii]) &&
+        $this->children[$ii] instanceof XHPAlwaysValidChild
+      ) {
         return;
       }
       throw new XHPInvalidChildrenException($this, $ii);
@@ -615,35 +618,23 @@ abstract class :x:composable-element extends :xhp {
       case XHPChildrenExpressionType::ANY_NUMBER:
         // Zero or more times -- :fb-thing*
         do {
-          list($ret, $index) = $this->validateChildrenRule(
-            $expr,
-            $index,
-          );
+          list($ret, $index) = $this->validateChildrenRule($expr, $index);
         } while ($ret);
         return tuple(true, $index);
 
       case XHPChildrenExpressionType::ZERO_OR_ONE:
         // Zero or one times -- :fb-thing?
-        list($_, $index) = $this->validateChildrenRule(
-          $expr,
-          $index,
-        );
+        list($_, $index) = $this->validateChildrenRule($expr, $index);
         return tuple(true, $index);
 
       case XHPChildrenExpressionType::ONE_OR_MORE:
         // One or more times -- :fb-thing+
-        list($ret, $index) = $this->validateChildrenRule(
-          $expr,
-          $index,
-        );
+        list($ret, $index) = $this->validateChildrenRule($expr, $index);
         if (!$ret) {
           return tuple(false, $index);
         }
         do {
-          list($ret, $index) = $this->validateChildrenRule(
-            $expr,
-            $index,
-          );
+          list($ret, $index) = $this->validateChildrenRule($expr, $index);
         } while ($ret);
         return tuple(true, $index);
 
@@ -699,23 +690,29 @@ abstract class :x:composable-element extends :xhp {
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::PCDATA:
-        if ($this->children->containsKey($index) &&
-            !($this->children->get($index) instanceof :xhp)) {
+        if (
+          $this->children->containsKey($index) &&
+          !($this->children->get($index) instanceof :xhp)
+        ) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::ELEMENT:
         $class = $expr->getConstraintString();
-        if ($this->children->containsKey($index) &&
-            $this->children->get($index) instanceof $class) {
+        if (
+          $this->children->containsKey($index) &&
+          $this->children->get($index) instanceof $class
+        ) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::CATEGORY:
-        if (!$this->children->containsKey($index) ||
-            !($this->children->get($index) instanceof :xhp)) {
+        if (
+          !$this->children->containsKey($index) ||
+          !($this->children->get($index) instanceof :xhp)
+        ) {
           return tuple(false, $index);
         }
         $category = :xhp::class2element($expr->getConstraintString());
@@ -728,10 +725,8 @@ abstract class :x:composable-element extends :xhp {
         return tuple(true, $index + 1);
 
       case XHPChildrenConstraintType::SUB_EXPR:
-        return $this->validateChildrenExpression(
-          $expr->getSubExpression(),
-          $index,
-        );
+        return
+          $this->validateChildrenExpression($expr->getSubExpression(), $index);
     }
   }
 
@@ -743,7 +738,7 @@ abstract class :x:composable-element extends :xhp {
    * __getChildrenDescription.
    */
   public function __getChildrenDeclaration(): string {
-    return (string) self::__xhpReflectionChildrenDeclaration();
+    return (string)self::__xhpReflectionChildrenDeclaration();
   }
 
   /**
@@ -756,9 +751,9 @@ abstract class :x:composable-element extends :xhp {
     $desc = array();
     foreach ($this->children as $child) {
       if ($child instanceof :xhp) {
-        $tmp = ':' . :xhp::class2element(get_class($child));
+        $tmp = ':'.:xhp::class2element(get_class($child));
         if ($categories = $child->__xhpCategoryDeclaration()) {
-          $tmp .= '[%'. implode(',%', array_keys($categories)) . ']';
+          $tmp .= '[%'.implode(',%', array_keys($categories)).']';
         }
         $desc[] = $tmp;
       } else {

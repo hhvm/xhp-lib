@@ -3,11 +3,7 @@
 // attributes
 
 class :test:attribute-coercion-modes extends :x:element {
-  attribute
-    int myint,
-    float myfloat,
-    string mystring,
-    bool mybool;
+  attribute int myint, float myfloat, string mystring, bool mybool;
 
   protected function render(): XHPRoot {
     return <div />;
@@ -32,12 +28,13 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
 
   public function testNoCoercion(): void {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes
-      myint={3}
-      myfloat={1.23}
-      mystring="foo"
-      mybool={true}
-    />;
+    $x =
+      <test:attribute-coercion-modes
+        myint={3}
+        myfloat={1.23}
+        mystring="foo"
+        mybool={true}
+      />;
     $this->assertSame(3, $x->:myint);
     $this->assertSame(1.23, $x->:myfloat);
     $this->assertSame('foo', $x->:mystring);

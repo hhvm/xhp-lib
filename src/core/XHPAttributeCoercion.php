@@ -47,12 +47,7 @@ abstract final class XHPAttributeCoercion {
         );
         return;
       case XHPAttributeCoercionMode::THROW_EXCEPTION:
-        throw new XHPInvalidAttributeException(
-          $context,
-          $what,
-          $attr,
-          $val
-        );
+        throw new XHPInvalidAttributeException($context, $what, $attr, $val);
     }
   }
 
@@ -62,20 +57,11 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): string {
     self::LogCoercion($context, 'string', $attr, $val);
-    if (
-      is_int($val)
-      || is_float($val)
-      || $val instanceof Stringish
-    ) {
-     return (string)$val;
+    if (is_int($val) || is_float($val) || $val instanceof Stringish) {
+      return (string)$val;
     }
 
-    throw new XHPInvalidAttributeException(
-      $context,
-      'string',
-      $attr,
-      $val,
-    );
+    throw new XHPInvalidAttributeException($context, 'string', $attr, $val);
   }
 
   public static function CoerceToInt(
@@ -85,18 +71,12 @@ abstract final class XHPAttributeCoercion {
   ): int {
     self::LogCoercion($context, 'int', $attr, $val);
     if (
-      (is_string($val) && is_numeric($val) && $val !== '')
-      || is_float($val)
+      (is_string($val) && is_numeric($val) && $val !== '') || is_float($val)
     ) {
-      return (int) $val;
+      return (int)$val;
     }
 
-    throw new XHPInvalidAttributeException(
-      $context,
-      'int',
-      $attr,
-      $val,
-    );
+    throw new XHPInvalidAttributeException($context, 'int', $attr, $val);
   }
 
   public static function CoerceToBool(
@@ -105,29 +85,15 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): bool {
     self::LogCoercion($context, 'bool', $attr, $val);
-    if (
-      $val === 'true'
-      || $val === 1
-      || $val === '1'
-      || $val === $attr
-    ) {
+    if ($val === 'true' || $val === 1 || $val === '1' || $val === $attr) {
       return true;
     }
 
-    if (
-      $val === 'false'
-      || $val === 0
-      || $val === '0'
-    ) {
+    if ($val === 'false' || $val === 0 || $val === '0') {
       return false;
     }
 
-    throw new XHPInvalidAttributeException(
-      $context,
-      'bool',
-      $attr,
-      $val,
-    );
+    throw new XHPInvalidAttributeException($context, 'bool', $attr, $val);
   }
 
   public static function CoerceToFloat(
@@ -140,11 +106,6 @@ abstract final class XHPAttributeCoercion {
       return (float)$val;
     }
 
-    throw new XHPInvalidAttributeException(
-      $context,
-      'float',
-      $attr,
-      $val,
-    );
+    throw new XHPInvalidAttributeException($context, 'float', $attr, $val);
   }
 }

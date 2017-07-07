@@ -11,7 +11,12 @@
 
 class :meter extends :xhp:html-element {
   attribute
-    float high, float low, float max, float min, float optimum, float value;
+    float high,
+    float low,
+    float max,
+    float min,
+    float optimum,
+    float value;
   category %flow, %phrase;
   // Should not contain :meter
   children (pcdata | %phrase)*;

@@ -28,20 +28,14 @@ class :async:par-test extends :x:element {
 
   attribute string label @required;
 
-  public static $log = Vector { };
+  public static $log = Vector {};
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
     $label = $this->:label;
     self::$log[] = [$label, 'start'];
-    await RescheduleWaitHandle::create(
-      RescheduleWaitHandle::QUEUE_DEFAULT,
-      0,
-    );
+    await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
     self::$log[] = [$label, 'mid'];
-    await RescheduleWaitHandle::create(
-      RescheduleWaitHandle::QUEUE_DEFAULT,
-      0,
-    );
+    await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
     self::$log[] = [$label, 'finish'];
     return <div>{$label}</div>;
   }
@@ -85,17 +79,14 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
   }
 
   public function parallelizationContainersProvider() {
-    return [
-      [<test:xfrag-wrap />],
-      [<test:async-xfrag-wrap />],
-    ];
+    return [[<test:xfrag-wrap />], [<test:async-xfrag-wrap />]];
   }
 
   /**
    * @dataProvider parallelizationContainersProvider
    */
   public function testParallelization(:x:element $container) {
-    :async:par-test::$log = Vector { };
+    :async:par-test::$log = Vector {};
 
     $a = <async:par-test label="a" />;
     $b = <async:par-test label="b" />;
@@ -104,10 +95,13 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $container->replaceChildren([$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
-    $this->assertSame('<div><div>a</div><div>b</div><div>c</div></div>', $tree->toString());
+    $this->assertSame(
+      '<div><div>a</div><div>b</div><div>c</div></div>',
+      $tree->toString(),
+    );
 
     $log = :async:par-test::$log;
-    $by_node = Map { 'a' => Map { }, 'b' => Map { }, 'c' => Map { } };
+    $by_node = Map { 'a' => Map {}, 'b' => Map {}, 'c' => Map {} };
 
     foreach ($log as $idx => $data) {
       list($label, $action) = $data;
@@ -119,8 +113,20 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $max_mid = max($by_node->map($x ==> $x['mid']));
     $min_finish = min($by_node->map($x ==> $x['finish']));
 
-    $this->assertGreaterThan($max_start, $min_mid, 'all should be started before any get continued');
-    $this->assertGreaterThan($max_mid, $min_finish, 'all should have reached stage two before any finish');
-    $this->assertGreaterThan($max_start, $min_finish, 'sanity check: all have started before any finish');
+    $this->assertGreaterThan(
+      $max_start,
+      $min_mid,
+      'all should be started before any get continued',
+    );
+    $this->assertGreaterThan(
+      $max_mid,
+      $min_finish,
+      'all should have reached stage two before any finish',
+    );
+    $this->assertGreaterThan(
+      $max_start,
+      $min_finish,
+      'sanity check: all have started before any finish',
+    );
   }
 }
