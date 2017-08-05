@@ -26,11 +26,13 @@ class XHPChildFlushTest extends PHPUnit_Framework_TestCase {
       [<test:verbatim-root root={<div />} />, '<div></div>'],
       [<x:frag><div /></x:frag>, '<div></div>'],
       [<x:frag><div /><div /></x:frag>, '<div></div><div></div>'],
-      [<test:verbatim-root root={<x:frag><div /><div /></x:frag>} />,
-      '<div></div><div></div>',
+      [
+        <test:verbatim-root root={<x:frag><div /><div /></x:frag>} />,
+        '<div></div><div></div>',
       ],
-      [<test:verbatim-root root={<test:verbatim-root root={<div />} />} />,
-      '<div></div>',
+      [
+        <test:verbatim-root root={<test:verbatim-root root={<div />} />} />,
+        '<div></div>',
       ],
       [<test:verbatim-root:async root={<div />} />, '<div></div>'],
     ];

@@ -10,6 +10,8 @@
  */
 
 class :param extends :xhp:pcdata-element {
-  attribute Stringish name, Stringish value;
+  attribute
+    Stringish name,
+    Stringish value;
   protected string $tagName = 'param';
 }

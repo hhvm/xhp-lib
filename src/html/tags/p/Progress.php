@@ -10,7 +10,9 @@
  */
 
 class :progress extends :xhp:html-element {
-  attribute float max, float value;
+  attribute
+    float max,
+    float value;
   category %flow, %phrase;
   // Should not contain :progress
   children (pcdata | %phrase)*;

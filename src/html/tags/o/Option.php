@@ -10,6 +10,10 @@
  */
 
 class :option extends :xhp:pcdata-element {
-  attribute bool disabled, Stringish label, bool selected, Stringish value;
+  attribute
+    bool disabled,
+    Stringish label,
+    bool selected,
+    Stringish value;
   protected string $tagName = 'option';
 }

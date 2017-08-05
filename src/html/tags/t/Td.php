@@ -10,7 +10,10 @@
  */
 
 class :td extends :xhp:html-element {
-  attribute int colspan, Stringish headers, int rowspan;
+  attribute
+    int colspan,
+    Stringish headers,
+    int rowspan;
   children (pcdata | %flow)*;
   protected string $tagName = 'td';
 }

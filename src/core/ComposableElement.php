@@ -538,9 +538,8 @@ abstract class :x:composable-element extends :xhp {
         }
         if (is_array($val)) {
           try {
-            $type_structure = (
-              new ReflectionTypeAlias($class)
-            )->getResolvedTypeStructure();
+            $type_structure =
+              (new ReflectionTypeAlias($class))->getResolvedTypeStructure();
             /* HH_FIXME[4110] $type_structure is an array, but should be a
              * TypeStructure<T> */
             TypeAssert::matchesTypeStructure($type_structure, $val);
@@ -592,10 +591,8 @@ abstract class :x:composable-element extends :xhp {
         return;
       }
     }
-    list($ret, $ii) = $this->validateChildrenExpression(
-      $decl->getExpression(),
-      0,
-    );
+    list($ret, $ii) =
+      $this->validateChildrenExpression($decl->getExpression(), 0);
     if (!$ret || $ii < count($this->children)) {
       if (
         isset($this->children[$ii]) &&
@@ -642,15 +639,11 @@ abstract class :x:composable-element extends :xhp {
         // Specific order -- :fb-thing, :fb-other-thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) = $this->validateChildrenExpression(
-          $sub_expr_1,
-          $index,
-        );
+        list($ret, $index) =
+          $this->validateChildrenExpression($sub_expr_1, $index);
         if ($ret) {
-          list($ret, $index) = $this->validateChildrenExpression(
-            $sub_expr_2,
-            $index,
-          );
+          list($ret, $index) =
+            $this->validateChildrenExpression($sub_expr_2, $index);
         }
         if ($ret) {
           return tuple(true, $index);
@@ -661,15 +654,11 @@ abstract class :x:composable-element extends :xhp {
         // Either or -- :fb-thing | :fb-other-thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) = $this->validateChildrenExpression(
-          $sub_expr_1,
-          $index,
-        );
+        list($ret, $index) =
+          $this->validateChildrenExpression($sub_expr_1, $index);
         if (!$ret) {
-          list($ret, $index) = $this->validateChildrenExpression(
-            $sub_expr_2,
-            $index,
-          );
+          list($ret, $index) =
+            $this->validateChildrenExpression($sub_expr_2, $index);
         }
         if ($ret) {
           return tuple(true, $index);

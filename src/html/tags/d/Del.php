@@ -10,7 +10,9 @@
  */
 
 class :del extends :xhp:html-element {
-  attribute Stringish cite, Stringish datetime;
+  attribute
+    Stringish cite,
+    Stringish datetime;
   category %flow, %phrase;
   // transparent
   children (pcdata | %flow)*;

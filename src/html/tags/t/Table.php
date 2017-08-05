@@ -10,7 +10,9 @@
  */
 
 class :table extends :xhp:html-element {
-  attribute int border, bool sortable;
+  attribute
+    int border,
+    bool sortable;
   category %flow;
   children (
     :caption?,

@@ -3,7 +3,11 @@
 // attributes
 
 class :test:attribute-coercion-modes extends :x:element {
-  attribute int myint, float myfloat, string mystring, bool mybool;
+  attribute
+    int myint,
+    float myfloat,
+    string mystring,
+    bool mybool;
 
   protected function render(): XHPRoot {
     return <div />;

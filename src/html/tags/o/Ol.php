@@ -10,7 +10,10 @@
  */
 
 class :ol extends :xhp:html-element {
-  attribute bool reversed, int start, enum {'1', 'a', 'A', 'i', 'I'} type;
+  attribute
+    bool reversed,
+    int start,
+    enum {'1', 'a', 'A', 'i', 'I'} type;
   category %flow;
   children (:li)*;
   protected string $tagName = 'ol';

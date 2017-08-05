@@ -10,7 +10,9 @@
  */
 
 class :canvas extends :xhp:html-element {
-  attribute int height, int width;
+  attribute
+    int height,
+    int width;
   category %flow, %phrase, %embedded;
   // Should not contain :table
   children (pcdata | %flow)*;
