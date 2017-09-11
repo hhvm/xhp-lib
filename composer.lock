@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "46c4bdeec3a0ee232610b4aee75d7733",
+    "content-hash": "60a2e3fa336131af85fb283c344dc3f3",
     "packages": [
         {
             "name": "hhvm/type-assert",
-            "version": "v1.1.1",
+            "version": "v2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/type-assert.git",
-                "reference": "a370a1b0f057f1fc3c000fa7c79b2439448c0a1b"
+                "reference": "fcd2cdc238302242b0da207fe395d6f7f2e8a2a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/a370a1b0f057f1fc3c000fa7c79b2439448c0a1b",
-                "reference": "a370a1b0f057f1fc3c000fa7c79b2439448c0a1b",
+                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/fcd2cdc238302242b0da207fe395d6f7f2e8a2a6",
+                "reference": "fcd2cdc238302242b0da207fe395d6f7f2e8a2a6",
                 "shasum": ""
             },
             "require": {
@@ -34,15 +34,12 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "ISC"
-            ],
             "description": "Convert untyped data to typed data",
             "keywords": [
                 "TypeAssert",
                 "hack"
             ],
-            "time": "2017-08-14T23:59:57+00:00"
+            "time": "2017-08-29T21:00:54+00:00"
         }
     ],
     "packages-dev": [

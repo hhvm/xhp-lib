@@ -9,8 +9,8 @@
  *
  */
 
-use FredEmmott\TypeAssert\IncorrectTypeException;
-use FredEmmott\TypeAssert\TypeAssert;
+use Facebook\TypeAssert\IncorrectTypeException;
+use Facebook\TypeAssert\TypeAssert;
 
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
