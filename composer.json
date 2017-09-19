@@ -6,7 +6,8 @@
     "license": ["BSD-3-Clause"],
     "require": {
         "hhvm": "~3.12",
-        "hhvm/type-assert": "^2.0"
+        "hhvm/type-assert": "^3.0",
+        "hhvm/hhvm-autoload": "^1.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^5.1.0",
@@ -16,15 +17,5 @@
         "branch-alias": {
             "dev-master": "2.x-dev"
         }
-    },
-    "autoload": {
-        "classmap": [
-            "src/"
-        ]
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "hhvm bin/generate-autoload-map.php > autoload-map.php"
-        ]
     }
 }

@@ -9,8 +9,8 @@
  *
  */
 
-use Facebook\TypeAssert\IncorrectTypeException;
-use Facebook\TypeAssert\TypeAssert;
+use type Facebook\TypeAssert\IncorrectTypeException;
+use namespace Facebook\TypeAssert;
 
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
@@ -542,7 +542,7 @@ abstract class :x:composable-element extends :xhp {
               (new ReflectionTypeAlias($class))->getResolvedTypeStructure();
             /* HH_FIXME[4110] $type_structure is an array, but should be a
              * TypeStructure<T> */
-            TypeAssert::matchesTypeStructure($type_structure, $val);
+            TypeAssert\matches_type_structure($type_structure, $val);
             break;
           } catch (ReflectionException $_) {
             // handled below
