@@ -21,6 +21,7 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
   public function setUp(): void {
     $this->coercionMode = XHPAttributeCoercion::GetMode();
     $this->errorReporting = error_reporting();
+    :xhp::enableAttributeValidation();
   }
 
   public function tearDown(): void {
@@ -28,6 +29,7 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
     invariant($mode !== null, 'did not save coercion mode');
     XHPAttributeCoercion::SetMode($mode);
     error_reporting($this->errorReporting);
+    :xhp::disableAttributeValidation();
   }
 
   public function testNoCoercion(): void {

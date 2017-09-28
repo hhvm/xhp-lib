@@ -42,7 +42,7 @@ abstract class :x:composable-element extends :xhp {
       $this->appendChild($child);
     }
     $this->setAttributes($attributes);
-    if (:xhp::$ENABLE_VALIDATION) {
+    if (:xhp::isChildValidationEnabled()) {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
       $args = func_get_args();
@@ -50,7 +50,7 @@ abstract class :x:composable-element extends :xhp {
         $this->source = "$args[2]:$args[3]";
       } else {
         $this->source =
-          'You have ENABLE_VALIDATION on, but debug information is not being '.
+          'You have child validation on, but debug information is not being '.
           'passed to XHP objects correctly. Ensure xhp.include_debug is on '.
           'in your PHP configuration. Without this option enabled, '.
           'validation errors will be painful to debug at best.';
@@ -304,7 +304,9 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function setAttribute(string $attr, mixed $value): this {
     if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-      $value = $this->validateAttributeValue($attr, $value);
+      if (:xhp::isAttributeValidationEnabled()) {
+        $value = $this->validateAttributeValue($attr, $value);
+      }
     } else {
       $value = (string)$value;
     }
@@ -345,7 +347,9 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function removeAttribute(string $attr): this {
     if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-      $value = $this->validateAttributeValue($attr, null);
+      if (:xhp::isAttributeValidationEnabled()) {
+        $value = $this->validateAttributeValue($attr, null);
+      }
     }
     $this->attributes->removeKey($attr);
     return $this;

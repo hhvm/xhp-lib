@@ -47,7 +47,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
 
   final protected async function __flushSubtree(): Awaitable<:x:primitive> {
     await $this->__flushElementChildren();
-    if (:xhp::$ENABLE_VALIDATION) {
+    if (:xhp::isChildValidationEnabled()) {
       $this->validateChildren();
     }
     return $this;

@@ -60,6 +60,11 @@ class StringableTestClass {
 class AttributesTest extends PHPUnit_Framework_TestCase {
   public function setUp(): void {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
+    :xhp::enableAttributeValidation();
+  }
+
+  public function tearDown(): void {
+    :xhp::disableAttributeValidation();
   }
 
   public function testValidTypes(): void {

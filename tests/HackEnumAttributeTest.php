@@ -14,6 +14,14 @@ class :test:hack-enum-attribute extends :x:element {
 }
 
 class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
+  public function setUp(): void {
+    :xhp::enableAttributeValidation();
+  }
+
+  public function tearDown(): void {
+    :xhp::disableAttributeValidation();
+  }
+
   public function testValidValues(): void {
     $x = <test:hack-enum-attribute foo={TestEnum::HERP} />;
     $this->assertSame('<div>HERP</div>', $x->toString());

@@ -35,7 +35,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   }
 
   protected async function __renderAndProcess(): Awaitable<XHPRoot> {
-    if (:xhp::$ENABLE_VALIDATION) {
+    if (:xhp::isChildValidationEnabled()) {
       $this->validateChildren();
     }
 

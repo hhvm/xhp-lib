@@ -146,7 +146,7 @@ trait XHPHelpers implements HasXHPHelpers {
   final public function transferAttributesToRenderedRoot(
     :x:composable-element $root,
   ): void {
-    if (:xhp::$ENABLE_VALIDATION && $root instanceof :x:element) {
+    if (:xhp::isAttributeValidationEnabled() && $root instanceof :x:element) {
       if (!($root instanceof HasXHPHelpers)) {
         throw new XHPClassException(
           $this,
