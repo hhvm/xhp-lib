@@ -37,7 +37,7 @@ Run Composer commands using HHVM like so:
 
 bc. $ hhvm $(which composer) install;
 
-Then `include vendor/autoload.php` in your project.
+Then @include vendor/autoload.php@ in your project.
 
 h1. Simple Example
 
