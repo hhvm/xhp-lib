@@ -19,7 +19,7 @@ Announcements and articles are posted to
 h1. Installation
 
 
-"Composer":https://getcomposer.org/ is the recommended installation method. To add XHP to your project, add the following to your @composer.json@ then re-run composer:
+"Composer":https://getcomposer.org/ is the recommended installation method. To add XHP to your project, add the following to your @composer.json@:
 
 <pre><code>
   "require": {
@@ -27,9 +27,17 @@ h1. Installation
   }
 </pre></code>
 
+Add a @roots@ entry to your @hh_autoload.json@, e.g.:
+
+<pre><code>
+  "roots": ["public"]
+ </pre></code>
+
 Run Composer commands using HHVM like so:
 
 bc. $ hhvm $(which composer) install;
+
+Then `include vendor/autoload.php` in your project.
 
 h1. Simple Example
 
