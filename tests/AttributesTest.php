@@ -1,6 +1,4 @@
-<?hh // decl
-// Using decl because this test intentional passes the wrong types for
-// attributes
+<?hh // strict
 
 type TMyTestShape = shape('foo' => string, 'bar' => ?string);
 class :test:attribute-types extends :x:element {
@@ -52,7 +50,7 @@ class :test:callable-attribute extends :x:element {
 class EmptyTestClass {
 }
 class StringableTestClass {
-  public function __toString() {
+  public function __toString(): string {
     return __CLASS__;
   }
 }
@@ -77,7 +75,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
         myobject={new stdClass()}
         myenum={'foo'}
         myfloat={1.23}
-        myvector={Vector { 1, 2, 3 }}
+        myvector={Vector { '1', '2', '3' }}
         mymap={Map { 'herp' => 'derp' }}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
@@ -87,18 +85,21 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testShapeWithExtraKey(): void {
     $x =
       <test:attribute-types
+        /* HH_IGNORE_ERROR[4166] */
         myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
       />;
     $this->assertEquals('<div></div>', $x->toString());
   }
 
   public function testShapeWithMissingOptionalKey(): void {
+    /* HH_IGNORE_ERROR[4057] */
     $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
     $this->assertEquals('<div></div>', $x->toString());
   }
 
   public function testShapeWithMissingRequiredKey(): void {
     $this->expectException(XHPInvalidAttributeException::class);
+    /* HH_IGNORE_ERROR[4057] */
     $x = <test:attribute-types myshape={shape()} />;
   }
 
@@ -113,6 +114,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testInvalidArrayKeys(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myarraykey={1.23} />;
     $x->toString();
   }
@@ -128,6 +130,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testInvalidNum(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mynum="123" />;
     $x->toString();
   }
@@ -137,11 +140,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testStringableObjectAsString(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={new StringableTestClass()} />;
     $this->assertSame('StringableTestClass', $x->:mystring);
   }
 
   public function testIntegerAsString(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={123} />;
     $this->assertSame('123', $x->:mystring);
   }
@@ -150,6 +155,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testUnstringableObjectAsString(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={new EmptyTestClass()} />;
   }
 
@@ -157,6 +163,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testIncompleteObjectAsString(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={new __PHP_Incomplete_Class()} />;
   }
 
@@ -164,20 +171,24 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testArrayAsString(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={[]} />;
   }
 
   public function testIntishStringAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={'123'} />;
     $this->assertSame(123, $x->:myint);
   }
 
   public function testFloatAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={1.23} />;
     $this->assertSame(1, $x->:myint);
   }
 
   public function testFloatishStringAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint="1.23" />;
     $this->assertSame(1, $x->:myint);
   }
@@ -186,6 +197,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testObjectAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={new EmptyTestClass()} />;
   }
 
@@ -193,6 +205,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testIncompleteObjectAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={new __PHP_Incomplete_Class()} />;
   }
 
@@ -200,6 +213,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testArrayAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={[]} />;
   }
 
@@ -207,15 +221,18 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testNumericPrefixStringAsInt(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint="123derp" />;
   }
 
   public function testTrueStringAsBool(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="true" />;
     $this->assertSame(true, $x->:mybool);
   }
 
   public function testFalseStringAsBool(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="false" />;
     $this->assertSame(false, $x->:mybool);
   }
@@ -224,6 +241,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testMixedCaseFalseStringAsBool(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="False" />;
     // 'False' is actually truthy
   }
@@ -232,12 +250,14 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testNoStringAsBool(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="No" />;
     // 'No' is actually truthy
   }
 
   public function testAttrNameAsBool(): void {
     // idiomatic - eg checked="checked"
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="mybool" />;
     $this->assertSame(true, $x->:mybool);
   }
@@ -250,13 +270,16 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testIntAsFloat(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat={123} />;
     $this->assertSame(123.0, $x->:myfloat);
   }
 
   public function testNumericStringsAsFloats(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="123" />;
     $this->assertSame(123.0, $x->:myfloat);
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="1.23" />;
     $this->assertSame(1.23, $x->:myfloat);
   }
@@ -265,6 +288,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testNonNumericStringAsFloat(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="herpderp" />;
   }
 
@@ -272,6 +296,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testNumericPrefixStringAsFloat(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="123derp" />;
   }
 
@@ -279,6 +304,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testNotAContainerAsArray(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myarray={new EmptyTestClass()} />;
   }
 
@@ -286,6 +312,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testHackContainerAsArray(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myarray={Vector { 1, 2, 3 }} />;
   }
 
@@ -293,6 +320,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testIncompatibleObjectAsObject(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myobject={new EmptyTestClass()} />;
   }
 
@@ -300,6 +328,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPInvalidAttributeException
    */
   public function testPassingArrayAsVector(): void {
+    /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myvector={[1, 2, 3]} />;
   }
 
@@ -333,6 +362,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    * @expectedException XHPAttributeNotSupportedException
    */
   public function testBogusAttributes(): void {
+    /* HH_IGNORE_ERROR[4053] */
     $x = <test:default-attributes idonotexist="derp" />;
   }
 
@@ -349,6 +379,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testRenderCallableAttribute(): void {
     $x =
       <test:callable-attribute
+    /* HH_IGNORE_ERROR[4110] */
         foo={function() {
         }}
       />;
