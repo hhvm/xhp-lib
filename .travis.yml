@@ -5,6 +5,7 @@ services:
 env:
  - HHVM_VERSION=3.21-lts-latest
  - HHVM_VERSION=latest
+ - HHVM_VERSION=nightly
 install:
  - docker pull hhvm/hhvm:$HHVM_VERSION
 script:
