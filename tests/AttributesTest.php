@@ -83,6 +83,10 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testShapeWithExtraKey(): void {
+    if (HHVM_VERSION_ID >= 32300) {
+      $this->expectException(XHPInvalidAttributeException::class);
+    }
+
     $x =
       <test:attribute-types
         /* HH_IGNORE_ERROR[4166] */
@@ -92,6 +96,10 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testShapeWithMissingOptionalKey(): void {
+    if (HHVM_VERSION_ID >= 32300) {
+      $this->expectException(XHPInvalidAttributeException::class);
+    }
+
     /* HH_IGNORE_ERROR[4057] */
     $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
     $this->assertEquals('<div></div>', $x->toString());
