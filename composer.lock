@@ -137,16 +137,16 @@
         },
         {
             "name": "hhvm/hsl",
-            "version": "v0.8",
+            "version": "v1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hsl.git",
-                "reference": "dea04b6dc6e4d64991f349e5ed98634fe8fae86a"
+                "reference": "99ed4bce2170d12e38654f8502482fcac5b80352"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hsl/zipball/dea04b6dc6e4d64991f349e5ed98634fe8fae86a",
-                "reference": "dea04b6dc6e4d64991f349e5ed98634fe8fae86a",
+                "url": "https://api.github.com/repos/hhvm/hsl/zipball/99ed4bce2170d12e38654f8502482fcac5b80352",
+                "reference": "99ed4bce2170d12e38654f8502482fcac5b80352",
                 "shasum": ""
             },
             "require": {
@@ -162,25 +162,25 @@
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "description": "The Hack Standard Library",
-            "time": "2017-10-20T16:53:49+00:00"
+            "time": "2017-10-26T18:38:35+00:00"
         },
         {
             "name": "hhvm/type-assert",
-            "version": "v3.0.3",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/type-assert.git",
-                "reference": "f2dececcfab97ae1b36439fa8ff09b7ae36cf10f"
+                "reference": "92848dbb1598f1df3f86cc5fab5226d6f68e8282"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/f2dececcfab97ae1b36439fa8ff09b7ae36cf10f",
-                "reference": "f2dececcfab97ae1b36439fa8ff09b7ae36cf10f",
+                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/92848dbb1598f1df3f86cc5fab5226d6f68e8282",
+                "reference": "92848dbb1598f1df3f86cc5fab5226d6f68e8282",
                 "shasum": ""
             },
             "require": {
-                "hhvm": ">= 3.21.3",
-                "hhvm/hsl": ">=0.3 <2.0"
+                "hhvm": "^3.21.0",
+                "hhvm/hsl": "^1.0"
             },
             "require-dev": {
                 "91carriage/phpunit-hhi": "~5.1",
@@ -195,7 +195,7 @@
                 "TypeAssert",
                 "hack"
             ],
-            "time": "2017-10-02T16:23:15+00:00"
+            "time": "2017-11-08T23:32:34+00:00"
         }
     ],
     "packages-dev": [
