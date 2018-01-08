@@ -31,6 +31,8 @@ Run Composer commands using HHVM like so:
 
 bc. $ hhvm $(which composer) install;
 
+In addition, you will need to use "hhvm-autoload":https://github.com/hhvm/hhvm-autoload#usage as your autoloader.
+
 h1. Simple Example
 
 bc. <?hh
