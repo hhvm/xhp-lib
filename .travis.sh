@@ -17,3 +17,7 @@ if [ $HHVM_VERSION -ge 32200 -a $HHVM_VERSION -lt 32300 ]; then
   echo enable_experimental_tc_features = optional_shape_field, unknown_fields_shape_is_not_subtype_of_known_fields_shape >> .hhconfig
   hh_server --check $(pwd)
 fi
+if [ $HHVM_VERSION -ge 32200 ]; then
+  echo safe_array = true >> .hhconfig
+  hh_server --check $(pwd)
+fi
