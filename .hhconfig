@@ -1,1 +1,3 @@
 assume_php=false
+enable_experimental_tc_features = safe_pass_by_ref, safe_array, safe_vector_array, contextual_inference
+ignored_paths = [ "vendor/.+/tests/.+" ]

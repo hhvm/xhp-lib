@@ -5,7 +5,7 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["BSD-3-Clause"],
     "require": {
-        "hhvm": "~3.12",
+        "hhvm": "~3.23",
         "hhvm/type-assert": "^3.0",
         "hhvm/hhvm-autoload": "^1.5"
     },
