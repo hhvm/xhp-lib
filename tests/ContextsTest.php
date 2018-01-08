@@ -4,7 +4,7 @@ class :test:contexts extends :x:element {
   protected function render(): XHPRoot {
     return
       <div>
-        <p>{$this->getContext('heading')}</p>
+        <p>{(string) $this->getContext('heading')}</p>
         {$this->getChildren()}
       </div>;
   }
