@@ -1,11 +1,7 @@
-sudo: required
-language: generic
-services:
- - docker
-env:
- - HHVM_VERSION=latest
- - HHVM_VERSION=nightly
-install:
- - docker pull hhvm/hhvm:$HHVM_VERSION
+language: php
+php:
+ - hhvm
+ - hhvm-3.24
+ - hhvm-nightly
 script:
- - docker run -v $(pwd):/var/source hhvm/hhvm:$HHVM_VERSION /var/source/.travis.sh
+ - ./.travis.sh
