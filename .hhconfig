@@ -1,5 +1,6 @@
 assume_php=false
-enable_experimental_tc_features = no_fallback_in_namespaces
+enable_experimental_tc_features = no_fallback_in_namespaces, unpacking_check_arity, disallow_refs_in_array, disallow_untyped_lambda_as_non_function_type
+ignored_paths = [ "vendor/.+/tests/.+" ]
 safe_array = true
 safe_vector_array = true
-ignored_paths = [ "vendor/.+/tests/.+" ]
+disallow_destruct = true
