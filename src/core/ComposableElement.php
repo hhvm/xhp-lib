@@ -41,7 +41,19 @@ abstract class :x:composable-element extends :xhp {
     foreach ($children as $child) {
       $this->appendChild($child);
     }
-    $this->setAttributes($attributes);
+
+    foreach ($attributes as $key => $value) {
+      if (self::isSpreadKey($key)) {
+        invariant(
+          $value instanceof :x:composable-element,
+          "Only XHP can be used with an attribute spread operator",
+        );
+        $this->spreadElementImpl($value);
+      } else {
+        $this->setAttribute($key, $value);
+      }
+    }
+
     if (:xhp::isChildValidationEnabled()) {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
@@ -291,6 +303,44 @@ abstract class :x:composable-element extends :xhp {
 
   final public function getAttributes(): Map<string, mixed> {
     return $this->attributes->toMap();
+  }
+
+  /**
+   * Determines if a given XHP attribute "key" represents an XHP spread operator
+   * in the constructor.
+   */
+  private static function isSpreadKey(string $key): bool {
+    return substr($key, 0, strlen(:xhp::SPREAD_PREFIX)) === :xhp::SPREAD_PREFIX;
+  }
+
+  /**
+   * Implements the XHP spread operator in expressions like:
+   *   <foo attr1="bar" {...$xhp} />
+   *
+   * This will only copy defined attributes on $xhp to when they are also
+   * defined on $this. "Special" data-/aria- attributes will still need to be
+   * implicitly transferred, since the typechecker never knows about them.
+   *
+   * Defaults from $xhp are copied as well, if they are present.
+   */
+  protected final function spreadElementImpl(
+    :x:composable-element $element,
+  ): void {
+    foreach ($element::__xhpReflectionAttributes() as $attr_name => $attr) {
+      $our_attr = static::__xhpReflectionAttribute($attr_name);
+      if ($our_attr === null) {
+        continue;
+      }
+
+      $val = $element->getAttribute($attr_name);
+      if ($val === null) {
+        continue;
+      }
+
+      // If the receiving class has the same attribute and we had a value or
+      // a default, then copy it over.
+      $this->setAttribute($attr_name, $val);
+    }
   }
 
   /**
