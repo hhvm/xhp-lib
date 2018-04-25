@@ -401,4 +401,15 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
       "Incorrect reflection for unsupported `callable` attribute type",
     );
   }
+
+  public function testAttributeSpread(): void {
+    $x = <test:attribute-types mystring="foo" mybool={true} />;
+    $y = <test:attribute-types mystring="bar" {...$x} myint={5} />;
+    $this->assertSame('foo', $y->:mystring);
+    $this->assertSame(5, $y->:myint);
+    $this->assertSame(true, $y->:mybool);
+
+    $attrs = $y->getAttributes()->keys();
+    $this->assertEquals(Vector { 'mystring', 'mybool', 'myint' }, $attrs);
+  }
 }

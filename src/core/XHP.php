@@ -10,6 +10,9 @@
  */
 
 abstract class :xhp implements XHPChild, JsonSerializable {
+  // Must be kept in sync with code generation for XHP
+  const string SPREAD_PREFIX = '...$';
+
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
     Traversable<XHPChild> $children,
