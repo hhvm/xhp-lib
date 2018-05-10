@@ -1,4 +1,12 @@
 <?hh
+/*
+ *  Copyright (c) 2004-present, Facebook, Inc.
+ *  All rights reserved.
+ *
+ *  This source code is licensed under the MIT license found in the
+ *  LICENSE file in the root directory of this source tree.
+ *
+ */
 
 // Please see MIGRATING.md for information on how these should be used in
 // practice; please don't create/use classes as unsafe as these examples.
