@@ -24,6 +24,21 @@ class ExampleVeryUnsafeRenderable extends ExampleUnsafeRenderable
   implements XHPUnsafeRenderable, XHPAlwaysValidChild {
 }
 
+// Attribute needs to implement Stringish as well to be valid
+class ExampleUnsafeAttribute implements XHPUnsafeRenderable, Stringish {
+  public function __construct(public string $htmlString) {
+  }
+
+  public function toHTMLString(): string {
+    return $this->htmlString;
+  }
+
+  public function __toString(): string {
+    return $this->htmlString;
+  }
+}
+
+
 class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
   public function testUnsafeRenderable() {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
@@ -47,5 +62,11 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
     $this->assertEquals('<html>foo<body></body></html>', $xhp->toString());
+  }
+
+  public function testUnsafeAttribute(): void {
+    $escaped = new ExampleUnsafeAttribute('foo && bar');
+    $xhp = <script onload={$escaped} />;
+    $this->assertEquals('<script onload="foo && bar"></script>', $xhp->toString());
   }
 }
