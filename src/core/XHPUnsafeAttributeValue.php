@@ -12,8 +12,8 @@
  * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
  * string.
  *
- * This is useful for attribute values that contain html entities which should
- * not be escaped, such as an onload attribute which can contain a snippet of JS.
+ * This is useful when migrating to XHP for attribute values which are already escaped.
+ * If the attribute contains unescaped double quotes, this will not escape them, which will break the runtime behavior.
  */
 abstract class XHPUnsafeAttributeValue implements Stringish {
   abstract public function toHTMLString(): string;

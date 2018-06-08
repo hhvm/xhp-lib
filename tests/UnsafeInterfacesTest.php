@@ -60,13 +60,14 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testUnsafeAttribute(): void {
-    // without using XHPUnsafeAttributeValue, this will be escaped in an undesirable way
-    $xhp = <script onload="foo && bar" />;
-    $this->assertEquals('<script onload="foo &amp;&amp; bar"></script>', $xhp->toString());
+    // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
+    $attr = "document.querySelector('div').innerHTML='foo &amp;&amp; bar'";
+    $xhp = <div onclick={$attr}>click me</div>;
+    $this->assertEquals('<div onclick="document.querySelector(\'div\').innerHTML=\'foo &amp;amp;&amp;amp; bar\'">click me</div>', $xhp->toString());
 
-    // skip escaping so that the JS works
-    $escaped = new ExampleUnsafeAttribute('foo && bar');
-    $xhp = <script onload={$escaped} />;
-    $this->assertEquals('<script onload="foo && bar"></script>', $xhp->toString());
+    // using XHPUnsafeAttributeValue the &amp; is not double escaped
+    $escaped = new ExampleUnsafeAttribute("document.querySelector('div').innerHTML='foo &amp;&amp; bar'");
+    $xhp = <div onclick={$escaped}>click me</div>;
+    $this->assertEquals('<div onclick="document.querySelector(\'div\').innerHTML=\'foo &amp;&amp; bar\'">click me</div>', $xhp->toString());
   }
 }

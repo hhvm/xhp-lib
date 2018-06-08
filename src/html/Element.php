@@ -118,7 +118,6 @@ abstract class :xhp:html-element extends :x:primitive {
         if ($val === true) {
           $buf .= ' '.htmlspecialchars($key);
         } else {
-
           if ($val instanceof XHPUnsafeAttributeValue) {
             $val_str = $val->toHTMLString();
           } else {
