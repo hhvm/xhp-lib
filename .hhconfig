@@ -1,6 +1,8 @@
 assume_php=false
-enable_experimental_tc_features = no_fallback_in_namespaces, unpacking_check_arity, disallow_refs_in_array, disallow_untyped_lambda_as_non_function_type
 ignored_paths = [ "vendor/.+/tests/.+" ]
-safe_array = true
-safe_vector_array = true
-disallow_destruct = true
+disallow_elvis_space=true
+disallow_non_arraykey_keys=true
+disallow_unsafe_comparisons=true
+decl_override_require_hint=true
+enable_experimental_tc_features=shape_field_check,sealed_classes
+forward_compatibility_level=20180704
