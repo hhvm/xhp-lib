@@ -16,6 +16,7 @@ class :script extends :xhp:raw-pcdata-element {
     bool defer,
     Stringish src,
     Stringish type,
+    Stringish integrity,
     // Legacy
     Stringish language;
   category %flow, %phrase, %metadata;
