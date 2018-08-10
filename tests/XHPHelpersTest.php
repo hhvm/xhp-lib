@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :test:no-xhphelpers extends :x:element {
   use XHPBaseHTMLHelpers;
   attribute :xhp:html-element;
@@ -58,30 +60,30 @@ class :test:with-class-on-root extends :x:element {
 class XHPHelpersTest extends PHPUnit_Framework_TestCase {
   public function testTransferAttributesWithoutHelpers(): void {
     $x = <test:no-xhphelpers data-foo="bar" />;
-    $this->assertSame('<div></div>', $x->toString());
-    $this->assertNotEmpty($x->getID());
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->getID())->toNotBeEmpty();
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testTransferAttributesAsyncWithoutHelpers(): void {
     $x = <test:async:no-xhphelpers data-foo="bar" />;
-    $this->assertSame('<div></div>', $x->toString());
-    $this->assertNotEmpty($x->getID());
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->getID())->toNotBeEmpty();
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testTransferAttributesWithHelpers(): void {
     $x = <test:xhphelpers data-foo="bar" />;
-    $this->assertSame('<div data-foo="bar"></div>', $x->toString());
-    $this->assertNotEmpty($x->getID());
-    $this->assertSame('<div id="'.$x->getID().'"></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div data-foo="bar"></div>');
+    expect($x->getID())->toNotBeEmpty();
+    expect('<div id="'.$x->getID().'"></div>')->toBeSame($x->toString());
   }
 
   public function testTransferAttributesAsyncWithHelpers(): void {
     $x = <test:async:xhphelpers data-foo="bar" />;
-    $this->assertSame('<div data-foo="bar"></div>', $x->toString());
-    $this->assertNotEmpty($x->getID());
-    $this->assertSame('<div id="'.$x->getID().'"></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div data-foo="bar"></div>');
+    expect($x->getID())->toNotBeEmpty();
+    expect('<div id="'.$x->getID().'"></div>')->toBeSame($x->toString());
   }
 
   public function testAddClassWithoutHelpers(): void {
@@ -89,8 +91,8 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
-    $this->assertSame('foo bar herp', $x->:class);
-    $this->assertSame("<div></div>", $x->toString());
+    expect($x->:class)->toBeSame('foo bar herp');
+    expect($x->toString())->toBeSame("<div></div>");
   }
 
   public function testAddClassWithHelpers(): void {
@@ -98,26 +100,25 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
-    $this->assertSame('foo bar herp', $x->:class);
-    $this->assertSame('<div class="foo bar herp"></div>', $x->toString());
+    expect($x->:class)->toBeSame('foo bar herp');
+    expect($x->toString())->toBeSame('<div class="foo bar herp"></div>');
   }
 
   public function testRootClassPreserved(): void {
     $x = <test:with-class-on-root />;
-    $this->assertSame('<div class="rootClass"></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div class="rootClass"></div>');
   }
 
   public function testTransferedClassesAppended(): void {
     $x = <test:with-class-on-root class="extraClass" />;
-    $this->assertSame(
-      '<div class="rootClass extraClass"></div>',
-      $x->toString(),
-    );
+    expect(      $x->toString(),
+)->toBeSame(
+      '<div class="rootClass extraClass"></div>'    );
   }
 
   public function testRootClassesNotOverridenByEmptyString(): void {
     $x = <test:with-class-on-root class="" />;
-    $this->assertSame('<div class="rootClass"></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div class="rootClass"></div>');
   }
 
   public function testNested(): void {
@@ -125,9 +126,8 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
       <test:xhphelpers class="herp">
         <test:xhphelpers class="derp" />
       </test:xhphelpers>;
-    $this->assertSame(
-      '<div class="herp"><div class="derp"></div></div>',
-      $x->toString(),
-    );
+    expect(      $x->toString(),
+)->toBeSame(
+      '<div class="herp"><div class="derp"></div></div>'    );
   }
 }

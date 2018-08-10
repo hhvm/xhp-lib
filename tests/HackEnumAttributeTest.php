@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 enum TestEnum: int {
   HERP = 1;
   DERP = 2;
@@ -32,17 +34,17 @@ class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testValidValues(): void {
     $x = <test:hack-enum-attribute foo={TestEnum::HERP} />;
-    $this->assertSame('<div>HERP</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>HERP</div>');
     $x = <test:hack-enum-attribute foo={TestEnum::DERP} />;
-    $this->assertSame('<div>DERP</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>DERP</div>');
   }
 
   public function testValidRawValues(): void {
     // UNSAFE
     $x = <test:hack-enum-attribute foo={1} />;
-    $this->assertSame('<div>HERP</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>HERP</div>');
     $x = <test:hack-enum-attribute foo={2} />;
-    $this->assertSame('<div>DERP</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>DERP</div>');
   }
 
   /**

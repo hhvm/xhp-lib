@@ -7,6 +7,8 @@
  *  LICENSE file in the root directory of this source tree.
  *
  */
+
+use function Facebook\FBExpect\expect;
 // Using decl because this test intentional passes the wrong types for
 // attributes
 
@@ -49,10 +51,10 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
         mystring="foo"
         mybool={true}
       />;
-    $this->assertSame(3, $x->:myint);
-    $this->assertSame(1.23, $x->:myfloat);
-    $this->assertSame('foo', $x->:mystring);
-    $this->assertSame(true, $x->:mybool);
+    expect($x->:myint)->toBeSame(3);
+    expect($x->:myfloat)->toBeSame(1.23);
+    expect($x->:mystring)->toBeSame('foo');
+    expect($x->:mybool)->toBeSame(true);
   }
 
   /**
@@ -107,7 +109,7 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
     error_reporting(E_ALL);
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
     $x = <test:attribute-coercion-modes mystring={2} />;
-    $this->assertSame('2', $x->:mystring);
+    expect($x->:mystring)->toBeSame('2');
   }
 
   public function testLoggingDeprecationCoercion(): void {
@@ -119,10 +121,10 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
     } catch (Exception $e) {
       $exception = $e;
     }
-    $this->assertInstanceOf('PHPUnit_Framework_Error_Deprecated', $exception);
+    expect($exception)->toBeInstanceOf('PHPUnit_Framework_Error_Deprecated');
 
     error_reporting(E_ALL & ~E_USER_DEPRECATED);
     $x = <test:attribute-coercion-modes mystring={2} />;
-    $this->assertSame('2', $x->:mystring);
+    expect($x->:mystring)->toBeSame('2');
   }
 }

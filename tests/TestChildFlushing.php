@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :test:verbatim-root extends :x:element {
   attribute XHPRoot root @required;
 
@@ -52,7 +54,7 @@ class XHPChildFlushTest extends PHPUnit_Framework_TestCase {
   public function testSynchronous(XHPRoot $root, string $expected) {
     $elem = <test:verbatim-root />;
     $elem->setContext('root', $root);
-    $this->assertSame($expected, $elem->toString());
+    expect($elem->toString())->toBeSame($expected);
   }
 
   /**
@@ -61,6 +63,6 @@ class XHPChildFlushTest extends PHPUnit_Framework_TestCase {
   public function testAsynchronous(XHPRoot $root, string $expected) {
     $elem = <test:verbatim-root:async />;
     $elem->setContext('root', $root);
-    $this->assertSame($expected, $elem->toString());
+    expect($elem->toString())->toBeSame($expected);
   }
 }

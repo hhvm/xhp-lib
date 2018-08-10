@@ -10,6 +10,7 @@
         "hhvm/hhvm-autoload": "^1.5"
     },
     "require-dev": {
+        "facebook/fbexpect": "^1.1.0",
         "phpunit/phpunit": "^5.1.0",
         "91carriage/phpunit-hhi": "^5.1.0"
     },

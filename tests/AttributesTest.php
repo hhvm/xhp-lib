@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 type TMyTestShape = shape('foo' => string, 'bar' => ?string);
 class :test:attribute-types extends :x:element {
   attribute
@@ -87,7 +89,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
         mymap={Map { 'herp' => 'derp' }}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
-    $this->assertEquals('<div></div>', $x->toString());
+    expect($x->toString())->toBePHPEqual('<div></div>');
   }
 
   public function testShapeWithExtraKey(): void {
@@ -100,7 +102,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
         /* HH_IGNORE_ERROR[4166] */
         myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
       />;
-    $this->assertEquals('<div></div>', $x->toString());
+    expect($x->toString())->toBePHPEqual('<div></div>');
   }
 
   public function testShapeWithMissingOptionalKey(): void {
@@ -110,7 +112,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
     /* HH_IGNORE_ERROR[4057] */
     $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
-    $this->assertEquals('<div></div>', $x->toString());
+    expect($x->toString())->toBePHPEqual('<div></div>');
   }
 
   public function testShapeWithMissingRequiredKey(): void {
@@ -121,9 +123,9 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testValidArrayKeys(): void {
     $x = <test:attribute-types myarraykey="foo" />;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
     $x = <test:attribute-types myarraykey={123} />;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   /**
@@ -137,9 +139,9 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testValidNum(): void {
     $x = <test:attribute-types mynum={123} />;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
     $x = <test:attribute-types mynum={1.23} />;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   /**
@@ -152,19 +154,19 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testNoAttributes(): void {
-    $this->assertEquals('<div></div>', <test:attribute-types />);
+    expect(<test:attribute-types />)->toBePHPEqual('<div></div>');
   }
 
   public function testStringableObjectAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={new StringableTestClass()} />;
-    $this->assertSame('StringableTestClass', $x->:mystring);
+    expect($x->:mystring)->toBeSame('StringableTestClass');
   }
 
   public function testIntegerAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mystring={123} />;
-    $this->assertSame('123', $x->:mystring);
+    expect($x->:mystring)->toBeSame('123');
   }
 
   /**
@@ -194,19 +196,19 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testIntishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={'123'} />;
-    $this->assertSame(123, $x->:myint);
+    expect($x->:myint)->toBeSame(123);
   }
 
   public function testFloatAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint={1.23} />;
-    $this->assertSame(1, $x->:myint);
+    expect($x->:myint)->toBeSame(1);
   }
 
   public function testFloatishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myint="1.23" />;
-    $this->assertSame(1, $x->:myint);
+    expect($x->:myint)->toBeSame(1);
   }
 
   /**
@@ -244,13 +246,13 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testTrueStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="true" />;
-    $this->assertSame(true, $x->:mybool);
+    expect($x->:mybool)->toBeSame(true);
   }
 
   public function testFalseStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="false" />;
-    $this->assertSame(false, $x->:mybool);
+    expect($x->:mybool)->toBeSame(false);
   }
 
   /**
@@ -275,7 +277,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     // idiomatic - eg checked="checked"
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types mybool="mybool" />;
-    $this->assertSame(true, $x->:mybool);
+    expect($x->:mybool)->toBeSame(true);
   }
 
   /**
@@ -288,16 +290,16 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testIntAsFloat(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat={123} />;
-    $this->assertSame(123.0, $x->:myfloat);
+    expect($x->:myfloat)->toBeSame(123.0);
   }
 
   public function testNumericStringsAsFloats(): void {
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="123" />;
-    $this->assertSame(123.0, $x->:myfloat);
+    expect($x->:myfloat)->toBeSame(123.0);
     /* HH_IGNORE_ERROR[4110] */
     $x = <test:attribute-types myfloat="1.23" />;
-    $this->assertSame(1.23, $x->:myfloat);
+    expect($x->:myfloat)->toBeSame(1.23);
   }
 
   /**
@@ -350,8 +352,8 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testProvidingRequiredAttributes(): void {
     $x = <test:required-attributes mystring="herp" />;
-    $this->assertSame('herp', $x->:mystring);
-    $this->assertSame('<div>herp</div>', $x->toString());
+    expect($x->:mystring)->toBeSame('herp');
+    expect($x->toString())->toBeSame('<div>herp</div>');
   }
 
   /**
@@ -359,19 +361,19 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
    */
   public function testOmittingRequiredAttributes(): void {
     $x = <test:required-attributes />;
-    $this->assertNull($x->:mystring);
+    expect($x->:mystring)->toBeNull();
   }
 
   public function testProvidingDefaultAttributes(): void {
     $x = <test:default-attributes mystring="herp" />;
-    $this->assertSame('herp', $x->:mystring);
-    $this->assertSame('<div>herp</div>', $x->toString());
+    expect($x->:mystring)->toBeSame('herp');
+    expect($x->toString())->toBeSame('<div>herp</div>');
   }
 
   public function testOmittingDefaultAttributes(): void {
     $x = <test:default-attributes />;
-    $this->assertSame('mydefault', $x->:mystring);
-    $this->assertSame('<div>mydefault</div>', $x->toString());
+    expect($x->:mystring)->toBeSame('mydefault');
+    expect($x->toString())->toBeSame('<div>mydefault</div>');
   }
 
   /**
@@ -384,9 +386,9 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
 
   public function testSpecialAttributes(): void {
     $x = <test:default-attributes data-idonotexist="derp" />;
-    $this->assertSame('<div>mydefault</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>mydefault</div>');
     $x = <test:default-attributes aria-idonotexist="derp" />;
-    $this->assertSame('<div>mydefault</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>mydefault</div>');
   }
 
   /**
@@ -395,7 +397,7 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testRenderCallableAttribute(): void {
     $x =
       <test:callable-attribute
-    /* HH_IGNORE_ERROR[4110] */
+        /* HH_IGNORE_ERROR[4110] */
         foo={function() {
         }}
       />;
@@ -404,20 +406,20 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   public function testReflectOnCallableAttribute(): void {
     $rxhp = new ReflectionXHPClass(:test:callable-attribute::class);
     $rattr = $rxhp->getAttribute('foo');
-    $this->assertTrue(
-      strstr((string)$rattr, "<UNSUPPORTED: legacy callable>") !== false,
-      "Incorrect reflection for unsupported `callable` attribute type",
-    );
+    expect(strstr((string)$rattr, "<UNSUPPORTED: legacy callable>") !== false)
+      ->toBeTrue(
+        "Incorrect reflection for unsupported `callable` attribute type",
+      );
   }
 
   public function testAttributeSpread(): void {
     $x = <test:attribute-types mystring="foo" mybool={true} />;
     $y = <test:attribute-types mystring="bar" {...$x} myint={5} />;
-    $this->assertSame('foo', $y->:mystring);
-    $this->assertSame(5, $y->:myint);
-    $this->assertSame(true, $y->:mybool);
+    expect($y->:mystring)->toBeSame('foo');
+    expect($y->:myint)->toBeSame(5);
+    expect($y->:mybool)->toBeSame(true);
 
     $attrs = $y->getAttributes()->keys();
-    $this->assertEquals(Vector { 'mystring', 'mybool', 'myint' }, $attrs);
+    expect($attrs)->toBePHPEqual(Vector { 'mystring', 'mybool', 'myint' });
   }
 }

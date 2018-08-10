@@ -5,4 +5,4 @@ disallow_non_arraykey_keys=true
 disallow_unsafe_comparisons=true
 decl_override_require_hint=true
 enable_experimental_tc_features=shape_field_check,sealed_classes
-forward_compatibility_level=20180704
+forward_compatibility_level=20180813
