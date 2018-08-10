@@ -111,9 +111,9 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
 
   public function testTransferedClassesAppended(): void {
     $x = <test:with-class-on-root class="extraClass" />;
-    expect(      $x->toString(),
-)->toBeSame(
-      '<div class="rootClass extraClass"></div>'    );
+    expect($x->toString())->toBeSame(
+      '<div class="rootClass extraClass"></div>',
+    );
   }
 
   public function testRootClassesNotOverridenByEmptyString(): void {
@@ -126,8 +126,8 @@ class XHPHelpersTest extends PHPUnit_Framework_TestCase {
       <test:xhphelpers class="herp">
         <test:xhphelpers class="derp" />
       </test:xhphelpers>;
-    expect(      $x->toString(),
-)->toBeSame(
-      '<div class="herp"><div class="derp"></div></div>'    );
+    expect($x->toString())->toBeSame(
+      '<div class="herp"><div class="derp"></div></div>',
+    );
   }
 }
