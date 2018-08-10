@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :async:test extends :x:element {
   use XHPAsync;
 
@@ -52,38 +54,38 @@ class :async:par-test extends :x:element {
 class AsyncTest extends PHPUnit_Framework_TestCase {
   public function testDiv() {
     $xhp = <async:test>Herp</async:test>;
-    $this->assertEquals('<div>Herp</div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
   }
 
   public function testXFrag() {
     $frag = <x:frag>{1}{2}</x:frag>;
     $xhp = <async:test>{$frag}</async:test>;
-    $this->assertEquals('<div>12</div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div>12</div>');
   }
 
   public function testNested() {
     $xhp = <async:test><async:test>herp derp</async:test></async:test>;
-    $this->assertEquals('<div><div>herp derp</div></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div><div>herp derp</div></div>');
   }
 
   public function testEmpty() {
     $xhp = <async:test />;
-    $this->assertEquals('<div></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div></div>');
   }
 
   public function testNestedEmpty() {
     $xhp = <async:test><async:test /></async:test>;
-    $this->assertEquals('<div><div></div></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div><div></div></div>');
   }
 
   public function testNestedWithNonAsyncChild() {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
-    $this->assertEquals('<div><b>BE BOLD</b></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div><b>BE BOLD</b></div>');
   }
 
   public function testInstanceOfInterface() {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
-    $this->assertInstanceOf(XHPAwaitable::class, $xhp);
+    expect($xhp)->toBeInstanceOf(XHPAwaitable::class);
   }
 
   public function parallelizationContainersProvider() {
@@ -103,9 +105,8 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $container->replaceChildren([$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
-    $this->assertSame(
+    expect($tree->toString())->toBeSame(
       '<div><div>a</div><div>b</div><div>c</div></div>',
-      $tree->toString(),
     );
 
     $log = :async:par-test::$log;
@@ -121,19 +122,16 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     $max_mid = max($by_node->map($x ==> $x['mid']));
     $min_finish = min($by_node->map($x ==> $x['finish']));
 
-    $this->assertGreaterThan(
+    expect($min_mid)->toBeGreaterThan(
       $max_start,
-      $min_mid,
       'all should be started before any get continued',
     );
-    $this->assertGreaterThan(
+    expect($min_finish)->toBeGreaterThan(
       $max_mid,
-      $min_finish,
       'all should have reached stage two before any finish',
     );
-    $this->assertGreaterThan(
+    expect($min_finish)->toBeGreaterThan(
       $max_start,
-      $min_finish,
       'sanity check: all have started before any finish',
     );
   }

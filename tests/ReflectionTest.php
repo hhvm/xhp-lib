@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :test:for-reflection extends :x:element {
   attribute
     string mystring @required,
@@ -29,40 +31,39 @@ class ReflectionTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testClassName(): void {
-    $this->assertSame(:test:for-reflection::class, $this->rxc?->getClassName());
+    expect($this->rxc?->getClassName())->toBeSame(:test:for-reflection::class);
   }
 
   public function testElementName(): void {
-    $this->assertSame('test:for-reflection', $this->rxc?->getElementName());
+    expect($this->rxc?->getElementName())->toBeSame('test:for-reflection');
   }
 
   public function testReflectionClass(): void {
     $rc = $this->rxc?->getReflectionClass();
-    $this->assertInstanceOf(ReflectionClass::class, $rc);
-    $this->assertSame(:test:for-reflection::class, $rc?->getName());
+    expect($rc)->toBeInstanceOf(ReflectionClass::class);
+    expect($rc?->getName())->toBeSame(:test:for-reflection::class);
   }
 
   public function testGetChildren(): void {
     $children = $this->rxc?->getChildren();
-    $this->assertInstanceOf(ReflectionXHPChildrenDeclaration::class, $children);
-    $this->assertSame('(:div+,(:code,:a)?)', (string)$children);
+    expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
+    expect((string)$children)->toBeSame('(:div+,(:code,:a)?)');
   }
 
   public function testGetAttributes(): void {
     $attrs = $this->rxc?->getAttributes();
-    $this->assertNotEmpty($attrs);
-    $this->assertEquals(
+    expect($attrs)->toNotBeEmpty();
+    expect($attrs?->map($attr ==> (string)$attr))->toBePHPEqual(
       Map {
         'mystring' => 'string mystring @required',
         'myenum' => "enum {'herp', 'derp'} myenum",
         'mystringwithdefault' => "string mystringwithdefault = 'mydefault'",
       },
-      $attrs?->map($attr ==> (string)$attr),
     );
   }
 
   public function testGetCategories(): void {
     $categories = $this->rxc?->getCategories();
-    $this->assertEquals(Set { 'herp', 'derp' }, $categories);
+    expect($categories)->toBePHPEqual(Set { 'herp', 'derp' });
   }
 }

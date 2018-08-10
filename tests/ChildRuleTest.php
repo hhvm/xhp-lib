@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :test:any-children extends :x:element {
   children any;
   protected function render(): XHPRoot {
@@ -113,7 +115,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       <test:any-number-of-child />,
     };
     foreach ($elems as $elem) {
-      $this->assertSame('<div></div>', (string)$elem);
+      expect((string)$elem)->toBeSame('<div></div>');
     }
   }
 
@@ -138,18 +140,18 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
-      $this->assertSame('<div></div>', (string)$elem);
+      expect((string)$elem)->toBeSame('<div></div>');
     }
   }
 
   /**
-   * @dataProvider toStringProvider 
+   * @dataProvider toStringProvider
    */
   public function testToString(
     :x:composable-element $elem,
     string $expected,
   ): void {
-    $this->assertSame($expected, $elem->__getChildrenDeclaration());
+    expect($elem->__getChildrenDeclaration())->toBeSame($expected);
   }
 
   public function toStringProvider() {
@@ -183,7 +185,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       } catch (Exception $e) {
         $exception = $e;
       }
-      $this->assertInstanceOf(XHPInvalidChildrenException::class, $exception);
+      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
     }
   }
 
@@ -204,7 +206,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       } catch (Exception $e) {
         $exception = $e;
       }
-      $this->assertInstanceOf(XHPInvalidChildrenException::class, $exception);
+      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
     }
   }
 
@@ -226,7 +228,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       } catch (Exception $e) {
         $exception = $e;
       }
-      $this->assertInstanceOf(XHPInvalidChildrenException::class, $exception);
+      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
     }
   }
 
@@ -238,7 +240,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
-      $this->assertSame('<div></div>', $elem->toString());
+      expect($elem->toString())->toBeSame('<div></div>');
     }
   }
 
@@ -247,29 +249,29 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       Vector { <test:any-number-of-child />, <test:at-least-one-child /> };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
-      $this->assertSame('<div></div>', $elem->toString());
+      expect($elem->toString())->toBeSame('<div></div>');
     }
   }
 
   public function testEitherValidChild(): void {
     $x = <test:either-of-two-children><div /></test:either-of-two-children>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
     $x = <test:either-of-two-children><code /></test:either-of-two-children>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
 
     $x = <test:nested-rule><div /></test:nested-rule>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
     $x = <test:nested-rule><code /></test:nested-rule>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
     $x = <test:nested-rule><code /><code /></test:nested-rule>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testPCDataChild(): void {
     $x = <test:pcdata-child>herp derp</test:pcdata-child>;
-    $this->assertSame('<div>herp derp</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>herp derp</div>');
     $x = <test:pcdata-child>{123}</test:pcdata-child>;
-    $this->assertSame('<div>123</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>123</div>');
   }
 
   public function testCommaCategory(): void {
@@ -277,12 +279,12 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
       <test:needs-comma-category>
         <test:has-comma-category />
       </test:needs-comma-category>;
-    $this->assertSame('<div></div>', $x->toString());
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testFrags(): void {
     $x = <div><x:frag>{'foo'}{'bar'}</x:frag></div>;
-    $this->assertSame('<div>foobar</div>', $x->toString());
+    expect($x->toString())->toBeSame('<div>foobar</div>');
   }
 
   /**

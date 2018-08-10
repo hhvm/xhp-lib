@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 // Please see MIGRATING.md for information on how these should be used in
 // practice; please don't create/use classes as unsafe as these examples.
 
@@ -20,7 +22,8 @@ class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
   }
 }
 
-class ExampleVeryUnsafeRenderable extends ExampleUnsafeRenderable
+class ExampleVeryUnsafeRenderable
+  extends ExampleUnsafeRenderable
   implements XHPUnsafeRenderable, XHPAlwaysValidChild {
 }
 
@@ -37,9 +40,8 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
   public function testUnsafeRenderable() {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;
-    $this->assertEquals(
+    expect($xhp->toString())->toBePHPEqual(
       '<div><script>lollerskates</script></div>',
-      $xhp->toString(),
     );
   }
 
@@ -55,19 +57,22 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
   public function testAlwaysValidChild() {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
-    $this->assertEquals('<html>foo<body></body></html>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<html>foo<body></body></html>');
   }
 
   public function testUnsafeAttribute(): void {
     // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
     $attr = "foo &amp;&amp; bar";
     $xhp = <div onclick={$attr} />;
-    $this->assertEquals('<div onclick="foo &amp;amp;&amp;amp; bar"></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual(
+      '<div onclick="foo &amp;amp;&amp;amp; bar"></div>',
+    );
 
     // using XHPUnsafeAttributeValue the &amp; is not double escaped
     $escaped = new ExampleUnsafeAttribute("foo &amp;&amp; bar");
     $xhp = <div onclick={$escaped} />;
-    $this->assertEquals('<div onclick="foo &amp;&amp; bar"></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual(
+      '<div onclick="foo &amp;&amp; bar"></div>',
+    );
   }
 }
-

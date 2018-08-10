@@ -8,6 +8,8 @@
  *
  */
 
+use function Facebook\FBExpect\expect;
+
 class :test:renders-primitive extends :x:element {
   protected function render(): XHPRoot {
     return <x:frag><div>123</div></x:frag>;
@@ -20,54 +22,54 @@ class BasicsTest extends PHPUnit_Framework_TestCase {
       <div>
         Hello, world.
       </div>;
-    $this->assertEquals('<div> Hello, world. </div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div> Hello, world. </div>');
   }
 
   public function testFragWithString() {
     $xhp = <x:frag>Derp</x:frag>;
-    $this->assertSame('Derp', $xhp->toString());
+    expect($xhp->toString())->toBeSame('Derp');
   }
 
   public function testDivWithChild() {
     $xhp = <div><div>Herp</div></div>;
-    $this->assertEquals('<div><div>Herp</div></div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div><div>Herp</div></div>');
   }
 
   public function testInterpolation() {
     $x = "Herp";
     $xhp = <div>{$x}</div>;
-    $this->assertEquals('<div>Herp</div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
   }
 
   public function testXFrag() {
     $x = 'herp';
     $y = 'derp';
     $frag = <x:frag>{$x}{$y}</x:frag>;
-    $this->assertEquals(2, $frag->getChildren()->count());
+    expect($frag->getChildren()->count())->toBePHPEqual(2);
     $xhp = <div>{$frag}</div>;
-    $this->assertEquals('<div>herpderp</div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div>herpderp</div>');
   }
 
   public function testEscaping() {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
-    $this->assertEquals('<div>foo&lt;SCRIPT&gt;bar</div>', $xhp->toString());
+    expect($xhp->toString())->toBePHPEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
   }
 
   public function testElement2Class(): void {
-    $this->assertSame(:div::class, :xhp::element2class('div'));
+    expect(:xhp::element2class('div'))->toBeSame(:div::class);
   }
 
   public function testClass2Element(): void {
-    $this->assertSame('div', :xhp::class2element(:div::class));
+    expect(:xhp::class2element(:div::class))->toBeSame('div');
   }
 
   public function testRendersPrimitive(): void {
     $xhp = <test:renders-primitive />;
-    $this->assertSame('<div>123</div>', $xhp->toString());
+    expect($xhp->toString())->toBeSame('<div>123</div>');
   }
 
   public function testJsonSerialize(): void {
     $xhp = <div>Hello world.</div>;
-    $this->assertSame('["<div>Hello world.<\/div>"]', json_encode([$xhp]));
+    expect(json_encode([$xhp]))->toBeSame('["<div>Hello world.<\/div>"]');
   }
 }
