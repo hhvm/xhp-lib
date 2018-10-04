@@ -23,12 +23,12 @@ class :test:hack-enum-attribute extends :x:element {
   }
 }
 
-class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
-  public function setUp(): void {
+class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
+  public async function beforeEachTestAsync(): Awaitable<void> {
     :xhp::enableAttributeValidation();
   }
 
-  public function tearDown(): void {
+  public async function afterEachTestAsync(): Awaitable<void> {
     :xhp::disableAttributeValidation();
   }
 
@@ -47,11 +47,9 @@ class HackEnumAttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div>DERP</div>');
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testInvalidValue(): void {
-    // UNSAFE
-    $x = <test:hack-enum-attribute foo={0} />;
+    expect(() ==> {
+      $x = <test:hack-enum-attribute foo={/* HH_FIXME[4110] */ 0} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 }

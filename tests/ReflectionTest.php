@@ -23,10 +23,10 @@ class :test:for-reflection extends :x:element {
   }
 }
 
-class ReflectionTest extends PHPUnit_Framework_TestCase {
+class ReflectionTest extends Facebook\HackTest\HackTest {
   private ?ReflectionXHPClass $rxc;
 
-  public function setUp(): void {
+  public async function beforeEachTestAsync(): Awaitable<void> {
     $this->rxc = new ReflectionXHPClass(:test:for-reflection::class);
   }
 

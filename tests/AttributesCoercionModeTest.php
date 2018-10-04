@@ -24,17 +24,17 @@ class :test:attribute-coercion-modes extends :x:element {
   }
 }
 
-class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
+class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
   private ?XHPAttributeCoercionMode $coercionMode;
   private mixed $errorReporting;
 
-  public function setUp(): void {
+  public async function beforeEachTestAsync(): Awaitable<void> {
     $this->coercionMode = XHPAttributeCoercion::GetMode();
     $this->errorReporting = error_reporting();
     :xhp::enableAttributeValidation();
   }
 
-  public function tearDown(): void {
+  public async function afterEachTestAsync(): Awaitable<void> {
     $mode = $this->coercionMode;
     invariant($mode !== null, 'did not save coercion mode');
     XHPAttributeCoercion::SetMode($mode);
@@ -57,52 +57,46 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
     expect($x->:mybool)->toBeSame(true);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIntishStringAsInt(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes myint="1" />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes myint="1" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testFloatAsInt(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes myint={1.23} />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes myint={1.23} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIntAsFloat(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes myfloat={2} />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes myfloat={2} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIntAsString(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes mystring={2} />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes mystring={2} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIntAsBool(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes mybool={1} />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes mybool={1} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testStringAsBool(): void {
-    XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
-    $x = <test:attribute-coercion-modes mybool="true" />;
+    expect(() ==> {
+      XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
+      $x = <test:attribute-coercion-modes mybool="true" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testSilentCoercion(): void {
@@ -113,6 +107,7 @@ class AttributesCoercionModeTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testLoggingDeprecationCoercion(): void {
+    $this->markTestSkipped("Needs porting to HackTest (fbexpect#7)");
     error_reporting(E_ALL);
     $exception = null;
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::LOG_DEPRECATION);

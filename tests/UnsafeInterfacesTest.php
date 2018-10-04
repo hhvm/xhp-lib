@@ -36,7 +36,7 @@ class ExampleUnsafeAttribute extends XHPUnsafeAttributeValue {
   }
 }
 
-class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
+class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
   public function testUnsafeRenderable() {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;
@@ -45,13 +45,12 @@ class UnsafeInterfacesTest extends PHPUnit_Framework_TestCase {
     );
   }
 
-  /**
-   * @expectedException XHPInvalidChildrenException
-   */
   public function testInvalidChild() {
-    $x = new ExampleUnsafeRenderable('foo');
-    $xhp = <html>{$x}<body /></html>;
-    $xhp->toString(); // validate, throw exception
+    expect(() ==> {
+      $x = new ExampleUnsafeRenderable('foo');
+      $xhp = <html>{$x}<body /></html>;
+      $xhp->toString(); // validate, throw exception
+    })->toThrow(XHPInvalidChildrenException::class);
   }
 
   public function testAlwaysValidChild() {

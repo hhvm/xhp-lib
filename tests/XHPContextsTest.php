@@ -20,7 +20,7 @@ class :test:contexts extends :x:element {
   }
 }
 
-class XHPContextsTest extends PHPUnit_Framework_TestCase {
+class XHPContextsTest extends Facebook\HackTest\HackTest {
   public function testContextSimple(): void {
     $x = <test:contexts />;
     $x->setContext('heading', 'herp');

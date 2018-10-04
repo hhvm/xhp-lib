@@ -106,7 +106,7 @@ class :test:needs-comma-category extends :x:element {
   }
 }
 
-class ChildRuleTest extends PHPUnit_Framework_TestCase {
+class ChildRuleTest extends Facebook\HackTest\HackTest {
   public function testNoChild(): void {
     $elems = Vector {
       <test:no-children />,
@@ -119,12 +119,11 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     }
   }
 
-  /**
-   * @expectedException XHPInvalidChildrenException
-   */
   public function testUnexpectedChild(): void {
-    $x = <test:no-children><div /></test:no-children>;
-    $x->toString();
+    expect(() ==> {
+      $x = <test:no-children><div /></test:no-children>;
+      $x->toString();
+    })->toThrow(XHPInvalidChildrenException::class);
   }
 
   public function testSingleChild(): void {
@@ -144,9 +143,7 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     }
   }
 
-  /**
-   * @dataProvider toStringProvider
-   */
+  <<DataProvider('toStringProvider')>>
   public function testToString(
     :x:composable-element $elem,
     string $expected,
@@ -287,11 +284,10 @@ class ChildRuleTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div>foobar</div>');
   }
 
-  /**
-   * @expectedException XHPInvalidChildrenException
-   */
   public function testNested(): void {
-    $x = <div><test:at-least-one-child /></div>;
-    $x->toString();
+    expect(() ==> {
+      $x = <div><test:at-least-one-child /></div>;
+      $x->toString();
+    })->toThrow(XHPInvalidChildrenException::class);
   }
 }

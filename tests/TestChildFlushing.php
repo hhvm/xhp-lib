@@ -28,7 +28,7 @@ class :test:verbatim-root:async extends :x:element {
   }
 }
 
-class XHPChildFlushTest extends PHPUnit_Framework_TestCase {
+class XHPChildFlushTest extends Facebook\HackTest\HackTest {
   public function xhpRootProvider() {
     return [
       [<div />, '<div></div>'],
@@ -48,18 +48,14 @@ class XHPChildFlushTest extends PHPUnit_Framework_TestCase {
     ];
   }
 
-  /**
-   * @dataProvider xhpRootProvider
-   */
+  <<DataProvider('xhpRootProvider')>>
   public function testSynchronous(XHPRoot $root, string $expected) {
     $elem = <test:verbatim-root />;
     $elem->setContext('root', $root);
     expect($elem->toString())->toBeSame($expected);
   }
 
-  /**
-   * @dataProvider xhpRootProvider
-   */
+  <<DataProvider('xhpRootProvider')>>
   public function testAsynchronous(XHPRoot $root, string $expected) {
     $elem = <test:verbatim-root:async />;
     $elem->setContext('root', $root);

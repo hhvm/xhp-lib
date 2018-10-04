@@ -65,13 +65,13 @@ class StringableTestClass {
   }
 }
 
-class AttributesTest extends PHPUnit_Framework_TestCase {
-  public function setUp(): void {
+class AttributesTest extends Facebook\HackTest\HackTest {
+  public async function beforeEachTestAsync(): Awaitable<void> {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
     :xhp::enableAttributeValidation();
   }
 
-  public function tearDown(): void {
+  public async function afterEachTestAsync(): Awaitable<void> {
     :xhp::disableAttributeValidation();
   }
 
@@ -93,32 +93,31 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
   }
 
   public function testShapeWithExtraKey(): void {
-    if (HHVM_VERSION_ID >= 32300) {
-      $this->expectException(XHPInvalidAttributeException::class);
-    }
+    expect(() ==> {
 
-    $x =
+      $x =
       <test:attribute-types
         /* HH_IGNORE_ERROR[4166] */
         myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
       />;
-    expect($x->toString())->toBePHPEqual('<div></div>');
+      expect($x->toString())->toBePHPEqual('<div></div>');
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testShapeWithMissingOptionalKey(): void {
-    if (HHVM_VERSION_ID >= 32300) {
-      $this->expectException(XHPInvalidAttributeException::class);
-    }
+    expect(() ==> {
 
     /* HH_IGNORE_ERROR[4057] */
-    $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
-    expect($x->toString())->toBePHPEqual('<div></div>');
+      $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
+      expect($x->toString())->toBePHPEqual('<div></div>');
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testShapeWithMissingRequiredKey(): void {
-    $this->expectException(XHPInvalidAttributeException::class);
+    expect(() ==> {
     /* HH_IGNORE_ERROR[4057] */
-    $x = <test:attribute-types myshape={shape()} />;
+      $x = <test:attribute-types myshape={shape()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testValidArrayKeys(): void {
@@ -128,13 +127,11 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div></div>');
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testInvalidArrayKeys(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myarraykey={1.23} />;
-    $x->toString();
+    expect(() ==> {
+      $x = <test:attribute-types myarraykey={/* HH_FIXME[4110] */ 1.23} />;
+      $x->toString();
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testValidNum(): void {
@@ -144,13 +141,11 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div></div>');
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testInvalidNum(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mynum="123" />;
-    $x->toString();
+    expect(() ==> {
+      $x = <test:attribute-types mynum=/* HH_FIXME[4110] */ "123" />;
+      $x->toString();
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testNoAttributes(): void {
@@ -169,28 +164,22 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->:mystring)->toBeSame('123');
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testUnstringableObjectAsString(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mystring={new EmptyTestClass()} />;
+    expect(() ==> {
+      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIncompleteObjectAsString(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mystring={new __PHP_Incomplete_Class()} />;
+    expect(() ==> {
+      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testArrayAsString(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mystring={[]} />;
+    expect(() ==> {
+      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ []} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIntishStringAsInt(): void {
@@ -211,36 +200,28 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->:myint)->toBeSame(1);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testObjectAsInt(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myint={new EmptyTestClass()} />;
+    expect(() ==> {
+      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIncompleteObjectAsInt(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myint={new __PHP_Incomplete_Class()} />;
+    expect(() ==> {
+      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testArrayAsInt(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myint={[]} />;
+    expect(() ==> {
+      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ []} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testNumericPrefixStringAsInt(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myint="123derp" />;
+    expect(() ==> {
+      $x = <test:attribute-types myint=/* HH_FIXME[4110] */ "123derp" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testTrueStringAsBool(): void {
@@ -255,21 +236,17 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->:mybool)->toBeSame(false);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testMixedCaseFalseStringAsBool(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mybool="False" />;
+    expect(() ==> {
+      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ "False" />;
+    })->toThrow(XHPInvalidAttributeException::class);
     // 'False' is actually truthy
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testNoStringAsBool(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types mybool="No" />;
+    expect(() ==> {
+      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ "No" />;
+    })->toThrow(XHPInvalidAttributeException::class);
     // 'No' is actually truthy
   }
 
@@ -280,11 +257,10 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->:mybool)->toBeSame(true);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testInvalidEnumValue(): void {
-    $x = <test:attribute-types myenum="derp" />;
+    expect(() ==> {
+      $x = <test:attribute-types myenum="derp" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIntAsFloat(): void {
@@ -302,52 +278,40 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->:myfloat)->toBeSame(1.23);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testNonNumericStringAsFloat(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myfloat="herpderp" />;
+    expect(() ==> {
+      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ "herpderp" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testNumericPrefixStringAsFloat(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myfloat="123derp" />;
+    expect(() ==> {
+      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ "123derp" />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testNotAContainerAsArray(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myarray={new EmptyTestClass()} />;
+    expect(() ==> {
+      $x = <test:attribute-types myarray={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testHackContainerAsArray(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myarray={Vector { 1, 2, 3 }} />;
+    expect(() ==> {
+      $x = <test:attribute-types myarray={/* HH_FIXME[4110] */ Vector { 1, 2, 3 }} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testIncompatibleObjectAsObject(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myobject={new EmptyTestClass()} />;
+    expect(() ==> {
+      $x = <test:attribute-types myobject={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  /**
-   * @expectedException XHPInvalidAttributeException
-   */
   public function testPassingArrayAsVector(): void {
-    /* HH_IGNORE_ERROR[4110] */
-    $x = <test:attribute-types myvector={[1, 2, 3]} />;
+    expect(() ==> {
+      $x = <test:attribute-types myvector={/* HH_FIXME[4110] */ [1, 2, 3]} />;
+    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testProvidingRequiredAttributes(): void {
@@ -356,12 +320,11 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div>herp</div>');
   }
 
-  /**
-   * @expectedException XHPAttributeRequiredException
-   */
   public function testOmittingRequiredAttributes(): void {
-    $x = <test:required-attributes />;
-    expect($x->:mystring)->toBeNull();
+    expect(() ==> {
+      $x = <test:required-attributes />;
+      expect($x->:mystring)->toBeNull();
+    })->toThrow(XHPAttributeRequiredException::class);
   }
 
   public function testProvidingDefaultAttributes(): void {
@@ -376,12 +339,10 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div>mydefault</div>');
   }
 
-  /**
-   * @expectedException XHPAttributeNotSupportedException
-   */
   public function testBogusAttributes(): void {
-    /* HH_IGNORE_ERROR[4053] */
-    $x = <test:default-attributes idonotexist="derp" />;
+    expect(() ==> {
+      $x = <test:default-attributes /* HH_FIXME[4053] */ idonotexist="derp" />;
+    })->toThrow(XHPAttributeNotSupportedException::class);
   }
 
   public function testSpecialAttributes(): void {
@@ -391,16 +352,15 @@ class AttributesTest extends PHPUnit_Framework_TestCase {
     expect($x->toString())->toBeSame('<div>mydefault</div>');
   }
 
-  /**
-   * @expectedException XHPUnsupportedAttributeTypeException
-   */
   public function testRenderCallableAttribute(): void {
-    $x =
+    expect(() ==> {
+      $x =
       <test:callable-attribute
         /* HH_IGNORE_ERROR[4110] */
         foo={function() {
         }}
       />;
+    })->toThrow(XHPUnsupportedAttributeTypeException::class);
   }
 
   public function testReflectOnCallableAttribute(): void {

@@ -51,7 +51,7 @@ class :async:par-test extends :x:element {
   }
 }
 
-class AsyncTest extends PHPUnit_Framework_TestCase {
+class AsyncTest extends Facebook\HackTest\HackTest {
   public function testDiv() {
     $xhp = <async:test>Herp</async:test>;
     expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
@@ -92,9 +92,7 @@ class AsyncTest extends PHPUnit_Framework_TestCase {
     return [[<test:xfrag-wrap />], [<test:async-xfrag-wrap />]];
   }
 
-  /**
-   * @dataProvider parallelizationContainersProvider
-   */
+  <<DataProvider('parallelizationContainersProvider')>>
   public function testParallelization(:x:element $container) {
     :async:par-test::$log = Vector {};
 
