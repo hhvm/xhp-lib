@@ -6,7 +6,7 @@ composer install
 
 hh_client
 
-hhvm vendor/bin/phpunit
+hhvm vendor/bin/hacktest tests/
 
 # Make sure we pass when a release is required
 EXPORT_DIR=$(mktemp -d)
