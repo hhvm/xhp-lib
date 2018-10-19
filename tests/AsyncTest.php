@@ -9,6 +9,7 @@
  */
 
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\DataProvider;
 
 class :async:test extends :x:element {
   use XHPAsync;

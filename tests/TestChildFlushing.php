@@ -10,6 +10,8 @@
 
 use function Facebook\FBExpect\expect;
 
+use type Facebook\HackTest\DataProvider;
+
 class :test:verbatim-root extends :x:element {
   attribute XHPRoot root @required;
 

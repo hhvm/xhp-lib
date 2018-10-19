@@ -71,7 +71,7 @@ class ReflectionXHPAttribute {
     );
     $v = $this->extraType;
     invariant(
-      is_string($v),
+      $v is string,
       'Class name for attribute %s is not a string',
       $this->getName(),
     );

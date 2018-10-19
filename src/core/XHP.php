@@ -92,13 +92,16 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   final protected static function renderChild(XHPChild $child): string {
     if ($child instanceof :xhp) {
       return $child->toString();
-    } else if ($child instanceof XHPUnsafeRenderable) {
-      return $child->toHTMLString();
-    } else if ($child instanceof Traversable) {
-      throw new XHPRenderArrayException('Can not render traversables!');
-    } else {
-      return htmlspecialchars((string)$child);
     }
+    if ($child instanceof XHPUnsafeRenderable) {
+      return $child->toHTMLString();
+    }
+    if ($child instanceof Traversable) {
+      throw new XHPRenderArrayException('Can not render traversables!');
+    }
+
+    /* HH_FIXME[4281] stringish migration */
+    return htmlspecialchars((string)$child);
   }
 
   public static function element2class(string $element): string {

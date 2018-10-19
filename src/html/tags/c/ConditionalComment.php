@@ -13,18 +13,14 @@
  * the conditional statement.
  */
 class :x:conditional-comment extends :x:primitive {
-  attribute Stringish if @required;
+  attribute string if @required;
   children (pcdata | :xhp)*;
 
   protected function stringify(): string {
     $children = $this->getChildren();
-    $html = '<!--[if '.(string)$this->:if.']>';
+    $html = '<!--[if '.$this->:if.']>';
     foreach ($children as $child) {
-      if ($child instanceof :xhp) {
-        $html .= :xhp::renderChild($child);
-      } else {
-        $html .= (string)$child;
-      }
+      $html .= :xhp::renderChild($child);
     }
     $html .= '<![endif]-->';
     return $html;

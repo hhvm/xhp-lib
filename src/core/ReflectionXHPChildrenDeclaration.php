@@ -70,7 +70,7 @@ class ReflectionXHPChildrenDeclaration {
     if ($this->getType() === XHPChildrenDeclarationType::NO_CHILDREN) {
       return 'empty';
     }
-    return (string)$this->getExpression();
+    return $this->getExpression()->__toString();
   }
 }
 
@@ -134,7 +134,7 @@ class ReflectionXHPChildrenExpression {
       :xhp::class2element(get_class($this->context)),
     );
     $data = $this->data[2];
-    invariant(is_string($data), 'Expected string data');
+    invariant($data is string, 'Expected string data');
     return $data;
   }
 
@@ -177,11 +177,11 @@ class ReflectionXHPChildrenExpression {
 
       case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
         list($e1, $e2) = $this->getSubExpressions();
-        return $e1.','.$e2;
+        return $e1->__toString().','.$e2->__toString();
 
       case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
         list($e1, $e2) = $this->getSubExpressions();
-        return $e1.'|'.$e2;
+        return $e1->__toString().'|'.$e2->__toString();
     }
   }
 
@@ -200,7 +200,7 @@ class ReflectionXHPChildrenExpression {
         return '%'.$this->getConstraintString();
 
       case XHPChildrenConstraintType::SUB_EXPR:
-        return '('.$this->getSubExpression().')';
+        return '('.$this->getSubExpression()->__toString().')';
     }
   }
 }

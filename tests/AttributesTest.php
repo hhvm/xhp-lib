@@ -85,8 +85,8 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         myobject={new stdClass()}
         myenum={'foo'}
         myfloat={1.23}
-        myvector={Vector { '1', '2', '3' }}
-        mymap={Map { 'herp' => 'derp' }}
+        myvector={Vector {'1', '2', '3'}}
+        mymap={Map {'herp' => 'derp'}}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
     expect($x->toString())->toBePHPEqual('<div></div>');
@@ -96,10 +96,10 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
 
       $x =
-      <test:attribute-types
-        /* HH_IGNORE_ERROR[4166] */
-        myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
-      />;
+        <test:attribute-types
+          /* HH_IGNORE_ERROR[4166] */
+          myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
+        />;
       expect($x->toString())->toBePHPEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -107,7 +107,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testShapeWithMissingOptionalKey(): void {
     expect(() ==> {
 
-    /* HH_IGNORE_ERROR[4057] */
+      /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
       expect($x->toString())->toBePHPEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
@@ -115,7 +115,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testShapeWithMissingRequiredKey(): void {
     expect(() ==> {
-    /* HH_IGNORE_ERROR[4057] */
+      /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute-types myshape={shape()} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -166,13 +166,19 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testUnstringableObjectAsString(): void {
     expect(() ==> {
-      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+      $x =
+        <test:attribute-types
+          mystring={/* HH_FIXME[4110] */ new EmptyTestClass()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIncompleteObjectAsString(): void {
     expect(() ==> {
-      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()} />;
+      $x =
+        <test:attribute-types
+          mystring={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -202,13 +208,19 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testObjectAsInt(): void {
     expect(() ==> {
-      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+      $x =
+        <test:attribute-types
+          myint={/* HH_FIXME[4110] */ new EmptyTestClass()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIncompleteObjectAsInt(): void {
     expect(() ==> {
-      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()} />;
+      $x =
+        <test:attribute-types
+          myint={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -292,19 +304,28 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testNotAContainerAsArray(): void {
     expect(() ==> {
-      $x = <test:attribute-types myarray={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+      $x =
+        <test:attribute-types
+          myarray={/* HH_FIXME[4110] */ new EmptyTestClass()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testHackContainerAsArray(): void {
     expect(() ==> {
-      $x = <test:attribute-types myarray={/* HH_FIXME[4110] */ Vector { 1, 2, 3 }} />;
+      $x =
+        <test:attribute-types
+          myarray={/* HH_FIXME[4110] */ Vector {1, 2, 3}}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIncompatibleObjectAsObject(): void {
     expect(() ==> {
-      $x = <test:attribute-types myobject={/* HH_FIXME[4110] */ new EmptyTestClass()} />;
+      $x =
+        <test:attribute-types
+          myobject={/* HH_FIXME[4110] */ new EmptyTestClass()}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -355,18 +376,20 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testRenderCallableAttribute(): void {
     expect(() ==> {
       $x =
-      <test:callable-attribute
-        /* HH_IGNORE_ERROR[4110] */
-        foo={function() {
-        }}
-      />;
+        <test:callable-attribute
+          /* HH_IGNORE_ERROR[4110] */
+          foo={function() {
+          }}
+        />;
     })->toThrow(XHPUnsupportedAttributeTypeException::class);
   }
 
   public function testReflectOnCallableAttribute(): void {
     $rxhp = new ReflectionXHPClass(:test:callable-attribute::class);
     $rattr = $rxhp->getAttribute('foo');
-    expect(strstr((string)$rattr, "<UNSUPPORTED: legacy callable>") !== false)
+    expect(
+      strstr($rattr->__toString(), "<UNSUPPORTED: legacy callable>") !== false,
+    )
       ->toBeTrue(
         "Incorrect reflection for unsupported `callable` attribute type",
       );
@@ -380,6 +403,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($y->:mybool)->toBeSame(true);
 
     $attrs = $y->getAttributes()->keys();
-    expect($attrs)->toBePHPEqual(Vector { 'mystring', 'mybool', 'myint' });
+    expect($attrs)->toBePHPEqual(Vector {'mystring', 'mybool', 'myint'});
   }
 }

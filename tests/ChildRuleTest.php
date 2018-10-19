@@ -9,6 +9,7 @@
  */
 
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\DataProvider;
 
 class :test:any-children extends :x:element {
   children any;
@@ -115,7 +116,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any-number-of-child />,
     };
     foreach ($elems as $elem) {
-      expect((string)$elem)->toBeSame('<div></div>');
+      expect($elem->__toString())->toBeSame('<div></div>');
     }
   }
 

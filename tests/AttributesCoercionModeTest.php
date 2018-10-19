@@ -107,7 +107,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
   }
 
   public function testLoggingDeprecationCoercion(): void {
-    $this->markTestSkipped("Needs porting to HackTest (fbexpect#7)");
+    static::markTestSkipped("Needs porting to HackTest (fbexpect#7)");
     error_reporting(E_ALL);
     $exception = null;
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::LOG_DEPRECATION);

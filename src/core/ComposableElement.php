@@ -541,25 +541,25 @@ abstract class :x:composable-element extends :xhp {
     }
     switch ($decl->getValueType()) {
       case XHPAttributeType::TYPE_STRING:
-        if (!is_string($val)) {
+        if (!($val is string)) {
           $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_BOOL:
-        if (!is_bool($val)) {
+        if (!($val is bool)) {
           $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_INTEGER:
-        if (!is_int($val)) {
+        if (!($val is int)) {
           $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_FLOAT:
-        if (!is_float($val)) {
+        if (!($val is float)) {
           $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
@@ -580,12 +580,12 @@ abstract class :x:composable-element extends :xhp {
         }
         // Things that are a valid array key without any coercion
         if ($class === 'HH\arraykey') {
-          if (is_int($val) || is_string($val)) {
+          if (($val is int) || ($val is string)) {
             break;
           }
         }
         if ($class === 'HH\num') {
-          if (is_int($val) || is_float($val)) {
+          if (($val is int) || ($val is float)) {
             break;
           }
         }
@@ -610,7 +610,7 @@ abstract class :x:composable-element extends :xhp {
         break;
 
       case XHPAttributeType::TYPE_ENUM:
-        if (!(is_string($val) && $decl->getEnumValues()->contains($val))) {
+        if (!(($val is string) && $decl->getEnumValues()->contains($val))) {
           $enums = 'enum("'.implode('","', $decl->getEnumValues()).'")';
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }
@@ -780,7 +780,7 @@ abstract class :x:composable-element extends :xhp {
    * __getChildrenDescription.
    */
   public function __getChildrenDeclaration(): string {
-    return (string)self::__xhpReflectionChildrenDeclaration();
+    return self::__xhpReflectionChildrenDeclaration()->__toString();
   }
 
   /**
