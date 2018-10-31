@@ -357,6 +357,9 @@ abstract class :x:composable-element extends :xhp {
         $value = $this->validateAttributeValue($attr, $value);
       }
     } else {
+      // Skip null values for special attributes instead of casting them to empty string,
+      // since null is used to conditionally remove the values
+      if ($value === null) return $this;
       $value = (string)$value;
     }
     $this->attributes->set($attr, $value);
