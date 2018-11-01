@@ -383,6 +383,10 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($x->toString())->toBeSame('<div></div>');
     $x = <div aria-idonotexist={null} />;
     expect($x->toString())->toBeSame('<div></div>');
+
+    $x = <div data-foo="derp" />;
+    $x->setAttribute('data-foo', null);
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testRenderCallableAttribute(): void {
