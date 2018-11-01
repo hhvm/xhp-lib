@@ -375,6 +375,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     // verify that special attributes actually render
     $x = <div data-idonotexist="derp" />;
     expect($x->toString())->toBeSame('<div data-idonotexist="derp"></div>');
+    // implicit string cast
+    $x = <div data-idonotexist={123} />;
+    expect($x->toString())->toBeSame('<div data-idonotexist="123"></div>');
     $x = <div aria-idonotexist="derp" />;
     expect($x->toString())->toBeSame('<div aria-idonotexist="derp"></div>');
 
