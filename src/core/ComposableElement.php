@@ -357,7 +357,7 @@ abstract class :x:composable-element extends :xhp {
         $value = $this->validateAttributeValue($attr, $value);
       }
     } else {
-      $value = (string)$value;
+      $value = $value;
     }
     $this->attributes->set($attr, $value);
     return $this;

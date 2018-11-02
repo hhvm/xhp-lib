@@ -371,6 +371,25 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($x->toString())->toBeSame('<div>mydefault</div>');
     $x = <test:default-attributes aria-idonotexist="derp" />;
     expect($x->toString())->toBeSame('<div>mydefault</div>');
+
+    // verify that special attributes actually render
+    $x = <div data-idonotexist="derp" />;
+    expect($x->toString())->toBeSame('<div data-idonotexist="derp"></div>');
+    // implicit string cast
+    $x = <div data-idonotexist={123} />;
+    expect($x->toString())->toBeSame('<div data-idonotexist="123"></div>');
+    $x = <div aria-idonotexist="derp" />;
+    expect($x->toString())->toBeSame('<div aria-idonotexist="derp"></div>');
+
+    // special attributes should disappear when null, like all other attributes
+    $x = <div data-idonotexist={null} />;
+    expect($x->toString())->toBeSame('<div></div>');
+    $x = <div aria-idonotexist={null} />;
+    expect($x->toString())->toBeSame('<div></div>');
+
+    $x = <div data-foo="derp" />;
+    $x->setAttribute('data-foo', null);
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testRenderCallableAttribute(): void {
