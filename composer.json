@@ -5,12 +5,12 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["MIT"],
     "require": {
-        "hhvm": "~3.23",
-        "hhvm/type-assert": "^3.0",
-        "hhvm/hhvm-autoload": "^1.5"
+        "hhvm": "4.0",
+        "hhvm/type-assert": "^3.0"
     },
     "require-dev": {
         "facebook/fbexpect": "^2.0.0",
+        "hhvm/hhvm-autoload": "^2.0",
         "hhvm/hacktest": "^1.0.0"
     },
     "extra": {
