@@ -35,12 +35,11 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   abstract public function removeAttribute(string $attr): this;
   abstract public function categoryOf(string $cat): bool;
   abstract public function toString(): string;
-  /* HH_FIXME[1002] Return collections instead of arrays */
-  abstract protected function &__xhpCategoryDeclaration(): array<string, int>;
-  abstract protected function &__xhpChildrenDeclaration(): mixed;
-  protected static function &__xhpAttributeDeclaration(
-  ): array<string, array<int, mixed>> {
-    return array();
+  abstract protected function __xhpCategoryDeclaration(): darray<string, int>;
+  abstract protected function __xhpChildrenDeclaration(): mixed;
+  protected static function __xhpAttributeDeclaration(
+  ): darray<string, darray<int, mixed>> {
+    return darray[];
   }
 
   public ?string $source;

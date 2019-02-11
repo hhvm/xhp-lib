@@ -156,7 +156,7 @@ class ReflectionXHPChildrenExpression {
 
     throw new Exception (
       'Expected a sub-expression, got a '.
-      is_object($data) ? get_class($data) : gettype($data).
+      (is_object($data) ? get_class($data) : gettype($data)).
       ' - in '. $this->context
     );
   }

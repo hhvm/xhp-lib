@@ -497,19 +497,17 @@ abstract class :x:composable-element extends :xhp {
    *
    * Attribute types are suggested by the TYPE_* constants.
    */
-  protected static function &__xhpAttributeDeclaration(
-  ): array<string, array<int, mixed>> {
-    static $decl = array();
-    return $decl;
+  protected static function __xhpAttributeDeclaration(
+  ): darray<string, darray<int, mixed>> {
+    return darray[];
   }
 
   /**
    * Defined in elements by the `category` keyword. This is just a list of all
    * categories an element belongs to. Each category is a key with value 1.
    */
-  protected function &__xhpCategoryDeclaration(): array<string, int> {
-    static $decl = array();
-    return $decl;
+  protected function __xhpCategoryDeclaration(): darray<string, int> {
+    return darray[];
   }
 
   /**
@@ -519,9 +517,8 @@ abstract class :x:composable-element extends :xhp {
    * respectively. Otherwise you're dealing with an array which is just the
    * biggest mess you've ever seen.
    */
-  protected function &__xhpChildrenDeclaration(): mixed {
-    static $decl = 1;
-    return $decl;
+  protected function __xhpChildrenDeclaration(): mixed {
+    return 1;
   }
 
   /**
