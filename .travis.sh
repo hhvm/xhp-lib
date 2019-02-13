@@ -1,18 +1,15 @@
 #!/bin/sh
 set -ex
+apt update -y
+DEBIAN_FRONTEND=noninteractive apt install -y php-cli zip unzip
 hhvm --version
+php --version
 
+(
+  cd $(mktemp -d)
+  curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+)
 composer install
 
 hh_client
-
 hhvm vendor/bin/hacktest tests/
-
-# Make sure we pass when a release is required
-EXPORT_DIR=$(mktemp -d)
-git archive --format=tar -o "${EXPORT_DIR}/exported.tar" HEAD
-cd "$EXPORT_DIR"
-tar -xf exported.tar
-composer install --no-dev
-echo > .hhconfig
-hh_server --check $(pwd)
