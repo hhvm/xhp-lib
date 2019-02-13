@@ -1,0 +1,321 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "675094cde88f9aa9c3166db3c3db7de0",
+    "packages": [
+        {
+            "name": "hhvm/hsl",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hsl.git",
+                "reference": "862e91698a121f6d57786dafa7ccdbfdd50ea3c2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hsl/zipball/862e91698a121f6d57786dafa7ccdbfdd50ea3c2",
+                "reference": "862e91698a121f6d57786dafa7ccdbfdd50ea3c2",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^4.0"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.0.0",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhvm-autoload": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Hack Standard Library",
+            "time": "2019-02-08T21:25:25+00:00"
+        },
+        {
+            "name": "hhvm/type-assert",
+            "version": "v3.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/type-assert.git",
+                "reference": "f207250e2f9d4602b28c25c8a83a34bc42811243"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/type-assert/zipball/f207250e2f9d4602b28c25c8a83a34bc42811243",
+                "reference": "f207250e2f9d4602b28c25c8a83a34bc42811243",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^4.0",
+                "hhvm/hsl": "^4.0"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.0.0",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhast": "^4.0",
+                "hhvm/hhvm-autoload": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Convert untyped data to typed data",
+            "keywords": [
+                "TypeAssert",
+                "hack"
+            ],
+            "time": "2019-02-08T23:10:16+00:00"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "facebook/difflib",
+            "version": "v1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/difflib.git",
+                "reference": "195502ecd77a691e91449a3b726c9c670a99addf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/difflib/zipball/195502ecd77a691e91449a3b726c9c670a99addf",
+                "reference": "195502ecd77a691e91449a3b726c9c670a99addf",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm/hsl": "^4.0"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1.2",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhast": "^4.0",
+                "hhvm/hhvm-autoload": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-02-09T01:44:39+00:00"
+        },
+        {
+            "name": "facebook/fbexpect",
+            "version": "v2.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/fbexpect.git",
+                "reference": "a0fd5e57c15bc580dd130e3298f01ca51421c189"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/fbexpect/zipball/a0fd5e57c15bc580dd130e3298f01ca51421c189",
+                "reference": "a0fd5e57c15bc580dd130e3298f01ca51421c189",
+                "shasum": ""
+            },
+            "require": {
+                "facebook/difflib": "^1.0.0",
+                "hhvm": "^3.28|^4.0",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hsl": "^3.26|^4.0"
+            },
+            "require-dev": {
+                "hhvm/hhvm-autoload": "^2.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Unit test helpers for Facebook projects",
+            "time": "2019-02-08T16:39:19+00:00"
+        },
+        {
+            "name": "facebook/hh-clilib",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hh-clilib.git",
+                "reference": "44f30c1f07b9d36430bfff721a119a0d43b15edd"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hh-clilib/zipball/44f30c1f07b9d36430bfff721a119a0d43b15edd",
+                "reference": "44f30c1f07b9d36430bfff721a119a0d43b15edd",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm/hsl": "^4.0",
+                "hhvm/hsl-experimental": "^4.0",
+                "hhvm/type-assert": "^3.2"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1.0",
+                "hhvm/hacktest": "^1.0.0",
+                "hhvm/hhast": "^4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "time": "2019-02-12T20:14:07+00:00"
+        },
+        {
+            "name": "hhvm/hacktest",
+            "version": "v1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hacktest.git",
+                "reference": "b9d24382967f35eb745b991288ed4765f97d6d0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hacktest/zipball/b9d24382967f35eb745b991288ed4765f97d6d0c",
+                "reference": "b9d24382967f35eb745b991288ed4765f97d6d0c",
+                "shasum": ""
+            },
+            "require": {
+                "facebook/hh-clilib": "^2.0.0",
+                "hhvm": "^4.0",
+                "hhvm/hhvm-autoload": "^2.0",
+                "hhvm/hsl": "^4.0",
+                "hhvm/type-assert": "^3.2"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.3.0",
+                "hhvm/hhast": "^4.0"
+            },
+            "bin": [
+                "bin/hacktest"
+            ],
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Hack Test Library",
+            "time": "2019-02-09T02:45:13+00:00"
+        },
+        {
+            "name": "hhvm/hhvm-autoload",
+            "version": "v2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hhvm-autoload.git",
+                "reference": "46b5f6759965a894f06e2cd1fc501f7783ee6830"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/46b5f6759965a894f06e2cd1fc501f7783ee6830",
+                "reference": "46b5f6759965a894f06e2cd1fc501f7783ee6830",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1.0",
+                "hhvm": "^4.0",
+                "hhvm/hsl": "^4.0"
+            },
+            "replace": {
+                "facebook/hhvm-autoload": "1.*"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.1",
+                "hhvm/hacktest": "^1.0"
+            },
+            "bin": [
+                "bin/hh-autoload",
+                "bin/hh-autoload.hack"
+            ],
+            "type": "composer-plugin",
+            "extra": {
+                "class": [
+                    "Facebook\\AutoloadMap\\ComposerPlugin"
+                ],
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/ComposerPlugin.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "time": "2019-02-13T17:18:00+00:00"
+        },
+        {
+            "name": "hhvm/hsl-experimental",
+            "version": "v4.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/hhvm/hsl-experimental.git",
+                "reference": "208fa5defedb0deb99095eaa09a5255bae26a198"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/208fa5defedb0deb99095eaa09a5255bae26a198",
+                "reference": "208fa5defedb0deb99095eaa09a5255bae26a198",
+                "shasum": ""
+            },
+            "require": {
+                "hhvm": "^4.0",
+                "hhvm/hsl": "^4.0"
+            },
+            "require-dev": {
+                "facebook/fbexpect": "^2.0",
+                "hhvm/hacktest": "^1.0",
+                "hhvm/hhvm-autoload": "^2.0"
+            },
+            "type": "library",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The Hack Standard Library - Experimental Additions",
+            "time": "2019-02-08T23:24:49+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "hhvm": "^4.0.0"
+    },
+    "platform-dev": [],
+    "platform-overrides": {
+        "hhvm": "4.0.0"
+    }
+}
