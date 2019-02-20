@@ -220,3 +220,7 @@ h1. External Resources
 Below are a list of external resources about XHP:
 
 "Code Before the Horse":http://codebeforethehorse.tumblr.com - Basic XHP introduction, examples, and lessons learned from Facebook written by one of their UI Engineers.
+
+h1. License
+
+This software is [MIT-licensed](LICENSE).
