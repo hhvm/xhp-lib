@@ -10,6 +10,7 @@
 
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
+use namespace HH\Lib\{C, Str};
 
 abstract class :x:composable-element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
@@ -35,6 +36,7 @@ abstract class :x:composable-element extends :xhp {
   final public function __construct(
     KeyedTraversable<string, mixed> $attributes,
     Traversable<XHPChild> $children,
+    dynamic ...$debug_info
   ) {
     parent::__construct($attributes, $children);
     foreach ($children as $child) {
@@ -56,9 +58,8 @@ abstract class :x:composable-element extends :xhp {
     if (:xhp::isChildValidationEnabled()) {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
-      $args = func_get_args();
-      if (isset($args[2])) {
-        $this->source = "$args[2]:$args[3]";
+      if (C\count($debug_info) >= 2) {
+        $this->source = $debug_info[0].':'.$debug_info[1];
       } else {
         $this->source =
           'You have child validation on, but debug information is not being '.
@@ -110,11 +111,10 @@ abstract class :x:composable-element extends :xhp {
    *
    * @param $children  Single child or array of children
    */
-  final public function replaceChildren(...): this {
+  final public function replaceChildren(XHPChild ...$children): this {
     // This function has been micro-optimized
-    $args = func_get_args();
     $new_children = Vector {};
-    foreach ($args as $xhp) {
+    foreach ($children as $xhp) {
       if ($xhp) {
         if ($xhp instanceof :x:frag) {
           foreach ($xhp->children as $child) {
@@ -291,13 +291,15 @@ abstract class :x:composable-element extends :xhp {
   final public static function __xhpReflectionCategoryDeclaration(
   ): Set<string> {
     return
-      new Set(array_keys(self::emptyInstance()->__xhpCategoryDeclaration()));
+      new Set(\array_keys(self::emptyInstance()->__xhpCategoryDeclaration()));
   }
 
   // Work-around to call methods that should be static without a real
   // instance.
+  <<__MemoizeLSB>>
   private static function emptyInstance(): this {
-    return hphp_create_object_without_constructor(static::class);
+    return
+      (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
   }
 
   final public function getAttributes(): Map<string, mixed> {

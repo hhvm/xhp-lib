@@ -173,15 +173,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testIncompleteObjectAsString(): void {
-    expect(() ==> {
-      $x =
-        <test:attribute-types
-          mystring={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()}
-        />;
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
   public function testArrayAsString(): void {
     expect(() ==> {
       $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ []} />;
@@ -211,15 +202,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
       $x =
         <test:attribute-types
           myint={/* HH_FIXME[4110] */ new EmptyTestClass()}
-        />;
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
-  public function testIncompleteObjectAsInt(): void {
-    expect(() ==> {
-      $x =
-        <test:attribute-types
-          myint={/* HH_FIXME[4110] */ new __PHP_Incomplete_Class()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
