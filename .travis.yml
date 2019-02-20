@@ -3,6 +3,7 @@ language: generic
 services: docker
 env:
  - HHVM_VERSION=latest
+ - HHVM_VERSION=nightly
 install:
  - docker pull hhvm/hhvm:$HHVM_VERSION
 script:
