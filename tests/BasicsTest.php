@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -17,7 +17,7 @@ class :test:renders-primitive extends :x:element {
 }
 
 class BasicsTest extends Facebook\HackTest\HackTest {
-  public function testDivWithString() {
+  public function testDivWithString(): void {
     $xhp =
       <div>
         Hello, world.
@@ -25,23 +25,23 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect($xhp->toString())->toBePHPEqual('<div> Hello, world. </div>');
   }
 
-  public function testFragWithString() {
+  public function testFragWithString(): void {
     $xhp = <x:frag>Derp</x:frag>;
     expect($xhp->toString())->toBeSame('Derp');
   }
 
-  public function testDivWithChild() {
+  public function testDivWithChild(): void {
     $xhp = <div><div>Herp</div></div>;
     expect($xhp->toString())->toBePHPEqual('<div><div>Herp</div></div>');
   }
 
-  public function testInterpolation() {
+  public function testInterpolation(): void {
     $x = "Herp";
     $xhp = <div>{$x}</div>;
     expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
   }
 
-  public function testXFrag() {
+  public function testXFrag(): void {
     $x = 'herp';
     $y = 'derp';
     $frag = <x:frag>{$x}{$y}</x:frag>;
@@ -50,7 +50,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect($xhp->toString())->toBePHPEqual('<div>herpderp</div>');
   }
 
-  public function testEscaping() {
+  public function testEscaping(): void {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
     expect($xhp->toString())->toBePHPEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
   }

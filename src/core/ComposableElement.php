@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -115,6 +115,7 @@ abstract class :x:composable-element extends :xhp {
     // This function has been micro-optimized
     $new_children = Vector {};
     foreach ($children as $xhp) {
+      /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
       if ($xhp) {
         if ($xhp instanceof :x:frag) {
           foreach ($xhp->children as $child) {
@@ -149,7 +150,7 @@ abstract class :x:composable-element extends :xhp {
   final public function getChildren(
     ?string $selector = null,
   ): Vector<XHPChild> {
-    if ($selector) {
+    if ($selector is string && $selector !== '') {
       $children = Vector {};
       if ($selector[0] == '%') {
         $selector = substr($selector, 1);
@@ -161,7 +162,7 @@ abstract class :x:composable-element extends :xhp {
       } else {
         $selector = :xhp::element2class($selector);
         foreach ($this->children as $child) {
-          if ($child instanceof $selector) {
+          if (is_a($child, $selector, /* allow strings = */ true)) {
             $children->add($child);
           }
         }
@@ -182,7 +183,7 @@ abstract class :x:composable-element extends :xhp {
    *                             false if there are no (matching) children
    */
   final public function getFirstChild(?string $selector = null): ?XHPChild {
-    if (!$selector) {
+    if ($selector === null) {
       return $this->children->get(0);
     } else if ($selector[0] == '%') {
       $selector = substr($selector, 1);
@@ -194,7 +195,7 @@ abstract class :x:composable-element extends :xhp {
     } else {
       $selector = :xhp::element2class($selector);
       foreach ($this->children as $child) {
-        if ($child instanceof $selector) {
+        if (is_a($child, $selector, /* allow strings = */ true)) {
           return $child;
         }
       }
@@ -228,7 +229,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $attr      attribute to fetch
    * @return           value
    */
-  final public function getAttribute(string $attr) {
+  final public function getAttribute(string $attr): mixed {
     // Return the attribute if it's there
     if ($this->attributes->containsKey($attr)) {
       return $this->attributes->get($attr);
@@ -571,9 +572,10 @@ abstract class :x:composable-element extends :xhp {
 
       case XHPAttributeType::TYPE_OBJECT:
         $class = $decl->getValueClass();
-        if ($val instanceof $class) {
+        if (is_a($val, $class, true)) {
           break;
         }
+        /* HH_FIXME[4026] $class as enumname<_> */
         if (enum_exists($class) && $class::isValid($val)) {
           break;
         }
@@ -647,8 +649,7 @@ abstract class :x:composable-element extends :xhp {
       $this->validateChildrenExpression($decl->getExpression(), 0);
     if (!$ret || $ii < count($this->children)) {
       if (
-        isset($this->children[$ii]) &&
-        $this->children[$ii] instanceof XHPAlwaysValidChild
+        ($this->children[$ii] ?? null) is XHPAlwaysValidChild
       ) {
         return;
       }
@@ -743,7 +744,7 @@ abstract class :x:composable-element extends :xhp {
         $class = $expr->getConstraintString();
         if (
           $this->children->containsKey($index) &&
-          $this->children->get($index) instanceof $class
+          is_a($this->children->get($index), $class, true)
         ) {
           return tuple(true, $index + 1);
         }
@@ -760,7 +761,7 @@ abstract class :x:composable-element extends :xhp {
         $child = $this->children->get($index);
         assert($child instanceof :xhp);
         $categories = $child->__xhpCategoryDeclaration();
-        if (empty($categories[$category])) {
+        if ($categories[$category] ?? 0 === 0) {
           return tuple(false, $index);
         }
         return tuple(true, $index + 1);
@@ -806,11 +807,11 @@ abstract class :x:composable-element extends :xhp {
 
   final public function categoryOf(string $c): bool {
     $categories = $this->__xhpCategoryDeclaration();
-    if (isset($categories[$c])) {
+    if ($categories[$c] ?? null !== null) {
       return true;
     }
     // XHP parses the category string
     $c = str_replace(array(':', '-'), array('__', '_'), $c);
-    return isset($categories[$c]);
+    return ($categories[$c] ?? null) !== null;
   }
 }

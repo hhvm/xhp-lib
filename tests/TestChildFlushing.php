@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -31,34 +31,34 @@ class :test:verbatim-root:async extends :x:element {
 }
 
 class XHPChildFlushTest extends Facebook\HackTest\HackTest {
-  public function xhpRootProvider() {
-    return [
-      [<div />, '<div></div>'],
-      [<div><div /><div /></div>, '<div><div></div><div></div></div>'],
-      [<test:verbatim-root root={<div />} />, '<div></div>'],
-      [<x:frag><div /></x:frag>, '<div></div>'],
-      [<x:frag><div /><div /></x:frag>, '<div></div><div></div>'],
-      [
+  public function xhpRootProvider(): vec<(:xhp, string)> {
+    return vec[
+      tuple(<div />, '<div></div>'),
+      tuple(<div><div /><div /></div>, '<div><div></div><div></div></div>'),
+      tuple(<test:verbatim-root root={<div />} />, '<div></div>'),
+      tuple(<x:frag><div /></x:frag>, '<div></div>'),
+      tuple(<x:frag><div /><div /></x:frag>, '<div></div><div></div>'),
+      tuple(
         <test:verbatim-root root={<x:frag><div /><div /></x:frag>} />,
         '<div></div><div></div>',
-      ],
-      [
+      ),
+      tuple(
         <test:verbatim-root root={<test:verbatim-root root={<div />} />} />,
         '<div></div>',
-      ],
-      [<test:verbatim-root:async root={<div />} />, '<div></div>'],
+      ),
+      tuple(<test:verbatim-root:async root={<div />} />, '<div></div>'),
     ];
   }
 
   <<DataProvider('xhpRootProvider')>>
-  public function testSynchronous(XHPRoot $root, string $expected) {
+  public function testSynchronous(XHPRoot $root, string $expected): void {
     $elem = <test:verbatim-root />;
     $elem->setContext('root', $root);
     expect($elem->toString())->toBeSame($expected);
   }
 
   <<DataProvider('xhpRootProvider')>>
-  public function testAsynchronous(XHPRoot $root, string $expected) {
+  public function testAsynchronous(XHPRoot $root, string $expected): void {
     $elem = <test:verbatim-root:async />;
     $elem->setContext('root', $root);
     expect($elem->toString())->toBeSame($expected);

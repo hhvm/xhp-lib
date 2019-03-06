@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -17,7 +17,7 @@ class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
   public function __construct(public string $htmlString) {
   }
 
-  public function toHTMLString() {
+  public function toHTMLString(): string {
     return $this->htmlString;
   }
 }
@@ -37,7 +37,7 @@ class ExampleUnsafeAttribute extends XHPUnsafeAttributeValue {
 }
 
 class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
-  public function testUnsafeRenderable() {
+  public function testUnsafeRenderable(): void {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;
     expect($xhp->toString())->toBePHPEqual(
@@ -45,7 +45,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
     );
   }
 
-  public function testInvalidChild() {
+  public function testInvalidChild(): void {
     expect(() ==> {
       $x = new ExampleUnsafeRenderable('foo');
       $xhp = <html>{$x}<body /></html>;
@@ -53,7 +53,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidChildrenException::class);
   }
 
-  public function testAlwaysValidChild() {
+  public function testAlwaysValidChild(): void {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
     expect($xhp->toString())->toBePHPEqual('<html>foo<body></body></html>');

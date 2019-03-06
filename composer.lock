@@ -230,16 +230,16 @@
         },
         {
             "name": "hhvm/hhvm-autoload",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hhvm-autoload.git",
-                "reference": "46b5f6759965a894f06e2cd1fc501f7783ee6830"
+                "reference": "19b2188ddcffd197a37e787b5d413ada98c5266b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/46b5f6759965a894f06e2cd1fc501f7783ee6830",
-                "reference": "46b5f6759965a894f06e2cd1fc501f7783ee6830",
+                "url": "https://api.github.com/repos/hhvm/hhvm-autoload/zipball/19b2188ddcffd197a37e787b5d413ada98c5266b",
+                "reference": "19b2188ddcffd197a37e787b5d413ada98c5266b",
                 "shasum": ""
             },
             "require": {
@@ -273,20 +273,20 @@
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2019-02-13T17:18:00+00:00"
+            "time": "2019-03-06T17:53:08+00:00"
         },
         {
             "name": "hhvm/hsl-experimental",
-            "version": "v4.0.1",
+            "version": "v4.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/hhvm/hsl-experimental.git",
-                "reference": "c1084e5f6a6d8e5a110f3e9bb630a4b20166cc53"
+                "reference": "a06996b0e438b2c6d7b86d1cb3ce41312e9885a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/c1084e5f6a6d8e5a110f3e9bb630a4b20166cc53",
-                "reference": "c1084e5f6a6d8e5a110f3e9bb630a4b20166cc53",
+                "url": "https://api.github.com/repos/hhvm/hsl-experimental/zipball/a06996b0e438b2c6d7b86d1cb3ce41312e9885a5",
+                "reference": "a06996b0e438b2c6d7b86d1cb3ce41312e9885a5",
                 "shasum": ""
             },
             "require": {
@@ -310,7 +310,7 @@
                 "MIT"
             ],
             "description": "The Hack Standard Library - Experimental Additions",
-            "time": "2019-02-20T21:11:25+00:00"
+            "time": "2019-03-04T21:35:44+00:00"
         }
     ],
     "aliases": [],

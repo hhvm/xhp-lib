@@ -9,7 +9,7 @@
  */
 
 class ReflectionXHPClass {
-  public function __construct(private string $className) {
+  public function __construct(private classname<:x:composable-element> $className) {
     invariant(
       class_exists($this->className),
       'Invalid class name: %s',
@@ -21,7 +21,7 @@ class ReflectionXHPClass {
     return new ReflectionClass($this->getClassName());
   }
 
-  public function getClassName(): string {
+  public function getClassName(): classname<:x:composable-element> {
     return $this->className;
   }
 

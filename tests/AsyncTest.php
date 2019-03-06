@@ -1,4 +1,4 @@
-<?hh
+<?hh // strict
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -39,62 +39,62 @@ class :async:par-test extends :x:element {
 
   attribute string label @required;
 
-  public static $log = Vector {};
+  public static Vector<(string, string)> $log = Vector {};
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
     $label = $this->:label;
-    self::$log[] = [$label, 'start'];
+    self::$log[] = tuple($label, 'start');
     await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
-    self::$log[] = [$label, 'mid'];
+    self::$log[] = tuple($label, 'mid');
     await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
-    self::$log[] = [$label, 'finish'];
+    self::$log[] = tuple($label, 'finish');
     return <div>{$label}</div>;
   }
 }
 
 class AsyncTest extends Facebook\HackTest\HackTest {
-  public function testDiv() {
+  public function testDiv(): void {
     $xhp = <async:test>Herp</async:test>;
     expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
   }
 
-  public function testXFrag() {
+  public function testXFrag(): void {
     $frag = <x:frag>{1}{2}</x:frag>;
     $xhp = <async:test>{$frag}</async:test>;
     expect($xhp->toString())->toBePHPEqual('<div>12</div>');
   }
 
-  public function testNested() {
+  public function testNested(): void {
     $xhp = <async:test><async:test>herp derp</async:test></async:test>;
     expect($xhp->toString())->toBePHPEqual('<div><div>herp derp</div></div>');
   }
 
-  public function testEmpty() {
+  public function testEmpty(): void {
     $xhp = <async:test />;
     expect($xhp->toString())->toBePHPEqual('<div></div>');
   }
 
-  public function testNestedEmpty() {
+  public function testNestedEmpty(): void {
     $xhp = <async:test><async:test /></async:test>;
     expect($xhp->toString())->toBePHPEqual('<div><div></div></div>');
   }
 
-  public function testNestedWithNonAsyncChild() {
+  public function testNestedWithNonAsyncChild(): void {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
     expect($xhp->toString())->toBePHPEqual('<div><b>BE BOLD</b></div>');
   }
 
-  public function testInstanceOfInterface() {
+  public function testInstanceOfInterface(): void {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
     expect($xhp)->toBeInstanceOf(XHPAwaitable::class);
   }
 
-  public function parallelizationContainersProvider() {
+  public function parallelizationContainersProvider(): array<array<:xhp>> {
     return [[<test:xfrag-wrap />], [<test:async-xfrag-wrap />]];
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
-  public function testParallelization(:x:element $container) {
+  public function testParallelization(:x:element $container): void {
     :async:par-test::$log = Vector {};
 
     $a = <async:par-test label="a" />;

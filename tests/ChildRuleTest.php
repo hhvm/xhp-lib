@@ -152,19 +152,19 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect($elem->__getChildrenDeclaration())->toBeSame($expected);
   }
 
-  public function toStringProvider() {
-    return [
-      [<test:any-children />, 'any'],
-      [<test:no-children />, 'empty'],
-      [<test:single-child />, '(:div)'],
-      [<test:optional-child />, '(:div?)'],
-      [<test:any-number-of-child />, '(:div*)'],
-      [<test:at-least-one-child />, '(:div+)'],
-      [<test:two-children />, '(:div,:div)'],
-      [<test:either-of-two-children />, '(:div|:code)'],
-      [<test:nested-rule />, '(:div|(:code+))'],
-      [<test:pcdata-child />, '(pcdata)'],
-      [<test:category-child />, '(%flow)'],
+  public function toStringProvider(): vec<(:xhp, string)> {
+    return vec[
+      tuple(<test:any-children />, 'any'),
+      tuple(<test:no-children />, 'empty'),
+      tuple(<test:single-child />, '(:div)'),
+      tuple(<test:optional-child />, '(:div?)'),
+      tuple(<test:any-number-of-child />, '(:div*)'),
+      tuple(<test:at-least-one-child />, '(:div+)'),
+      tuple(<test:two-children />, '(:div,:div)'),
+      tuple(<test:either-of-two-children />, '(:div|:code)'),
+      tuple(<test:nested-rule />, '(:div|(:code+))'),
+      tuple(<test:pcdata-child />, '(pcdata)'),
+      tuple(<test:category-child />, '(%flow)'),
     ];
   }
 

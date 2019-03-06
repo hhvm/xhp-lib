@@ -153,20 +153,20 @@ trait XHPHelpers implements HasXHPHelpers {
         );
       }
 
-      $rootID = $root->getAttribute('id') ?: null;
-      $thisID = $this->getAttribute('id') ?: null;
+      $rootID = $root->getAttribute('id') ?? null;
+      $thisID = $this->getAttribute('id') ?? null;
 
-      if ($rootID && $thisID && $rootID != $thisID) {
+      if ($rootID !== null && $thisID !== null && $rootID != $thisID) {
         throw new XHPException(
           'ID Collision. '.
           (:xhp::class2element(self::class)).
           ' has an ID '.
           'of "'.
-          $thisID.
+          ($thisID as arraykey).
           '" but it renders into a(n) '.
           (:xhp::class2element(get_class($root))).
           ' which has an ID of "'.
-          $rootID.
+          ($rootID as arraykey).
           '". The latter will get '.
           'overwritten (most often unexpectedly). If you are intending for '.
           'this behavior consider calling $this->removeAttribute(\'id\') '.
