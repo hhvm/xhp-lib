@@ -761,7 +761,7 @@ abstract class :x:composable-element extends :xhp {
         $child = $this->children->get($index);
         assert($child instanceof :xhp);
         $categories = $child->__xhpCategoryDeclaration();
-        if ($categories[$category] ?? 0 === 0) {
+        if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);
         }
         return tuple(true, $index + 1);
