@@ -259,32 +259,24 @@ abstract class :x:composable-element extends :xhp {
     return null;
   }
 
+  <<__MemoizeLSB>>
   final public static function __xhpReflectionAttributes(
   ): Map<string, ReflectionXHPAttribute> {
-    static $cache = Map {};
-    $class = static::class;
-    if (!$cache->containsKey($class)) {
-      $map = Map {};
-      $decl = static::__xhpAttributeDeclaration();
-      foreach ($decl as $name => $attr_decl) {
-        $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
-      }
-      $cache[$class] = $map;
+    $map = Map {};
+    $decl = static::__xhpAttributeDeclaration();
+    foreach ($decl as $name => $attr_decl) {
+      $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
     }
-    return $cache[$class];
+    return $map;
   }
 
+  <<__MemoizeLSB>>
   final public static function __xhpReflectionChildrenDeclaration(
   ): ReflectionXHPChildrenDeclaration {
-    static $cache = Map {};
-    $class = static::class;
-    if (!$cache->containsKey($class)) {
-      $cache[$class] = new ReflectionXHPChildrenDeclaration(
-        :xhp::class2element($class),
-        self::emptyInstance()->__xhpChildrenDeclaration(),
-      );
-    }
-    return $cache[$class];
+    return new ReflectionXHPChildrenDeclaration(
+      :xhp::class2element(static::class),
+      self::emptyInstance()->__xhpChildrenDeclaration(),
+    );
   }
 
   final public static function __xhpReflectionCategoryDeclaration(

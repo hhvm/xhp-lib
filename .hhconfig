@@ -6,4 +6,5 @@ disallow_unsafe_comparisons=true
 decl_override_require_hint=true
 enable_experimental_tc_features=shape_field_check,sealed_classes
 user_attributes=
+disable_static_local_variables = true
 disable_primitive_refinement=true
