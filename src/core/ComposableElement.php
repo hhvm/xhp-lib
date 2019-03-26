@@ -116,25 +116,23 @@ abstract class :x:composable-element extends :xhp {
     $new_children = Vector {};
     foreach ($children as $xhp) {
       /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
-      if ($xhp) {
-        if ($xhp instanceof :x:frag) {
-          foreach ($xhp->children as $child) {
+    if ($xhp instanceof :x:frag) {
+      foreach ($xhp->children as $child) {
+        $new_children->add($child);
+      }
+    } else if (!($xhp instanceof Traversable)) {
+      $new_children->add($xhp);
+    } else {
+      foreach ($xhp as $element) {
+        if ($element instanceof :x:frag) {
+          foreach ($element->children as $child) {
             $new_children->add($child);
           }
-        } else if (!($xhp instanceof Traversable)) {
-          $new_children->add($xhp);
-        } else {
-          foreach ($xhp as $element) {
-            if ($element instanceof :x:frag) {
-              foreach ($element->children as $child) {
-                $new_children->add($child);
-              }
-            } else if ($element !== null) {
-              $new_children->add($element);
-            }
-          }
+        } else if ($element !== null) {
+          $new_children->add($element);
         }
       }
+    }
     }
     $this->children = $new_children;
     return $this;
@@ -291,16 +289,18 @@ abstract class :x:composable-element extends :xhp {
 
   final public static function __xhpReflectionCategoryDeclaration(
   ): Set<string> {
-    return
-      new Set(\array_keys(self::emptyInstance()->__xhpCategoryDeclaration()));
+    return new Set(
+      \array_keys(self::emptyInstance()->__xhpCategoryDeclaration()),
+    );
   }
 
   // Work-around to call methods that should be static without a real
   // instance.
   <<__MemoizeLSB>>
   private static function emptyInstance(): this {
-    return
-      (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
+    return (
+      new \ReflectionClass(static::class)
+    )->newInstanceWithoutConstructor();
   }
 
   final public function getAttributes(): Map<string, mixed> {
@@ -592,8 +592,9 @@ abstract class :x:composable-element extends :xhp {
         }
         if (is_array($val)) {
           try {
-            $type_structure =
-              (new ReflectionTypeAlias($class))->getResolvedTypeStructure();
+            $type_structure = (
+              new ReflectionTypeAlias($class)
+            )->getResolvedTypeStructure();
             /* HH_FIXME[4110] $type_structure is an array, but should be a
              * TypeStructure<T> */
             TypeAssert\matches_type_structure($type_structure, $val);
@@ -645,12 +646,12 @@ abstract class :x:composable-element extends :xhp {
         return;
       }
     }
-    list($ret, $ii) =
-      $this->validateChildrenExpression($decl->getExpression(), 0);
+    list($ret, $ii) = $this->validateChildrenExpression(
+      $decl->getExpression(),
+      0,
+    );
     if (!$ret || $ii < count($this->children)) {
-      if (
-        ($this->children[$ii] ?? null) is XHPAlwaysValidChild
-      ) {
+      if (($this->children[$ii] ?? null) is XHPAlwaysValidChild) {
         return;
       }
       throw new XHPInvalidChildrenException($this, $ii);
@@ -692,11 +693,15 @@ abstract class :x:composable-element extends :xhp {
         // Specific order -- :fb-thing, :fb-other-thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) =
-          $this->validateChildrenExpression($sub_expr_1, $index);
+        list($ret, $index) = $this->validateChildrenExpression(
+          $sub_expr_1,
+          $index,
+        );
         if ($ret) {
-          list($ret, $index) =
-            $this->validateChildrenExpression($sub_expr_2, $index);
+          list($ret, $index) = $this->validateChildrenExpression(
+            $sub_expr_2,
+            $index,
+          );
         }
         if ($ret) {
           return tuple(true, $index);
@@ -707,11 +712,15 @@ abstract class :x:composable-element extends :xhp {
         // Either or -- :fb-thing | :fb-other-thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) =
-          $this->validateChildrenExpression($sub_expr_1, $index);
+        list($ret, $index) = $this->validateChildrenExpression(
+          $sub_expr_1,
+          $index,
+        );
         if (!$ret) {
-          list($ret, $index) =
-            $this->validateChildrenExpression($sub_expr_2, $index);
+          list($ret, $index) = $this->validateChildrenExpression(
+            $sub_expr_2,
+            $index,
+          );
         }
         if ($ret) {
           return tuple(true, $index);
@@ -767,8 +776,10 @@ abstract class :x:composable-element extends :xhp {
         return tuple(true, $index + 1);
 
       case XHPChildrenConstraintType::SUB_EXPR:
-        return
-          $this->validateChildrenExpression($expr->getSubExpression(), $index);
+        return $this->validateChildrenExpression(
+          $expr->getSubExpression(),
+          $index,
+        );
     }
   }
 
