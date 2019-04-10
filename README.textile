@@ -1,4 +1,4 @@
-!https://travis-ci.org/hhvm/xhp-lib.svg?branch=master!:https://travis-ci.org/facebook/xhp-lib
+!https://travis-ci.org/hhvm/xhp-lib.svg?branch=master!:https://travis-ci.org/hhvm/xhp-lib
 
 h1. Introduction
 
