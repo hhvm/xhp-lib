@@ -6,6 +6,7 @@ xhp/parser.yacc.*
 xhp/scanner.lex.*
 xhp/fastpath.cpp
 xhp/libxhp.so
+composer.lock
 xhp/xhpize
 /.deps
 /.libs
