@@ -45,7 +45,8 @@ trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
     $id = /* UNSAFE_EXPR */ $this->:id;
     if ($id === null || $id === '') {
       try {
-        $this->setAttribute('id', $id = bin2hex(random_bytes(5)));
+        $id = bin2hex(random_bytes(5));
+        $this->setAttribute('id', $id);
       } catch (XHPInvalidAttributeException $error) {
         throw new XHPException(
           'You are trying to add an HTML id to a(n) '.
