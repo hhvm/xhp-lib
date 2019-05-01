@@ -797,7 +797,8 @@ abstract class :x:composable-element extends :xhp {
     foreach ($this->children as $child) {
       if ($child instanceof :xhp) {
         $tmp = ':'.:xhp::class2element(get_class($child));
-        if ($categories = $child->__xhpCategoryDeclaration()) {
+        $categories = $child->__xhpCategoryDeclaration();
+        if (C\count($categories) > 0) {
           $tmp .= '[%'.implode(',%', array_keys($categories)).']';
         }
         $desc[] = $tmp;

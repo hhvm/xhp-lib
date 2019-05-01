@@ -182,15 +182,15 @@ trait XHPHelpers implements HasXHPHelpers {
     foreach ($this->getAttributeNamesThatAppendValuesOnTransfer() as $attr) {
       if (array_key_exists($attr, $attributes)) {
         $rootAttributes = $root->getAttributes();
-        if (
-          array_key_exists($attr, $rootAttributes) &&
-          ($rootValue = (string)$rootAttributes[$attr]) !== ''
-        ) {
-          $thisValue = (string)$attributes[$attr];
-          if ($thisValue !== '') {
-            $root->setAttribute($attr, $rootValue.' '.$thisValue);
+        if (array_key_exists($attr, $rootAttributes)) {
+          $rootValue = (string)$rootAttributes[$attr];
+          if ($rootValue !== '') {
+            $thisValue = (string)$attributes[$attr];
+            if ($thisValue !== '') {
+              $root->setAttribute($attr, $rootValue.' '.$thisValue);
+            }
+            $this->removeAttribute($attr);
           }
-          $this->removeAttribute($attr);
         }
       }
     }
