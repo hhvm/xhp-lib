@@ -17,7 +17,7 @@ trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
    */
   public function addClass(string $class): this {
     try {
-      $current_class = /* UNSAFE_EXPR */ $this->:class;
+      $current_class = ($this->getAttributes()['class'] ?? '') as string;
       return $this->setAttribute('class', trim($current_class.' '.$class));
     } catch (XHPInvalidAttributeException $error) {
       throw new XHPException(
@@ -42,7 +42,7 @@ trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
    * will only be generated if one has not already been set.
    */
   public function requireUniqueID(): string {
-    $id = /* UNSAFE_EXPR */ $this->:id;
+    $id = $this->getAttributes()['id'] ?? null;
     if ($id === null || $id === '') {
       try {
         $id = bin2hex(random_bytes(5));

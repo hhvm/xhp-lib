@@ -41,9 +41,9 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidRawValues(): void {
     // UNSAFE
-    $x = <test:hack-enum-attribute foo={1} />;
+    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */ 1} />;
     expect($x->toString())->toBeSame('<div>HERP</div>');
-    $x = <test:hack-enum-attribute foo={2} />;
+    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */2} />;
     expect($x->toString())->toBeSame('<div>DERP</div>');
   }
 

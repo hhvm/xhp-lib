@@ -17,5 +17,5 @@
  */
 interface XHPAwaitable {
   require extends :x:element;
-  // protected function asyncRender(): Awaitable<XHPRoot>
+  protected function asyncRender(): Awaitable<XHPRoot>;
 }
