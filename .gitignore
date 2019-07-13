@@ -39,3 +39,4 @@ CMakeFiles
 CMakeCache.txt
 vendor/
 *.orig
+**/*hhast.parser-cache
