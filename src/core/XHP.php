@@ -99,7 +99,6 @@ abstract class :xhp implements XHPChild, JsonSerializable {
       throw new XHPRenderArrayException('Can not render traversables!');
     }
 
-    /* HH_FIXME[4281] stringish migration */
     return htmlspecialchars((string)$child);
   }
 
