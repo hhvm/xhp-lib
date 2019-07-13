@@ -46,7 +46,7 @@ abstract class :x:composable-element extends :xhp {
     foreach ($attributes as $key => $value) {
       if (self::isSpreadKey($key)) {
         invariant(
-          $value instanceof :x:composable-element,
+          $value is :x:composable-element,
           "Only XHP can be used with an attribute spread operator",
         );
         $this->spreadElementImpl($value);
@@ -78,14 +78,14 @@ abstract class :x:composable-element extends :xhp {
    * @param $child     single child or array of children
    */
   final public function appendChild(mixed $child): this {
-    if ($child instanceof Traversable) {
+    if ($child is Traversable<_>) {
       foreach ($child as $c) {
         $this->appendChild($c);
       }
-    } else if ($child instanceof :x:frag) {
+    } else if ($child is :x:frag) {
       $this->children->addAll($child->getChildren());
     } else if ($child !== null) {
-      assert($child instanceof XHPChild);
+      assert($child is XHPChild);
       $this->children->add($child);
     }
     return $this;
@@ -116,15 +116,15 @@ abstract class :x:composable-element extends :xhp {
     $new_children = Vector {};
     foreach ($children as $xhp) {
       /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
-    if ($xhp instanceof :x:frag) {
+    if ($xhp is :x:frag) {
       foreach ($xhp->children as $child) {
         $new_children->add($child);
       }
-    } else if (!($xhp instanceof Traversable)) {
+    } else if (!($xhp is Traversable<_>)) {
       $new_children->add($xhp);
     } else {
       foreach ($xhp as $element) {
-        if ($element instanceof :x:frag) {
+        if ($element is :x:frag) {
           foreach ($element->children as $child) {
             $new_children->add($child);
           }
@@ -134,6 +134,7 @@ abstract class :x:composable-element extends :xhp {
       }
     }
     }
+    /*HH_FIXME[4110] $new_children was appended on line 132 with a nonnull element*/
     $this->children = $new_children;
     return $this;
   }
@@ -153,7 +154,7 @@ abstract class :x:composable-element extends :xhp {
       if ($selector[0] == '%') {
         $selector = substr($selector, 1);
         foreach ($this->children as $child) {
-          if ($child instanceof :xhp && $child->categoryOf($selector)) {
+          if ($child is :xhp && $child->categoryOf($selector)) {
             $children->add($child);
           }
         }
@@ -186,7 +187,7 @@ abstract class :x:composable-element extends :xhp {
     } else if ($selector[0] == '%') {
       $selector = substr($selector, 1);
       foreach ($this->children as $child) {
-        if ($child instanceof :xhp && $child->categoryOf($selector)) {
+        if ($child is :xhp && $child->categoryOf($selector)) {
           return $child;
         }
       }
@@ -735,7 +736,7 @@ abstract class :x:composable-element extends :xhp {
       case XHPChildrenConstraintType::PCDATA:
         if (
           $this->children->containsKey($index) &&
-          !($this->children->get($index) instanceof :xhp)
+          !($this->children->get($index) is :xhp)
         ) {
           return tuple(true, $index + 1);
         }
@@ -754,13 +755,13 @@ abstract class :x:composable-element extends :xhp {
       case XHPChildrenConstraintType::CATEGORY:
         if (
           !$this->children->containsKey($index) ||
-          !($this->children->get($index) instanceof :xhp)
+          !($this->children->get($index) is :xhp)
         ) {
           return tuple(false, $index);
         }
         $category = :xhp::class2element($expr->getConstraintString());
         $child = $this->children->get($index);
-        assert($child instanceof :xhp);
+        assert($child is :xhp);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);
@@ -795,7 +796,7 @@ abstract class :x:composable-element extends :xhp {
   final public function __getChildrenDescription(): string {
     $desc = array();
     foreach ($this->children as $child) {
-      if ($child instanceof :xhp) {
+      if ($child is :xhp) {
         $tmp = ':'.:xhp::class2element(get_class($child));
         $categories = $child->__xhpCategoryDeclaration();
         if (C\count($categories) > 0) {
