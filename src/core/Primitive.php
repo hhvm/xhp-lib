@@ -30,7 +30,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
     $children = $this->getChildren();
     $awaitables = Map {};
     foreach ($children as $idx => $child) {
-      if ($child instanceof :x:composable-element) {
+      if ($child is :x:composable-element) {
         $child->__transferContext($this->getAllContexts());
         $awaitables[$idx] = $child->__flushSubtree();
       }

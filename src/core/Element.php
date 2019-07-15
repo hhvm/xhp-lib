@@ -45,7 +45,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
     }
 
     $composed->__transferContext($this->getAllContexts());
-    if ($this instanceof XHPHasTransferAttributes) {
+    if ($this is XHPHasTransferAttributes) {
       $this->transferAttributesToRenderedRoot($composed);
     }
 
@@ -56,11 +56,11 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
   ): Awaitable<:x:primitive> {
     $that = $this;
     // Flush root elements returned from render() to an :x:primitive
-    while ($that instanceof :x:element) {
+    while ($that is :x:element) {
       $that = await $that->__renderAndProcess();
     }
 
-    if ($that instanceof :x:primitive) {
+    if ($that is :x:primitive) {
       return $that;
     }
 
