@@ -5,7 +5,7 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["MIT"],
     "require": {
-        "hhvm": "^4.0.0",
+        "hhvm": "^4.13.0",
         "hhvm/type-assert": "^3.0"
     },
     "require-dev": {
