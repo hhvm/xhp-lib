@@ -98,7 +98,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
       $x =
         <test:attribute-types
           /* HH_IGNORE_ERROR[4110] */
-          /* HH_IGNORE_ERROR[4166] This supression is not needed under HHVM 4.14, but needed in lower versions. */
+          /* HH_IGNORE_ERROR[4166] 
+          Older HHVM versions may not handle this expression well
+          HHVM 4.14 is fine with it.*/
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
       expect($x->toString())->toBePHPEqual('<div></div>');

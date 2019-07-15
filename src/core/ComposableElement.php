@@ -133,7 +133,8 @@ abstract class :x:composable-element extends :xhp {
       }
     }
     }
-    /*HH_FIXME[4110] $new_children was appended on line 132 with a nonnull element*/
+    /*HH_FIXME[4110] $new_children was appended with $element, 
+      which is (only) nonnull to the typechecker*/
     $this->children = $new_children;
     return $this;
   }
