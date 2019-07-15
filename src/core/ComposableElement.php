@@ -534,25 +534,25 @@ abstract class :x:composable-element extends :xhp {
     }
     switch ($decl->getValueType()) {
       case XHPAttributeType::TYPE_STRING:
-        if (!($val is string)) {
+        if (!$val is string) {
           $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_BOOL:
-        if (!($val is bool)) {
+        if (!$val is bool) {
           $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_INTEGER:
-        if (!($val is int)) {
+        if (!$val is int) {
           $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
         }
         break;
 
       case XHPAttributeType::TYPE_FLOAT:
-        if (!($val is float)) {
+        if (!$val is float) {
           $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
@@ -574,12 +574,12 @@ abstract class :x:composable-element extends :xhp {
         }
         // Things that are a valid array key without any coercion
         if ($class === 'HH\arraykey') {
-          if (($val is arraykey)) {
+          if ($val is arraykey) {
             break;
           }
         }
         if ($class === 'HH\num') {
-          if (($val is num)) {
+          if ($val is num) {
             break;
           }
         }
@@ -605,7 +605,7 @@ abstract class :x:composable-element extends :xhp {
         break;
 
       case XHPAttributeType::TYPE_ENUM:
-        if (!(($val is string) && $decl->getEnumValues()->contains($val))) {
+        if (!($val is string && $decl->getEnumValues()->contains($val))) {
           $enums = 'enum("'.implode('","', $decl->getEnumValues()).'")';
           throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
         }

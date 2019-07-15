@@ -65,7 +65,7 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): string {
     self::LogCoercion($context, 'string', $attr, $val);
-    if (($val is num) || $val is Stringish) {
+    if ($val is num || $val is Stringish) {
       return (string)$val;
     }
 
@@ -79,7 +79,7 @@ abstract final class XHPAttributeCoercion {
   ): int {
     self::LogCoercion($context, 'int', $attr, $val);
     if (
-      (($val is string) && is_numeric($val) && $val !== '') || ($val is float)
+      ($val is string && is_numeric($val) && $val !== '') || $val is float
     ) {
       return (int)$val;
     }
