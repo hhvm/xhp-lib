@@ -116,22 +116,22 @@ abstract class :x:composable-element extends :xhp {
     $new_children = Vector {};
     foreach ($children as $xhp) {
       if ($xhp is :x:frag) {
-      foreach ($xhp->children as $child) {
-        $new_children->add($child);
-      }
-    } else if (!($xhp is Traversable<_>)) {
-      $new_children->add($xhp);
-    } else {
-      foreach ($xhp as $element) {
-        if ($element is :x:frag) {
-          foreach ($element->children as $child) {
-            $new_children->add($child);
+        foreach ($xhp->children as $child) {
+          $new_children->add($child);
+        }
+      } else if (!($xhp is Traversable<_>)) {
+        $new_children->add($xhp);
+      } else {
+        foreach ($xhp as $element) {
+          if ($element is :x:frag) {
+            foreach ($element->children as $child) {
+              $new_children->add($child);
+            }
+          } else if ($element !== null) {
+            $new_children->add($element);
           }
-        } else if ($element !== null) {
-          $new_children->add($element);
         }
       }
-    }
     }
     /*HH_FIXME[4110] $new_children was appended with $element, 
       which is (only) nonnull to the typechecker*/
@@ -574,12 +574,12 @@ abstract class :x:composable-element extends :xhp {
         }
         // Things that are a valid array key without any coercion
         if ($class === 'HH\arraykey') {
-          if (($val is int) || ($val is string)) {
+          if (($val is arraykey)) {
             break;
           }
         }
         if ($class === 'HH\num') {
-          if (($val is int) || ($val is float)) {
+          if (($val is num)) {
             break;
           }
         }
