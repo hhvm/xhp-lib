@@ -119,7 +119,7 @@ abstract class :x:composable-element extends :xhp {
         foreach ($xhp->children as $child) {
           $new_children->add($child);
         }
-      } else if (!($xhp is Traversable<_>)) {
+      } else if (!$xhp is Traversable<_>) {
         $new_children->add($xhp);
       } else {
         foreach ($xhp as $element) {
