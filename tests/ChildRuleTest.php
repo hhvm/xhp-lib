@@ -140,7 +140,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
-      expect((string)$elem)->toBeSame('<div></div>');
+      expect($elem->toString())->toBeSame('<div></div>');
     }
   }
 

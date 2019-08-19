@@ -65,8 +65,14 @@ abstract final class XHPAttributeCoercion {
     mixed $val,
   ): string {
     self::LogCoercion($context, 'string', $attr, $val);
-    if (($val is int) || ($val is float) || $val is Stringish) {
+    if ($val is string) {
+      return $val;
+    }
+    if ($val is num) {
       return (string)$val;
+    }
+    if ($val is Stringish) {
+      return /* HH_FIXME[4128] */ $val->__toString();
     }
 
     throw new XHPInvalidAttributeException($context, 'string', $attr, $val);

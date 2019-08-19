@@ -47,13 +47,13 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testGetChildren(): void {
     $children = $this->rxc?->getChildren();
     expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
-    expect((string)$children)->toBeSame('(:div+,(:code,:a)?)');
+    expect($children?->__toString())->toBeSame('(:div+,(:code,:a)?)');
   }
 
   public function testGetAttributes(): void {
     $attrs = $this->rxc?->getAttributes();
     expect($attrs)->toNotBeEmpty();
-    expect($attrs?->map($attr ==> (string)$attr))->toBePHPEqual(
+    expect($attrs?->map($attr ==> /* HH_FIXME[4281] */(string)$attr))->toBePHPEqual(
       Map {
         'mystring' => 'string mystring @required',
         'myenum' => "enum {'herp', 'derp'} myenum",
