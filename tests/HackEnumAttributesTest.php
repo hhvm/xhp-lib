@@ -41,15 +41,15 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidRawValues(): void {
     // UNSAFE
-    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */ 1} />;
+    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1} />;
     expect($x->toString())->toBeSame('<div>HERP</div>');
-    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */2} />;
+    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2} />;
     expect($x->toString())->toBeSame('<div>DERP</div>');
   }
 
   public function testInvalidValue(): void {
     expect(() ==> {
-      $x = <test:hack-enum-attribute foo={/* HH_FIXME[4110] */ 0} />;
+      $x = <test:hack-enum-attribute foo={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 0} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 }

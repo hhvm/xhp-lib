@@ -98,6 +98,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
       $x =
         <test:attribute-types
           /* HH_IGNORE_ERROR[4110] */
+          /* HH_IGNORE_ERROR[4343] */
           /* HH_IGNORE_ERROR[4166] */
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
@@ -130,7 +131,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testInvalidArrayKeys(): void {
     expect(() ==> {
-      $x = <test:attribute-types myarraykey={/* HH_FIXME[4110] */ 1.23} />;
+      $x = <test:attribute-types myarraykey={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 1.23} />;
       $x->toString();
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -144,7 +145,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testInvalidNum(): void {
     expect(() ==> {
-      $x = <test:attribute-types mynum=/* HH_FIXME[4110] */ "123" />;
+      $x = <test:attribute-types mynum=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123" />;
       $x->toString();
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -155,12 +156,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testStringableObjectAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mystring={new StringableTestClass()} />;
     expect($x->:mystring)->toBeSame('StringableTestClass');
   }
 
   public function testIntegerAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mystring={123} />;
     expect($x->:mystring)->toBeSame('123');
   }
@@ -169,31 +172,34 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x =
         <test:attribute-types
-          mystring={/* HH_FIXME[4110] */ new EmptyTestClass()}
+          mystring={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testArrayAsString(): void {
     expect(() ==> {
-      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ []} />;
+      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ []} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIntishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint={'123'} />;
     expect($x->:myint)->toBeSame(123);
   }
 
   public function testFloatAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint={1.23} />;
     expect($x->:myint)->toBeSame(1);
   }
 
   public function testFloatishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint="1.23" />;
     expect($x->:myint)->toBeSame(1);
   }
@@ -202,45 +208,47 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x =
         <test:attribute-types
-          myint={/* HH_FIXME[4110] */ new EmptyTestClass()}
+          myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testArrayAsInt(): void {
     expect(() ==> {
-      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ []} />;
+      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ []} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testNumericPrefixStringAsInt(): void {
     expect(() ==> {
-      $x = <test:attribute-types myint=/* HH_FIXME[4110] */ "123derp" />;
+      $x = <test:attribute-types myint=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123derp" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testTrueStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="true" />;
     expect($x->:mybool)->toBeSame(true);
   }
 
   public function testFalseStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="false" />;
     expect($x->:mybool)->toBeSame(false);
   }
 
   public function testMixedCaseFalseStringAsBool(): void {
     expect(() ==> {
-      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ "False" />;
+      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "False" />;
     })->toThrow(XHPInvalidAttributeException::class);
     // 'False' is actually truthy
   }
 
   public function testNoStringAsBool(): void {
     expect(() ==> {
-      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ "No" />;
+      $x = <test:attribute-types mybool=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "No" />;
     })->toThrow(XHPInvalidAttributeException::class);
     // 'No' is actually truthy
   }
@@ -248,6 +256,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testAttrNameAsBool(): void {
     // idiomatic - eg checked="checked"
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="mybool" />;
     expect($x->:mybool)->toBeSame(true);
   }
@@ -260,28 +269,31 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testIntAsFloat(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat={123} />;
     expect($x->:myfloat)->toBeSame(123.0);
   }
 
   public function testNumericStringsAsFloats(): void {
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat="123" />;
     expect($x->:myfloat)->toBeSame(123.0);
     /* HH_IGNORE_ERROR[4110] */
+    /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat="1.23" />;
     expect($x->:myfloat)->toBeSame(1.23);
   }
 
   public function testNonNumericStringAsFloat(): void {
     expect(() ==> {
-      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ "herpderp" />;
+      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "herpderp" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testNumericPrefixStringAsFloat(): void {
     expect(() ==> {
-      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ "123derp" />;
+      $x = <test:attribute-types myfloat=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123derp" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -289,7 +301,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x =
         <test:attribute-types
-          myarray={/* HH_FIXME[4110] */ new EmptyTestClass()}
+          myarray={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -298,7 +310,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x =
         <test:attribute-types
-          myarray={/* HH_FIXME[4110] */ Vector {1, 2, 3}}
+          myarray={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ Vector {1, 2, 3}}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -307,14 +319,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x =
         <test:attribute-types
-          myobject={/* HH_FIXME[4110] */ new EmptyTestClass()}
+          myobject={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testPassingArrayAsVector(): void {
     expect(() ==> {
-      $x = <test:attribute-types myvector={/* HH_FIXME[4110] */ [1, 2, 3]} />;
+      $x = <test:attribute-types myvector={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ [1, 2, 3]} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -380,6 +392,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
       $x =
         <test:callable-attribute
           /* HH_IGNORE_ERROR[4110] */
+          /* HH_IGNORE_ERROR[4343] */
           foo={function() {
           }}
         />;
