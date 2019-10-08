@@ -15,11 +15,11 @@ class :video extends :xhp:html-element {
     enum {'anonymous', 'use-credentials'} crossorigin,
     int height,
     bool loop,
-    Stringish mediagroup,
+    string mediagroup,
     bool muted,
-    Stringish poster,
+    string poster,
     enum {'none', 'metadata', 'auto'} preload,
-    Stringish src,
+    string src,
     int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);

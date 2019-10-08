@@ -11,8 +11,8 @@
 class :embed extends :xhp:html-element {
   attribute
     int height,
-    Stringish src,
-    Stringish type,
+    string src,
+    string type,
     int width,
     /**
      * The following attributes are Flash specific.
@@ -20,7 +20,7 @@ class :embed extends :xhp:html-element {
      */
     bool allowfullscreen,
     enum {'always', 'never'} allowscriptaccess,
-    Stringish wmode;
+    string wmode;
 
   category %flow, %phrase, %embedded, %interactive;
   children (pcdata | %phrase)*;

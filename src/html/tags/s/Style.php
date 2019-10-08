@@ -10,9 +10,9 @@
 
 class :style extends :xhp:raw-pcdata-element {
   attribute
-    Stringish media,
+    string media,
     bool scoped,
-    Stringish type;
+    string type;
   category %flow, %metadata;
   protected string $tagName = 'style';
 }

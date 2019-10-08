@@ -10,8 +10,8 @@
 
 class :html extends :xhp:html-element {
   attribute
-    Stringish manifest,
-    Stringish xmlns;
+    string manifest,
+    string xmlns;
   children (:head, :body);
   protected string $tagName = 'html';
 }

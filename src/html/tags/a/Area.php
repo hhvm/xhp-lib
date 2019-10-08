@@ -10,13 +10,13 @@
 
 class :area extends :xhp:html-singleton {
   attribute
-    Stringish alt,
-    Stringish coords,
-    Stringish download,
-    Stringish href,
+    string alt,
+    string coords,
+    string download,
+    string href,
     bool hreflang,
-    Stringish media,
-    Stringish rel,
+    string media,
+    string rel,
     enum {
       'circ',
       'circle',
@@ -26,8 +26,8 @@ class :area extends :xhp:html-singleton {
       'rect',
       'rectangle',
     } shape,
-    Stringish target,
-    Stringish type;
+    string target,
+    string type;
   category %flow, %phrase;
   protected string $tagName = 'area';
 }

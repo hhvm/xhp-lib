@@ -10,12 +10,12 @@
 
 class :th extends :xhp:html-element {
   attribute
-    Stringish abbr,
+    string abbr,
     int colspan,
-    Stringish headers,
+    string headers,
     int rowspan,
     enum {'col', 'colgroup', 'row', 'rowgroup'} scope,
-    Stringish sorted;
+    string sorted;
   children (pcdata | %flow)*;
   protected string $tagName = 'th';
 }

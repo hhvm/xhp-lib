@@ -9,7 +9,7 @@
  */
 
 class :data extends :xhp:html-element {
-  attribute Stringish value @required;
+  attribute string value @required;
   category %flow, %phrase;
   children (%phrase*);
   protected string $tagName = 'data';
