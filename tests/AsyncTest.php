@@ -89,8 +89,8 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     expect($xhp)->toBeInstanceOf(XHPAwaitable::class);
   }
 
-  public function parallelizationContainersProvider(): array<array<:xhp>> {
-    return [[<test:xfrag-wrap />], [<test:async-xfrag-wrap />]];
+  public function parallelizationContainersProvider(): varray<varray<:xhp>> {
+    return varray[varray[<test:xfrag-wrap />], varray[<test:async-xfrag-wrap />]];
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
@@ -101,7 +101,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     $b = <async:par-test label="b" />;
     $c = <async:par-test label="c" />;
 
-    $container->replaceChildren([$b, $c]);
+    $container->replaceChildren(varray[$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
     expect($tree->toString())->toBeSame(

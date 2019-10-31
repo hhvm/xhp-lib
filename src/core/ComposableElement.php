@@ -793,7 +793,7 @@ abstract class :x:composable-element extends :xhp {
    * :span[%inline],pcdata
    */
   final public function __getChildrenDescription(): string {
-    $desc = array();
+    $desc = varray[];
     foreach ($this->children as $child) {
       if ($child is :xhp) {
         $tmp = ':'.:xhp::class2element(get_class($child));
@@ -815,7 +815,7 @@ abstract class :x:composable-element extends :xhp {
       return true;
     }
     // XHP parses the category string
-    $c = str_replace(array(':', '-'), array('__', '_'), $c);
+    $c = str_replace(varray[':', '-'], varray['__', '_'], $c);
     return ($categories[$c] ?? null) !== null;
   }
 }

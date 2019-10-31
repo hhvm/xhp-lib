@@ -70,6 +70,6 @@ class BasicsTest extends Facebook\HackTest\HackTest {
 
   public function testJsonSerialize(): void {
     $xhp = <div>Hello world.</div>;
-    expect(json_encode([$xhp]))->toBeSame('["<div>Hello world.<\/div>"]');
+    expect(json_encode(varray[$xhp]))->toBeSame('["<div>Hello world.<\/div>"]');
   }
 }
