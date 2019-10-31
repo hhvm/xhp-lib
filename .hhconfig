@@ -8,6 +8,4 @@ enable_experimental_tc_features=shape_field_check,sealed_classes
 user_attributes=
 disable_static_local_variables = true
 disable_primitive_refinement=true
-
-; Set me to true when the dependencies are also up to date
-disallow_array_literal = false
+disallow_array_literal = true
