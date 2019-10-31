@@ -9,5 +9,5 @@ user_attributes=
 disable_static_local_variables = true
 disable_primitive_refinement=true
 
-; As soon as type-assert passes disallow_array_literal this setting can be safely enabled
+; Set me to true when the dependencies are also up to date
 disallow_array_literal = false
