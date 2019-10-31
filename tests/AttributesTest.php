@@ -81,7 +81,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         mystring="foo"
         mybool={true}
         myint={123}
-        myarray={[1, 2, 3]}
+        myarray={varray[1, 2, 3]}
         myobject={new stdClass()}
         myenum={'foo'}
         myfloat={1.23}
@@ -179,7 +179,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testArrayAsString(): void {
     expect(() ==> {
-      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ []} />;
+      $x = <test:attribute-types mystring={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[]} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -215,7 +215,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testArrayAsInt(): void {
     expect(() ==> {
-      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ []} />;
+      $x = <test:attribute-types myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[]} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -326,7 +326,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testPassingArrayAsVector(): void {
     expect(() ==> {
-      $x = <test:attribute-types myvector={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ [1, 2, 3]} />;
+      $x = <test:attribute-types myvector={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[1, 2, 3]} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 

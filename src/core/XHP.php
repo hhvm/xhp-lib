@@ -104,13 +104,13 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   }
 
   public static function element2class(string $element): string {
-    return 'xhp_'.str_replace(array(':', '-'), array('__', '_'), $element);
+    return 'xhp_'.str_replace(varray[':', '-'], varray['__', '_'], $element);
   }
 
   public static function class2element(string $class): string {
     return str_replace(
-      array('__', '_'),
-      array(':', '-'),
+      varray['__', '_'],
+      varray[':', '-'],
       preg_replace('#^xhp_#i', '', $class),
     );
   }
