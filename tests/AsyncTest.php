@@ -95,7 +95,8 @@ class AsyncTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('parallelizationContainersProvider')>>
   public function testParallelization(:x:element $container): void {
-    :async:par-test::$log = Vector {};
+    $par_test_classname = :async:par-test::class;
+    $par_test_classname::$log = Vector {};
 
     $a = <async:par-test label="a" />;
     $b = <async:par-test label="b" />;
@@ -108,7 +109,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
       '<div><div>a</div><div>b</div><div>c</div></div>',
     );
 
-    $log = :async:par-test::$log;
+    $log = $par_test_classname::$log;
     $by_node = Map { 'a' => Map {}, 'b' => Map {}, 'c' => Map {} };
 
     foreach ($log as $idx => $data) {
