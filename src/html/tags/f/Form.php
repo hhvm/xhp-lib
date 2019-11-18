@@ -10,14 +10,14 @@
 
 class :form extends :xhp:html-element {
   attribute
-    Stringish action,
-    Stringish accept-charset,
+    string action,
+    string accept-charset,
     enum {'on', 'off'} autocomplete,
-    Stringish enctype,
+    string enctype,
     enum {'get', 'post'} method,
-    Stringish name,
+    string name,
     bool novalidate,
-    Stringish target;
+    string target;
   category %flow;
   // Should not contain :form
   children (pcdata | %flow)*;

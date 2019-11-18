@@ -9,7 +9,7 @@
  */
 
 class :time extends :xhp:html-element {
-  attribute Stringish datetime;
+  attribute string datetime;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
   protected string $tagName = 'time';

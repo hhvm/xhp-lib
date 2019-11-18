@@ -10,10 +10,10 @@
 
 class :source extends :xhp:html-singleton {
   attribute
-    Stringish media,
-    Stringish sizes,
-    Stringish src,
-    Stringish srcset,
-    Stringish type;
+    string media,
+    string sizes,
+    string src,
+    string srcset,
+    string type;
   protected string $tagName = 'source';
 }

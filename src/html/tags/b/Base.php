@@ -10,8 +10,8 @@
 
 class :base extends :xhp:html-singleton {
   attribute
-    Stringish href,
-    Stringish target;
+    string href,
+    string target;
   category %metadata;
   protected string $tagName = 'base';
 }

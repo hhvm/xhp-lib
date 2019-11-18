@@ -11,8 +11,8 @@
 class :fieldset extends :xhp:html-element {
   attribute
     bool disabled,
-    Stringish form,
-    Stringish name;
+    string form,
+    string name;
   category %flow;
   children (:legend?, (pcdata | %flow)*);
   protected string $tagName = 'fieldset';

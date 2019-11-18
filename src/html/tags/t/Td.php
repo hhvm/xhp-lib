@@ -11,7 +11,7 @@
 class :td extends :xhp:html-element {
   attribute
     int colspan,
-    Stringish headers,
+    string headers,
     int rowspan;
   children (pcdata | %flow)*;
   protected string $tagName = 'td';

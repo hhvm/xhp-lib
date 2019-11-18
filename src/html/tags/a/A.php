@@ -10,15 +10,15 @@
 
 class :a extends :xhp:html-element {
   attribute
-    Stringish download,
-    Stringish href,
-    Stringish hreflang,
-    Stringish media,
-    Stringish rel,
-    Stringish target,
-    Stringish type,
+    string download,
+    string href,
+    string hreflang,
+    string media,
+    string rel,
+    string target,
+    string type,
     // Legacy
-    Stringish name;
+    string name;
   category %flow, %phrase, %interactive;
   // Should not contain %interactive
   children (pcdata | %flow)*;

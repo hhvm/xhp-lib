@@ -14,10 +14,10 @@ class :audio extends :xhp:html-element {
     bool controls,
     enum {'anonymous', 'use-credentials'} crossorigin,
     bool loop,
-    Stringish mediagroup,
+    string mediagroup,
     bool muted,
     enum {'none', 'metadata', 'auto'} preload,
-    Stringish src;
+    string src;
   category %flow, %phrase, %embedded, %interactive;
   children (:source*, :track*, (pcdata | %flow)*);
   protected string $tagName = 'audio';

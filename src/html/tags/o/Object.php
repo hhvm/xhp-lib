@@ -10,13 +10,13 @@
 
 class :object extends :xhp:html-element {
   attribute
-    Stringish data,
+    string data,
     int height,
-    Stringish form,
-    Stringish name,
-    Stringish type,
+    string form,
+    string name,
+    string type,
     bool typemustmatch,
-    Stringish usemap,
+    string usemap,
     int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:param*, (pcdata | %flow)*);

@@ -10,8 +10,8 @@
 
 class :ins extends :xhp:html-element {
   attribute
-    Stringish cite,
-    Stringish datetime;
+    string cite,
+    string datetime;
   category %flow, %phrase;
   children (pcdata | %flow)*;
   protected string $tagName = 'ins';

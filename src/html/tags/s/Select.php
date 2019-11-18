@@ -12,9 +12,9 @@ class :select extends :xhp:html-element {
   attribute
     bool autofocus,
     bool disabled,
-    Stringish form,
+    string form,
     bool multiple,
-    Stringish name,
+    string name,
     bool required,
     int size;
   category %flow, %phrase, %interactive;
