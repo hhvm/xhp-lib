@@ -3,7 +3,7 @@
 h1. Introduction
 
 XHP augments the syntax of Hack such that XML document fragments become valid
-PHP expressions. This allows you to use Hack as a stricter templating engine and
+Hack expressions. This allows you to use Hack as a stricter templating engine and
 offers much more straightforward implementation of reusable components.
 
 This repository contains the class library, which is required to use XHP. 2.0 and
@@ -41,9 +41,9 @@ echo <a href={$href}>Facebook</a>;
 
 Take note of the syntax on line 3, this is not a string. This is the major new syntax that XHP introduces to Hack.
 
-Anything that's in {}'s is interpreted as a full PHP expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
+Anything that's in {}'s is interpreted as a full Hack expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
 
-You can define arbitrary elements that can be instantiated in PHP. Under the covers each element you create is an instance of a class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
+You can define arbitrary elements that can be instantiated in Hack. Under the covers each element you create is an instance of a class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
 
 h1. Complex Structures
 
@@ -73,9 +73,9 @@ In the code, @<ul />@ creates a ul with no children. Then we dynamically append 
 
 h1. Escaping
 
-An interesting feature of XHP is the idea of automatic escaping. In vanilla PHP if you want to render input from the user you must manually escape it. This practice is error-prone and has been proven over time to be an untenable solution. It increases code complexity and still leads to security vulnerabilities by careless programming. However, since XHP has context-specific about the page structure it can automatically escape data. The following two examples are identical, and both are "safe".
+An interesting feature of XHP is the idea of automatic escaping. Without XHP, if you need to render input from the user you must manually escape it. This practice is error-prone and has been proven over time to be an untenable solution. It increases code complexity and still leads to security vulnerabilities by careless programming. However, since XHP has context-specific about the page structure it can automatically escape data. The following two examples are identical, and both are "safe".
 
-bc. <?php
+bc. <?hh
 echo '<div>Hello '.htmlspecialchars($_GET['name']).'</div>';
 
 bc. <?hh
@@ -85,7 +85,7 @@ As you can see, using XHP makes safety the default rather than the exception.
 
 h1. Defining Elements
 
-All elements in XHP are just PHP classes. Even the basic HTML elements like div and span are classes. You define an element just like you do a class, except you use a leading colon to specify that you're creating an XHP element:
+All elements in XHP are just Hack classes. Even the basic HTML elements like div and span are classes. You define an element just like you do a class, except you use a leading colon to specify that you're creating an XHP element:
 
 bc. <?hh
 class :fb:thing extends :x:element {

@@ -14,7 +14,7 @@ XHPUnsafeRenderable
 
 **This is incredibly dangerous!**
 
-```PHP
+```HACK
 interface XHPUnsafeRenderable {
   public function toHTMLString();
 }
@@ -36,7 +36,7 @@ Usage
 
 To actually embed arbitrary HTML anywhere:
 
-```PHP
+```HACK
 final class POTENTIAL_XSS_SECURITY_HOLE
   implements XHPAlwaysValidChild, XHPUnsafeRenderable {
   private $html;
@@ -72,7 +72,7 @@ POTENTIAL_XSS_SECURITY_HOLE(render_markdown($markdown));
 We suggest not implementing POTENTIAL_XSS_SECURITY_HOLE at all, and instead
 doing something like the following:
 
-```PHP
+```HACK
 // Probably don't need XHPAlwaysValidChild - this is likely to be in a <div />
 // or other similarly liberal container
 final class XHPMarkdown implements XHPUnsafeRenderable {
