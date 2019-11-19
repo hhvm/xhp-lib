@@ -89,7 +89,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         mymap={Map {'herp' => 'derp'}}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testShapeWithExtraKey(): void {
@@ -102,7 +102,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
           /* HH_IGNORE_ERROR[4166] */
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
-      expect($x->toString())->toBeEqual('<div></div>');
+      expect($x->toString())->toEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -111,7 +111,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
       /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
-      expect($x->toString())->toBeEqual('<div></div>');
+      expect($x->toString())->toEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -124,9 +124,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidArrayKeys(): void {
     $x = <test:attribute-types myarraykey="foo" />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <test:attribute-types myarraykey={123} />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testInvalidArrayKeys(): void {
@@ -141,9 +141,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidNum(): void {
     $x = <test:attribute-types mynum={123} />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <test:attribute-types mynum={1.23} />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testInvalidNum(): void {
@@ -157,21 +157,21 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testNoAttributes(): void {
-    expect((<test:attribute-types />)->toString())->toBeEqual('<div></div>');
+    expect((<test:attribute-types />)->toString())->toEqual('<div></div>');
   }
 
   public function testStringableObjectAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mystring={new StringableTestClass()} />;
-    expect($x->:mystring)->toBeEqual('StringableTestClass');
+    expect($x->:mystring)->toEqual('StringableTestClass');
   }
 
   public function testIntegerAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mystring={123} />;
-    expect($x->:mystring)->toBeEqual('123');
+    expect($x->:mystring)->toEqual('123');
   }
 
   public function testUnstringableObjectAsString(): void {
@@ -198,21 +198,21 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint={'123'} />;
-    expect($x->:myint)->toBeEqual(123);
+    expect($x->:myint)->toEqual(123);
   }
 
   public function testFloatAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint={1.23} />;
-    expect($x->:myint)->toBeEqual(1);
+    expect($x->:myint)->toEqual(1);
   }
 
   public function testFloatishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myint="1.23" />;
-    expect($x->:myint)->toBeEqual(1);
+    expect($x->:myint)->toEqual(1);
   }
 
   public function testObjectAsInt(): void {
@@ -246,14 +246,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="true" />;
-    expect($x->:mybool)->toBeEqual(true);
+    expect($x->:mybool)->toEqual(true);
   }
 
   public function testFalseStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="false" />;
-    expect($x->:mybool)->toBeEqual(false);
+    expect($x->:mybool)->toEqual(false);
   }
 
   public function testMixedCaseFalseStringAsBool(): void {
@@ -281,7 +281,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types mybool="mybool" />;
-    expect($x->:mybool)->toBeEqual(true);
+    expect($x->:mybool)->toEqual(true);
   }
 
   public function testInvalidEnumValue(): void {
@@ -294,18 +294,18 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat={123} />;
-    expect($x->:myfloat)->toBeEqual(123.0);
+    expect($x->:myfloat)->toEqual(123.0);
   }
 
   public function testNumericStringsAsFloats(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat="123" />;
-    expect($x->:myfloat)->toBeEqual(123.0);
+    expect($x->:myfloat)->toEqual(123.0);
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute-types myfloat="1.23" />;
-    expect($x->:myfloat)->toBeEqual(1.23);
+    expect($x->:myfloat)->toEqual(1.23);
   }
 
   public function testNonNumericStringAsFloat(): void {
@@ -368,8 +368,8 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testProvidingRequiredAttributes(): void {
     $x = <test:required-attributes mystring="herp" />;
-    expect($x->:mystring)->toBeEqual('herp');
-    expect($x->toString())->toBeEqual('<div>herp</div>');
+    expect($x->:mystring)->toEqual('herp');
+    expect($x->toString())->toEqual('<div>herp</div>');
   }
 
   public function testOmittingRequiredAttributes(): void {
@@ -381,14 +381,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testProvidingDefaultAttributes(): void {
     $x = <test:default-attributes mystring="herp" />;
-    expect($x->:mystring)->toBeEqual('herp');
-    expect($x->toString())->toBeEqual('<div>herp</div>');
+    expect($x->:mystring)->toEqual('herp');
+    expect($x->toString())->toEqual('<div>herp</div>');
   }
 
   public function testOmittingDefaultAttributes(): void {
     $x = <test:default-attributes />;
-    expect($x->:mystring)->toBeEqual('mydefault');
-    expect($x->toString())->toBeEqual('<div>mydefault</div>');
+    expect($x->:mystring)->toEqual('mydefault');
+    expect($x->toString())->toEqual('<div>mydefault</div>');
   }
 
   public function testBogusAttributes(): void {
@@ -399,28 +399,28 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testSpecialAttributes(): void {
     $x = <test:default-attributes data-idonotexist="derp" />;
-    expect($x->toString())->toBeEqual('<div>mydefault</div>');
+    expect($x->toString())->toEqual('<div>mydefault</div>');
     $x = <test:default-attributes aria-idonotexist="derp" />;
-    expect($x->toString())->toBeEqual('<div>mydefault</div>');
+    expect($x->toString())->toEqual('<div>mydefault</div>');
 
     // verify that special attributes actually render
     $x = <div data-idonotexist="derp" />;
-    expect($x->toString())->toBeEqual('<div data-idonotexist="derp"></div>');
+    expect($x->toString())->toEqual('<div data-idonotexist="derp"></div>');
     // implicit string cast
     $x = <div data-idonotexist={123} />;
-    expect($x->toString())->toBeEqual('<div data-idonotexist="123"></div>');
+    expect($x->toString())->toEqual('<div data-idonotexist="123"></div>');
     $x = <div aria-idonotexist="derp" />;
-    expect($x->toString())->toBeEqual('<div aria-idonotexist="derp"></div>');
+    expect($x->toString())->toEqual('<div aria-idonotexist="derp"></div>');
 
     // special attributes should disappear when null, like all other attributes
     $x = <div data-idonotexist={null} />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <div aria-idonotexist={null} />;
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
 
     $x = <div data-foo="derp" />;
     $x->setAttribute('data-foo', null);
-    expect($x->toString())->toBeEqual('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testRenderCallableAttribute(): void {
@@ -449,9 +449,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testAttributeSpread(): void {
     $x = <test:attribute-types mystring="foo" mybool={true} />;
     $y = <test:attribute-types mystring="bar" {...$x} myint={5} />;
-    expect($y->:mystring)->toBeEqual('foo');
-    expect($y->:myint)->toBeEqual(5);
-    expect($y->:mybool)->toBeEqual(true);
+    expect($y->:mystring)->toEqual('foo');
+    expect($y->:myint)->toEqual(5);
+    expect($y->:mybool)->toEqual(true);
 
     $attrs = $y->getAttributes()->keys();
     expect($attrs)->toHaveSameContentAs(Vector {'mystring', 'mybool', 'myint'});

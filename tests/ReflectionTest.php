@@ -31,23 +31,23 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   }
 
   public function testClassName(): void {
-    expect($this->rxc?->getClassName())->toBeEqual(:test:for-reflection::class);
+    expect($this->rxc?->getClassName())->toEqual(:test:for-reflection::class);
   }
 
   public function testElementName(): void {
-    expect($this->rxc?->getElementName())->toBeEqual('test:for-reflection');
+    expect($this->rxc?->getElementName())->toEqual('test:for-reflection');
   }
 
   public function testReflectionClass(): void {
     $rc = $this->rxc?->getReflectionClass();
     expect($rc)->toBeInstanceOf(ReflectionClass::class);
-    expect($rc?->getName())->toBeEqual(:test:for-reflection::class);
+    expect($rc?->getName())->toEqual(:test:for-reflection::class);
   }
 
   public function testGetChildren(): void {
     $children = $this->rxc?->getChildren();
     expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
-    expect($children?->__toString())->toBeEqual('(:div+,(:code,:a)?)');
+    expect($children?->__toString())->toEqual('(:div+,(:code,:a)?)');
   }
 
   public function testGetAttributes(): void {

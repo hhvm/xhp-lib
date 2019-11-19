@@ -24,19 +24,19 @@ class XHPContextsTest extends Facebook\HackTest\HackTest {
   public function testContextSimple(): void {
     $x = <test:contexts />;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toBeEqual('<div><p>herp</p></div>');
+    expect($x->toString())->toEqual('<div><p>herp</p></div>');
   }
 
   public function testContextInsideHTMLElement(): void {
     $x = <div><test:contexts /></div>;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toBeEqual('<div><div><p>herp</p></div></div>');
+    expect($x->toString())->toEqual('<div><div><p>herp</p></div></div>');
   }
 
   public function testNestedContexts(): void {
     $x = <test:contexts><test:contexts /></test:contexts>;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toBeEqual(
+    expect($x->toString())->toEqual(
       '<div><p>herp</p><div><p>herp</p></div></div>',
     );
   }

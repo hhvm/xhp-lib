@@ -51,10 +51,10 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
         mystring="foo"
         mybool={true}
       />;
-    expect($x->:myint)->toBeEqual(3);
-    expect($x->:myfloat)->toBeEqual(1.23);
-    expect($x->:mystring)->toBeEqual('foo');
-    expect($x->:mybool)->toBeEqual(true);
+    expect($x->:myint)->toEqual(3);
+    expect($x->:myfloat)->toEqual(1.23);
+    expect($x->:mystring)->toEqual('foo');
+    expect($x->:mybool)->toEqual(true);
   }
 
   public function testIntishStringAsInt(): void {
@@ -117,7 +117,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
     $x = <test:attribute-coercion-modes mystring={2} />;
-    expect($x->:mystring)->toBeEqual('2');
+    expect($x->:mystring)->toEqual('2');
   }
 
   public function testLoggingDeprecationCoercion(): void {
@@ -138,6 +138,6 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
     $x = <test:attribute-coercion-modes mystring={2} />;
-    expect($x->:mystring)->toBeEqual('2');
+    expect($x->:mystring)->toEqual('2');
   }
 }

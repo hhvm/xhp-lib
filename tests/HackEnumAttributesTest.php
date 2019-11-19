@@ -34,9 +34,9 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidValues(): void {
     $x = <test:hack-enum-attribute foo={TestEnum::HERP} />;
-    expect($x->toString())->toBeEqual('<div>HERP</div>');
+    expect($x->toString())->toEqual('<div>HERP</div>');
     $x = <test:hack-enum-attribute foo={TestEnum::DERP} />;
-    expect($x->toString())->toBeEqual('<div>DERP</div>');
+    expect($x->toString())->toEqual('<div>DERP</div>');
   }
 
   public function testValidRawValues(): void {
@@ -45,12 +45,12 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
       <test:hack-enum-attribute
         foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1}
       />;
-    expect($x->toString())->toBeEqual('<div>HERP</div>');
+    expect($x->toString())->toEqual('<div>HERP</div>');
     $x =
       <test:hack-enum-attribute
         foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2}
       />;
-    expect($x->toString())->toBeEqual('<div>DERP</div>');
+    expect($x->toString())->toEqual('<div>DERP</div>');
   }
 
   public function testInvalidValue(): void {
