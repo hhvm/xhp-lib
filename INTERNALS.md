@@ -1,4 +1,4 @@
-The parser converts XHP syntax to standard Hack code. This file documents some
+The parser converts XHP syntax to standard PHP code. This file documents some
 parts of that conversion.
 
 Class Names
