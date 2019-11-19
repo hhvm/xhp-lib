@@ -54,13 +54,13 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
   public function testSynchronous(XHPRoot $root, string $expected): void {
     $elem = <test:verbatim-root />;
     $elem->setContext('root', $root);
-    expect($elem->toString())->toBeSame($expected);
+    expect($elem->toString())->toBeEqual($expected);
   }
 
   <<DataProvider('xhpRootProvider')>>
   public function testAsynchronous(XHPRoot $root, string $expected): void {
     $elem = <test:verbatim-root:async />;
     $elem->setContext('root', $root);
-    expect($elem->toString())->toBeSame($expected);
+    expect($elem->toString())->toBeEqual($expected);
   }
 }
