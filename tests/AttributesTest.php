@@ -89,7 +89,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         mymap={Map {'herp' => 'derp'}}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
-    expect($x->toString())->toBePHPEqual('<div></div>');
+    expect($x->toString())->toBeSame('<div></div>');
   }
 
   public function testShapeWithExtraKey(): void {
@@ -102,7 +102,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
           /* HH_IGNORE_ERROR[4166] */
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
-      expect($x->toString())->toBePHPEqual('<div></div>');
+      expect($x->toString())->toBeSame('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -111,7 +111,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
       /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
-      expect($x->toString())->toBePHPEqual('<div></div>');
+      expect($x->toString())->toBeSame('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -151,7 +151,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testNoAttributes(): void {
-    expect(<test:attribute-types />)->toBePHPEqual('<div></div>');
+    expect((<test:attribute-types />)->toString())->toBeSame('<div></div>');
   }
 
   public function testStringableObjectAsString(): void {
@@ -418,6 +418,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($y->:mybool)->toBeSame(true);
 
     $attrs = $y->getAttributes()->keys();
-    expect($attrs)->toBePHPEqual(Vector {'mystring', 'mybool', 'myint'});
+    expect($attrs)->toHaveSameContentAs(Vector {'mystring', 'mybool', 'myint'});
   }
 }

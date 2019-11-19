@@ -53,7 +53,7 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testGetAttributes(): void {
     $attrs = $this->rxc?->getAttributes();
     expect($attrs)->toNotBeEmpty();
-    expect($attrs?->map($attr ==> /* HH_FIXME[4281] */(string)$attr))->toBePHPEqual(
+    expect($attrs?->map($attr ==> /* HH_FIXME[4281] */(string)$attr))->toHaveSameContentAs(
       Map {
         'mystring' => 'string mystring @required',
         'myenum' => "enum {'herp', 'derp'} myenum",
@@ -64,6 +64,6 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
 
   public function testGetCategories(): void {
     $categories = $this->rxc?->getCategories();
-    expect($categories)->toBePHPEqual(Set { 'herp', 'derp' });
+    expect($categories)->toHaveSameContentAs(Set { 'herp', 'derp' });
   }
 }

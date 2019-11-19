@@ -22,7 +22,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
       <div>
         Hello, world.
       </div>;
-    expect($xhp->toString())->toBePHPEqual('<div> Hello, world. </div>');
+    expect($xhp->toString())->toBeSame('<div> Hello, world. </div>');
   }
 
   public function testFragWithString(): void {
@@ -32,27 +32,27 @@ class BasicsTest extends Facebook\HackTest\HackTest {
 
   public function testDivWithChild(): void {
     $xhp = <div><div>Herp</div></div>;
-    expect($xhp->toString())->toBePHPEqual('<div><div>Herp</div></div>');
+    expect($xhp->toString())->toBeSame('<div><div>Herp</div></div>');
   }
 
   public function testInterpolation(): void {
     $x = "Herp";
     $xhp = <div>{$x}</div>;
-    expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
+    expect($xhp->toString())->toBeSame('<div>Herp</div>');
   }
 
   public function testXFrag(): void {
     $x = 'herp';
     $y = 'derp';
     $frag = <x:frag>{$x}{$y}</x:frag>;
-    expect($frag->getChildren()->count())->toBePHPEqual(2);
+    expect($frag->getChildren()->count())->toBeSame(2);
     $xhp = <div>{$frag}</div>;
-    expect($xhp->toString())->toBePHPEqual('<div>herpderp</div>');
+    expect($xhp->toString())->toBeSame('<div>herpderp</div>');
   }
 
   public function testEscaping(): void {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
-    expect($xhp->toString())->toBePHPEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
+    expect($xhp->toString())->toBeSame('<div>foo&lt;SCRIPT&gt;bar</div>');
   }
 
   public function testElement2Class(): void {
