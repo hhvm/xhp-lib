@@ -40,7 +40,7 @@ abstract class :x:element extends :x:composable-element implements XHPRoot {
 
     if ($this is XHPAwaitable) {
       $composed = /* HH_FIXME[4112] protected */
-      /* HH_FIXME[4053] is check does not refine to XHPAwaitable */
+      /* HH_FIXME[4053] Refinement with protected methods (bug) */
       await $this->asyncRender();
     } else {
       $composed = $this->render();
