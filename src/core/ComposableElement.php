@@ -64,7 +64,7 @@ abstract class :x:composable-element extends :xhp {
         $this->source =
           'You have child validation on, but debug information is not being '.
           'passed to XHP objects correctly. Ensure xhp.include_debug is on '.
-          'in your PHP configuration. Without this option enabled, '.
+          'in your server configuration. Without this option enabled, '.
           'validation errors will be painful to debug at best.';
       }
     }

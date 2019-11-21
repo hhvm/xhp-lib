@@ -40,7 +40,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
   public function testUnsafeRenderable(): void {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;
-    expect($xhp->toString())->toBePHPEqual(
+    expect($xhp->toString())->toEqual(
       '<div><script>lollerskates</script></div>',
     );
   }
@@ -56,21 +56,21 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
   public function testAlwaysValidChild(): void {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
-    expect($xhp->toString())->toBePHPEqual('<html>foo<body></body></html>');
+    expect($xhp->toString())->toEqual('<html>foo<body></body></html>');
   }
 
   public function testUnsafeAttribute(): void {
     // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
     $attr = "foo &amp;&amp; bar";
     $xhp = <div onclick={$attr} />;
-    expect($xhp->toString())->toBePHPEqual(
+    expect($xhp->toString())->toEqual(
       '<div onclick="foo &amp;amp;&amp;amp; bar"></div>',
     );
 
     // using XHPUnsafeAttributeValue the &amp; is not double escaped
     $escaped = new ExampleUnsafeAttribute("foo &amp;&amp; bar");
     $xhp = <div onclick={$escaped} />;
-    expect($xhp->toString())->toBePHPEqual(
+    expect($xhp->toString())->toEqual(
       '<div onclick="foo &amp;&amp; bar"></div>',
     );
   }

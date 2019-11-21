@@ -116,7 +116,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any-number-of-child />,
     };
     foreach ($elems as $elem) {
-      expect($elem->__toString())->toBeSame('<div></div>');
+      expect($elem->__toString())->toEqual('<div></div>');
     }
   }
 
@@ -140,7 +140,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
-      expect($elem->toString())->toBeSame('<div></div>');
+      expect($elem->toString())->toEqual('<div></div>');
     }
   }
 
@@ -149,7 +149,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     :x:composable-element $elem,
     string $expected,
   ): void {
-    expect($elem->__getChildrenDeclaration())->toBeSame($expected);
+    expect($elem->__getChildrenDeclaration())->toEqual($expected);
   }
 
   public function toStringProvider(): vec<(:xhp, string)> {
@@ -238,38 +238,37 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
-      expect($elem->toString())->toBeSame('<div></div>');
+      expect($elem->toString())->toEqual('<div></div>');
     }
   }
 
   public function testThreeChildren(): void {
-    $elems =
-      Vector { <test:any-number-of-child />, <test:at-least-one-child /> };
+    $elems = Vector {<test:any-number-of-child />, <test:at-least-one-child />};
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
-      expect($elem->toString())->toBeSame('<div></div>');
+      expect($elem->toString())->toEqual('<div></div>');
     }
   }
 
   public function testEitherValidChild(): void {
     $x = <test:either-of-two-children><div /></test:either-of-two-children>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <test:either-of-two-children><code /></test:either-of-two-children>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
 
     $x = <test:nested-rule><div /></test:nested-rule>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <test:nested-rule><code /></test:nested-rule>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     $x = <test:nested-rule><code /><code /></test:nested-rule>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testPCDataChild(): void {
     $x = <test:pcdata-child>herp derp</test:pcdata-child>;
-    expect($x->toString())->toBeSame('<div>herp derp</div>');
+    expect($x->toString())->toEqual('<div>herp derp</div>');
     $x = <test:pcdata-child>{123}</test:pcdata-child>;
-    expect($x->toString())->toBeSame('<div>123</div>');
+    expect($x->toString())->toEqual('<div>123</div>');
   }
 
   public function testCommaCategory(): void {
@@ -277,12 +276,12 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:needs-comma-category>
         <test:has-comma-category />
       </test:needs-comma-category>;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testFrags(): void {
     $x = <div><x:frag>{'foo'}{'bar'}</x:frag></div>;
-    expect($x->toString())->toBeSame('<div>foobar</div>');
+    expect($x->toString())->toEqual('<div>foobar</div>');
   }
 
   public function testNested(): void {

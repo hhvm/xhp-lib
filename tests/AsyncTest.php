@@ -55,33 +55,33 @@ class :async:par-test extends :x:element {
 class AsyncTest extends Facebook\HackTest\HackTest {
   public function testDiv(): void {
     $xhp = <async:test>Herp</async:test>;
-    expect($xhp->toString())->toBePHPEqual('<div>Herp</div>');
+    expect($xhp->toString())->toEqual('<div>Herp</div>');
   }
 
   public function testXFrag(): void {
     $frag = <x:frag>{1}{2}</x:frag>;
     $xhp = <async:test>{$frag}</async:test>;
-    expect($xhp->toString())->toBePHPEqual('<div>12</div>');
+    expect($xhp->toString())->toEqual('<div>12</div>');
   }
 
   public function testNested(): void {
     $xhp = <async:test><async:test>herp derp</async:test></async:test>;
-    expect($xhp->toString())->toBePHPEqual('<div><div>herp derp</div></div>');
+    expect($xhp->toString())->toEqual('<div><div>herp derp</div></div>');
   }
 
   public function testEmpty(): void {
     $xhp = <async:test />;
-    expect($xhp->toString())->toBePHPEqual('<div></div>');
+    expect($xhp->toString())->toEqual('<div></div>');
   }
 
   public function testNestedEmpty(): void {
     $xhp = <async:test><async:test /></async:test>;
-    expect($xhp->toString())->toBePHPEqual('<div><div></div></div>');
+    expect($xhp->toString())->toEqual('<div><div></div></div>');
   }
 
   public function testNestedWithNonAsyncChild(): void {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
-    expect($xhp->toString())->toBePHPEqual('<div><b>BE BOLD</b></div>');
+    expect($xhp->toString())->toEqual('<div><b>BE BOLD</b></div>');
   }
 
   public function testInstanceOfInterface(): void {
@@ -90,7 +90,10 @@ class AsyncTest extends Facebook\HackTest\HackTest {
   }
 
   public function parallelizationContainersProvider(): varray<varray<:xhp>> {
-    return varray[varray[<test:xfrag-wrap />], varray[<test:async-xfrag-wrap />]];
+    return varray[
+      varray[<test:xfrag-wrap />],
+      varray[<test:async-xfrag-wrap />],
+    ];
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
@@ -104,12 +107,12 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     $container->replaceChildren(varray[$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
-    expect($tree->toString())->toBeSame(
+    expect($tree->toString())->toEqual(
       '<div><div>a</div><div>b</div><div>c</div></div>',
     );
 
     $log = :async:par-test::$log;
-    $by_node = Map { 'a' => Map {}, 'b' => Map {}, 'c' => Map {} };
+    $by_node = Map {'a' => Map {}, 'b' => Map {}, 'c' => Map {}};
 
     foreach ($log as $idx => $data) {
       list($label, $action) = $data;

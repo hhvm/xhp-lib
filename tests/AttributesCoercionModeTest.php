@@ -51,10 +51,10 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
         mystring="foo"
         mybool={true}
       />;
-    expect($x->:myint)->toBeSame(3);
-    expect($x->:myfloat)->toBeSame(1.23);
-    expect($x->:mystring)->toBeSame('foo');
-    expect($x->:mybool)->toBeSame(true);
+    expect($x->:myint)->toEqual(3);
+    expect($x->:myfloat)->toEqual(1.23);
+    expect($x->:mystring)->toEqual('foo');
+    expect($x->:mybool)->toEqual(true);
   }
 
   public function testIntishStringAsInt(): void {
@@ -114,10 +114,10 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
   public function testSilentCoercion(): void {
     error_reporting(E_ALL);
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
-     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
+    /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
     $x = <test:attribute-coercion-modes mystring={2} />;
-    expect($x->:mystring)->toBeSame('2');
+    expect($x->:mystring)->toEqual('2');
   }
 
   public function testLoggingDeprecationCoercion(): void {
@@ -135,9 +135,9 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     //expect($exception)->toBeInstanceOf('PHPUnit_Framework_Error_Deprecated');
 
     error_reporting(E_ALL & ~E_USER_DEPRECATED);
-     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
+    /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
     $x = <test:attribute-coercion-modes mystring={2} />;
-    expect($x->:mystring)->toBeSame('2');
+    expect($x->:mystring)->toEqual('2');
   }
 }

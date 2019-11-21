@@ -34,22 +34,31 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidValues(): void {
     $x = <test:hack-enum-attribute foo={TestEnum::HERP} />;
-    expect($x->toString())->toBeSame('<div>HERP</div>');
+    expect($x->toString())->toEqual('<div>HERP</div>');
     $x = <test:hack-enum-attribute foo={TestEnum::DERP} />;
-    expect($x->toString())->toBeSame('<div>DERP</div>');
+    expect($x->toString())->toEqual('<div>DERP</div>');
   }
 
   public function testValidRawValues(): void {
     // UNSAFE
-    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1} />;
-    expect($x->toString())->toBeSame('<div>HERP</div>');
-    $x = <test:hack-enum-attribute foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2} />;
-    expect($x->toString())->toBeSame('<div>DERP</div>');
+    $x =
+      <test:hack-enum-attribute
+        foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1}
+      />;
+    expect($x->toString())->toEqual('<div>HERP</div>');
+    $x =
+      <test:hack-enum-attribute
+        foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2}
+      />;
+    expect($x->toString())->toEqual('<div>DERP</div>');
   }
 
   public function testInvalidValue(): void {
     expect(() ==> {
-      $x = <test:hack-enum-attribute foo={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 0} />;
+      $x =
+        <test:hack-enum-attribute
+          foo={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 0}
+        />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 }

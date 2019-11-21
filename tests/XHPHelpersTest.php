@@ -60,30 +60,30 @@ class :test:with-class-on-root extends :x:element {
 class XHPHelpersTest extends Facebook\HackTest\HackTest {
   public function testTransferAttributesWithoutHelpers(): void {
     $x = <test:no-xhphelpers data-foo="bar" />;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testTransferAttributesAsyncWithoutHelpers(): void {
     $x = <test:async:no-xhphelpers data-foo="bar" />;
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toBeSame('<div></div>');
+    expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testTransferAttributesWithHelpers(): void {
     $x = <test:xhphelpers data-foo="bar" />;
-    expect($x->toString())->toBeSame('<div data-foo="bar"></div>');
+    expect($x->toString())->toEqual('<div data-foo="bar"></div>');
     expect($x->getID())->toNotBeEmpty();
-    expect('<div id="'.$x->getID().'"></div>')->toBeSame($x->toString());
+    expect('<div id="'.$x->getID().'"></div>')->toEqual($x->toString());
   }
 
   public function testTransferAttributesAsyncWithHelpers(): void {
     $x = <test:async:xhphelpers data-foo="bar" />;
-    expect($x->toString())->toBeSame('<div data-foo="bar"></div>');
+    expect($x->toString())->toEqual('<div data-foo="bar"></div>');
     expect($x->getID())->toNotBeEmpty();
-    expect('<div id="'.$x->getID().'"></div>')->toBeSame($x->toString());
+    expect('<div id="'.$x->getID().'"></div>')->toEqual($x->toString());
   }
 
   public function testAddClassWithoutHelpers(): void {
@@ -91,8 +91,8 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
-    expect($x->:class)->toBeSame('foo bar herp');
-    expect($x->toString())->toBeSame("<div></div>");
+    expect($x->:class)->toEqual('foo bar herp');
+    expect($x->toString())->toEqual("<div></div>");
   }
 
   public function testAddClassWithHelpers(): void {
@@ -100,25 +100,23 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
-    expect($x->:class)->toBeSame('foo bar herp');
-    expect($x->toString())->toBeSame('<div class="foo bar herp"></div>');
+    expect($x->:class)->toEqual('foo bar herp');
+    expect($x->toString())->toEqual('<div class="foo bar herp"></div>');
   }
 
   public function testRootClassPreserved(): void {
     $x = <test:with-class-on-root />;
-    expect($x->toString())->toBeSame('<div class="rootClass"></div>');
+    expect($x->toString())->toEqual('<div class="rootClass"></div>');
   }
 
   public function testTransferedClassesAppended(): void {
     $x = <test:with-class-on-root class="extraClass" />;
-    expect($x->toString())->toBeSame(
-      '<div class="rootClass extraClass"></div>',
-    );
+    expect($x->toString())->toEqual('<div class="rootClass extraClass"></div>');
   }
 
   public function testRootClassesNotOverridenByEmptyString(): void {
     $x = <test:with-class-on-root class="" />;
-    expect($x->toString())->toBeSame('<div class="rootClass"></div>');
+    expect($x->toString())->toEqual('<div class="rootClass"></div>');
   }
 
   public function testNested(): void {
@@ -126,7 +124,7 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
       <test:xhphelpers class="herp">
         <test:xhphelpers class="derp" />
       </test:xhphelpers>;
-    expect($x->toString())->toBeSame(
+    expect($x->toString())->toEqual(
       '<div class="herp"><div class="derp"></div></div>',
     );
   }
