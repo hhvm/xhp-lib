@@ -517,7 +517,7 @@ abstract class :x:composable-element extends :xhp {
    * The fact that :xhp::enableAttributeValidation() enables these coersions
    * is misleading.
    */
-  final protected function validateEnumValuesAndCoerceScalars<T>(
+  final protected function validateEnumValuesAndCoerceScalars(
     string $attr,
     mixed $val,
   ): mixed {
