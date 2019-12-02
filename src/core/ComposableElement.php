@@ -514,7 +514,7 @@ abstract class :x:composable-element extends :xhp {
    * on this element and this type appears to be an enum.
    * If this type is a scalar however, we will coerce it to that type.
    * This is something from the past and should ideally not be relied upon.
-   * The fact that :xhp::enableAttributeValidation() enables these coersions
+   * The fact that :xhp::enableAttributeValidation() enables these coercions
    * is misleading.
    */
   final protected function validateEnumValuesAndCoerceScalars(
@@ -546,7 +546,7 @@ abstract class :x:composable-element extends :xhp {
         }
         break;
 
-      // Coersion should ideally not be relied on, but it is not causing trouble (yet)
+      // Coercion should ideally not be relied on, but it is not causing trouble (yet)
       case XHPAttributeType::TYPE_STRING:
         if (!($val is string)) {
           $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
