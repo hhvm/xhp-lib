@@ -9,7 +9,7 @@
  */
 
 /**
- * Subclasses of :xhp:pcdata-elements may contain only Stringish children.
+ * Subclasses of :xhp:pcdata-elements may contain only string children.
  */
 abstract class :xhp:pcdata-element extends :xhp:html-element {
   children (pcdata)*;

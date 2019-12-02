@@ -14,8 +14,10 @@
  *
  * This is useful when migrating to XHP for attribute values which are already escaped.
  * If the attribute contains unescaped double quotes, this will not escape them, which will break the runtime behavior.
+ *
+ * This must be used via `forceAttribute()`.
  */
-abstract class XHPUnsafeAttributeValue implements Stringish {
+abstract class XHPUnsafeAttributeValue {
   abstract public function toHTMLString(): string;
 
   final public function __toString(): string {
