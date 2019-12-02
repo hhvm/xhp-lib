@@ -17,7 +17,6 @@ enum XHPAttributeType: int {
   TYPE_VAR = 6;
   TYPE_ENUM = 7;
   TYPE_FLOAT = 8;
-  TYPE_UNSUPPORTED_LEGACY_CALLABLE = 9;
 }
 
 class ReflectionXHPAttribute {
@@ -31,7 +30,7 @@ class ReflectionXHPAttribute {
   private mixed $defaultValue;
   private bool $required;
 
-  private static ImmSet<string> $specialAttributes = ImmSet { 'data', 'aria' };
+  private static ImmSet<string> $specialAttributes = ImmSet {'data', 'aria'};
 
   public function __construct(private string $name, array<int, mixed> $decl) {
     $this->type = XHPAttributeType::assert($decl[0]);
@@ -133,9 +132,6 @@ class ReflectionXHPAttribute {
         break;
       case XHPAttributeType::TYPE_FLOAT:
         $out = 'float';
-        break;
-      case XHPAttributeType::TYPE_UNSUPPORTED_LEGACY_CALLABLE:
-        $out = '<UNSUPPORTED: legacy callable>';
         break;
     }
     $out .= ' '.$this->getName();

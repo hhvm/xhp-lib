@@ -349,12 +349,10 @@ abstract class :x:composable-element extends :xhp {
   final public function setAttribute(string $attr, mixed $value): this {
     if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       if (:xhp::isAttributeValidationEnabled()) {
-        $value = $this->validateAttributeValue($attr, $value);
+        $value = $this->validateEnumValuesAndCoerceScalars($attr, $value);
       }
-    } else {
-      $value = $value;
     }
-    $this->attributes->set($attr, $value);
+    $this->attributes[$attr] = $value;
     return $this;
   }
 
@@ -390,11 +388,6 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
-    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-      if (:xhp::isAttributeValidationEnabled()) {
-        $value = $this->validateAttributeValue($attr, null);
-      }
-    }
     $this->attributes->removeKey($attr);
     return $this;
   }
@@ -445,7 +438,7 @@ abstract class :x:composable-element extends :xhp {
    * @return :xhp           $this
    */
   final public function setContext(string $key, mixed $value): this {
-    $this->context->set($key, $value);
+    $this->context[$key] = $value;
     return $this;
   }
 
@@ -476,7 +469,7 @@ abstract class :x:composable-element extends :xhp {
   ): void {
     foreach ($parentContext as $key => $value) {
       if (!$this->context->containsKey($key)) {
-        $this->context->set($key, $value);
+        $this->context[$key] = $value;
       }
     }
   }
@@ -518,21 +511,42 @@ abstract class :x:composable-element extends :xhp {
 
   /**
    * Throws an exception if $val is not a valid value for the attribute $attr
-   * on this element.
+   * on this element and this type appears to be an enum.
+   * If this type is a scalar however, we will coerce it to that type.
+   * This is something from the past and should ideally not be relied upon.
+   * The fact that :xhp::enableAttributeValidation() enables these coersions
+   * is misleading.
    */
-  <<__Deprecated('Runtime validation is going')>>
-  final protected function validateAttributeValue<T>(
+  final protected function validateEnumValuesAndCoerceScalars<T>(
     string $attr,
-    T $val,
+    mixed $val,
   ): mixed {
-    $decl = static::__xhpReflectionAttribute($attr);
-    if ($decl === null) {
-      throw new XHPAttributeNotSupportedException($this, $attr);
-    }
-    if ($val === null) {
+    if ($val is null) {
       return null;
     }
+    $decl = static::__xhpReflectionAttribute($attr);
+    if ($decl is null) {
+      throw new XHPAttributeNotSupportedException($this, $attr);
+    }
+
     switch ($decl->getValueType()) {
+      case XHPAttributeType::TYPE_OBJECT:
+        $class = $decl->getValueClass();
+        if (enum_exists($class)) {
+          /* HH_FIXME[4026] $class as enumname<_> */
+          if (!$class::isValid($val)) {
+            throw new XHPInvalidAttributeException($this, $class, $attr, $val);
+          }
+        }
+        break;
+      case XHPAttributeType::TYPE_ENUM:
+        if (!(($val is string) && $decl->getEnumValues()->contains($val))) {
+          $enums = 'enum("'.Str\join($decl->getEnumValues(), '","').'")';
+          throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
+        }
+        break;
+
+      // Coersion should ideally not be relied on, but it is not causing trouble (yet)
       case XHPAttributeType::TYPE_STRING:
         if (!($val is string)) {
           $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
@@ -556,68 +570,8 @@ abstract class :x:composable-element extends :xhp {
           $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
         }
         break;
-
-      case XHPAttributeType::TYPE_ARRAY:
-        if (!is_array($val)) {
-          throw new XHPInvalidAttributeException($this, 'array', $attr, $val);
-        }
-        break;
-
-      case XHPAttributeType::TYPE_OBJECT:
-        $class = $decl->getValueClass();
-        if (is_a($val, $class, true)) {
-          break;
-        }
-        /* HH_FIXME[4026] $class as enumname<_> */
-        if (enum_exists($class) && $class::isValid($val)) {
-          break;
-        }
-        // Things that are a valid array key without any coercion
-        if ($class === 'HH\arraykey') {
-          if (($val is int) || ($val is string)) {
-            break;
-          }
-        }
-        if ($class === 'HH\num') {
-          if (($val is int) || ($val is float)) {
-            break;
-          }
-        }
-        if (is_array($val)) {
-          try {
-            $type_structure = (
-              new ReflectionTypeAlias($class)
-            )->getResolvedTypeStructure();
-            /* HH_FIXME[4110] $type_structure is an array, but should be a
-             * TypeStructure<T> */
-            TypeAssert\matches_type_structure($type_structure, $val);
-            break;
-          } catch (ReflectionException $_) {
-            // handled below
-          } catch (IncorrectTypeException $_) {
-            // handled below
-          }
-        }
-        throw new XHPInvalidAttributeException($this, $class, $attr, $val);
-        break;
-
-      case XHPAttributeType::TYPE_VAR:
-        break;
-
-      case XHPAttributeType::TYPE_ENUM:
-        if (!(($val is string) && $decl->getEnumValues()->contains($val))) {
-          $enums = 'enum("'.implode('","', $decl->getEnumValues()).'")';
-          throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
-        }
-        break;
-
-      case XHPAttributeType::TYPE_UNSUPPORTED_LEGACY_CALLABLE:
-        throw new XHPUnsupportedAttributeTypeException(
-          $this,
-          'callable',
-          $attr,
-          'not supported in XHP-Lib 2.0 or higher.',
-        );
+      default:
+        return $val;
     }
     return $val;
   }

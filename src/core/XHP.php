@@ -76,7 +76,6 @@ abstract class :xhp implements XHPChild, JsonSerializable {
     self::$validateAttributes = true;
   }
 
-  <<__Deprecated('Runtime validation is going')>>
   public static function isAttributeValidationEnabled(): bool {
     return self::$validateAttributes;
   }
