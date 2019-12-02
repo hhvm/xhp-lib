@@ -117,22 +117,22 @@ abstract class :x:composable-element extends :xhp {
     foreach ($children as $xhp) {
       /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
     if ($xhp is :x:frag) {
-      foreach ($xhp->children as $child) {
-        $new_children->add($child);
-      }
-    } else if (!($xhp is Traversable<_>)) {
-      $new_children->add($xhp);
-    } else {
-      foreach ($xhp as $element) {
-        if ($element is :x:frag) {
-          foreach ($element->children as $child) {
-            $new_children->add($child);
+        foreach ($xhp->children as $child) {
+          $new_children->add($child);
+        }
+      } else if (!($xhp is Traversable<_>)) {
+        $new_children->add($xhp);
+      } else {
+        foreach ($xhp as $element) {
+          if ($element is :x:frag) {
+            foreach ($element->children as $child) {
+              $new_children->add($child);
+            }
+          } else if ($element !== null) {
+            $new_children->add($element as XHPChild);
           }
-        } else if ($element !== null) {
-          $new_children->add($element as XHPChild);
         }
       }
-    }
     }
     $this->children = $new_children;
     return $this;
@@ -347,12 +347,10 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function setAttribute(string $attr, mixed $value): this {
-    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-      if (:xhp::isAttributeValidationEnabled()) {
+    if (:xhp::isAttributeValidationEnabled()) {
+      if (!ReflectionXHPAttribute::IsSpecial($attr)) {
         $value = $this->validateAttributeValue($attr, $value);
       }
-    } else {
-      $value = $value;
     }
     $this->attributes->set($attr, $value);
     return $this;
@@ -390,8 +388,8 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
-    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-      if (:xhp::isAttributeValidationEnabled()) {
+    if (:xhp::isAttributeValidationEnabled()) {
+      if (!ReflectionXHPAttribute::IsSpecial($attr)) {
         $value = $this->validateAttributeValue($attr, null);
       }
     }
