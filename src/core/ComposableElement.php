@@ -116,7 +116,7 @@ abstract class :x:composable-element extends :xhp {
     $new_children = Vector {};
     foreach ($children as $xhp) {
       /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
-    if ($xhp is :x:frag) {
+      if ($xhp is :x:frag) {
         foreach ($xhp->children as $child) {
           $new_children->add($child);
         }
