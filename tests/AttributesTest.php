@@ -68,6 +68,7 @@ class StringableTestClass {
 class AttributesTest extends Facebook\HackTest\HackTest {
   public async function beforeEachTestAsync(): Awaitable<void> {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
+    /*HH_FIXME[4128] Deprecated, because we are trying to remove this.*/
     :xhp::enableAttributeValidation();
   }
 
