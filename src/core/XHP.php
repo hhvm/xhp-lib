@@ -72,6 +72,11 @@ abstract class :xhp implements XHPChild, JsonSerializable {
     self::$validateAttributes = false;
   }
 
+  <<__Deprecated(
+    'The validation rules have been changed.'.
+    'They will now only apply for enums (both Hack and XHP enums).'.
+    'This funcionality will be remove completely at some point.',
+  )>>
   public static function enableAttributeValidation(): void {
     self::$validateAttributes = true;
   }

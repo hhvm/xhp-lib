@@ -31,6 +31,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
   public async function beforeEachTestAsync(): Awaitable<void> {
     $this->coercionMode = XHPAttributeCoercion::GetMode();
     $this->errorReporting = error_reporting();
+    /*HH_FIXME[4128] Deprecated, because we are trying to remove this.*/
     :xhp::enableAttributeValidation();
   }
 
