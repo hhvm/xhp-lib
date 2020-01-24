@@ -12,8 +12,42 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
+class :test:new-child-declaration-only extends :x:element {
+  use XHPChildValidation;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\ofType<:div>();
+  }
+
+  protected function render(): XHPRoot {
+    return <x:frag>{$this->getChildren()}</x:frag>;
+  }
+}
+
+class :test:new-and-old-child-declarations extends :x:element {
+  // Providing all of these is invalid; for a migration consistency check, use
+  // the XHPChildDeclarationConsistencyValidation trait instead.
+  use XHPChildValidation;
+  children (:div);
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\ofType<:div>();
+  }
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
+class :test:old-child-declaration-only extends :x:element {
+  children (:div);
+
+  protected function render(): XHPRoot {
+    return <x:frag>{$this->getChildren()}</x:frag>;
+  }
+}
+
 class :test:any-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children any;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any();
@@ -25,7 +59,7 @@ class :test:any-children extends :x:element {
 }
 
 class :test:no-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children empty;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();
@@ -37,7 +71,7 @@ class :test:no-children extends :x:element {
 }
 
 class :test:single-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\ofType<:div>();
@@ -49,7 +83,7 @@ class :test:single-child extends :x:element {
 }
 
 class :test:optional-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div?);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\optional(XHPChild\ofType<:div>());
@@ -60,9 +94,8 @@ class :test:optional-child extends :x:element {
   }
 }
 
-
 class :test:any-number-of-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div*);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
@@ -74,7 +107,7 @@ class :test:any-number-of-child extends :x:element {
 }
 
 class :test:at-least-one-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div+);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
@@ -86,7 +119,7 @@ class :test:at-least-one-child extends :x:element {
 }
 
 class :test:two-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div, :div);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
@@ -98,7 +131,7 @@ class :test:two-children extends :x:element {
 }
 
 class :test:three-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div, :div, :div);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
@@ -115,7 +148,7 @@ class :test:three-children extends :x:element {
 
 
 class :test:either-of-two-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div | :code);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
@@ -127,7 +160,7 @@ class :test:either-of-two-children extends :x:element {
 }
 
 class :test:any-of-three-children extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div | :code | :p);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
@@ -144,7 +177,7 @@ class :test:any-of-three-children extends :x:element {
 
 
 class :test:nested-rule extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (:div | (:code+));
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
@@ -159,7 +192,7 @@ class :test:nested-rule extends :x:element {
 }
 
 class :test:pcdata-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
@@ -171,7 +204,7 @@ class :test:pcdata-child extends :x:element {
 }
 
 class :test:category-child extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (%flow);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%flow');
@@ -183,7 +216,7 @@ class :test:category-child extends :x:element {
 }
 
 class :test:has-comma-category extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   category %foo:bar;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
@@ -195,7 +228,7 @@ class :test:has-comma-category extends :x:element {
 }
 
 class :test:needs-comma-category extends :x:element {
-  use XHPChildDeclarationConsistencyTrait;
+  use XHPChildDeclarationConsistencyValidation;
   children (%foo:bar);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
@@ -393,5 +426,49 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       $x = <div><test:at-least-one-child /></div>;
       $x->toString();
     })->toThrow(XHPInvalidChildrenException::class);
+  }
+
+  public function testNewChildDeclarations(): void {
+    expect(
+      (
+        <test:new-child-declaration-only>
+          <div>foo</div>
+        </test:new-child-declaration-only>
+      )->toString(),
+    )->toEqual('<div>foo</div>');
+
+    expect(() ==> (<test:new-child-declaration-only />)->toString())->toThrow(
+      XHPInvalidChildrenException::class,
+    );
+    expect(
+      () ==> (
+        <test:new-child-declaration-only><p /></test:new-child-declaration-only>
+      )->toString(),
+    )->toThrow(XHPInvalidChildrenException::class);
+  }
+
+  public function testOldChildDeclarations(): void {
+    expect(
+      (
+        <test:old-child-declaration-only>
+          <div>foo</div>
+        </test:old-child-declaration-only>
+      )->toString(),
+    )->toEqual('<div>foo</div>');
+
+    expect(() ==> (<test:old-child-declaration-only />)->toString())->toThrow(
+      XHPInvalidChildrenException::class,
+    );
+    expect(
+      () ==> (
+        <test:old-child-declaration-only><p /></test:old-child-declaration-only>
+      )->toString(),
+    )->toThrow(XHPInvalidChildrenException::class);
+  }
+
+
+  public function testConflictingNewAndOldChildDeclarations(): void {
+    expect(() ==> (<test:new-and-old-child-declarations />)->toString())
+      ->toThrow(InvariantException::class);
   }
 }

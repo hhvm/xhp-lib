@@ -270,12 +270,20 @@ abstract class :x:composable-element extends :xhp {
     return $map;
   }
 
+  protected static function __legacySerializedXHPChildrenDeclaration(): mixed {
+    $decl = self::emptyInstance()->__xhpChildrenDeclaration();
+    if ($decl === self::__NO_LEGACY_CHILDREN_DECLARATION) {
+      return 1; // any children
+    }
+    return $decl;
+  }
+
   <<__MemoizeLSB>>
   final public static function __xhpReflectionChildrenDeclaration(
   ): ReflectionXHPChildrenDeclaration {
     return new ReflectionXHPChildrenDeclaration(
       :xhp::class2element(static::class),
-      self::emptyInstance()->__xhpChildrenDeclaration(),
+      static::__legacySerializedXHPChildrenDeclaration(),
     );
   }
 
@@ -498,6 +506,8 @@ abstract class :x:composable-element extends :xhp {
     return darray[];
   }
 
+  const int __NO_LEGACY_CHILDREN_DECLARATION = -31337;
+
   /**
    * Defined in elements by the `children` keyword. This returns a pattern of
    * allowed children. The return value is potentially very complicated. The
@@ -506,7 +516,7 @@ abstract class :x:composable-element extends :xhp {
    * biggest mess you've ever seen.
    */
   protected function __xhpChildrenDeclaration(): mixed {
-    return 1;
+    return self::__NO_LEGACY_CHILDREN_DECLARATION;
   }
 
   /**

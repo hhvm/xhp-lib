@@ -10,10 +10,11 @@
 use namespace \Facebook\XHP\ChildValidation as XHPChild;
 
 /** Verify that a new child declaration matches the legacy codegen. */
-trait XHPChildDeclarationConsistencyTrait {
+trait XHPChildDeclarationConsistencyValidation {
   require extends :x:element;
 
-  abstract protected static function getChildrenDeclaration(): XHPChild\Constraint;
+  abstract protected static function getChildrenDeclaration(
+  ): XHPChild\Constraint;
 
   final private static function normalize(mixed $x): mixed {
     if (
