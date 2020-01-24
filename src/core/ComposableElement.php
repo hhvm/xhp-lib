@@ -580,7 +580,7 @@ abstract class :x:composable-element extends :xhp {
    * Validates that this element's children match its children descriptor, and
    * throws an exception if that's not the case.
    */
-  final protected function validateChildren(): void {
+  protected function validateChildren(): void {
     $decl = self::__xhpReflectionChildrenDeclaration();
     $type = $decl->getType();
     if ($type === XHPChildrenDeclarationType::ANY_CHILDREN) {

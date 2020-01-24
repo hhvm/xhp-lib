@@ -10,30 +10,51 @@
 
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
+use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :test:any-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children any;
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\any();
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:no-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children empty;
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\empty();
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:single-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\ofType<:div>();
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:optional-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div?);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\optional(XHPChild\ofType<:div>());
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
@@ -41,42 +62,108 @@ class :test:optional-child extends :x:element {
 
 
 class :test:any-number-of-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div*);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:at-least-one-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div+);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:two-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div, :div);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
+
+class :test:three-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
+  children (:div, :div, :div);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\ofType<:div>(),
+      XHPChild\ofType<:div>(),
+      XHPChild\ofType<:div>(),
+    );
+  }
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
 
 class :test:either-of-two-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div | :code);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
+class :test:any-of-three-children extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
+  children (:div | :code | :p);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyOf(
+      XHPChild\ofType<:div>(),
+      XHPChild\ofType<:code>(),
+      XHPChild\ofType<:p>(),
+    );
+  }
+
+  protected function render(): XHPRoot {
+    return <div />;
+  }
+}
+
+
 class :test:nested-rule extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (:div | (:code+));
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyOf(
+      XHPChild\ofType<:div>(),
+      XHPChild\atLeastOneOf(XHPChild\ofType<:code>()),
+    );
+  }
+
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
 class :test:pcdata-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (pcdata);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\pcdata();
+  }
 
   protected function render(): XHPRoot {
     return <div>{$this->getChildren()}</div>;
@@ -84,7 +171,11 @@ class :test:pcdata-child extends :x:element {
 }
 
 class :test:category-child extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (%flow);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\category('%flow');
+  }
 
   protected function render(): XHPRoot {
     return <div />;
@@ -92,7 +183,11 @@ class :test:category-child extends :x:element {
 }
 
 class :test:has-comma-category extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   category %foo:bar;
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\category('%foo:bar');
+  }
 
   protected function render(): XHPRoot {
     return <div />;
@@ -100,7 +195,11 @@ class :test:has-comma-category extends :x:element {
 }
 
 class :test:needs-comma-category extends :x:element {
+  use XHPChildDeclarationConsistencyTrait;
   children (%foo:bar);
+  protected function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\category('%foo:bar');
+  }
 
   protected function render(): XHPRoot {
     return <div />;
@@ -135,6 +234,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any-number-of-child />,
       <test:at-least-one-child />,
       <test:either-of-two-children />,
+      <test:any-of-three-children />,
       <test:nested-rule />,
       <test:category-child />,
     };
@@ -161,7 +261,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       tuple(<test:any-number-of-child />, '(:div*)'),
       tuple(<test:at-least-one-child />, '(:div+)'),
       tuple(<test:two-children />, '(:div,:div)'),
+      tuple(<test:three-children />, '(:div,:div,:div)'),
       tuple(<test:either-of-two-children />, '(:div|:code)'),
+      tuple(<test:any-of-three-children />, '(:div|:code|:p)'),
       tuple(<test:nested-rule />, '(:div|(:code+))'),
       tuple(<test:pcdata-child />, '(pcdata)'),
       tuple(<test:category-child />, '(%flow)'),
@@ -192,13 +294,14 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:single-child />,
       <test:optional-child />,
       <test:two-children />,
+      <test:three-children />,
       <test:either-of-two-children />,
       <test:nested-rule />,
       <test:category-child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
-      $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
+      $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
       try {
         $elem->toString();
       } catch (Exception $e) {
@@ -215,6 +318,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any-number-of-child />,
       <test:at-least-one-child />,
       <test:either-of-two-children />,
+      <test:any-of-three-children />,
       <test:nested-rule />,
       <test:category-child />,
     };
