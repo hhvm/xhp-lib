@@ -15,7 +15,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 class :test:any-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children any;
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any();
   }
 
@@ -27,7 +27,7 @@ class :test:any-children extends :x:element {
 class :test:no-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children empty;
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();
   }
 
@@ -39,7 +39,7 @@ class :test:no-children extends :x:element {
 class :test:single-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\ofType<:div>();
   }
 
@@ -51,7 +51,7 @@ class :test:single-child extends :x:element {
 class :test:optional-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div?);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\optional(XHPChild\ofType<:div>());
   }
 
@@ -64,7 +64,7 @@ class :test:optional-child extends :x:element {
 class :test:any-number-of-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div*);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
   }
 
@@ -76,7 +76,7 @@ class :test:any-number-of-child extends :x:element {
 class :test:at-least-one-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div+);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
   }
 
@@ -88,7 +88,7 @@ class :test:at-least-one-child extends :x:element {
 class :test:two-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div, :div);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
   }
 
@@ -100,7 +100,7 @@ class :test:two-children extends :x:element {
 class :test:three-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div, :div, :div);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
       XHPChild\ofType<:div>(),
       XHPChild\ofType<:div>(),
@@ -117,7 +117,7 @@ class :test:three-children extends :x:element {
 class :test:either-of-two-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div | :code);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
   }
 
@@ -129,7 +129,7 @@ class :test:either-of-two-children extends :x:element {
 class :test:any-of-three-children extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div | :code | :p);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\ofType<:div>(),
       XHPChild\ofType<:code>(),
@@ -146,7 +146,7 @@ class :test:any-of-three-children extends :x:element {
 class :test:nested-rule extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (:div | (:code+));
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\ofType<:div>(),
       XHPChild\atLeastOneOf(XHPChild\ofType<:code>()),
@@ -161,7 +161,7 @@ class :test:nested-rule extends :x:element {
 class :test:pcdata-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (pcdata);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
   }
 
@@ -173,7 +173,7 @@ class :test:pcdata-child extends :x:element {
 class :test:category-child extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (%flow);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%flow');
   }
 
@@ -185,7 +185,7 @@ class :test:category-child extends :x:element {
 class :test:has-comma-category extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   category %foo:bar;
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
   }
 
@@ -197,7 +197,7 @@ class :test:has-comma-category extends :x:element {
 class :test:needs-comma-category extends :x:element {
   use XHPChildDeclarationConsistencyTrait;
   children (%foo:bar);
-  protected function getChildrenDeclaration(): XHPChild\Constraint {
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
   }
 

@@ -13,11 +13,9 @@ use namespace \Facebook\XHP\ChildValidation as XHPChild;
 trait XHPChildDeclarationConsistencyTrait {
   require extends :x:element;
 
-  abstract protected function getChildrenDeclaration(): XHPChild\Constraint;
+  abstract protected static function getChildrenDeclaration(): XHPChild\Constraint;
 
   final private static function normalize(mixed $x): mixed {
-    // (exactly one, expr, $x) is equivalent to $x; HackC
-    // always generates this form for the top-level constraint
     if (
       $x is (int, int, mixed) &&
       $x[0] === XHPChild\LegacyExpressionType::EXACTLY_ONE &&
@@ -35,7 +33,7 @@ trait XHPChildDeclarationConsistencyTrait {
 
   final public function validateChildren(): void {
     $old = self::normalize($this->__xhpChildrenDeclaration());
-    $new = self::normalize($this->getChildrenDeclaration()->legacySerialize());
+    $new = self::normalize(static::getChildrenDeclaration()->legacySerialize());
 
     invariant(
       $old === $new,
@@ -43,7 +41,7 @@ trait XHPChildDeclarationConsistencyTrait {
       static::class,
       \var_export($old, true),
       \var_export($new, true),
-      \var_export($this->getChildrenDeclaration(), true),
+      \var_export(static::getChildrenDeclaration(), true),
     );
     parent::validateChildren();
   }
