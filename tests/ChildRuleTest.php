@@ -216,11 +216,7 @@ class :test:category-child extends :x:element {
 }
 
 class :test:has-comma-category extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
   category %foo:bar;
-  protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\category('%foo:bar');
-  }
 
   protected function render(): XHPRoot {
     return <div />;
