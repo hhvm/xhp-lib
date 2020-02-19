@@ -8,11 +8,27 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :menu extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string label,
     enum {'popup', 'toolbar'} type;
   category %flow;
   children ((:menuitem | :hr | :menu)* | :li* | %flow*);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyOf(
+      XHPChild\anyNumberOf(XHPChild\anyOf(
+        XHPChild\ofType<:menuitem>(),
+        XHPChild\ofType<:hr>(),
+        XHPChild\ofType<:menu>(),
+      )),
+      XHPChild\anyNumberOf(XHPChild\ofType<:li>()),
+      XHPChild\anyNumberOf(XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'menu';
 }

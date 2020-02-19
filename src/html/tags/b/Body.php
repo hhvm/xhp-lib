@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :body extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string onafterprint,
     string onbeforeprint,
@@ -23,5 +26,12 @@ class :body extends :xhp:html-element {
     string onstorage,
     string onunload;
   children (pcdata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'body';
 }

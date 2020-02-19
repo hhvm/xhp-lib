@@ -8,12 +8,25 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :fieldset extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     bool disabled,
     string form,
     string name;
   category %flow;
   children (:legend?, (pcdata | %flow)*);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\optional(XHPChild\ofType<:legend>()),
+      XHPChild\anyNumberOf(
+        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+      ),
+    );
+  }
+
   protected string $tagName = 'fieldset';
 }

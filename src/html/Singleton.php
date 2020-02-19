@@ -12,8 +12,16 @@
  * Subclasses of :xhp:html-singleton may not contain children. When
  * rendered they will be in singleton (<img />, <br />) form.
  */
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 abstract class :xhp:html-singleton extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children empty;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\empty();
+  }
+
 
   protected function stringify(): string {
     return $this->renderBaseAttrs().'>';

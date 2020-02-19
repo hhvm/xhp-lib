@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :select extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     bool autofocus,
     bool disabled,
@@ -19,5 +22,12 @@ class :select extends :xhp:html-element {
     int size;
   category %flow, %phrase, %interactive;
   children (:option | :optgroup)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\ofType<:option>(), XHPChild\ofType<:optgroup>()),
+    );
+  }
+
   protected string $tagName = 'select';
 }

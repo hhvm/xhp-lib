@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :th extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string abbr,
     int colspan,
@@ -17,5 +20,12 @@ class :th extends :xhp:html-element {
     enum {'col', 'colgroup', 'row', 'rowgroup'} scope,
     string sorted;
   children (pcdata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'th';
 }

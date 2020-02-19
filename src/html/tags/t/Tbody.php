@@ -8,7 +8,15 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :tbody extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (:tr)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\ofType<:tr>());
+  }
+
   protected string $tagName = 'tbody';
 }

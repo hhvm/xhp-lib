@@ -8,12 +8,22 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :del extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string cite,
     string datetime;
   category %flow, %phrase;
   // transparent
   children (pcdata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'del';
 }

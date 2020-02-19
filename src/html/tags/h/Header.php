@@ -8,8 +8,18 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :header extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow, %heading;
   children (pcdata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'header';
 }

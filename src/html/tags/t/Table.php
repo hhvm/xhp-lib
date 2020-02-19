@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :table extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     int border,
     bool sortable;
@@ -19,5 +22,30 @@ class :table extends :xhp:html-element {
     :thead?,
     ((:tfoot, (:tbody+ | :tr*)) | ((:tbody+ | :tr*), :tfoot?))
   );
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\optional(XHPChild\ofType<:caption>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<:colgroup>()),
+      XHPChild\optional(XHPChild\ofType<:thead>()),
+      XHPChild\anyOf(
+        XHPChild\sequence(
+          XHPChild\ofType<:tfoot>(),
+          XHPChild\anyOf(
+            XHPChild\atLeastOneOf(XHPChild\ofType<:tbody>()),
+            XHPChild\anyNumberOf(XHPChild\ofType<:tr>()),
+          ),
+        ),
+        XHPChild\sequence(
+          XHPChild\anyOf(
+            XHPChild\atLeastOneOf(XHPChild\ofType<:tbody>()),
+            XHPChild\anyNumberOf(XHPChild\ofType<:tr>()),
+          ),
+          XHPChild\optional(XHPChild\ofType<:tfoot>()),
+        ),
+      ),
+    );
+  }
+
   protected string $tagName = 'table';
 }

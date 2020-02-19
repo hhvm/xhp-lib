@@ -8,8 +8,23 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :hgroup extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow, %heading;
   children (:h1 | :h2 | :h3 | :h4 | :h5 | :h6)+;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\atLeastOneOf(XHPChild\anyOf(
+      XHPChild\ofType<:h1>(),
+      XHPChild\ofType<:h2>(),
+      XHPChild\ofType<:h3>(),
+      XHPChild\ofType<:h4>(),
+      XHPChild\ofType<:h5>(),
+      XHPChild\ofType<:h6>(),
+    ));
+  }
+
   protected string $tagName = 'hgroup';
 }

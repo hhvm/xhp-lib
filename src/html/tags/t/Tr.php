@@ -8,7 +8,17 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :tr extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (:th | :td)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\ofType<:th>(), XHPChild\ofType<:td>()),
+    );
+  }
+
   protected string $tagName = 'tr';
 }

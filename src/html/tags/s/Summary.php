@@ -8,7 +8,17 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :summary extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'summary';
 }

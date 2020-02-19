@@ -8,8 +8,19 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :picture extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow, %phrase;
   children (:source*, :img);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\anyNumberOf(XHPChild\ofType<:source>()),
+      XHPChild\ofType<:img>(),
+    );
+  }
+
   protected string $tagName = 'picture';
 }

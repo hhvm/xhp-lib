@@ -8,8 +8,25 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :figure extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow, %sectioning;
   children ((:figcaption, %flow+) | (%flow+, :figcaption?));
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyOf(
+      XHPChild\sequence(
+        XHPChild\ofType<:figcaption>(),
+        XHPChild\atLeastOneOf(XHPChild\category('%flow')),
+      ),
+      XHPChild\sequence(
+        XHPChild\atLeastOneOf(XHPChild\category('%flow')),
+        XHPChild\optional(XHPChild\ofType<:figcaption>()),
+      ),
+    );
+  }
+
   protected string $tagName = 'figure';
 }

@@ -12,8 +12,16 @@
  * Render an <html /> element within a DOCTYPE, XHP has chosen to only support
  * the HTML5 doctype.
  */
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :x:doctype extends :x:primitive {
+  use XHPChildDeclarationConsistencyValidation;
   children (:html);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\ofType<:html>();
+  }
+
 
   protected function stringify(): string {
     $children = $this->getChildren();

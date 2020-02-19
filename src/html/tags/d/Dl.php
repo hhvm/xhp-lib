@@ -8,8 +8,19 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :dl extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow;
   children (:dt+, :dd+)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\sequence(
+      XHPChild\atLeastOneOf(XHPChild\ofType<:dt>()),
+      XHPChild\atLeastOneOf(XHPChild\ofType<:dd>()),
+    ));
+  }
+
   protected string $tagName = 'dl';
 }

@@ -8,7 +8,15 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :head extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (%metadata*);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\category('%metadata'));
+  }
+
   protected string $tagName = 'head';
 }

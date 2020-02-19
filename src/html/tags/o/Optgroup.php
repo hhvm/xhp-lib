@@ -8,10 +8,18 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :optgroup extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     bool disabled,
     string label;
   children (:option)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\ofType<:option>());
+  }
+
   protected string $tagName = 'optgroup';
 }

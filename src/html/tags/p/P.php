@@ -8,8 +8,18 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :p extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   category %flow;
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'p';
 }

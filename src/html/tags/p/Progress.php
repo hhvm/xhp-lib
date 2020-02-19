@@ -8,12 +8,22 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :progress extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     float max,
     float value;
   category %flow, %phrase;
   // Should not contain :progress
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'progress';
 }

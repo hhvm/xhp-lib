@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :object extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string data,
     int height,
@@ -20,5 +23,15 @@ class :object extends :xhp:html-element {
     int width;
   category %flow, %phrase, %embedded, %interactive;
   children (:param*, (pcdata | %flow)*);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\anyNumberOf(XHPChild\ofType<:param>()),
+      XHPChild\anyNumberOf(
+        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+      ),
+    );
+  }
+
   protected string $tagName = 'object';
 }

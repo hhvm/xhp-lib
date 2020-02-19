@@ -8,10 +8,21 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :html extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string manifest,
     string xmlns;
   children (:head, :body);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\ofType<:head>(),
+      XHPChild\ofType<:body>(),
+    );
+  }
+
   protected string $tagName = 'html';
 }

@@ -8,8 +8,20 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :noscript extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata | %metadata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\pcdata(),
+      XHPChild\category('%metadata'),
+      XHPChild\category('%flow'),
+    ));
+  }
+
   category %flow, %phrase, %metadata;
   protected string $tagName = 'noscript';
 }

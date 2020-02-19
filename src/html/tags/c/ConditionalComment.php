@@ -12,9 +12,19 @@
  * Render an HTML conditional comment. You can choose whatever you like as
  * the conditional statement.
  */
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :x:conditional-comment extends :x:primitive {
+  use XHPChildDeclarationConsistencyValidation;
   attribute string if @required;
   children (pcdata | :xhp)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<:xhp>()),
+    );
+  }
+
 
   protected function stringify(): string {
     $children = $this->getChildren();

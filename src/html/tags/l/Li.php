@@ -8,7 +8,17 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :li extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata | %flow)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'li';
 }

@@ -8,9 +8,20 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :details extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute bool open;
   category %flow, %phrase, %interactive;
   children (:summary, %flow+);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\ofType<:summary>(),
+      XHPChild\atLeastOneOf(XHPChild\category('%flow')),
+    );
+  }
+
   protected string $tagName = 'details';
 }

@@ -8,12 +8,22 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :output extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     string for,
     string form,
     string name;
   category %flow, %phrase;
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'output';
 }

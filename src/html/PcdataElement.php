@@ -11,6 +11,14 @@
 /**
  * Subclasses of :xhp:pcdata-elements may contain only string children.
  */
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 abstract class :xhp:pcdata-element extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\pcdata());
+  }
+
 }

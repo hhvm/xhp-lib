@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :button extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     bool autofocus,
     bool disabled,
@@ -25,5 +28,12 @@ class :button extends :xhp:html-element {
   category %flow, %phrase, %interactive;
   // Should not contain interactive
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'button';
 }

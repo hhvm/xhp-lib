@@ -8,7 +8,17 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :rp extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   children (pcdata | %phrase)+;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\atLeastOneOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'rp';
 }

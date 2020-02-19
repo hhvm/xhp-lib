@@ -8,8 +8,16 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :colgroup extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute int span;
   children (:col)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\ofType<:col>());
+  }
+
   protected string $tagName = 'colgroup';
 }

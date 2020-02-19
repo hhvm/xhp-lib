@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :meter extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     float high,
     float low,
@@ -19,5 +22,12 @@ class :meter extends :xhp:html-element {
   category %flow, %phrase;
   // Should not contain :meter
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'meter';
 }

@@ -8,7 +8,10 @@
  *
  */
 
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
 class :embed extends :xhp:html-element {
+  use XHPChildDeclarationConsistencyValidation;
   attribute
     int height,
     string src,
@@ -24,5 +27,12 @@ class :embed extends :xhp:html-element {
 
   category %flow, %phrase, %embedded, %interactive;
   children (pcdata | %phrase)*;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    );
+  }
+
   protected string $tagName = 'embed';
 }
