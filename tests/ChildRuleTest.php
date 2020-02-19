@@ -285,17 +285,17 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     return vec[
       tuple(<test:any-children />, 'any'),
       tuple(<test:no-children />, 'empty'),
-      tuple(<test:single-child />, '(:div)'),
-      tuple(<test:optional-child />, '(:div?)'),
-      tuple(<test:any-number-of-child />, '(:div*)'),
-      tuple(<test:at-least-one-child />, '(:div+)'),
-      tuple(<test:two-children />, '(:div,:div)'),
-      tuple(<test:three-children />, '(:div,:div,:div)'),
-      tuple(<test:either-of-two-children />, '(:div|:code)'),
-      tuple(<test:any-of-three-children />, '(:div|:code|:p)'),
-      tuple(<test:nested-rule />, '(:div|(:code+))'),
-      tuple(<test:pcdata-child />, '(pcdata)'),
-      tuple(<test:category-child />, '(%flow)'),
+      tuple(<test:single-child />, ':div'),
+      tuple(<test:optional-child />, ':div?'),
+      tuple(<test:any-number-of-child />, ':div*'),
+      tuple(<test:at-least-one-child />, ':div+'),
+      tuple(<test:two-children />, ':div,:div'),
+      tuple(<test:three-children />, ':div,:div,:div'),
+      tuple(<test:either-of-two-children />, ':div|:code'),
+      tuple(<test:any-of-three-children />, ':div|:code|:p'),
+      tuple(<test:nested-rule />, ':div|:code+'),
+      tuple(<test:pcdata-child />, 'pcdata'),
+      tuple(<test:category-child />, '%flow'),
     ];
   }
 
@@ -460,11 +460,5 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
         <test:old-child-declaration-only><p /></test:old-child-declaration-only>
       )->toString(),
     )->toThrow(XHPInvalidChildrenException::class);
-  }
-
-
-  public function testConflictingNewAndOldChildDeclarations(): void {
-    expect(() ==> (<test:new-and-old-child-declarations />)->toString())
-      ->toThrow(InvariantException::class);
   }
 }

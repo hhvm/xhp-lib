@@ -35,7 +35,10 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   }
 
   public function testElementName(): void {
-    expect($this->rxc?->getElementName())->toEqual('test:for-reflection');
+    $name = $this->rxc?->getElementName() ?? 'NULL';
+    expect(keyset['test:for-reflection', 'test:for_reflection'])->toContainKey(
+      $name,
+    );
   }
 
   public function testReflectionClass(): void {
@@ -47,7 +50,7 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testGetChildren(): void {
     $children = $this->rxc?->getChildren();
     expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
-    expect($children?->__toString())->toEqual('(:div+,(:code,:a)?)');
+    expect($children?->__toString())->toEqual(':div+,(:code,:a)?');
   }
 
   public function testGetAttributes(): void {
