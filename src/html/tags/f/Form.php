@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :form extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string action,
     string accept-charset,
@@ -23,8 +23,6 @@ class :form extends :xhp:html-element {
     string target;
   category %flow;
   // Should not contain :form
-  children (pcdata | %flow)*;
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),

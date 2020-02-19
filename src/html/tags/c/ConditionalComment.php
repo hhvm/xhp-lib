@@ -15,9 +15,8 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :x:conditional-comment extends :x:primitive {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute string if @required;
-  children (pcdata | :xhp)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

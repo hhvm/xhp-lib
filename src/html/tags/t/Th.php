@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :th extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string abbr,
     int colspan,
@@ -19,7 +19,6 @@ class :th extends :xhp:html-element {
     int rowspan,
     enum {'col', 'colgroup', 'row', 'rowgroup'} scope,
     string sorted;
-  children (pcdata | %flow)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

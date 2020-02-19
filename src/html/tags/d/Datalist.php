@@ -11,9 +11,8 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :datalist extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   category %flow, %phrase;
-  children (%phrase+ | :option*);
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(

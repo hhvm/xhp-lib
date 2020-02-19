@@ -11,13 +11,12 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :output extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string for,
     string form,
     string name;
   category %flow, %phrase;
-  children (pcdata | %phrase)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

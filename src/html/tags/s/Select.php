@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :select extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     bool autofocus,
     bool disabled,
@@ -21,7 +21,6 @@ class :select extends :xhp:html-element {
     bool required,
     int size;
   category %flow, %phrase, %interactive;
-  children (:option | :optgroup)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

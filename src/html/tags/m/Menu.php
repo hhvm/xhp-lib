@@ -11,12 +11,11 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :menu extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string label,
     enum {'popup', 'toolbar'} type;
   category %flow;
-  children ((:menuitem | :hr | :menu)* | :li* | %flow*);
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(

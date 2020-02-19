@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :a extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string download,
     string href,
@@ -24,8 +24,6 @@ class :a extends :xhp:html-element {
     string name;
   category %flow, %phrase, %interactive;
   // Should not contain %interactive
-  children (pcdata | %flow)*;
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),

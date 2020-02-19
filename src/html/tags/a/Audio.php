@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :audio extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     bool autoplay,
     bool controls,
@@ -22,7 +22,6 @@ class :audio extends :xhp:html-element {
     enum {'none', 'metadata', 'auto'} preload,
     string src;
   category %flow, %phrase, %embedded, %interactive;
-  children (:source*, :track*, (pcdata | %flow)*);
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

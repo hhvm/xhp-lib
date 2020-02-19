@@ -11,10 +11,9 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :dialog extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute bool open;
   category %flow, %sectioning;
-  children (%flow);
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%flow');

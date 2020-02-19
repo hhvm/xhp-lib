@@ -11,11 +11,9 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :address extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   category %flow;
   // May not contain %heading, %sectioning, :header, :footer, or :address
-  children (pcdata | %flow)*;
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),

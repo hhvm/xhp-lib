@@ -11,11 +11,8 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :ruby extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   category %flow, %phrase;
-  children (
-    (pcdata | :rb)+ | ((:rp, :rt) | (:rp, :rtc) | (:rt, :rp) | (:rtc, :rp))+
-  );
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(

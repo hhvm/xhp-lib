@@ -11,9 +11,8 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :figure extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   category %flow, %sectioning;
-  children ((:figcaption, %flow+) | (%flow+, :figcaption?));
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(

@@ -11,17 +11,11 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :table extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     int border,
     bool sortable;
   category %flow;
-  children (
-    :caption?,
-    :colgroup*,
-    :thead?,
-    ((:tfoot, (:tbody+ | :tr*)) | ((:tbody+ | :tr*), :tfoot?))
-  );
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

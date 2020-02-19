@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :embed extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     int height,
     string src,
@@ -26,7 +26,6 @@ class :embed extends :xhp:html-element {
     string wmode;
 
   category %flow, %phrase, %embedded, %interactive;
-  children (pcdata | %phrase)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

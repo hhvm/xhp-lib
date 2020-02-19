@@ -11,14 +11,12 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :label extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string for,
     string form;
   category %flow, %phrase, %interactive;
   // may not contain label
-  children (pcdata | %phrase)*;
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),

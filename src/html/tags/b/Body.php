@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :body extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     string onafterprint,
     string onbeforeprint,
@@ -25,7 +25,6 @@ class :body extends :xhp:html-element {
     string onpopstate,
     string onstorage,
     string onunload;
-  children (pcdata | %flow)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

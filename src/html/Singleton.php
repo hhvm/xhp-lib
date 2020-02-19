@@ -15,8 +15,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 abstract class :xhp:html-singleton extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
-  children empty;
+  use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();

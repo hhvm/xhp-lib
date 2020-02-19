@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :video extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     bool autoplay,
     bool controls,
@@ -25,7 +25,6 @@ class :video extends :xhp:html-element {
     string src,
     int width;
   category %flow, %phrase, %embedded, %interactive;
-  children (:source*, :track*, (pcdata | %flow)*);
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

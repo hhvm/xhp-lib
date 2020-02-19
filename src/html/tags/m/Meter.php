@@ -11,7 +11,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :meter extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     float high,
     float low,
@@ -21,8 +21,6 @@ class :meter extends :xhp:html-element {
     float value;
   category %flow, %phrase;
   // Should not contain :meter
-  children (pcdata | %phrase)*;
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),

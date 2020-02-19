@@ -14,8 +14,7 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 abstract class :xhp:pcdata-element extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (pcdata)*;
+  use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\pcdata());

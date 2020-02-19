@@ -11,10 +11,9 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :blockquote extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute string cite;
   category %flow, %sectioning;
-  children (pcdata | %flow)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

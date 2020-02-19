@@ -11,12 +11,11 @@
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 class :td extends :xhp:html-element {
-  use XHPChildDeclarationConsistencyValidation;
+  use XHPChildValidation;
   attribute
     int colspan,
     string headers,
     int rowspan;
-  children (pcdata | %flow)*;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
