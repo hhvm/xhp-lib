@@ -723,7 +723,9 @@ abstract class :x:composable-element extends :xhp {
         ) {
           return tuple(false, $index);
         }
-        $category = :xhp::class2element($expr->getConstraintString());
+        $category = $expr->getConstraintString()
+          |> Str\replace($$, '__', ':')
+          |> Str\replace($$, '_', '-');
         $child = $this->children->get($index);
         assert($child is :xhp);
         $categories = $child->__xhpCategoryDeclaration();

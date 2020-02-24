@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\Str;
+
 abstract class :xhp implements XHPChild, JsonSerializable {
   // Must be kept in sync with code generation for XHP
   const string SPREAD_PREFIX = '...$';
@@ -109,14 +111,35 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   }
 
   public static function element2class(string $element): string {
-    return 'xhp_'.str_replace(varray[':', '-'], varray['__', '_'], $element);
+    if (self::areXHPNamespacesEnabled()) {
+      return Str\replace($element, ':', '\\');
+    }
+    return $element
+      |> Str\replace($$, ':', '__')
+      |> Str\replace($$, '-', '_')
+      |> 'xhp_'.$$;
   }
 
   public static function class2element(string $class): string {
-    return str_replace(
-      varray['__', '_'],
-      varray[':', '-'],
-      preg_replace('#^xhp_#i', '', $class),
-    );
+    if (self::areXHPNamespacesEnabled()) {
+      return Str\replace($class, '\\', ':');
+    }
+
+    $elem = Str\strip_prefix($class, 'xhp_')
+      |> Str\replace($$, '__', ':');
+    if (self::areHyphensMangled()) {
+      return Str\replace($elem, '_', '-');
+    }
+    return $elem;
+  }
+
+  <<__Memoize>>
+  private static function areXHPNamespacesEnabled(): bool {
+    return !Str\starts_with(:x:element::class, 'xhp_');
+  }
+
+  <<__Memoize>>
+  private static function areHyphensMangled(): bool {
+    return !(ini_get('hhvm.hack.lang.disable_xhp_element_mangling') ?? false);
   }
 }
