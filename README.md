@@ -21,7 +21,7 @@ Announcements and articles are posted to [the XHP-Lib blog](https://hhvm.github.
 
 [Composer](https://getcomposer.org) is the recommended installation method. To add XHP to your project, run the following command : 
 ```console
-$ composer require facebook/xhp-lib:^2.0
+$ composer require facebook/xhp-lib:^3.0
 ```
 
 ## Simple Example
