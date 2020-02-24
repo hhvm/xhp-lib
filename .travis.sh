@@ -19,7 +19,12 @@ if [ "$(hhvm --php -r 'var_dump(HHVM_VERSION_ID >= 44600);')" = "bool(true)" ]; 
   echo disable_xhp_element_mangling=true >> .hhconfig
   echo enable_xhp_class_modifier=true >> .hhconfig
   hh_client
-  rm -f ~/.hhvm.hhbc
+  hhvm -dhhvm.hack.lang.disable_xhp_element_mangling=true -dhhvm.hack.lang.enable_xhp_class_modifier=true vendor/bin/hh-autoload
+  hhvm -dhhvm.hack.lang.disable_xhp_element_mangling=true -dhhvm.hack.lang.enable_xhp_class_modifier=true vendor/bin/hacktest tests/
+
+  vendor/bin/hhast-migrate --add-xhp-children-declaration-method --remove-xhp-child-declarations tests
+  vendor/bin/hhast-migrate --demangle-xhp-class-names --xhp-class-modifier tests
+  hh_client
   hhvm -dhhvm.hack.lang.disable_xhp_element_mangling=true -dhhvm.hack.lang.enable_xhp_class_modifier=true vendor/bin/hh-autoload
   hhvm -dhhvm.hack.lang.disable_xhp_element_mangling=true -dhhvm.hack.lang.enable_xhp_class_modifier=true vendor/bin/hacktest tests/
 fi
