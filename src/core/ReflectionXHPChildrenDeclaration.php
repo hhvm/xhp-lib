@@ -35,7 +35,9 @@ enum XHPChildrenConstraintType: int {
 }
 
 class ReflectionXHPChildrenDeclaration {
-  public function __construct(private string $context, private mixed $data) {
+  private mixed $data;
+  public function __construct(private string $context, mixed $data) {
+    $this->data = \Facebook\XHP\ChildValidation\_Private\normalize($data);
   }
 
   <<__Memoize>>
