@@ -27,7 +27,7 @@ abstract final class XHPAttributeCoercion {
   }
 
   private static function LogCoercion(
-    :x:composable-element $context,
+    :x:composable_element $context,
     string $what,
     string $attr,
     mixed $val,
@@ -60,7 +60,7 @@ abstract final class XHPAttributeCoercion {
   }
 
   public static function CoerceToString(
-    :x:composable-element $context,
+    :x:composable_element $context,
     string $attr,
     mixed $val,
   ): string {
@@ -79,7 +79,7 @@ abstract final class XHPAttributeCoercion {
   }
 
   public static function CoerceToInt(
-    :x:composable-element $context,
+    :x:composable_element $context,
     string $attr,
     mixed $val,
   ): int {
@@ -94,7 +94,7 @@ abstract final class XHPAttributeCoercion {
   }
 
   public static function CoerceToBool(
-    :x:composable-element $context,
+    :x:composable_element $context,
     string $attr,
     mixed $val,
   ): bool {
@@ -111,7 +111,7 @@ abstract final class XHPAttributeCoercion {
   }
 
   public static function CoerceToFloat(
-    :x:composable-element $context,
+    :x:composable_element $context,
     string $attr,
     mixed $val,
   ): float {

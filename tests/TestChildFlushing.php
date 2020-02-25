@@ -12,7 +12,7 @@ use function Facebook\FBExpect\expect;
 
 use type Facebook\HackTest\DataProvider;
 
-class :test:verbatim-root extends :x:element {
+xhp class test:verbatim_root extends :x:element {
   attribute XHPRoot root @required;
 
   protected function render(): XHPRoot {
@@ -20,7 +20,7 @@ class :test:verbatim-root extends :x:element {
   }
 }
 
-class :test:verbatim-root:async extends :x:element {
+xhp class test:verbatim_root:async extends :x:element {
   use XHPAsync;
 
   attribute XHPRoot root @required;
@@ -35,31 +35,31 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
     return vec[
       tuple(<div />, '<div></div>'),
       tuple(<div><div /><div /></div>, '<div><div></div><div></div></div>'),
-      tuple(<test:verbatim-root root={<div />} />, '<div></div>'),
+      tuple(<test:verbatim_root root={<div />} />, '<div></div>'),
       tuple(<x:frag><div /></x:frag>, '<div></div>'),
       tuple(<x:frag><div /><div /></x:frag>, '<div></div><div></div>'),
       tuple(
-        <test:verbatim-root root={<x:frag><div /><div /></x:frag>} />,
+        <test:verbatim_root root={<x:frag><div /><div /></x:frag>} />,
         '<div></div><div></div>',
       ),
       tuple(
-        <test:verbatim-root root={<test:verbatim-root root={<div />} />} />,
+        <test:verbatim_root root={<test:verbatim_root root={<div />} />} />,
         '<div></div>',
       ),
-      tuple(<test:verbatim-root:async root={<div />} />, '<div></div>'),
+      tuple(<test:verbatim_root:async root={<div />} />, '<div></div>'),
     ];
   }
 
   <<DataProvider('xhpRootProvider')>>
   public function testSynchronous(XHPRoot $root, string $expected): void {
-    $elem = <test:verbatim-root />;
+    $elem = <test:verbatim_root />;
     $elem->setContext('root', $root);
     expect($elem->toString())->toEqual($expected);
   }
 
   <<DataProvider('xhpRootProvider')>>
   public function testAsynchronous(XHPRoot $root, string $expected): void {
-    $elem = <test:verbatim-root:async />;
+    $elem = <test:verbatim_root:async />;
     $elem->setContext('root', $root);
     expect($elem->toString())->toEqual($expected);
   }

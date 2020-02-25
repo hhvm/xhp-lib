@@ -8,7 +8,7 @@
  *
  */
 
-class :wbr extends :xhp:html-singleton {
+xhp class wbr extends :xhp:html_singleton {
   category %flow, %phrase;
   protected string $tagName = 'wbr';
 }

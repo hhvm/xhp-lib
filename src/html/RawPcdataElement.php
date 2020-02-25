@@ -21,7 +21,7 @@
  * the end of the s content. In valid documents, this would be the end tag for
  * the element."
  */
-abstract class :xhp:raw-pcdata-element extends :xhp:pcdata-element {
+abstract xhp class xhp:raw_pcdata_element extends :xhp:pcdata_element {
   protected function stringify(): string {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {

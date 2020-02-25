@@ -8,7 +8,7 @@
  *
  */
 
-class :area extends :xhp:html-singleton {
+xhp class area extends :xhp:html_singleton {
   attribute
     string alt,
     string coords,

@@ -14,7 +14,7 @@
  * needs to directly implement stringify(). All other elements should subclass
  * from :x:element.
  */
-abstract class :x:primitive extends :x:composable-element implements XHPRoot {
+abstract xhp class x:primitive extends :x:composable_element implements XHPRoot {
   abstract protected function stringify(): string;
 
   final public function toString(): string {
@@ -30,7 +30,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
     $children = $this->getChildren();
     $awaitables = Map {};
     foreach ($children as $idx => $child) {
-      if ($child is :x:composable-element) {
+      if ($child is :x:composable_element) {
         $child->__transferContext($this->getAllContexts());
         $awaitables[$idx] = $child->__flushSubtree();
       }

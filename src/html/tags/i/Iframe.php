@@ -8,7 +8,7 @@
  *
  */
 
-class :iframe extends :xhp:pcdata-element {
+xhp class iframe extends :xhp:pcdata_element {
   attribute
     bool allowfullscreen,
     string name,

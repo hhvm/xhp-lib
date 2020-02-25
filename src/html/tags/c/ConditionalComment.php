@@ -14,7 +14,7 @@
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :x:conditional-comment extends :x:primitive {
+xhp class x:conditional_comment extends :x:primitive {
   use XHPChildValidation;
   attribute string if @required;
 

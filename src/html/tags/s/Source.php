@@ -8,7 +8,7 @@
  *
  */
 
-class :source extends :xhp:html-singleton {
+xhp class source extends :xhp:html_singleton {
   attribute
     string media,
     string sizes,

@@ -9,7 +9,7 @@
  */
 
 interface HasXHPBaseHTMLHelpers {
-  require extends :x:composable-element;
+  require extends :x:composable_element;
 
   public function addClass(string $class): this;
   public function conditionClass(bool $cond, string $class): this;

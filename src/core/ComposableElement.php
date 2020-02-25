@@ -12,7 +12,7 @@ use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Str};
 
-abstract class :x:composable-element extends :xhp {
+abstract xhp class x:composable_element extends :xhp {
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
@@ -46,7 +46,7 @@ abstract class :x:composable-element extends :xhp {
     foreach ($attributes as $key => $value) {
       if (self::isSpreadKey($key)) {
         invariant(
-          $value is :x:composable-element,
+          $value is :x:composable_element,
           "Only XHP can be used with an attribute spread operator",
         );
         $this->spreadElementImpl($value);
@@ -326,7 +326,7 @@ abstract class :x:composable-element extends :xhp {
    * Defaults from $xhp are copied as well, if they are present.
    */
   protected final function spreadElementImpl(
-    :x:composable-element $element,
+    :x:composable_element $element,
   ): void {
     foreach ($element::__xhpReflectionAttributes() as $attr_name => $attr) {
       $our_attr = static::__xhpReflectionAttribute($attr_name);

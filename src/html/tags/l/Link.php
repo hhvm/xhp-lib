@@ -8,7 +8,7 @@
  *
  */
 
-class :link extends :xhp:html-singleton {
+xhp class link extends :xhp:html_singleton {
   attribute
     string as,
     enum {'anonymous', 'use-credentials'} crossorigin,

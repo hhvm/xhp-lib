@@ -11,7 +11,7 @@
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
-class :async:test extends :x:element {
+xhp class async:test extends :x:element {
   use XHPAsync;
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
@@ -19,14 +19,14 @@ class :async:test extends :x:element {
   }
 }
 
-class :test:xfrag-wrap extends :x:element {
+xhp class test:xfrag_wrap extends :x:element {
 
   protected function render(): XHPRoot {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
-class :test:async-xfrag-wrap extends :x:element {
+xhp class test:async_xfrag_wrap extends :x:element {
   use XHPAsync;
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
@@ -34,7 +34,7 @@ class :test:async-xfrag-wrap extends :x:element {
   }
 }
 
-class :async:par-test extends :x:element {
+xhp class async:par_test extends :x:element {
   use XHPAsync;
 
   attribute string label @required;
@@ -91,18 +91,18 @@ class AsyncTest extends Facebook\HackTest\HackTest {
 
   public function parallelizationContainersProvider(): varray<varray<:xhp>> {
     return varray[
-      varray[<test:xfrag-wrap />],
-      varray[<test:async-xfrag-wrap />],
+      varray[<test:xfrag_wrap />],
+      varray[<test:async_xfrag_wrap />],
     ];
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
   public function testParallelization(:x:element $container): void {
-    :async:par-test::$log = Vector {};
+    :async:par_test::$log = Vector {};
 
-    $a = <async:par-test label="a" />;
-    $b = <async:par-test label="b" />;
-    $c = <async:par-test label="c" />;
+    $a = <async:par_test label="a" />;
+    $b = <async:par_test label="b" />;
+    $c = <async:par_test label="c" />;
 
     $container->replaceChildren(varray[$b, $c]);
 
@@ -111,7 +111,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
       '<div><div>a</div><div>b</div><div>c</div></div>',
     );
 
-    $log = :async:par-test::$log;
+    $log = :async:par_test::$log;
     $by_node = Map {'a' => Map {}, 'b' => Map {}, 'c' => Map {}};
 
     foreach ($log as $idx => $data) {

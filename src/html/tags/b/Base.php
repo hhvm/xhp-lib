@@ -8,7 +8,7 @@
  *
  */
 
-class :base extends :xhp:html-singleton {
+xhp class base extends :xhp:html_singleton {
   attribute
     string href,
     string target;

@@ -8,7 +8,7 @@
  *
  */
 
-class :template extends :xhp:html-element {
+xhp class template extends :xhp:html_element {
   category %flow, %phrase, %metadata;
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.

@@ -8,7 +8,7 @@
  *
  */
 
-class :style extends :xhp:raw-pcdata-element {
+xhp class style extends :xhp:raw_pcdata_element {
   attribute
     string media,
     bool scoped,

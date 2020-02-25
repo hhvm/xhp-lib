@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :td extends :xhp:html-element {
+xhp class td extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     int colspan,

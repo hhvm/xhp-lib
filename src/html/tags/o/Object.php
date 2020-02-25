@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :object extends :xhp:html-element {
+xhp class object extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     string data,

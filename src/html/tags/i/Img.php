@@ -8,7 +8,7 @@
  *
  */
 
-class :img extends :xhp:html-singleton {
+xhp class img extends :xhp:html_singleton {
   attribute
     string alt,
     enum {'anonymous', 'use-credentials'} crossorigin,

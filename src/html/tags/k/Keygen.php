@@ -8,7 +8,7 @@
  *
  */
 
-class :keygen extends :xhp:html-singleton {
+xhp class keygen extends :xhp:html_singleton {
   attribute
     bool autofocus,
     string challenge,

@@ -8,7 +8,7 @@
  *
  */
 
-class :param extends :xhp:pcdata-element {
+xhp class param extends :xhp:pcdata_element {
   attribute
     string name,
     string value;

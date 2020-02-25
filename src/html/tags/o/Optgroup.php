@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :optgroup extends :xhp:html-element {
+xhp class optgroup extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     bool disabled,

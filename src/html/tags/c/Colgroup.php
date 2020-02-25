@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :colgroup extends :xhp:html-element {
+xhp class colgroup extends :xhp:html_element {
   use XHPChildValidation;
   attribute int span;
 

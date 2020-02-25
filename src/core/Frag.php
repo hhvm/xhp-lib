@@ -14,7 +14,7 @@
  * element the <x:frag /> will disappear and each child will be sequentially
  * appended to the element.
  */
-class :x:frag extends :x:primitive {
+xhp class x:frag extends :x:primitive {
   protected function stringify(): string {
     $buf = '';
     foreach ($this->getChildren() as $child) {

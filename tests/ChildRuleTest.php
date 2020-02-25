@@ -12,7 +12,7 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :test:new-child-declaration-only extends :x:element {
+xhp class test:new_child_declaration_only extends :x:element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -24,11 +24,10 @@ class :test:new-child-declaration-only extends :x:element {
   }
 }
 
-class :test:new-and-old-child-declarations extends :x:element {
+xhp class test:new_and_old_child_declarations extends :x:element {
   // Providing all of these is invalid; for a migration consistency check, use
   // the XHPChildDeclarationConsistencyValidation trait instead.
   use XHPChildValidation;
-  children (:div);
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\ofType<:div>();
   }
@@ -38,17 +37,21 @@ class :test:new-and-old-child-declarations extends :x:element {
   }
 }
 
-class :test:old-child-declaration-only extends :x:element {
-  children (:div);
+xhp class test:old_child_declaration_only extends :x:element {
+  use XHPChildValidation;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\ofType<:div>();
+  }
+
 
   protected function render(): XHPRoot {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
-class :test:any-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children any;
+xhp class test:any_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any();
   }
@@ -58,9 +61,8 @@ class :test:any-children extends :x:element {
   }
 }
 
-class :test:no-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children empty;
+xhp class test:no_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();
   }
@@ -70,9 +72,8 @@ class :test:no-children extends :x:element {
   }
 }
 
-class :test:single-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div);
+xhp class test:single_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\ofType<:div>();
   }
@@ -82,9 +83,8 @@ class :test:single-child extends :x:element {
   }
 }
 
-class :test:optional-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div?);
+xhp class test:optional_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\optional(XHPChild\ofType<:div>());
   }
@@ -94,9 +94,8 @@ class :test:optional-child extends :x:element {
   }
 }
 
-class :test:any-number-of-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div*);
+xhp class test:any_number_of_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
   }
@@ -106,9 +105,8 @@ class :test:any-number-of-child extends :x:element {
   }
 }
 
-class :test:at-least-one-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div+);
+xhp class test:at_least_one_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
   }
@@ -118,9 +116,8 @@ class :test:at-least-one-child extends :x:element {
   }
 }
 
-class :test:two-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div, :div);
+xhp class test:two_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
   }
@@ -130,9 +127,8 @@ class :test:two-children extends :x:element {
   }
 }
 
-class :test:three-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div, :div, :div);
+xhp class test:three_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
       XHPChild\ofType<:div>(),
@@ -147,9 +143,8 @@ class :test:three-children extends :x:element {
 }
 
 
-class :test:either-of-two-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div | :code);
+xhp class test:either_of_two_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
   }
@@ -159,9 +154,8 @@ class :test:either-of-two-children extends :x:element {
   }
 }
 
-class :test:any-of-three-children extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div | :code | :p);
+xhp class test:any_of_three_children extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\ofType<:div>(),
@@ -176,9 +170,8 @@ class :test:any-of-three-children extends :x:element {
 }
 
 
-class :test:nested-rule extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (:div | (:code+));
+xhp class test:nested_rule extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\ofType<:div>(),
@@ -191,9 +184,8 @@ class :test:nested-rule extends :x:element {
   }
 }
 
-class :test:pcdata-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (pcdata);
+xhp class test:pcdata_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
   }
@@ -203,9 +195,8 @@ class :test:pcdata-child extends :x:element {
   }
 }
 
-class :test:category-child extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (%flow);
+xhp class test:category_child extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%flow');
   }
@@ -215,7 +206,7 @@ class :test:category-child extends :x:element {
   }
 }
 
-class :test:has-comma-category extends :x:element {
+xhp class test:has_comma_category extends :x:element {
   category %foo:bar;
 
   protected function render(): XHPRoot {
@@ -223,9 +214,8 @@ class :test:has-comma-category extends :x:element {
   }
 }
 
-class :test:needs-comma-category extends :x:element {
-  use XHPChildDeclarationConsistencyValidation;
-  children (%foo:bar);
+xhp class test:needs_comma_category extends :x:element {
+  use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
   }
@@ -238,10 +228,10 @@ class :test:needs-comma-category extends :x:element {
 class ChildRuleTest extends Facebook\HackTest\HackTest {
   public function testNoChild(): void {
     $elems = Vector {
-      <test:no-children />,
-      <test:any-children />,
-      <test:optional-child />,
-      <test:any-number-of-child />,
+      <test:no_children />,
+      <test:any_children />,
+      <test:optional_child />,
+      <test:any_number_of_child />,
     };
     foreach ($elems as $elem) {
       expect($elem->__toString())->toEqual('<div></div>');
@@ -250,22 +240,22 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function testUnexpectedChild(): void {
     expect(() ==> {
-      $x = <test:no-children><div /></test:no-children>;
+      $x = <test:no_children><div /></test:no_children>;
       $x->toString();
     })->toThrow(XHPInvalidChildrenException::class);
   }
 
   public function testSingleChild(): void {
     $elems = Vector {
-      <test:any-children />,
-      <test:single-child />,
-      <test:optional-child />,
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
-      <test:either-of-two-children />,
-      <test:any-of-three-children />,
-      <test:nested-rule />,
-      <test:category-child />,
+      <test:any_children />,
+      <test:single_child />,
+      <test:optional_child />,
+      <test:any_number_of_child />,
+      <test:at_least_one_child />,
+      <test:either_of_two_children />,
+      <test:any_of_three_children />,
+      <test:nested_rule />,
+      <test:category_child />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
@@ -275,7 +265,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('toStringProvider')>>
   public function testToString(
-    :x:composable-element $elem,
+    :x:composable_element $elem,
     string $expected,
   ): void {
     expect($elem->__getChildrenDeclaration())->toEqual($expected);
@@ -283,29 +273,29 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function toStringProvider(): vec<(:xhp, string)> {
     return vec[
-      tuple(<test:any-children />, 'any'),
-      tuple(<test:no-children />, 'empty'),
-      tuple(<test:single-child />, ':div'),
-      tuple(<test:optional-child />, ':div?'),
-      tuple(<test:any-number-of-child />, ':div*'),
-      tuple(<test:at-least-one-child />, ':div+'),
-      tuple(<test:two-children />, ':div,:div'),
-      tuple(<test:three-children />, ':div,:div,:div'),
-      tuple(<test:either-of-two-children />, ':div|:code'),
-      tuple(<test:any-of-three-children />, ':div|:code|:p'),
-      tuple(<test:nested-rule />, ':div|:code+'),
-      tuple(<test:pcdata-child />, 'pcdata'),
-      tuple(<test:category-child />, '%flow'),
+      tuple(<test:any_children />, 'any'),
+      tuple(<test:no_children />, 'empty'),
+      tuple(<test:single_child />, ':div'),
+      tuple(<test:optional_child />, ':div?'),
+      tuple(<test:any_number_of_child />, ':div*'),
+      tuple(<test:at_least_one_child />, ':div+'),
+      tuple(<test:two_children />, ':div,:div'),
+      tuple(<test:three_children />, ':div,:div,:div'),
+      tuple(<test:either_of_two_children />, ':div|:code'),
+      tuple(<test:any_of_three_children />, ':div|:code|:p'),
+      tuple(<test:nested_rule />, ':div|:code+'),
+      tuple(<test:pcdata_child />, 'pcdata'),
+      tuple(<test:category_child />, '%flow'),
     ];
   }
 
   public function testExpectedChild(): void {
     $elems = Vector {
-      <test:single-child />,
-      <test:at-least-one-child />,
-      <test:either-of-two-children />,
-      <test:nested-rule />,
-      <test:pcdata-child />,
+      <test:single_child />,
+      <test:at_least_one_child />,
+      <test:either_of_two_children />,
+      <test:nested_rule />,
+      <test:pcdata_child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -320,13 +310,13 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function testTooManyChildren(): void {
     $elems = Vector {
-      <test:single-child />,
-      <test:optional-child />,
-      <test:two-children />,
-      <test:three-children />,
-      <test:either-of-two-children />,
-      <test:nested-rule />,
-      <test:category-child />,
+      <test:single_child />,
+      <test:optional_child />,
+      <test:two_children />,
+      <test:three_children />,
+      <test:either_of_two_children />,
+      <test:nested_rule />,
+      <test:category_child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -342,14 +332,14 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function testIncorrectChild(): void {
     $elems = Vector {
-      <test:single-child />,
-      <test:optional-child />,
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
-      <test:either-of-two-children />,
-      <test:any-of-three-children />,
-      <test:nested-rule />,
-      <test:category-child />,
+      <test:single_child />,
+      <test:optional_child />,
+      <test:any_number_of_child />,
+      <test:at_least_one_child />,
+      <test:either_of_two_children />,
+      <test:any_of_three_children />,
+      <test:nested_rule />,
+      <test:category_child />,
     };
     foreach ($elems as $elem) {
       $exception = null;
@@ -365,9 +355,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function testTwoChildren(): void {
     $elems = Vector {
-      <test:any-number-of-child />,
-      <test:at-least-one-child />,
-      <test:two-children />,
+      <test:any_number_of_child />,
+      <test:at_least_one_child />,
+      <test:two_children />,
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
@@ -376,7 +366,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public function testThreeChildren(): void {
-    $elems = Vector {<test:any-number-of-child />, <test:at-least-one-child />};
+    $elems = Vector {<test:any_number_of_child />, <test:at_least_one_child />};
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
       expect($elem->toString())->toEqual('<div></div>');
@@ -384,31 +374,31 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public function testEitherValidChild(): void {
-    $x = <test:either-of-two-children><div /></test:either-of-two-children>;
+    $x = <test:either_of_two_children><div /></test:either_of_two_children>;
     expect($x->toString())->toEqual('<div></div>');
-    $x = <test:either-of-two-children><code /></test:either-of-two-children>;
+    $x = <test:either_of_two_children><code /></test:either_of_two_children>;
     expect($x->toString())->toEqual('<div></div>');
 
-    $x = <test:nested-rule><div /></test:nested-rule>;
+    $x = <test:nested_rule><div /></test:nested_rule>;
     expect($x->toString())->toEqual('<div></div>');
-    $x = <test:nested-rule><code /></test:nested-rule>;
+    $x = <test:nested_rule><code /></test:nested_rule>;
     expect($x->toString())->toEqual('<div></div>');
-    $x = <test:nested-rule><code /><code /></test:nested-rule>;
+    $x = <test:nested_rule><code /><code /></test:nested_rule>;
     expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testPCDataChild(): void {
-    $x = <test:pcdata-child>herp derp</test:pcdata-child>;
+    $x = <test:pcdata_child>herp derp</test:pcdata_child>;
     expect($x->toString())->toEqual('<div>herp derp</div>');
-    $x = <test:pcdata-child>{123}</test:pcdata-child>;
+    $x = <test:pcdata_child>{123}</test:pcdata_child>;
     expect($x->toString())->toEqual('<div>123</div>');
   }
 
   public function testCommaCategory(): void {
     $x =
-      <test:needs-comma-category>
-        <test:has-comma-category />
-      </test:needs-comma-category>;
+      <test:needs_comma_category>
+        <test:has_comma_category />
+      </test:needs_comma_category>;
     expect($x->toString())->toEqual('<div></div>');
   }
 
@@ -419,7 +409,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   public function testNested(): void {
     expect(() ==> {
-      $x = <div><test:at-least-one-child /></div>;
+      $x = <div><test:at_least_one_child /></div>;
       $x->toString();
     })->toThrow(XHPInvalidChildrenException::class);
   }
@@ -427,18 +417,18 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   public function testNewChildDeclarations(): void {
     expect(
       (
-        <test:new-child-declaration-only>
+        <test:new_child_declaration_only>
           <div>foo</div>
-        </test:new-child-declaration-only>
+        </test:new_child_declaration_only>
       )->toString(),
     )->toEqual('<div>foo</div>');
 
-    expect(() ==> (<test:new-child-declaration-only />)->toString())->toThrow(
+    expect(() ==> (<test:new_child_declaration_only />)->toString())->toThrow(
       XHPInvalidChildrenException::class,
     );
     expect(
       () ==> (
-        <test:new-child-declaration-only><p /></test:new-child-declaration-only>
+        <test:new_child_declaration_only><p /></test:new_child_declaration_only>
       )->toString(),
     )->toThrow(XHPInvalidChildrenException::class);
   }
@@ -446,18 +436,18 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   public function testOldChildDeclarations(): void {
     expect(
       (
-        <test:old-child-declaration-only>
+        <test:old_child_declaration_only>
           <div>foo</div>
-        </test:old-child-declaration-only>
+        </test:old_child_declaration_only>
       )->toString(),
     )->toEqual('<div>foo</div>');
 
-    expect(() ==> (<test:old-child-declaration-only />)->toString())->toThrow(
+    expect(() ==> (<test:old_child_declaration_only />)->toString())->toThrow(
       XHPInvalidChildrenException::class,
     );
     expect(
       () ==> (
-        <test:old-child-declaration-only><p /></test:old-child-declaration-only>
+        <test:old_child_declaration_only><p /></test:old_child_declaration_only>
       )->toString(),
     )->toThrow(XHPInvalidChildrenException::class);
   }

@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :table extends :xhp:html-element {
+xhp class table extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     int border,

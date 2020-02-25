@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :video extends :xhp:html-element {
+xhp class video extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     bool autoplay,

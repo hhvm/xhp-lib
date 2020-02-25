@@ -8,7 +8,7 @@
  *
  */
 
-class :br extends :xhp:html-singleton {
+xhp class br extends :xhp:html_singleton {
   category %flow, %phrase;
   protected string $tagName = 'br';
 }

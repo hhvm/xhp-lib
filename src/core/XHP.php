@@ -10,7 +10,7 @@
 
 use namespace HH\Lib\Str;
 
-abstract class :xhp implements XHPChild, JsonSerializable {
+abstract xhp class xhp implements XHPChild, JsonSerializable {
   // Must be kept in sync with code generation for XHP
   const string SPREAD_PREFIX = '...$';
 

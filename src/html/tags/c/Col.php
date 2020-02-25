@@ -8,7 +8,7 @@
  *
  */
 
-class :col extends :xhp:html-singleton {
+xhp class col extends :xhp:html_singleton {
   attribute int span;
   protected string $tagName = 'col';
 }

@@ -8,7 +8,7 @@
  *
  */
 
-class :meta extends :xhp:html-singleton {
+xhp class meta extends :xhp:html_singleton {
   attribute
     // The correct definition of http-equiv is an enum, but there are legacy
     // values still used and any strictness here would only be frustrating.

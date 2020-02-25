@@ -8,7 +8,7 @@
  *
  */
 
-class :script extends :xhp:raw-pcdata-element {
+xhp class script extends :xhp:raw_pcdata_element {
   attribute
     bool async,
     string charset,

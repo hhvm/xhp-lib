@@ -9,5 +9,5 @@
  */
 
 interface XHPRoot extends XHPChild {
-  require extends :x:composable-element;
+  require extends :x:composable_element;
 }

@@ -14,7 +14,7 @@
  * close to spec as possible. Facebook-specific extensions should go into their
  * own elements.
  */
-abstract class :xhp:html-element extends :x:primitive {
+abstract xhp class xhp:html_element extends :x:primitive {
   use XHPBaseHTMLHelpers;
 
   // enum { 'true', 'false' } attributes: these are actually tri-state -

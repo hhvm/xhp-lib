@@ -20,7 +20,7 @@ interface HasXHPHelpers
  * attribute :xhp:html-element;
  */
 trait XHPHelpers implements HasXHPHelpers {
-  require extends :x:composable-element;
+  require extends :x:composable_element;
 
   use XHPBaseHTMLHelpers;
 
@@ -28,7 +28,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * Copies all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public function copyAllAttributes(:x:composable-element $target): void {
+  final public function copyAllAttributes(:x:composable_element $target): void {
     $this->transferAttributesImpl($target, Set {});
   }
 
@@ -37,7 +37,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $target to $target.
    */
   final public function copyCustomAttributes(
-    :x:composable-element $target,
+    :x:composable_element $target,
   ): void {
     $this->transferAttributesImpl($target);
   }
@@ -47,7 +47,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * valid on $target to $target.
    */
   final public function copyAttributesExcept(
-    :x:composable-element $target,
+    :x:composable_element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -58,7 +58,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $target. This will unset all transfered attributes from $this.
    */
   final public function transferAllAttributes(
-    :x:composable-element $target,
+    :x:composable_element $target,
   ): void {
     $this->transferAttributesImpl($target, Set {}, true);
   }
@@ -68,7 +68,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $target to $target. This will unset all transfered attributes from $this.
    */
   final public function transferCustomAttributes(
-    :x:composable-element $target,
+    :x:composable_element $target,
   ): void {
     $this->transferAttributesImpl($target, null, true);
   }
@@ -79,7 +79,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $this.
    */
   final public function transferAttributesExcept(
-    :x:composable-element $target,
+    :x:composable_element $target,
     Set<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore, true);
@@ -90,12 +90,12 @@ trait XHPHelpers implements HasXHPHelpers {
    * directly. Instead, use one of the transfer/copy flavors above.
    */
   final private function transferAttributesImpl(
-    :x:composable-element $target,
+    :x:composable_element $target,
     ?Set<string> $ignore = null,
     bool $remove = false,
   ): void {
     if ($ignore === null) {
-      $ignore = :xhp:html-element::__xhpAttributeDeclaration();
+      $ignore = :xhp:html_element::__xhpAttributeDeclaration();
     } else {
       $ignore = array_fill_keys($ignore->toArray(), true);
     }
@@ -143,7 +143,7 @@ trait XHPHelpers implements HasXHPHelpers {
   }
 
   final public function transferAttributesToRenderedRoot(
-    :x:composable-element $root,
+    :x:composable_element $root,
   ): void {
     if (:xhp::isAttributeValidationEnabled() && $root is :x:element) {
       if (!($root is HasXHPHelpers)) {

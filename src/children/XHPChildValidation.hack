@@ -11,7 +11,7 @@ use namespace \Facebook\XHP\ChildValidation as XHPChild;
 
 /** Verify that a new child declaration matches the legacy codegen. */
 trait XHPChildValidation {
-  require extends :x:composable-element;
+  require extends :x:composable_element;
 
   abstract protected static function getChildrenDeclaration(
   ): XHPChild\Constraint;

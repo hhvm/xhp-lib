@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :time extends :xhp:html-element {
+xhp class time extends :xhp:html_element {
   use XHPChildValidation;
   attribute string datetime;
   category %flow, %phrase;

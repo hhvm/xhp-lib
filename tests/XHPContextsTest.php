@@ -10,7 +10,7 @@
 
 use function Facebook\FBExpect\expect;
 
-class :test:contexts extends :x:element {
+xhp class test:contexts extends :x:element {
   protected function render(): XHPRoot {
     return
       <div>

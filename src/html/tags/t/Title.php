@@ -8,7 +8,7 @@
  *
  */
 
-class :title extends :xhp:pcdata-element {
+xhp class title extends :xhp:pcdata_element {
   category %metadata;
   protected string $tagName = 'title';
 }

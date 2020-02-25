@@ -16,6 +16,6 @@
 interface XHPHasTransferAttributes {
   require extends :x:element;
   public function transferAttributesToRenderedRoot(
-    :x:composable-element $root,
+    :x:composable_element $root,
   ): void;
 }

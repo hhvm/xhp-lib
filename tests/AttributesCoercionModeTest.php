@@ -12,7 +12,7 @@ use function Facebook\FBExpect\expect;
 // Using decl because this test intentional passes the wrong types for
 // attributes
 
-class :test:attribute-coercion-modes extends :x:element {
+xhp class test:attribute_coercion_modes extends :x:element {
   attribute
     int myint,
     float myfloat,
@@ -46,7 +46,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
   public function testNoCoercion(): void {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
     $x =
-      <test:attribute-coercion-modes
+      <test:attribute_coercion_modes
         myint={3}
         myfloat={1.23}
         mystring="foo"
@@ -63,7 +63,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes myint="1" />;
+      $x = <test:attribute_coercion_modes myint="1" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -72,7 +72,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes myint={1.23} />;
+      $x = <test:attribute_coercion_modes myint={1.23} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -81,7 +81,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes myfloat={2} />;
+      $x = <test:attribute_coercion_modes myfloat={2} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -90,7 +90,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes mystring={2} />;
+      $x = <test:attribute_coercion_modes mystring={2} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -99,7 +99,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes mybool={1} />;
+      $x = <test:attribute_coercion_modes mybool={1} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -108,7 +108,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
       XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::THROW_EXCEPTION);
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes mybool="true" />;
+      $x = <test:attribute_coercion_modes mybool="true" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
@@ -117,7 +117,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     XHPAttributeCoercion::SetMode(XHPAttributeCoercionMode::SILENT);
     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-    $x = <test:attribute-coercion-modes mystring={2} />;
+    $x = <test:attribute_coercion_modes mystring={2} />;
     expect($x->:mystring)->toEqual('2');
   }
 
@@ -129,7 +129,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     try {
       /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
       /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-      $x = <test:attribute-coercion-modes mystring={2} />;
+      $x = <test:attribute_coercion_modes mystring={2} />;
     } catch (Exception $e) {
       $exception = $e;
     }
@@ -138,7 +138,7 @@ class AttributesCoercionModeTest extends Facebook\HackTest\HackTest {
     error_reporting(E_ALL & ~E_USER_DEPRECATED);
     /* HH_IGNORE_ERROR[4110] testing behavior for incorrect types */
     /* HH_IGNORE_ERROR[4343] testing behavior for incorrect types */
-    $x = <test:attribute-coercion-modes mystring={2} />;
+    $x = <test:attribute_coercion_modes mystring={2} />;
     expect($x->:mystring)->toEqual('2');
   }
 }

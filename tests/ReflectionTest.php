@@ -10,12 +10,19 @@
 
 use function Facebook\FBExpect\expect;
 
-class :test:for-reflection extends :x:element {
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+
+xhp class test:for_reflection extends :x:element {
+  use XHPChildValidation;
   attribute
     string mystring @required,
     enum {'herp', 'derp'} myenum,
     string mystringwithdefault = 'mydefault';
-  children (:div+, (:code, :a)?);
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(XHPChild\atLeastOneOf(XHPChild\ofType<:div>()), XHPChild\optional(XHPChild\sequence(XHPChild\ofType<:code>(), XHPChild\ofType<:a>(), )), );
+  }
+
   category %herp, %derp;
 
   public function render(): XHPRoot {
@@ -27,11 +34,11 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   private ?ReflectionXHPClass $rxc;
 
   public async function beforeEachTestAsync(): Awaitable<void> {
-    $this->rxc = new ReflectionXHPClass(:test:for-reflection::class);
+    $this->rxc = new ReflectionXHPClass(:test:for_reflection::class);
   }
 
   public function testClassName(): void {
-    expect($this->rxc?->getClassName())->toEqual(:test:for-reflection::class);
+    expect($this->rxc?->getClassName())->toEqual(:test:for_reflection::class);
   }
 
   public function testElementName(): void {
@@ -44,7 +51,7 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testReflectionClass(): void {
     $rc = $this->rxc?->getReflectionClass();
     expect($rc)->toBeInstanceOf(ReflectionClass::class);
-    expect($rc?->getName())->toEqual(:test:for-reflection::class);
+    expect($rc?->getName())->toEqual(:test:for_reflection::class);
   }
 
   public function testGetChildren(): void {

@@ -8,7 +8,7 @@
  *
  */
 
-class :input extends :xhp:html-singleton {
+xhp class input extends :xhp:html_singleton {
   attribute
     string accept,
     string alt,

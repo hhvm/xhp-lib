@@ -8,7 +8,7 @@
  *
  */
 
-class :textarea extends :xhp:pcdata-element {
+xhp class textarea extends :xhp:pcdata_element {
   attribute
     enum {'on', 'off'} autocomplete,
     bool autofocus,

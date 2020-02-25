@@ -13,7 +13,7 @@
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-abstract class :xhp:pcdata-element extends :xhp:html-element {
+abstract xhp class xhp:pcdata_element extends :xhp:html_element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

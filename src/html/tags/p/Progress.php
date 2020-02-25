@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :progress extends :xhp:html-element {
+xhp class progress extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     float max,

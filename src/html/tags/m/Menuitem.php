@@ -8,7 +8,7 @@
  *
  */
 
-class :menuitem extends :xhp:html-singleton {
+xhp class menuitem extends :xhp:html_singleton {
   attribute
     bool checked,
     string command,

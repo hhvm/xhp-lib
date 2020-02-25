@@ -14,7 +14,7 @@
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :x:doctype extends :x:primitive {
+xhp class x:doctype extends :x:primitive {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

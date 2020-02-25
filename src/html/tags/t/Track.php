@@ -8,7 +8,7 @@
  *
  */
 
-class :track extends :xhp:html-singleton {
+xhp class track extends :xhp:html_singleton {
   attribute
     bool default,
     enum {'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'} kind,

@@ -10,7 +10,7 @@
 
 use function Facebook\FBExpect\expect;
 
-class :test:renders-primitive extends :x:element {
+xhp class test:renders_primitive extends :x:element {
   protected function render(): XHPRoot {
     return <x:frag><div>123</div></x:frag>;
   }
@@ -64,7 +64,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   }
 
   public function testRendersPrimitive(): void {
-    $xhp = <test:renders-primitive />;
+    $xhp = <test:renders_primitive />;
     expect($xhp->toString())->toEqual('<div>123</div>');
   }
 

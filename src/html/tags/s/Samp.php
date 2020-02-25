@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :samp extends :xhp:html-element {
+xhp class samp extends :xhp:html_element {
   use XHPChildValidation;
   category %flow, %phrase;
 

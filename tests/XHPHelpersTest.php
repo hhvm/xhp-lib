@@ -10,47 +10,47 @@
 
 use function Facebook\FBExpect\expect;
 
-class :test:no-xhphelpers extends :x:element {
+xhp class test:no_xhphelpers extends :x:element {
   use XHPBaseHTMLHelpers;
-  attribute :xhp:html-element;
+  attribute :xhp:html_element;
 
   protected function render(): XHPRoot {
     return <div />;
   }
 }
 
-class :test:xhphelpers extends :x:element {
+xhp class test:xhphelpers extends :x:element {
   use XHPHelpers;
-  attribute :xhp:html-element;
+  attribute :xhp:html_element;
 
   protected function render(): XHPRoot {
     return <div>{$this->getChildren()}</div>;
   }
 }
 
-class :test:async:no-xhphelpers extends :x:element {
+xhp class test:async:no_xhphelpers extends :x:element {
   use XHPAsync;
   use XHPBaseHTMLHelpers;
-  attribute :xhp:html-element;
+  attribute :xhp:html_element;
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
 
-class :test:async:xhphelpers extends :x:element {
+xhp class test:async:xhphelpers extends :x:element {
   use XHPAsync;
   use XHPHelpers;
-  attribute :xhp:html-element;
+  attribute :xhp:html_element;
 
   protected async function asyncRender(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
 
-class :test:with-class-on-root extends :x:element {
+xhp class test:with_class_on_root extends :x:element {
   use XHPHelpers;
-  attribute :xhp:html-element;
+  attribute :xhp:html_element;
 
   protected function render(): XHPRoot {
     return <div class="rootClass" />;
@@ -59,14 +59,14 @@ class :test:with-class-on-root extends :x:element {
 
 class XHPHelpersTest extends Facebook\HackTest\HackTest {
   public function testTransferAttributesWithoutHelpers(): void {
-    $x = <test:no-xhphelpers data-foo="bar" />;
+    $x = <test:no_xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div></div>');
     expect($x->getID())->toNotBeEmpty();
     expect($x->toString())->toEqual('<div></div>');
   }
 
   public function testTransferAttributesAsyncWithoutHelpers(): void {
-    $x = <test:async:no-xhphelpers data-foo="bar" />;
+    $x = <test:async:no_xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div></div>');
     expect($x->getID())->toNotBeEmpty();
     expect($x->toString())->toEqual('<div></div>');
@@ -87,7 +87,7 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
   }
 
   public function testAddClassWithoutHelpers(): void {
-    $x = <test:no-xhphelpers class="foo" />;
+    $x = <test:no_xhphelpers class="foo" />;
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
@@ -105,17 +105,17 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
   }
 
   public function testRootClassPreserved(): void {
-    $x = <test:with-class-on-root />;
+    $x = <test:with_class_on_root />;
     expect($x->toString())->toEqual('<div class="rootClass"></div>');
   }
 
   public function testTransferedClassesAppended(): void {
-    $x = <test:with-class-on-root class="extraClass" />;
+    $x = <test:with_class_on_root class="extraClass" />;
     expect($x->toString())->toEqual('<div class="rootClass extraClass"></div>');
   }
 
   public function testRootClassesNotOverridenByEmptyString(): void {
-    $x = <test:with-class-on-root class="" />;
+    $x = <test:with_class_on_root class="" />;
     expect($x->toString())->toEqual('<div class="rootClass"></div>');
   }
 

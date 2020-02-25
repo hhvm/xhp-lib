@@ -15,7 +15,7 @@ enum TestEnum: int {
   DERP = 2;
 }
 
-class :test:hack-enum-attribute extends :x:element {
+xhp class test:hack_enum_attribute extends :x:element {
   attribute TestEnum foo @required;
   protected function render(): XHPRoot {
     $foo = TestEnum::getNames()[$this->:foo];
@@ -34,21 +34,21 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testValidValues(): void {
-    $x = <test:hack-enum-attribute foo={TestEnum::HERP} />;
+    $x = <test:hack_enum_attribute foo={TestEnum::HERP} />;
     expect($x->toString())->toEqual('<div>HERP</div>');
-    $x = <test:hack-enum-attribute foo={TestEnum::DERP} />;
+    $x = <test:hack_enum_attribute foo={TestEnum::DERP} />;
     expect($x->toString())->toEqual('<div>DERP</div>');
   }
 
   public function testValidRawValues(): void {
     // UNSAFE
     $x =
-      <test:hack-enum-attribute
+      <test:hack_enum_attribute
         foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1}
       />;
     expect($x->toString())->toEqual('<div>HERP</div>');
     $x =
-      <test:hack-enum-attribute
+      <test:hack_enum_attribute
         foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2}
       />;
     expect($x->toString())->toEqual('<div>DERP</div>');
@@ -57,7 +57,7 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
   public function testInvalidValue(): void {
     expect(() ==> {
       $x =
-        <test:hack-enum-attribute
+        <test:hack_enum_attribute
           foo={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 0}
         />;
     })->toThrow(XHPInvalidAttributeException::class);

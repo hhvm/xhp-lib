@@ -10,7 +10,7 @@
 
 
 trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
-  require extends :x:composable-element;
+  require extends :x:composable_element;
 
   /*
    * Appends a string to the "class" attribute (space separated).

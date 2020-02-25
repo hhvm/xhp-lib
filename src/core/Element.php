@@ -15,7 +15,7 @@
  * This is important because most elements should not be dealing with strings
  * of markup.
  */
-abstract class :x:element extends :x:composable-element implements XHPRoot {
+abstract xhp class x:element extends :x:composable_element implements XHPRoot {
   abstract protected function render(): XHPRoot;
 
   final public function toString(): string {

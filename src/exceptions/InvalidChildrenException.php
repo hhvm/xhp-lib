@@ -9,7 +9,7 @@
  */
 
 class XHPInvalidChildrenException extends XHPException {
-  public function __construct(:x:composable-element $that, int $index) {
+  public function __construct(:x:composable_element $that, int $index) {
     parent::__construct(
       'Element `'.
       XHPException::getElementName($that).

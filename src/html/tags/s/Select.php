@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :select extends :xhp:html-element {
+xhp class select extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     bool autofocus,

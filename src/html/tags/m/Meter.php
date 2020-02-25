@@ -10,7 +10,7 @@
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-class :meter extends :xhp:html-element {
+xhp class meter extends :xhp:html_element {
   use XHPChildValidation;
   attribute
     float high,

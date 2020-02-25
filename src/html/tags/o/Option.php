@@ -8,7 +8,7 @@
  *
  */
 
-class :option extends :xhp:pcdata-element {
+xhp class option extends :xhp:pcdata_element {
   attribute
     bool disabled,
     string label,

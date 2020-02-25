@@ -11,7 +11,7 @@
 use function Facebook\FBExpect\expect;
 
 type TMyTestShape = shape('foo' => string, 'bar' => ?string);
-class :test:attribute-types extends :x:element {
+xhp class test:attribute_types extends :x:element {
   attribute
     string mystring,
     bool mybool,
@@ -31,7 +31,7 @@ class :test:attribute-types extends :x:element {
   }
 }
 
-class :test:required-attributes extends :x:element {
+xhp class test:required_attributes extends :x:element {
   attribute string mystring @required;
 
   protected function render(): XHPRoot {
@@ -39,7 +39,7 @@ class :test:required-attributes extends :x:element {
   }
 }
 
-class :test:default-attributes extends :x:element {
+xhp class test:default_attributes extends :x:element {
   attribute string mystring = 'mydefault';
 
   protected function render(): XHPRoot {
@@ -47,7 +47,7 @@ class :test:default-attributes extends :x:element {
   }
 }
 
-class :test:callable-attribute extends :x:element {
+xhp class test:callable_attribute extends :x:element {
   attribute
     /* HH_FIXME[2049]: callable is an invalid Hack type */
     callable foo; // unsupported in 2.0+
@@ -78,7 +78,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testValidTypes(): void {
     $x =
-      <test:attribute-types
+      <test:attribute_types
         mystring="foo"
         mybool={true}
         myint={123}
@@ -98,7 +98,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
 
       $x =
-        <test:attribute-types
+        <test:attribute_types
           /* HH_IGNORE_ERROR[4110] */
           /* HH_IGNORE_ERROR[4343] */
           /* HH_IGNORE_ERROR[4166] */
@@ -113,7 +113,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
 
       /* HH_IGNORE_ERROR[4057] */
-      $x = <test:attribute-types myshape={shape('foo' => 'herp')} />;
+      $x = <test:attribute_types myshape={shape('foo' => 'herp')} />;
       expect($x->toString())->toEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
@@ -122,14 +122,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       /* HH_IGNORE_ERROR[4057] */
-      $x = <test:attribute-types myshape={shape()} />;
+      $x = <test:attribute_types myshape={shape()} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testValidArrayKeys(): void {
-    $x = <test:attribute-types myarraykey="foo" />;
+    $x = <test:attribute_types myarraykey="foo" />;
     expect($x->toString())->toEqual('<div></div>');
-    $x = <test:attribute-types myarraykey={123} />;
+    $x = <test:attribute_types myarraykey={123} />;
     expect($x->toString())->toEqual('<div></div>');
   }
 
@@ -137,7 +137,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myarraykey={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 1.23}
         />;
       $x->toString();
@@ -145,9 +145,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testValidNum(): void {
-    $x = <test:attribute-types mynum={123} />;
+    $x = <test:attribute_types mynum={123} />;
     expect($x->toString())->toEqual('<div></div>');
-    $x = <test:attribute-types mynum={1.23} />;
+    $x = <test:attribute_types mynum={1.23} />;
     expect($x->toString())->toEqual('<div></div>');
   }
 
@@ -156,7 +156,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           mynum=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123"
         />;
       $x->toString();
@@ -164,27 +164,27 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testNoAttributes(): void {
-    expect((<test:attribute-types />)->toString())->toEqual('<div></div>');
+    expect((<test:attribute_types />)->toString())->toEqual('<div></div>');
   }
 
   public function testStringableObjectAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types mystring={new StringableTestClass()} />;
+    $x = <test:attribute_types mystring={new StringableTestClass()} />;
     expect($x->:mystring)->toEqual('StringableTestClass');
   }
 
   public function testIntegerAsString(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types mystring={123} />;
+    $x = <test:attribute_types mystring={123} />;
     expect($x->:mystring)->toEqual('123');
   }
 
   public function testUnstringableObjectAsString(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           mystring={
             /* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()
           }
@@ -195,7 +195,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testArrayAsString(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           mystring={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[]}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -204,28 +204,28 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testIntishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myint={'123'} />;
+    $x = <test:attribute_types myint={'123'} />;
     expect($x->:myint)->toEqual(123);
   }
 
   public function testFloatAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myint={1.23} />;
+    $x = <test:attribute_types myint={1.23} />;
     expect($x->:myint)->toEqual(1);
   }
 
   public function testFloatishStringAsInt(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myint="1.23" />;
+    $x = <test:attribute_types myint="1.23" />;
     expect($x->:myint)->toEqual(1);
   }
 
   public function testObjectAsInt(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -234,7 +234,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testArrayAsInt(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myint={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[]}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -243,7 +243,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testNumericPrefixStringAsInt(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myint=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123derp"
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -252,21 +252,21 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testTrueStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types mybool="true" />;
+    $x = <test:attribute_types mybool="true" />;
     expect($x->:mybool)->toEqual(true);
   }
 
   public function testFalseStringAsBool(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types mybool="false" />;
+    $x = <test:attribute_types mybool="false" />;
     expect($x->:mybool)->toEqual(false);
   }
 
   public function testMixedCaseFalseStringAsBool(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           mybool=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "False"
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -276,7 +276,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testNoStringAsBool(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           mybool=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "No"
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -287,38 +287,38 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     // idiomatic - eg checked="checked"
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types mybool="mybool" />;
+    $x = <test:attribute_types mybool="mybool" />;
     expect($x->:mybool)->toEqual(true);
   }
 
   public function testInvalidEnumValue(): void {
     expect(() ==> {
-      $x = <test:attribute-types myenum="derp" />;
+      $x = <test:attribute_types myenum="derp" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testIntAsFloat(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myfloat={123} />;
+    $x = <test:attribute_types myfloat={123} />;
     expect($x->:myfloat)->toEqual(123.0);
   }
 
   public function testNumericStringsAsFloats(): void {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myfloat="123" />;
+    $x = <test:attribute_types myfloat="123" />;
     expect($x->:myfloat)->toEqual(123.0);
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
-    $x = <test:attribute-types myfloat="1.23" />;
+    $x = <test:attribute_types myfloat="1.23" />;
     expect($x->:myfloat)->toEqual(1.23);
   }
 
   public function testNonNumericStringAsFloat(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myfloat=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "herpderp"
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -327,7 +327,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   public function testNumericPrefixStringAsFloat(): void {
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myfloat=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123derp"
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -337,7 +337,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myarray={
             /* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()
           }
@@ -349,7 +349,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myarray={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ Vector {1, 2, 3}}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
@@ -359,7 +359,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myobject={
             /* HH_FIXME[4110] */ /* HH_FIXME[4343] */ new EmptyTestClass()
           }
@@ -371,47 +371,47 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
-        <test:attribute-types
+        <test:attribute_types
           myvector={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ varray[1, 2, 3]}
         />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public function testProvidingRequiredAttributes(): void {
-    $x = <test:required-attributes mystring="herp" />;
+    $x = <test:required_attributes mystring="herp" />;
     expect($x->:mystring)->toEqual('herp');
     expect($x->toString())->toEqual('<div>herp</div>');
   }
 
   public function testOmittingRequiredAttributes(): void {
     expect(() ==> {
-      $x = <test:required-attributes />;
+      $x = <test:required_attributes />;
       expect($x->:mystring)->toBeNull();
     })->toThrow(XHPAttributeRequiredException::class);
   }
 
   public function testProvidingDefaultAttributes(): void {
-    $x = <test:default-attributes mystring="herp" />;
+    $x = <test:default_attributes mystring="herp" />;
     expect($x->:mystring)->toEqual('herp');
     expect($x->toString())->toEqual('<div>herp</div>');
   }
 
   public function testOmittingDefaultAttributes(): void {
-    $x = <test:default-attributes />;
+    $x = <test:default_attributes />;
     expect($x->:mystring)->toEqual('mydefault');
     expect($x->toString())->toEqual('<div>mydefault</div>');
   }
 
   public function testBogusAttributes(): void {
     expect(() ==> {
-      $x = <test:default-attributes /* HH_FIXME[4053] */ idonotexist="derp" />;
+      $x = <test:default_attributes /* HH_FIXME[4053] */ idonotexist="derp" />;
     })->toThrow(XHPAttributeNotSupportedException::class);
   }
 
   public function testSpecialAttributes(): void {
-    $x = <test:default-attributes data-idonotexist="derp" />;
+    $x = <test:default_attributes data-idonotexist="derp" />;
     expect($x->toString())->toEqual('<div>mydefault</div>');
-    $x = <test:default-attributes aria-idonotexist="derp" />;
+    $x = <test:default_attributes aria-idonotexist="derp" />;
     expect($x->toString())->toEqual('<div>mydefault</div>');
 
     // verify that special attributes actually render
@@ -438,7 +438,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     self::markTestSkipped('This type has been unsupported since 2.0');
     expect(() ==> {
       $x =
-        <test:callable-attribute
+        <test:callable_attribute
           /* HH_IGNORE_ERROR[4110] */
           /* HH_IGNORE_ERROR[4343] */
           foo={function() {
@@ -449,7 +449,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public function testReflectOnCallableAttribute(): void {
     self::markTestSkipped('This type has been unsupported since 2.0');
-    $rxhp = new ReflectionXHPClass(:test:callable-attribute::class);
+    $rxhp = new ReflectionXHPClass(:test:callable_attribute::class);
     $rattr = $rxhp->getAttribute('foo');
     expect(
       strstr($rattr->__toString(), "<UNSUPPORTED: legacy callable>") !== false,
@@ -460,8 +460,8 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testAttributeSpread(): void {
-    $x = <test:attribute-types mystring="foo" mybool={true} />;
-    $y = <test:attribute-types mystring="bar" {...$x} myint={5} />;
+    $x = <test:attribute_types mystring="foo" mybool={true} />;
+    $y = <test:attribute_types mystring="bar" {...$x} myint={5} />;
     expect($y->:mystring)->toEqual('foo');
     expect($y->:myint)->toEqual(5);
     expect($y->:mybool)->toEqual(true);
