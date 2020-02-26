@@ -16,7 +16,7 @@
  * of markup.
  */
 abstract xhp class x:element extends :x:composable_element implements XHPRoot {
-  abstract protected function render(): XHPRoot;
+  abstract protected function renderAsync(): Awaitable<XHPRoot>;
 
   final public function toString(): string {
     return \HH\Asio\join($this->asyncToString());
@@ -38,13 +38,7 @@ abstract xhp class x:element extends :x:composable_element implements XHPRoot {
       $this->validateChildren();
     }
 
-    if ($this is XHPAwaitable) {
-      $composed = /* HH_FIXME[4112] protected */
-      /* HH_FIXME[4053] Refinement with protected methods (bug) */
-      await $this->asyncRender();
-    } else {
-      $composed = $this->render();
-    }
+    $composed = await $this->renderAsync();
 
     $composed->__transferContext($this->getAllContexts());
     if ($this is XHPHasTransferAttributes) {
