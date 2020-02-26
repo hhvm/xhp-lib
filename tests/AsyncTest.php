@@ -12,36 +12,33 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
 xhp class async:test extends :x:element {
-  use XHPAsync;
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->getChildren()}</div>;
   }
 }
 
 xhp class test:xfrag_wrap extends :x:element {
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
 xhp class test:async_xfrag_wrap extends :x:element {
-  use XHPAsync;
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
 xhp class async:par_test extends :x:element {
-  use XHPAsync;
 
   attribute string label @required;
 
   public static Vector<(string, string)> $log = Vector {};
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     $label = $this->:label;
     self::$log[] = tuple($label, 'start');
     await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);
@@ -82,11 +79,6 @@ class AsyncTest extends Facebook\HackTest\HackTest {
   public function testNestedWithNonAsyncChild(): void {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
     expect($xhp->toString())->toEqual('<div><b>BE BOLD</b></div>');
-  }
-
-  public function testInstanceOfInterface(): void {
-    $xhp = <async:test><b>BE BOLD</b></async:test>;
-    expect($xhp)->toBeInstanceOf(XHPAwaitable::class);
   }
 
   public function parallelizationContainersProvider(): varray<varray<:xhp>> {

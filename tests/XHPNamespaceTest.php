@@ -12,7 +12,7 @@ namespace MyTestNS {
 
 /** Intentionally conflicting name */
 xhp class div extends :x:element {
-  protected function render(): \XHPRoot {
+  protected async function renderAsync(): Awaitable<\XHPRoot> {
     return <:div>
       -{static::class}-{$this->getChildren()}-/{static::class}-
     </:div>;
@@ -26,7 +26,7 @@ xhp class divsubclass2 extends :MyTestNS:div {
 }
 
 xhp class useswithinnamespace extends :x:element  {
-  protected function render(): \XHPRoot {
+  protected async function renderAsync(): Awaitable<\XHPRoot> {
     return
       <:dl>
         <:dt>:div</:dt>

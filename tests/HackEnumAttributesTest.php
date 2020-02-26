@@ -17,7 +17,7 @@ enum TestEnum: int {
 
 xhp class test:hack_enum_attribute extends :x:element {
   attribute TestEnum foo @required;
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     $foo = TestEnum::getNames()[$this->:foo];
     return <div>{$foo}</div>;
   }

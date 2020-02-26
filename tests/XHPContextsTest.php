@@ -11,7 +11,7 @@
 use function Facebook\FBExpect\expect;
 
 xhp class test:contexts extends :x:element {
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return
       <div>
         <p>{(string)$this->getContext('heading')}</p>

@@ -26,7 +26,7 @@ xhp class test:attribute_types extends :x:element {
     TMyTestShape myshape,
     num mynum;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -34,7 +34,7 @@ xhp class test:attribute_types extends :x:element {
 xhp class test:required_attributes extends :x:element {
   attribute string mystring @required;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->:mystring}</div>;
   }
 }
@@ -42,7 +42,7 @@ xhp class test:required_attributes extends :x:element {
 xhp class test:default_attributes extends :x:element {
   attribute string mystring = 'mydefault';
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->:mystring}</div>;
   }
 }
@@ -51,7 +51,7 @@ xhp class test:callable_attribute extends :x:element {
   attribute
     /* HH_FIXME[2049]: callable is an invalid Hack type */
     callable foo; // unsupported in 2.0+
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     $x = $this->getAttribute('foo');
     return <div />;
   }

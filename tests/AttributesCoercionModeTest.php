@@ -19,7 +19,7 @@ xhp class test:attribute_coercion_modes extends :x:element {
     string mystring,
     bool mybool;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }

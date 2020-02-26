@@ -15,17 +15,16 @@ use type Facebook\HackTest\DataProvider;
 xhp class test:verbatim_root extends :x:element {
   attribute XHPRoot root @required;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return $this->:root;
   }
 }
 
 xhp class test:verbatim_root:async extends :x:element {
-  use XHPAsync;
 
   attribute XHPRoot root @required;
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return $this->:root;
   }
 }

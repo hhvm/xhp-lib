@@ -19,7 +19,7 @@ xhp class test:new_child_declaration_only extends :x:element {
     return XHPChild\ofType<:div>();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
@@ -32,7 +32,7 @@ xhp class test:new_and_old_child_declarations extends :x:element {
     return XHPChild\ofType<:div>();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -45,7 +45,7 @@ xhp class test:old_child_declaration_only extends :x:element {
   }
 
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
@@ -56,7 +56,7 @@ xhp class test:any_children extends :x:element {
     return XHPChild\any();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -67,7 +67,7 @@ xhp class test:no_children extends :x:element {
     return XHPChild\empty();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -78,7 +78,7 @@ xhp class test:single_child extends :x:element {
     return XHPChild\ofType<:div>();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -89,7 +89,7 @@ xhp class test:optional_child extends :x:element {
     return XHPChild\optional(XHPChild\ofType<:div>());
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -100,7 +100,7 @@ xhp class test:any_number_of_child extends :x:element {
     return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -111,7 +111,7 @@ xhp class test:at_least_one_child extends :x:element {
     return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -122,7 +122,7 @@ xhp class test:two_children extends :x:element {
     return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -137,7 +137,7 @@ xhp class test:three_children extends :x:element {
     );
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -149,7 +149,7 @@ xhp class test:either_of_two_children extends :x:element {
     return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -164,7 +164,7 @@ xhp class test:any_of_three_children extends :x:element {
     );
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -179,7 +179,7 @@ xhp class test:nested_rule extends :x:element {
     );
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -190,7 +190,7 @@ xhp class test:pcdata_child extends :x:element {
     return XHPChild\pcdata();
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->getChildren()}</div>;
   }
 }
@@ -201,7 +201,7 @@ xhp class test:category_child extends :x:element {
     return XHPChild\category('%flow');
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -209,7 +209,7 @@ xhp class test:category_child extends :x:element {
 xhp class test:has_comma_category extends :x:element {
   category %foo:bar;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -220,7 +220,7 @@ xhp class test:needs_comma_category extends :x:element {
     return XHPChild\category('%foo:bar');
   }
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }

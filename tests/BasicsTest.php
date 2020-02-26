@@ -11,7 +11,7 @@
 use function Facebook\FBExpect\expect;
 
 xhp class test:renders_primitive extends :x:element {
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag><div>123</div></x:frag>;
   }
 }

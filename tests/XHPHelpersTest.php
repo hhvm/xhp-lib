@@ -14,7 +14,7 @@ xhp class test:no_xhphelpers extends :x:element {
   use XHPBaseHTMLHelpers;
   attribute :xhp:html_element;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -23,27 +23,25 @@ xhp class test:xhphelpers extends :x:element {
   use XHPHelpers;
   attribute :xhp:html_element;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->getChildren()}</div>;
   }
 }
 
 xhp class test:async:no_xhphelpers extends :x:element {
-  use XHPAsync;
   use XHPBaseHTMLHelpers;
   attribute :xhp:html_element;
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
 
 xhp class test:async:xhphelpers extends :x:element {
-  use XHPAsync;
   use XHPHelpers;
   attribute :xhp:html_element;
 
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
@@ -52,7 +50,7 @@ xhp class test:with_class_on_root extends :x:element {
   use XHPHelpers;
   attribute :xhp:html_element;
 
-  protected function render(): XHPRoot {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div class="rootClass" />;
   }
 }

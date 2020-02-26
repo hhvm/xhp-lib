@@ -25,7 +25,7 @@ xhp class test:for_reflection extends :x:element {
 
   category %herp, %derp;
 
-  public function render(): XHPRoot {
+  public async function renderAsync(): Awaitable<XHPRoot> {
     return <div />;
   }
 }
