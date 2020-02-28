@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\C;
+
 enum XHPAttributeType: int {
   TYPE_STRING = 1;
   TYPE_BOOL = 2;
@@ -30,7 +32,7 @@ class ReflectionXHPAttribute {
   private mixed $defaultValue;
   private bool $required;
 
-  private static ImmSet<string> $specialAttributes = ImmSet {'data', 'aria'};
+  private static keyset<string> $specialAttributes = keyset['data', 'aria'];
 
   public function __construct(private string $name, array<int, mixed> $decl) {
     $this->type = XHPAttributeType::assert($decl[0]);
@@ -77,6 +79,7 @@ class ReflectionXHPAttribute {
     return $v;
   }
 
+  // @reviewer modified sets may be observed by the next caller
   <<__Memoize>>
   public function getEnumValues(): Set<string> {
     $t = $this->getValueType();
@@ -102,7 +105,7 @@ class ReflectionXHPAttribute {
   public static function IsSpecial(string $attr): bool {
     return strlen($attr) >= 6 &&
       $attr[4] === '-' &&
-      self::$specialAttributes->contains(substr($attr, 0, 4));
+      C\contains_key(self::$specialAttributes, substr($attr, 0, 4));
   }
 
   public function __toString(): string {
