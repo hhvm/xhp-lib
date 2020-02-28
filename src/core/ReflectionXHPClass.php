@@ -1,4 +1,4 @@
-<?hh // partial
+<?hh
 /*
  *  Copyright (c) 2004-present, Facebook, Inc.
  *  All rights reserved.
@@ -9,7 +9,9 @@
  */
 
 class ReflectionXHPClass {
-  public function __construct(private classname<:x:composable-element> $className) {
+  public function __construct(
+    private classname<:x:composable-element> $className,
+  ) {
     invariant(
       class_exists($this->className),
       'Invalid class name: %s',
