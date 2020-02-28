@@ -10,12 +10,15 @@
 
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
-use namespace HH\Lib\{C, Str};
+use namespace HH\Lib\{C, Dict, Str};
 
 abstract class :x:composable-element extends :xhp {
-  private Map<string, mixed> $attributes = Map {};
+  private dict<string, mixed> $attributes = dict[];
+  // Cannot be changed just yet because:
+  // - getChildren exposes a mutable Vector when call with an empty selector
+  // - prependChild would become a lot slower
   private Vector<XHPChild> $children = Vector {};
-  private Map<string, mixed> $context = Map {};
+  private dict<string, mixed> $context = dict[];
 
   protected function init(): void {
   }
@@ -83,10 +86,12 @@ abstract class :x:composable-element extends :xhp {
         $this->appendChild($c);
       }
     } else if ($child is :x:frag) {
-      $this->children->addAll($child->getChildren());
+      foreach ($child->getChildren() as $new_child) {
+        $this->children[] = $new_child;
+      }
     } else if ($child !== null) {
       assert($child is XHPChild);
-      $this->children->add($child);
+      $this->children[] = $child;
     }
     return $this;
   }
@@ -99,6 +104,9 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function prependChild(mixed $child): this {
     // There's no prepend to a Vector, so reverse, append, and reverse agains
+    // @reviewer, this would become significantly slower with Hack arrays.
+    // We'd ideally not allocate the memory for the intermediary vec's.
+    // Maybe \array_unshift() (of a safe HSL variant) might be a better option here.
     $this->children->reverse();
     $this->appendChild($child);
     $this->children->reverse();
@@ -113,28 +121,27 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function replaceChildren(XHPChild ...$children): this {
     // This function has been micro-optimized
-    $new_children = Vector {};
+    $new_children = vec[];
     foreach ($children as $xhp) {
-      /* HH_FIXME[4273] bogus "XHPChild always truthy" - FB T41388073 */
       if ($xhp is :x:frag) {
         foreach ($xhp->children as $child) {
-          $new_children->add($child);
+          $new_children[] = $child;
         }
       } else if (!($xhp is Traversable<_>)) {
-        $new_children->add($xhp);
+        $new_children[] = $xhp;
       } else {
         foreach ($xhp as $element) {
           if ($element is :x:frag) {
             foreach ($element->children as $child) {
-              $new_children->add($child);
+              $new_children[] = $child;
             }
           } else if ($element !== null) {
-            $new_children->add($element as XHPChild);
+            $new_children[] = $element as XHPChild;
           }
         }
       }
     }
-    $this->children = $new_children;
+    $this->children = new Vector($new_children);
     return $this;
   }
 
@@ -149,26 +156,32 @@ abstract class :x:composable-element extends :xhp {
     ?string $selector = null,
   ): Vector<XHPChild> {
     if ($selector is string && $selector !== '') {
-      $children = Vector {};
+      $children = vec[];
       if ($selector[0] == '%') {
         $selector = substr($selector, 1);
         foreach ($this->children as $child) {
           if ($child is :xhp && $child->categoryOf($selector)) {
-            $children->add($child);
+            $children[] = $child;
           }
         }
       } else {
         $selector = :xhp::element2class($selector);
         foreach ($this->children as $child) {
           if (is_a($child, $selector, /* allow strings = */ true)) {
-            $children->add($child);
+            $children[] = $child;
           }
         }
       }
     } else {
-      $children = new Vector($this->children);
+      $children = $this->children;
     }
-    return $children;
+
+    // Why this complex check to prevent calling new Vector(...) on $children?
+    // The return of this function is mutable and it directly exposes
+    // the $this->children on empty selectors.
+    // We'd need to make sure that no calling code is modifying the private Vector
+    // by calling this function with an empty selector.
+    return $children is Vector<_> ? $children : new Vector($children);
   }
 
 
@@ -182,7 +195,7 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function getFirstChild(?string $selector = null): ?XHPChild {
     if ($selector === null) {
-      return $this->children->get(0);
+      return $this->children[0] ?? null;
     } else if ($selector[0] == '%') {
       $selector = substr($selector, 1);
       foreach ($this->children as $child) {
@@ -229,8 +242,8 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function getAttribute(string $attr): mixed {
     // Return the attribute if it's there
-    if ($this->attributes->containsKey($attr)) {
-      return $this->attributes->get($attr);
+    if (C\contains_key($this->attributes, $attr)) {
+      return $this->attributes[$attr];
     }
 
     if (!ReflectionXHPAttribute::IsSpecial($attr)) {
@@ -304,7 +317,7 @@ abstract class :x:composable-element extends :xhp {
   }
 
   final public function getAttributes(): Map<string, mixed> {
-    return $this->attributes->toMap();
+    return new Map($this->attributes);
   }
 
   /**
@@ -385,7 +398,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $attr attribute to check
    */
   final public function isAttributeSet(string $attr): bool {
-    return $this->attributes->containsKey($attr);
+    return C\contains_key($this->attributes, $attr);
   }
 
   /**
@@ -396,7 +409,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
-    $this->attributes->removeKey($attr);
+    unset($this->attributes[$attr]);
     return $this;
   }
 
@@ -408,7 +421,7 @@ abstract class :x:composable-element extends :xhp {
    * @param $val       value
    */
   final public function forceAttribute(string $attr, mixed $value): this {
-    $this->attributes->set($attr, $value);
+    $this->attributes[$attr] = $value;
     return $this;
   }
   /**
@@ -417,7 +430,7 @@ abstract class :x:composable-element extends :xhp {
    * @return array  All contexts
    */
   final public function getAllContexts(): Map<string, mixed> {
-    return $this->context->toMap();
+    return new Map($this->context);
   }
 
   /**
@@ -428,8 +441,9 @@ abstract class :x:composable-element extends :xhp {
    * @return mixed          The context value or $default
    */
   final public function getContext(string $key, mixed $default = null): mixed {
-    if ($this->context->containsKey($key)) {
-      return $this->context->get($key);
+    // You can't use ?? here, since the context may contain nulls.
+    if (C\contains_key($this->context, $key)) {
+      return $this->context[$key];
     }
     return $default;
   }
@@ -460,8 +474,10 @@ abstract class :x:composable-element extends :xhp {
    * @param Map $context  A map of key/value pairs
    * @return :xhp         $this
    */
-  final public function addContextMap(Map<string, mixed> $context): this {
-    $this->context->setAll($context);
+  final public function addContextMap(
+    KeyedContainer<string, mixed> $context,
+  ): this {
+    $this->context = Dict\merge($this->context, $context);
     return $this;
   }
 
@@ -473,10 +489,11 @@ abstract class :x:composable-element extends :xhp {
    * @param array $parentContext  The context to transfer
    */
   final protected function __transferContext(
-    Map<string, mixed> $parentContext,
+    KeyedContainer<string, mixed> $parentContext,
   ): void {
     foreach ($parentContext as $key => $value) {
-      if (!$this->context->containsKey($key)) {
+      // You can't use ??= here, since context may contain nulls.
+      if (!C\contains_key($this->context, $key)) {
         $this->context[$key] = $value;
       }
     }
@@ -607,7 +624,7 @@ abstract class :x:composable-element extends :xhp {
       $decl->getExpression(),
       0,
     );
-    if (!$ret || $ii < count($this->children)) {
+    if (!$ret || $ii < C\count($this->children)) {
       if (($this->children[$ii] ?? null) is XHPAlwaysValidChild) {
         return;
       }
@@ -692,15 +709,15 @@ abstract class :x:composable-element extends :xhp {
   ): (bool, int) {
     switch ($expr->getConstraintType()) {
       case XHPChildrenConstraintType::ANY:
-        if ($this->children->containsKey($index)) {
+        if (C\contains_key($this->children, $index)) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::PCDATA:
         if (
-          $this->children->containsKey($index) &&
-          !($this->children->get($index) is :xhp)
+          C\contains_key($this->children, $index) &&
+          !($this->children[$index] is :xhp)
         ) {
           return tuple(true, $index + 1);
         }
@@ -709,8 +726,8 @@ abstract class :x:composable-element extends :xhp {
       case XHPChildrenConstraintType::ELEMENT:
         $class = $expr->getConstraintString();
         if (
-          $this->children->containsKey($index) &&
-          is_a($this->children->get($index), $class, true)
+          C\contains_key($this->children, $index) &&
+          is_a($this->children[$index], $class, true)
         ) {
           return tuple(true, $index + 1);
         }
@@ -718,15 +735,15 @@ abstract class :x:composable-element extends :xhp {
 
       case XHPChildrenConstraintType::CATEGORY:
         if (
-          !$this->children->containsKey($index) ||
-          !($this->children->get($index) is :xhp)
+          !C\contains_key($this->children, $index) ||
+          !($this->children[$index] is :xhp)
         ) {
           return tuple(false, $index);
         }
         $category = $expr->getConstraintString()
           |> Str\replace($$, '__', ':')
           |> Str\replace($$, '_', '-');
-        $child = $this->children->get($index);
+        $child = $this->children[$index];
         assert($child is :xhp);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {

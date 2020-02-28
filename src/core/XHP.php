@@ -22,6 +22,10 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   abstract public function appendChild(mixed $child): this;
   abstract public function prependChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
+  // This type signature is problematic.
+  // ComposableElement returns its private mutable instance on an empty selector.
+  // We might need to take a conservative step here via ImmVector,
+  // before going to vec to prevent very subtle breaks.
   abstract public function getChildren(
     ?string $selector = null,
   ): Vector<XHPChild>;
