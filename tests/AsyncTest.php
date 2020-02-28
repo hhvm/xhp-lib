@@ -8,6 +8,7 @@
  *
  */
 
+use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
@@ -112,17 +113,19 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     );
 
     $log = :async:par-test::$log;
-    $by_node = Map {'a' => Map {}, 'b' => Map {}, 'c' => Map {}};
+    $by_node = dict['a' => dict[], 'b' => dict[], 'c' => dict[]];
 
     foreach ($log as $idx => $data) {
       list($label, $action) = $data;
       $by_node[$label][$action] = $idx;
     }
 
-    $max_start = max($by_node->map($x ==> $x['start']));
-    $min_mid = min($by_node->map($x ==> $x['mid']));
-    $max_mid = max($by_node->map($x ==> $x['mid']));
-    $min_finish = min($by_node->map($x ==> $x['finish']));
+    // Math\max_byx() addition to the HSL?
+    $max_start = Math\max_by($by_node, $x ==> $x['start']) as nonnull['start'];
+    $min_mid = Math\min_by($by_node, $x ==> $x['mid']) as nonnull['mid'];
+    $max_mid = Math\max_by($by_node, $x ==> $x['mid']) as nonnull['mid'];
+    // hackfmt-ignore
+    $min_finish = Math\max_by($by_node, $x ==> $x['finish']) as nonnull['finish'];
 
     expect($min_mid)->toBeGreaterThan(
       $max_start,

@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\C;
+
 interface HasXHPHelpers
   extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
 }
@@ -100,11 +102,11 @@ trait XHPHelpers implements HasXHPHelpers {
       $ignore = array_fill_keys($ignore->toArray(), true);
     }
 
-    $compatible = new Map($target::__xhpAttributeDeclaration());
+    $compatible = $target::__xhpAttributeDeclaration();
     $transferAttributes = array_diff_key($this->getAttributes(), $ignore);
     foreach ($transferAttributes as $attribute => $value) {
       if (
-        $compatible->containsKey($attribute) ||
+        C\contains_key($compatible, $attribute) ||
         ReflectionXHPAttribute::IsSpecial($attribute)
       ) {
         try {
@@ -139,7 +141,7 @@ trait XHPHelpers implements HasXHPHelpers {
 
   protected function getAttributeNamesThatAppendValuesOnTransfer(
   ): ImmSet<string> {
-    return ImmSet { 'class' };
+    return ImmSet {'class'};
   }
 
   final public function transferAttributesToRenderedRoot(

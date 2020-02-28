@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\Dict;
+
 /**
  * :x:primitive lays down the foundation for very low-level elements. You
  * should directly :x:primitive only if you are creating a core element that
@@ -28,7 +30,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
 
   final private async function __flushElementChildren(): Awaitable<void> {
     $children = $this->getChildren();
-    $awaitables = Map {};
+    $awaitables = dict[];
     foreach ($children as $idx => $child) {
       if ($child is :x:composable-element) {
         $child->__transferContext($this->getAllContexts());
@@ -36,7 +38,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
       }
     }
     if ($awaitables) {
-      $awaited = await HH\Asio\m($awaitables);
+      $awaited = await Dict\from_async($awaitables);
       foreach ($awaited as $idx => $child) {
         $children[$idx] = $child;
       }

@@ -55,11 +55,11 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
     expect($attrs)->toNotBeEmpty();
     expect($attrs?->map($attr ==> /* HH_FIXME[4281] */(string)$attr))
       ->toHaveSameContentAs(
-        Map {
+        dict[
           'mystring' => 'string mystring @required',
           'myenum' => "enum {'herp', 'derp'} myenum",
           'mystringwithdefault' => "string mystringwithdefault = 'mydefault'",
-        },
+        ],
       );
   }
 

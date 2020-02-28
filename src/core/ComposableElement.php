@@ -272,6 +272,9 @@ abstract class :x:composable-element extends :xhp {
     return null;
   }
 
+  // @reviewer, the memoize would make it so that changes made
+  // to this map are observable to the next caller.
+  // This would be a mild bc break, but one to note non the less.
   <<__MemoizeLSB>>
   final public static function __xhpReflectionAttributes(
   ): Map<string, ReflectionXHPAttribute> {
@@ -471,8 +474,8 @@ abstract class :x:composable-element extends :xhp {
    * that are rendered as children of that root element will receive this
    * context WHEN RENDERED. The context will not be available before render.
    *
-   * @param Map $context  A map of key/value pairs
-   * @return :xhp         $this
+   * @param KeyedContainer $context  A map of key/value pairs
+   * @return :xhp                    $this
    */
   final public function addContextMap(
     KeyedContainer<string, mixed> $context,
