@@ -13,6 +13,7 @@ use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Str};
 
 abstract xhp class x:composable_element extends :xhp {
+  protected bool $__isRendered = false;
   private Map<string, mixed> $attributes = Map {};
   private Vector<XHPChild> $children = Vector {};
   private Map<string, mixed> $context = Map {};
@@ -78,6 +79,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @param $child     single child or array of children
    */
   final public function appendChild(mixed $child): this {
+    invariant(!$this->__isRendered, "Can't appendChild after render");
     if ($child is Traversable<_>) {
       foreach ($child as $c) {
         $this->appendChild($c);
@@ -112,6 +114,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @param $children  Single child or array of children
    */
   final public function replaceChildren(XHPChild ...$children): this {
+    invariant(!$this->__isRendered, "Can't appendChild after render");
     // This function has been micro-optimized
     $new_children = Vector {};
     foreach ($children as $xhp) {
@@ -360,6 +363,7 @@ abstract xhp class x:composable_element extends :xhp {
         $value = $this->validateEnumValuesAndCoerceScalars($attr, $value);
       }
     }
+    invariant(!$this->__isRendered, "Can't setAttribute after render");
     $this->attributes[$attr] = $value;
     return $this;
   }
@@ -396,6 +400,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
+    invariant(!$this->__isRendered, "Can't removeAttribute after render");
     $this->attributes->removeKey($attr);
     return $this;
   }
@@ -408,6 +413,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @param $val       value
    */
   final public function forceAttribute(string $attr, mixed $value): this {
+    invariant(!$this->__isRendered, "Can't forceAttribute after render");
     $this->attributes->set($attr, $value);
     return $this;
   }
@@ -446,6 +452,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @return :xhp           $this
    */
   final public function setContext(string $key, mixed $value): this {
+    invariant(!$this->__isRendered, "Can't setContext after render");
     $this->context[$key] = $value;
     return $this;
   }
@@ -461,6 +468,7 @@ abstract xhp class x:composable_element extends :xhp {
    * @return :xhp         $this
    */
   final public function addContextMap(Map<string, mixed> $context): this {
+    invariant(!$this->__isRendered, "Can't setContext after render");
     $this->context->setAll($context);
     return $this;
   }

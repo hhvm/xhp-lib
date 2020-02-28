@@ -59,6 +59,7 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
   public function testTransferAttributesWithoutHelpers(): void {
     $x = <test:no_xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div></div>');
+    $x = <test:no_xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
     expect($x->toString())->toEqual('<div></div>');
   }
@@ -66,6 +67,7 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
   public function testTransferAttributesAsyncWithoutHelpers(): void {
     $x = <test:async:no_xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div></div>');
+    $x = <test:async:no_xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
     expect($x->toString())->toEqual('<div></div>');
   }
@@ -73,15 +75,17 @@ class XHPHelpersTest extends Facebook\HackTest\HackTest {
   public function testTransferAttributesWithHelpers(): void {
     $x = <test:xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div data-foo="bar"></div>');
+    $x = <test:xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect('<div id="'.$x->getID().'"></div>')->toEqual($x->toString());
+    expect($x->toString())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
   }
 
   public function testTransferAttributesAsyncWithHelpers(): void {
     $x = <test:async:xhphelpers data-foo="bar" />;
     expect($x->toString())->toEqual('<div data-foo="bar"></div>');
+    $x = <test:async:xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect('<div id="'.$x->getID().'"></div>')->toEqual($x->toString());
+    expect($x->toString())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
   }
 
   public function testAddClassWithoutHelpers(): void {

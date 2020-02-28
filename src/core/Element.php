@@ -34,6 +34,8 @@ abstract xhp class x:element extends :x:composable_element implements XHPRoot {
   }
 
   protected async function __renderAndProcess(): Awaitable<XHPRoot> {
+    invariant(!$this->__isRendered, "Attempted to render XHP element twice");
+    $this->__isRendered = true;
     if (:xhp::isChildValidationEnabled()) {
       $this->validateChildren();
     }
