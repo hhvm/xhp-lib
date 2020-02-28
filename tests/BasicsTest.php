@@ -17,59 +17,54 @@ xhp class test:renders_primitive extends :x:element {
 }
 
 class BasicsTest extends Facebook\HackTest\HackTest {
-  public function testDivWithString(): void {
+  public async function testDivWithString(): Awaitable<void> {
     $xhp =
       <div>
         Hello, world.
       </div>;
-    expect($xhp->toString())->toEqual('<div> Hello, world. </div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div> Hello, world. </div>');
   }
 
-  public function testFragWithString(): void {
+  public async function testFragWithString(): Awaitable<void> {
     $xhp = <x:frag>Derp</x:frag>;
-    expect($xhp->toString())->toEqual('Derp');
+    expect(await $xhp->toStringAsync())->toEqual('Derp');
   }
 
-  public function testDivWithChild(): void {
+  public async function testDivWithChild(): Awaitable<void> {
     $xhp = <div><div>Herp</div></div>;
-    expect($xhp->toString())->toEqual('<div><div>Herp</div></div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div><div>Herp</div></div>');
   }
 
-  public function testInterpolation(): void {
+  public async function testInterpolation(): Awaitable<void> {
     $x = "Herp";
     $xhp = <div>{$x}</div>;
-    expect($xhp->toString())->toEqual('<div>Herp</div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div>Herp</div>');
   }
 
-  public function testXFrag(): void {
+  public async function testXFrag(): Awaitable<void> {
     $x = 'herp';
     $y = 'derp';
     $frag = <x:frag>{$x}{$y}</x:frag>;
     expect($frag->getChildren()->count())->toEqual(2);
     $xhp = <div>{$frag}</div>;
-    expect($xhp->toString())->toEqual('<div>herpderp</div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div>herpderp</div>');
   }
 
-  public function testEscaping(): void {
+  public async function testEscaping(): Awaitable<void> {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
-    expect($xhp->toString())->toEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
   }
 
-  public function testElement2Class(): void {
+  public async function testElement2Class(): Awaitable<void> {
     expect(:xhp::element2class('div'))->toEqual(:div::class);
   }
 
-  public function testClass2Element(): void {
+  public async function testClass2Element(): Awaitable<void> {
     expect(:xhp::class2element(:div::class))->toEqual('div');
   }
 
-  public function testRendersPrimitive(): void {
+  public async function testRendersPrimitive(): Awaitable<void> {
     $xhp = <test:renders_primitive />;
-    expect($xhp->toString())->toEqual('<div>123</div>');
-  }
-
-  public function testJsonSerialize(): void {
-    $xhp = <div>Hello world.</div>;
-    expect(json_encode(varray[$xhp]))->toEqual('["<div>Hello world.<\/div>"]');
+    expect(await $xhp->toStringAsync())->toEqual('<div>123</div>');
   }
 }

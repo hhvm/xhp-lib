@@ -76,7 +76,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     :xhp::disableAttributeValidation();
   }
 
-  public function testValidTypes(): void {
+  public async function testValidTypes(): Awaitable<void> {
     $x =
       <test:attribute_types
         mystring="foo"
@@ -90,13 +90,12 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         mymap={Map {'herp' => 'derp'}}
         myshape={shape('foo' => 'herp', 'bar' => 'derp')}
       />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testShapeWithExtraKey(): void {
+  public async function testShapeWithExtraKey(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
-    expect(() ==> {
-
+    expect(async () ==> {
       $x =
         <test:attribute_types
           /* HH_IGNORE_ERROR[4110] */
@@ -104,36 +103,36 @@ class AttributesTest extends Facebook\HackTest\HackTest {
           /* HH_IGNORE_ERROR[4166] */
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
-      expect($x->toString())->toEqual('<div></div>');
+      expect(await $x->toStringAsync())->toEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testShapeWithMissingOptionalKey(): void {
+  public async function testShapeWithMissingOptionalKey(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
-    expect(() ==> {
+    expect(async () ==> {
 
       /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute_types myshape={shape('foo' => 'herp')} />;
-      expect($x->toString())->toEqual('<div></div>');
+      expect(await $x->toStringAsync())->toEqual('<div></div>');
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testShapeWithMissingRequiredKey(): void {
+  public async function testShapeWithMissingRequiredKey(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
-    expect(() ==> {
+    expect(async () ==> {
       /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute_types myshape={shape()} />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testValidArrayKeys(): void {
+  public async function testValidArrayKeys(): Awaitable<void> {
     $x = <test:attribute_types myarraykey="foo" />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:attribute_types myarraykey={123} />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testInvalidArrayKeys(): void {
+  public async function testInvalidArrayKeys(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
@@ -144,14 +143,14 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testValidNum(): void {
+  public async function testValidNum(): Awaitable<void> {
     $x = <test:attribute_types mynum={123} />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:attribute_types mynum={1.23} />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testInvalidNum(): void {
+  public async function testInvalidNum(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
 
     expect(() ==> {
@@ -163,25 +162,25 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testNoAttributes(): void {
-    expect((<test:attribute_types />)->toString())->toEqual('<div></div>');
+  public async function testNoAttributes(): Awaitable<void> {
+    expect(await (<test:attribute_types />)->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testStringableObjectAsString(): void {
+  public async function testStringableObjectAsString(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types mystring={new StringableTestClass()} />;
     expect($x->:mystring)->toEqual('StringableTestClass');
   }
 
-  public function testIntegerAsString(): void {
+  public async function testIntegerAsString(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types mystring={123} />;
     expect($x->:mystring)->toEqual('123');
   }
 
-  public function testUnstringableObjectAsString(): void {
+  public async function testUnstringableObjectAsString(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -192,7 +191,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testArrayAsString(): void {
+  public async function testArrayAsString(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -201,28 +200,28 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testIntishStringAsInt(): void {
+  public async function testIntishStringAsInt(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types myint={'123'} />;
     expect($x->:myint)->toEqual(123);
   }
 
-  public function testFloatAsInt(): void {
+  public async function testFloatAsInt(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types myint={1.23} />;
     expect($x->:myint)->toEqual(1);
   }
 
-  public function testFloatishStringAsInt(): void {
+  public async function testFloatishStringAsInt(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types myint="1.23" />;
     expect($x->:myint)->toEqual(1);
   }
 
-  public function testObjectAsInt(): void {
+  public async function testObjectAsInt(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -231,7 +230,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testArrayAsInt(): void {
+  public async function testArrayAsInt(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -240,7 +239,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testNumericPrefixStringAsInt(): void {
+  public async function testNumericPrefixStringAsInt(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -249,21 +248,21 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testTrueStringAsBool(): void {
+  public async function testTrueStringAsBool(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types mybool="true" />;
     expect($x->:mybool)->toEqual(true);
   }
 
-  public function testFalseStringAsBool(): void {
+  public async function testFalseStringAsBool(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types mybool="false" />;
     expect($x->:mybool)->toEqual(false);
   }
 
-  public function testMixedCaseFalseStringAsBool(): void {
+  public async function testMixedCaseFalseStringAsBool(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -273,7 +272,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     // 'False' is actually truthy
   }
 
-  public function testNoStringAsBool(): void {
+  public async function testNoStringAsBool(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -283,7 +282,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     // 'No' is actually truthy
   }
 
-  public function testAttrNameAsBool(): void {
+  public async function testAttrNameAsBool(): Awaitable<void> {
     // idiomatic - eg checked="checked"
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
@@ -291,20 +290,20 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($x->:mybool)->toEqual(true);
   }
 
-  public function testInvalidEnumValue(): void {
+  public async function testInvalidEnumValue(): Awaitable<void> {
     expect(() ==> {
       $x = <test:attribute_types myenum="derp" />;
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testIntAsFloat(): void {
+  public async function testIntAsFloat(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types myfloat={123} />;
     expect($x->:myfloat)->toEqual(123.0);
   }
 
-  public function testNumericStringsAsFloats(): void {
+  public async function testNumericStringsAsFloats(): Awaitable<void> {
     /* HH_IGNORE_ERROR[4110] */
     /* HH_IGNORE_ERROR[4343] */
     $x = <test:attribute_types myfloat="123" />;
@@ -315,7 +314,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($x->:myfloat)->toEqual(1.23);
   }
 
-  public function testNonNumericStringAsFloat(): void {
+  public async function testNonNumericStringAsFloat(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -324,7 +323,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testNumericPrefixStringAsFloat(): void {
+  public async function testNumericPrefixStringAsFloat(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:attribute_types
@@ -333,7 +332,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testNotAContainerAsArray(): void {
+  public async function testNotAContainerAsArray(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
@@ -345,7 +344,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testHackContainerAsArray(): void {
+  public async function testHackContainerAsArray(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
@@ -355,7 +354,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testIncompatibleObjectAsObject(): void {
+  public async function testIncompatibleObjectAsObject(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
@@ -367,7 +366,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testPassingArrayAsVector(): void {
+  public async function testPassingArrayAsVector(): Awaitable<void> {
     self::markTestSkipped('Only enums are validated at runtime.');
     expect(() ==> {
       $x =
@@ -377,64 +376,64 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPInvalidAttributeException::class);
   }
 
-  public function testProvidingRequiredAttributes(): void {
+  public async function testProvidingRequiredAttributes(): Awaitable<void> {
     $x = <test:required_attributes mystring="herp" />;
     expect($x->:mystring)->toEqual('herp');
-    expect($x->toString())->toEqual('<div>herp</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>herp</div>');
   }
 
-  public function testOmittingRequiredAttributes(): void {
+  public async function testOmittingRequiredAttributes(): Awaitable<void> {
     expect(() ==> {
       $x = <test:required_attributes />;
       expect($x->:mystring)->toBeNull();
     })->toThrow(XHPAttributeRequiredException::class);
   }
 
-  public function testProvidingDefaultAttributes(): void {
+  public async function testProvidingDefaultAttributes(): Awaitable<void> {
     $x = <test:default_attributes mystring="herp" />;
     expect($x->:mystring)->toEqual('herp');
-    expect($x->toString())->toEqual('<div>herp</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>herp</div>');
   }
 
-  public function testOmittingDefaultAttributes(): void {
+  public async function testOmittingDefaultAttributes(): Awaitable<void> {
     $x = <test:default_attributes />;
     expect($x->:mystring)->toEqual('mydefault');
-    expect($x->toString())->toEqual('<div>mydefault</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>mydefault</div>');
   }
 
-  public function testBogusAttributes(): void {
+  public async function testBogusAttributes(): Awaitable<void> {
     expect(() ==> {
       $x = <test:default_attributes /* HH_FIXME[4053] */ idonotexist="derp" />;
     })->toThrow(XHPAttributeNotSupportedException::class);
   }
 
-  public function testSpecialAttributes(): void {
+  public async function testSpecialAttributes(): Awaitable<void> {
     $x = <test:default_attributes data-idonotexist="derp" />;
-    expect($x->toString())->toEqual('<div>mydefault</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>mydefault</div>');
     $x = <test:default_attributes aria-idonotexist="derp" />;
-    expect($x->toString())->toEqual('<div>mydefault</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>mydefault</div>');
 
     // verify that special attributes actually render
     $x = <div data-idonotexist="derp" />;
-    expect($x->toString())->toEqual('<div data-idonotexist="derp"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-idonotexist="derp"></div>');
     // implicit string cast
     $x = <div data-idonotexist={123} />;
-    expect($x->toString())->toEqual('<div data-idonotexist="123"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-idonotexist="123"></div>');
     $x = <div aria-idonotexist="derp" />;
-    expect($x->toString())->toEqual('<div aria-idonotexist="derp"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div aria-idonotexist="derp"></div>');
 
     // special attributes should disappear when null, like all other attributes
     $x = <div data-idonotexist={null} />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <div aria-idonotexist={null} />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
 
     $x = <div data-foo="derp" />;
     $x->setAttribute('data-foo', null);
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testRenderCallableAttribute(): void {
+  public async function testRenderCallableAttribute(): Awaitable<void> {
     self::markTestSkipped('This type has been unsupported since 2.0');
     expect(() ==> {
       $x =
@@ -447,7 +446,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     })->toThrow(XHPUnsupportedAttributeTypeException::class);
   }
 
-  public function testReflectOnCallableAttribute(): void {
+  public async function testReflectOnCallableAttribute(): Awaitable<void> {
     self::markTestSkipped('This type has been unsupported since 2.0');
     $rxhp = new ReflectionXHPClass(:test:callable_attribute::class);
     $rattr = $rxhp->getAttribute('foo');
@@ -459,7 +458,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
       );
   }
 
-  public function testAttributeSpread(): void {
+  public async function testAttributeSpread(): Awaitable<void> {
     $x = <test:attribute_types mystring="foo" mybool={true} />;
     $y = <test:attribute_types mystring="bar" {...$x} myint={5} />;
     expect($y->:mystring)->toEqual('foo');

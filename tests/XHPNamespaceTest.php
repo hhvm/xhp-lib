@@ -52,41 +52,42 @@ use type MyTestNS\div as aliaseddiv;
 use namespace MyTestNS as AliasedNS;
 
 class XHPNamespaceTest extends Facebook\HackTest\HackTest {
-  public function testQualifiedReference(): void {
-    expect((<MyTestNS:div>foo</MyTestNS:div>)->toString())
+  public async function testQualifiedReference(): Awaitable<void> {
+    expect(await (<MyTestNS:div>foo</MyTestNS:div>)->toStringAsync())
       ->toEqual('<div> -MyTestNS\\div-foo-/MyTestNS\\div- </div>');
   }
 
-  public function testFullyQualifiedReference(): void {
-    expect((<:MyTestNS:div>foo</:MyTestNS:div>)->toString())
+  public async function testFullyQualifiedReference(): Awaitable<void> {
+    expect(await (<:MyTestNS:div>foo</:MyTestNS:div>)->toStringAsync())
       ->toEqual('<div> -MyTestNS\\div-foo-/MyTestNS\\div- </div>');
   }
 
-  public function testUseType(): void {
-    expect((<aliaseddiv>foo</aliaseddiv>)->toString())
+  public async function testUseType(): Awaitable<void> {
+    expect(await (<aliaseddiv>foo</aliaseddiv>)->toStringAsync())
       ->toEqual('<div> -MyTestNS\\div-foo-/MyTestNS\\div- </div>');
   }
 
-  public function testUseNamespace(): void {
-    expect((<AliasedNS:div>foo</AliasedNS:div>)->toString())
+  public async function testUseNamespace(): Awaitable<void> {
+    expect(await (<AliasedNS:div>foo</AliasedNS:div>)->toStringAsync())
       ->toEqual('<div> -MyTestNS\\div-foo-/MyTestNS\\div- </div>');
   }
 
-  public function testReferencesWithinNamespace(): void {
-    expect((<MyTestNS:useswithinnamespace />)->toString())->toEqual((
-      <dl>
-        <dt>:div</dt>
-        <dd><div>content</div></dd>
-        <dt>div</dt>
-        <dd><div> -MyTestNS\div-content-/MyTestNS\div- </div></dd>
-        <dt>divsubclass</dt>
-        <dd><div> -MyTestNS\divsubclass-content-/MyTestNS\divsubclass- </div></dd>
-        <dt>divsubclass2</dt>
-        <dd><div> -MyTestNS\divsubclass2-content-/MyTestNS\divsubclass2- </div></dd>
-        <dt>:x:frag</dt>
-        <dd>foo</dd>
-      </dl>
-    )->toString());
+  public async function testReferencesWithinNamespace(): Awaitable<void> {
+    expect(await (<MyTestNS:useswithinnamespace />)->toStringAsync())->toEqual(
+      await (
+        <dl>
+          <dt>:div</dt>
+          <dd><div>content</div></dd>
+          <dt>div</dt>
+          <dd><div> -MyTestNS\div-content-/MyTestNS\div- </div></dd>
+          <dt>divsubclass</dt>
+          <dd><div> -MyTestNS\divsubclass-content-/MyTestNS\divsubclass- </div></dd>
+          <dt>divsubclass2</dt>
+          <dd><div> -MyTestNS\divsubclass2-content-/MyTestNS\divsubclass2- </div></dd>
+          <dt>:x:frag</dt>
+          <dd>foo</dd>
+        </dl>
+      )->toStringAsync());
   }
 }
 

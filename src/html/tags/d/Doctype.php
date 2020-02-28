@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\C;
+
 /**
  * Render an <html /> element within a DOCTYPE, XHP has chosen to only support
  * the HTML5 doctype.
@@ -22,8 +24,7 @@ xhp class x:doctype extends :x:primitive {
   }
 
 
-  protected function stringify(): string {
-    $children = $this->getChildren();
-    return '<!DOCTYPE html>'.(:xhp::renderChild($children[0]));
+  protected async function stringifyAsync(): Awaitable<string> {
+    return '<!DOCTYPE html>'.(await :xhp::renderChildAsync(C\onlyx($this->getChildren())));
   }
 }

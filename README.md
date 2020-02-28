@@ -19,7 +19,7 @@ Announcements and articles are posted to [the XHP-Lib blog](https://hhvm.github.
 
 ## Installation
 
-[Composer](https://getcomposer.org) is the recommended installation method. To add XHP to your project, run the following command : 
+[Composer](https://getcomposer.org) is the recommended installation method. To add XHP to your project, run the following command :
 ```console
 $ composer require facebook/xhp-lib:^3.0
 ```
@@ -174,8 +174,7 @@ efficiently fetch the data that they require:
 
 ```hack
 class :async-thing extends :x:element {
-  use XHPAsync;
-  protected async function asyncRender(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     $db = await AsyncMysqlClient::connect(...);
     $result = await $db->queryf(
       'SELECT id2 FROM %T WHERE id1 %=d',
@@ -223,7 +222,7 @@ There are certain conventions that you should comply with while using XHP.
 
 ```hack
 class :fb:thing extends :x:element {
-  protected function render() {
+  protected async function renderAsync(): Awaitable<XHPRoot? {
     return <div class="thing">thing</div>;
   }
 }

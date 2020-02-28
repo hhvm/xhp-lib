@@ -8,6 +8,8 @@
  *
  */
 
+ use namespace HH\Lib\{Str, Vec};
+
 /**
  * An <x:frag /> is a transparent wrapper around any number of elements. When
  * you render it just the children will be rendered. When you append it to an
@@ -15,11 +17,10 @@
  * appended to the element.
  */
 xhp class x:frag extends :x:primitive {
-  protected function stringify(): string {
-    $buf = '';
-    foreach ($this->getChildren() as $child) {
-      $buf .= :xhp::renderChild($child);
-    }
-    return $buf;
+  protected async function stringifyAsync(): Awaitable<string> {
+    return await Vec\map_async(
+      $this->getChildren(),
+      async $child ==> await :xhp::renderChildAsync($child),
+    ) |> Str\join($$, '');
   }
 }

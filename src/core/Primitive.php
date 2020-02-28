@@ -15,15 +15,11 @@
  * from :x:element.
  */
 abstract xhp class x:primitive extends :x:composable_element implements XHPRoot {
-  abstract protected function stringify(): string;
+  abstract protected function stringifyAsync(): Awaitable<string>;
 
-  final public function toString(): string {
-    return \HH\Asio\join($this->asyncToString());
-  }
-
-  final public async function asyncToString(): Awaitable<string> {
+  final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushSubtree();
-    return $that->stringify();
+    return await $that->stringifyAsync();
   }
 
   final private async function __flushElementChildren(): Awaitable<void> {

@@ -56,77 +56,77 @@ xhp class test:with_class_on_root extends :x:element {
 }
 
 class XHPHelpersTest extends Facebook\HackTest\HackTest {
-  public function testTransferAttributesWithoutHelpers(): void {
+  public async function testTransferAttributesWithoutHelpers(): Awaitable<void> {
     $x = <test:no_xhphelpers data-foo="bar" />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:no_xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testTransferAttributesAsyncWithoutHelpers(): void {
+  public async function testTransferAttributesAsyncWithoutHelpers(): Awaitable<void> {
     $x = <test:async:no_xhphelpers data-foo="bar" />;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:async:no_xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testTransferAttributesWithHelpers(): void {
+  public async function testTransferAttributesWithHelpers(): Awaitable<void> {
     $x = <test:xhphelpers data-foo="bar" />;
-    expect($x->toString())->toEqual('<div data-foo="bar"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-foo="bar"></div>');
     $x = <test:xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
   }
 
-  public function testTransferAttributesAsyncWithHelpers(): void {
+  public async function testTransferAttributesAsyncWithHelpers(): Awaitable<void> {
     $x = <test:async:xhphelpers data-foo="bar" />;
-    expect($x->toString())->toEqual('<div data-foo="bar"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-foo="bar"></div>');
     $x = <test:async:xhphelpers data-foo="bar" />;
     expect($x->getID())->toNotBeEmpty();
-    expect($x->toString())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div data-foo="bar" id="'.$x->getID().'"></div>');
   }
 
-  public function testAddClassWithoutHelpers(): void {
+  public async function testAddClassWithoutHelpers(): Awaitable<void> {
     $x = <test:no_xhphelpers class="foo" />;
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
     expect($x->:class)->toEqual('foo bar herp');
-    expect($x->toString())->toEqual("<div></div>");
+    expect(await $x->toStringAsync())->toEqual("<div></div>");
   }
 
-  public function testAddClassWithHelpers(): void {
+  public async function testAddClassWithHelpers(): Awaitable<void> {
     $x = <test:xhphelpers class="foo" />;
     $x->addClass("bar");
     $x->conditionClass(true, "herp");
     $x->conditionClass(false, "derp");
     expect($x->:class)->toEqual('foo bar herp');
-    expect($x->toString())->toEqual('<div class="foo bar herp"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div class="foo bar herp"></div>');
   }
 
-  public function testRootClassPreserved(): void {
+  public async function testRootClassPreserved(): Awaitable<void> {
     $x = <test:with_class_on_root />;
-    expect($x->toString())->toEqual('<div class="rootClass"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div class="rootClass"></div>');
   }
 
-  public function testTransferedClassesAppended(): void {
+  public async function testTransferedClassesAppended(): Awaitable<void> {
     $x = <test:with_class_on_root class="extraClass" />;
-    expect($x->toString())->toEqual('<div class="rootClass extraClass"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div class="rootClass extraClass"></div>');
   }
 
-  public function testRootClassesNotOverridenByEmptyString(): void {
+  public async function testRootClassesNotOverridenByEmptyString(): Awaitable<void> {
     $x = <test:with_class_on_root class="" />;
-    expect($x->toString())->toEqual('<div class="rootClass"></div>');
+    expect(await $x->toStringAsync())->toEqual('<div class="rootClass"></div>');
   }
 
-  public function testNested(): void {
+  public async function testNested(): Awaitable<void> {
     $x =
       <test:xhphelpers class="herp">
         <test:xhphelpers class="derp" />
       </test:xhphelpers>;
-    expect($x->toString())->toEqual(
+    expect(await $x->toStringAsync())->toEqual(
       '<div class="herp"><div class="derp"></div></div>',
     );
   }

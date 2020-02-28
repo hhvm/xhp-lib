@@ -18,13 +18,9 @@
 abstract xhp class x:element extends :x:composable_element implements XHPRoot {
   abstract protected function renderAsync(): Awaitable<XHPRoot>;
 
-  final public function toString(): string {
-    return \HH\Asio\join($this->asyncToString());
-  }
-
-  final public async function asyncToString(): Awaitable<string> {
+  final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushRenderedRootElement();
-    $ret = await $that->asyncToString();
+    $ret = await $that->toStringAsync();
     return $ret;
   }
 

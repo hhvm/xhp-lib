@@ -33,28 +33,28 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
     :xhp::disableAttributeValidation();
   }
 
-  public function testValidValues(): void {
+  public async function testValidValues(): Awaitable<void> {
     $x = <test:hack_enum_attribute foo={TestEnum::HERP} />;
-    expect($x->toString())->toEqual('<div>HERP</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>HERP</div>');
     $x = <test:hack_enum_attribute foo={TestEnum::DERP} />;
-    expect($x->toString())->toEqual('<div>DERP</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>DERP</div>');
   }
 
-  public function testValidRawValues(): void {
+  public async function testValidRawValues(): Awaitable<void> {
     // UNSAFE
     $x =
       <test:hack_enum_attribute
         foo={/* HH_IGNORE_ERROR[4110] */ /* HH_IGNORE_ERROR[4343] */ 1}
       />;
-    expect($x->toString())->toEqual('<div>HERP</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>HERP</div>');
     $x =
       <test:hack_enum_attribute
         foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2}
       />;
-    expect($x->toString())->toEqual('<div>DERP</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>DERP</div>');
   }
 
-  public function testInvalidValue(): void {
+  public async function testInvalidValue(): Awaitable<void> {
     expect(() ==> {
       $x =
         <test:hack_enum_attribute

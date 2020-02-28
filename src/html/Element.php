@@ -8,6 +8,8 @@
  *
  */
 
+ use namespace HH\Lib\{Str, Vec};
+
 /**
  * This is the base library of HTML elements for use in XHP. This includes all
  * non-deprecated tags and attributes. Elements in this file should stay as
@@ -135,11 +137,12 @@ abstract xhp class xhp:html_element extends :x:primitive {
     return $buf;
   }
 
-  protected function stringify(): string {
+  protected async function stringifyAsync(): Awaitable<string> {
     $buf = $this->renderBaseAttrs().'>';
-    foreach ($this->getChildren() as $child) {
-      $buf .= :xhp::renderChild($child);
-    }
+    $buf .= await Vec\map_async(
+      $this->getChildren(),
+      async $child ==> await :xhp::renderChildAsync($child),
+    ) |> Str\join($$, '');
     $buf .= '</'.$this->tagName.'>';
     return $buf;
   }

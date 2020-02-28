@@ -17,5 +17,5 @@
  * for more information.
  */
 interface XHPUnsafeRenderable extends XHPChild {
-  public function toHTMLString(): string;
+  public function toHTMLStringAsync(): Awaitable<string>;
 }

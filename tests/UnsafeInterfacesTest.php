@@ -17,7 +17,7 @@ class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
   public function __construct(public string $htmlString) {
   }
 
-  public function toHTMLString(): string {
+  public async function toHTMLStringAsync(): Awaitable<string> {
     return $this->htmlString;
   }
 }
@@ -37,33 +37,35 @@ class ExampleUnsafeAttribute extends XHPUnsafeAttributeValue {
 }
 
 class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
-  public function testUnsafeRenderable(): void {
+  public async function testUnsafeRenderable(): Awaitable<void> {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;
-    expect($xhp->toString())->toEqual(
+    expect(await $xhp->toStringAsync())->toEqual(
       '<div><script>lollerskates</script></div>',
     );
   }
 
-  public function testInvalidChild(): void {
-    expect(() ==> {
+  public async function testInvalidChild(): Awaitable<void> {
+    expect(async () ==> {
       $x = new ExampleUnsafeRenderable('foo');
       $xhp = <html>{$x}<body /></html>;
-      $xhp->toString(); // validate, throw exception
+      await $xhp->toStringAsync(); // validate, throw exception
     })->toThrow(XHPInvalidChildrenException::class);
   }
 
-  public function testAlwaysValidChild(): void {
+  public async function testAlwaysValidChild(): Awaitable<void> {
     $x = new ExampleVeryUnsafeRenderable('foo');
     $xhp = <html>{$x}<body /></html>;
-    expect($xhp->toString())->toEqual('<html>foo<body></body></html>');
+    expect(await $xhp->toStringAsync())->toEqual(
+      '<html>foo<body></body></html>',
+    );
   }
 
-  public function testUnsafeAttribute(): void {
+  public async function testUnsafeAttribute(): Awaitable<void> {
     // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
     $attr = "foo &amp;&amp; bar";
     $xhp = <div onclick={$attr} />;
-    expect($xhp->toString())->toEqual(
+    expect(await $xhp->toStringAsync())->toEqual(
       '<div onclick="foo &amp;amp;&amp;amp; bar"></div>',
     );
 
@@ -71,7 +73,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
     $escaped = new ExampleUnsafeAttribute("foo &amp;&amp; bar");
     $xhp = <div />;
     $xhp->forceAttribute('onclick', $escaped);
-    expect($xhp->toString())->toEqual(
+    expect(await $xhp->toStringAsync())->toEqual(
       '<div onclick="foo &amp;&amp; bar"></div>',
     );
   }

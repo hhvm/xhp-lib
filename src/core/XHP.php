@@ -10,7 +10,7 @@
 
 use namespace HH\Lib\Str;
 
-abstract xhp class xhp implements XHPChild, JsonSerializable {
+abstract xhp class xhp implements XHPChild {
   // Must be kept in sync with code generation for XHP
   const string SPREAD_PREFIX = '...$';
 
@@ -19,6 +19,7 @@ abstract xhp class xhp implements XHPChild, JsonSerializable {
     Traversable<XHPChild> $children,
   ): void {
   }
+  abstract public function toStringAsync(): Awaitable<string>;
   abstract public function appendChild(mixed $child): this;
   abstract public function prependChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
@@ -36,7 +37,6 @@ abstract xhp class xhp implements XHPChild, JsonSerializable {
   abstract public function isAttributeSet(string $attr): bool;
   abstract public function removeAttribute(string $attr): this;
   abstract public function categoryOf(string $cat): bool;
-  abstract public function toString(): string;
   abstract protected function __xhpCategoryDeclaration(): darray<string, int>;
   abstract protected function __xhpChildrenDeclaration(): mixed;
   protected static function __xhpAttributeDeclaration(
@@ -87,20 +87,13 @@ abstract xhp class xhp implements XHPChild, JsonSerializable {
     return self::$validateAttributes;
   }
 
-  final public function __toString(): string {
-    return $this->toString();
-  }
 
-  final public function jsonSerialize(): string {
-    return $this->toString();
-  }
-
-  final protected static function renderChild(XHPChild $child): string {
+  final protected static async function renderChildAsync(XHPChild $child): Awaitable<string> {
     if ($child is :xhp) {
-      return $child->toString();
+      return await $child->toStringAsync();
     }
     if ($child is XHPUnsafeRenderable) {
-      return $child->toHTMLString();
+      return await $child->toHTMLStringAsync();
     }
     if ($child is Traversable<_>) {
       throw new XHPRenderArrayException('Can not render traversables!');

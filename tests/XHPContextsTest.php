@@ -21,22 +21,22 @@ xhp class test:contexts extends :x:element {
 }
 
 class XHPContextsTest extends Facebook\HackTest\HackTest {
-  public function testContextSimple(): void {
+  public async function testContextSimple(): Awaitable<void> {
     $x = <test:contexts />;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toEqual('<div><p>herp</p></div>');
+    expect(await $x->toStringAsync())->toEqual('<div><p>herp</p></div>');
   }
 
-  public function testContextInsideHTMLElement(): void {
+  public async function testContextInsideHTMLElement(): Awaitable<void> {
     $x = <div><test:contexts /></div>;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toEqual('<div><div><p>herp</p></div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div><div><p>herp</p></div></div>');
   }
 
-  public function testNestedContexts(): void {
+  public async function testNestedContexts(): Awaitable<void> {
     $x = <test:contexts><test:contexts /></test:contexts>;
     $x->setContext('heading', 'herp');
-    expect($x->toString())->toEqual(
+    expect(await $x->toStringAsync())->toEqual(
       '<div><p>herp</p><div><p>herp</p></div></div>',
     );
   }

@@ -50,35 +50,35 @@ xhp class async:par_test extends :x:element {
 }
 
 class AsyncTest extends Facebook\HackTest\HackTest {
-  public function testDiv(): void {
+  public async function testDiv(): Awaitable<void> {
     $xhp = <async:test>Herp</async:test>;
-    expect($xhp->toString())->toEqual('<div>Herp</div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div>Herp</div>');
   }
 
-  public function testXFrag(): void {
+  public async function testXFrag(): Awaitable<void> {
     $frag = <x:frag>{1}{2}</x:frag>;
     $xhp = <async:test>{$frag}</async:test>;
-    expect($xhp->toString())->toEqual('<div>12</div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div>12</div>');
   }
 
-  public function testNested(): void {
+  public async function testNested(): Awaitable<void> {
     $xhp = <async:test><async:test>herp derp</async:test></async:test>;
-    expect($xhp->toString())->toEqual('<div><div>herp derp</div></div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div><div>herp derp</div></div>');
   }
 
-  public function testEmpty(): void {
+  public async function testEmpty(): Awaitable<void> {
     $xhp = <async:test />;
-    expect($xhp->toString())->toEqual('<div></div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testNestedEmpty(): void {
+  public async function testNestedEmpty(): Awaitable<void> {
     $xhp = <async:test><async:test /></async:test>;
-    expect($xhp->toString())->toEqual('<div><div></div></div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div><div></div></div>');
   }
 
-  public function testNestedWithNonAsyncChild(): void {
+  public async function testNestedWithNonAsyncChild(): Awaitable<void> {
     $xhp = <async:test><b>BE BOLD</b></async:test>;
-    expect($xhp->toString())->toEqual('<div><b>BE BOLD</b></div>');
+    expect(await $xhp->toStringAsync())->toEqual('<div><b>BE BOLD</b></div>');
   }
 
   public function parallelizationContainersProvider(): varray<varray<:xhp>> {
@@ -89,7 +89,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
-  public function testParallelization(:x:element $container): void {
+  public async function testParallelization(:x:element $container): Awaitable<void> {
     :async:par_test::$log = Vector {};
 
     $a = <async:par_test label="a" />;
@@ -99,7 +99,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     $container->replaceChildren(varray[$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
-    expect($tree->toString())->toEqual(
+    expect(await $tree->toStringAsync())->toEqual(
       '<div><div>a</div><div>b</div><div>c</div></div>',
     );
 

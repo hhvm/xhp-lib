@@ -226,7 +226,7 @@ xhp class test:needs_comma_category extends :x:element {
 }
 
 class ChildRuleTest extends Facebook\HackTest\HackTest {
-  public function testNoChild(): void {
+  public async function testNoChild(): Awaitable<void> {
     $elems = Vector {
       <test:no_children />,
       <test:any_children />,
@@ -234,18 +234,18 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any_number_of_child />,
     };
     foreach ($elems as $elem) {
-      expect($elem->__toString())->toEqual('<div></div>');
+      expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
 
-  public function testUnexpectedChild(): void {
-    expect(() ==> {
+  public async function testUnexpectedChild(): Awaitable<void> {
+    expect(async () ==> {
       $x = <test:no_children><div /></test:no_children>;
-      $x->toString();
+      await $x->toStringAsync();
     })->toThrow(XHPInvalidChildrenException::class);
   }
 
-  public function testSingleChild(): void {
+  public async function testSingleChild(): Awaitable<void> {
     $elems = Vector {
       <test:any_children />,
       <test:single_child />,
@@ -259,7 +259,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
-      expect($elem->toString())->toEqual('<div></div>');
+      expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
 
@@ -289,7 +289,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     ];
   }
 
-  public function testExpectedChild(): void {
+  public async function testExpectedChild(): Awaitable<void> {
     $elems = Vector {
       <test:single_child />,
       <test:at_least_one_child />,
@@ -298,17 +298,12 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:pcdata_child />,
     };
     foreach ($elems as $elem) {
-      $exception = null;
-      try {
-        $elem->toString();
-      } catch (Exception $e) {
-        $exception = $e;
-      }
-      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
+      expect(async () ==> await $elem->toStringAsync())
+        ->toThrow(XHPInvalidChildrenException::class);
     }
   }
 
-  public function testTooManyChildren(): void {
+  public async function testTooManyChildren(): Awaitable<void> {
     $elems = Vector {
       <test:single_child />,
       <test:optional_child />,
@@ -321,16 +316,12 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     foreach ($elems as $elem) {
       $exception = null;
       $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
-      try {
-        $elem->toString();
-      } catch (Exception $e) {
-        $exception = $e;
-      }
-      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
+      expect(async () ==> await $elem->toStringAsync())
+        ->toThrow(XHPInvalidChildrenException::class);
     }
   }
 
-  public function testIncorrectChild(): void {
+  public async function testIncorrectChild(): Awaitable<void> {
     $elems = Vector {
       <test:single_child />,
       <test:optional_child />,
@@ -345,7 +336,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       $exception = null;
       $elem->appendChild(<thead />);
       try {
-        $elem->toString();
+        await $elem->toStringAsync();
       } catch (Exception $e) {
         $exception = $e;
       }
@@ -353,7 +344,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     }
   }
 
-  public function testTwoChildren(): void {
+  public async function testTwoChildren(): Awaitable<void> {
     $elems = Vector {
       <test:any_number_of_child />,
       <test:at_least_one_child />,
@@ -361,94 +352,92 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     };
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
-      expect($elem->toString())->toEqual('<div></div>');
+      expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
 
-  public function testThreeChildren(): void {
+  public async function testThreeChildren(): Awaitable<void> {
     $elems = Vector {<test:any_number_of_child />, <test:at_least_one_child />};
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
-      expect($elem->toString())->toEqual('<div></div>');
+      expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
 
-  public function testEitherValidChild(): void {
+  public async function testEitherValidChild(): Awaitable<void> {
     $x = <test:either_of_two_children><div /></test:either_of_two_children>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:either_of_two_children><code /></test:either_of_two_children>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
 
     $x = <test:nested_rule><div /></test:nested_rule>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:nested_rule><code /></test:nested_rule>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:nested_rule><code /><code /></test:nested_rule>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testPCDataChild(): void {
+  public async function testPCDataChild(): Awaitable<void> {
     $x = <test:pcdata_child>herp derp</test:pcdata_child>;
-    expect($x->toString())->toEqual('<div>herp derp</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>herp derp</div>');
     $x = <test:pcdata_child>{123}</test:pcdata_child>;
-    expect($x->toString())->toEqual('<div>123</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>123</div>');
   }
 
-  public function testCommaCategory(): void {
+  public async function testCommaCategory(): Awaitable<void> {
     $x =
       <test:needs_comma_category>
         <test:has_comma_category />
       </test:needs_comma_category>;
-    expect($x->toString())->toEqual('<div></div>');
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public function testFrags(): void {
+  public async function testFrags(): Awaitable<void> {
     $x = <div><x:frag>{'foo'}{'bar'}</x:frag></div>;
-    expect($x->toString())->toEqual('<div>foobar</div>');
+    expect(await $x->toStringAsync())->toEqual('<div>foobar</div>');
   }
 
-  public function testNested(): void {
-    expect(() ==> {
+  public async function testNested(): Awaitable<void> {
+    expect(async () ==> {
       $x = <div><test:at_least_one_child /></div>;
-      $x->toString();
+      await $x->toStringAsync();
     })->toThrow(XHPInvalidChildrenException::class);
   }
 
-  public function testNewChildDeclarations(): void {
+  public async function testNewChildDeclarations(): Awaitable<void> {
     expect(
-      (
+      await (
         <test:new_child_declaration_only>
           <div>foo</div>
         </test:new_child_declaration_only>
-      )->toString(),
+      )->toStringAsync(),
     )->toEqual('<div>foo</div>');
 
-    expect(() ==> (<test:new_child_declaration_only />)->toString())->toThrow(
-      XHPInvalidChildrenException::class,
-    );
+    expect(async () ==> await (<test:new_child_declaration_only />)->toStringAsync())
+      ->toThrow(XHPInvalidChildrenException::class);
     expect(
-      () ==> (
+      async () ==> await (
         <test:new_child_declaration_only><p /></test:new_child_declaration_only>
-      )->toString(),
+      )->toStringAsync(),
     )->toThrow(XHPInvalidChildrenException::class);
   }
 
-  public function testOldChildDeclarations(): void {
+  public async function testOldChildDeclarations(): Awaitable<void> {
     expect(
-      (
+      await (
         <test:old_child_declaration_only>
           <div>foo</div>
         </test:old_child_declaration_only>
-      )->toString(),
+      )->toStringAsync(),
     )->toEqual('<div>foo</div>');
 
-    expect(() ==> (<test:old_child_declaration_only />)->toString())->toThrow(
-      XHPInvalidChildrenException::class,
-    );
+    expect(async () ==> await (<test:old_child_declaration_only />)->toStringAsync())
+      ->toThrow(XHPInvalidChildrenException::class);
     expect(
-      () ==> (
+      async () ==> await (
         <test:old_child_declaration_only><p /></test:old_child_declaration_only>
-      )->toString(),
+      )->toStringAsync(),
     )->toThrow(XHPInvalidChildrenException::class);
   }
 }

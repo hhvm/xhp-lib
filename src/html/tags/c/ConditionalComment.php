@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\{Str, Vec};
+
 /**
  * Render an HTML conditional comment. You can choose whatever you like as
  * the conditional statement.
@@ -25,12 +27,13 @@ xhp class x:conditional_comment extends :x:primitive {
   }
 
 
-  protected function stringify(): string {
+  protected async function stringifyAsync(): Awaitable<string> {
     $children = $this->getChildren();
     $html = '<!--[if '.$this->:if.']>';
-    foreach ($children as $child) {
-      $html .= :xhp::renderChild($child);
-    }
+    $html .= await Vec\map_async(
+      $this->getChildren(),
+      async $child ==> await :xhp::renderChildAsync($child),
+    ) |> Str\join($$, '');
     $html .= '<![endif]-->';
     return $html;
   }
