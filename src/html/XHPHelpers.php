@@ -8,6 +8,7 @@
  *
  */
 
+use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\C;
 
 interface HasXHPHelpers
@@ -31,7 +32,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $target.
    */
   final public function copyAllAttributes(:x:composable-element $target): void {
-    $this->transferAttributesImpl($target, Set {});
+    $this->transferAttributesImpl($target, ImmSet {});
   }
 
   /*
@@ -50,7 +51,7 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final public function copyAttributesExcept(
     :x:composable-element $target,
-    Set<string> $ignore,
+    _Private\SetLike<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
   }
@@ -62,7 +63,7 @@ trait XHPHelpers implements HasXHPHelpers {
   final public function transferAllAttributes(
     :x:composable-element $target,
   ): void {
-    $this->transferAttributesImpl($target, Set {}, true);
+    $this->transferAttributesImpl($target, ImmSet {}, true);
   }
 
   /*
@@ -82,7 +83,7 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final public function transferAttributesExcept(
     :x:composable-element $target,
-    Set<string> $ignore,
+    _Private\SetLike<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore, true);
   }
@@ -93,13 +94,13 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final private function transferAttributesImpl(
     :x:composable-element $target,
-    ?Set<string> $ignore = null,
+    ?_Private\SetLike<string> $ignore = null,
     bool $remove = false,
   ): void {
     if ($ignore === null) {
       $ignore = :xhp:html-element::__xhpAttributeDeclaration();
     } else {
-      $ignore = array_fill_keys($ignore->toArray(), true);
+      $ignore = array_fill_keys(keyset($ignore), true);
     }
 
     $compatible = $target::__xhpAttributeDeclaration();

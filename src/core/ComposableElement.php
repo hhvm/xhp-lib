@@ -10,7 +10,7 @@
 
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
-use namespace HH\Lib\{C, Dict, Str};
+use namespace HH\Lib\{C, Dict, Keyset, Str};
 
 abstract class :x:composable-element extends :xhp {
   private dict<string, mixed> $attributes = dict[];
@@ -306,7 +306,7 @@ abstract class :x:composable-element extends :xhp {
   final public static function __xhpReflectionCategoryDeclaration(
   ): Set<string> {
     return new Set(
-      \array_keys(self::emptyInstance()->__xhpCategoryDeclaration()),
+      Keyset\keys(self::emptyInstance()->__xhpCategoryDeclaration()),
     );
   }
 
