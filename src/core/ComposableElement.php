@@ -14,9 +14,7 @@ use namespace HH\Lib\{C, Dict, Keyset, Str};
 
 abstract class :x:composable-element extends :xhp {
   private dict<string, mixed> $attributes = dict[];
-  // Cannot be changed just yet because:
-  // - getChildren exposes a mutable Vector when call with an empty selector
-  // - prependChild would become a lot slower
+  // Cannot be changed just yet because prependChild would become a lot slower
   private Vector<XHPChild> $children = Vector {};
   private dict<string, mixed> $context = dict[];
 
@@ -173,15 +171,12 @@ abstract class :x:composable-element extends :xhp {
         }
       }
     } else {
-      $children = $this->children;
+      // Clone the private Vector
+      return new Vector($this->children);
     }
 
-    // Why this complex check to prevent calling new Vector(...) on $children?
-    // The return of this function is mutable and it directly exposes
-    // the $this->children on empty selectors.
-    // We'd need to make sure that no calling code is modifying the private Vector
-    // by calling this function with an empty selector.
-    return $children is Vector<_> ? $children : new Vector($children);
+    // Transform the vec into a Vector
+    return new Vector($children);
   }
 
 
