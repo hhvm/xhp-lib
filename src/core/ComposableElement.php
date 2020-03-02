@@ -22,7 +22,7 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * A new :x:composable-element is instantiated for every literal tag
+   * A new :x:composable_element is instantiated for every literal tag
    * expression in the script.
    *
    * The following code:
@@ -537,22 +537,22 @@ abstract xhp class x:composable_element extends :xhp {
   ): (bool, int) {
     switch ($expr->getType()) {
       case XHPChildrenExpressionType::SINGLE:
-        // Exactly once -- :fb-thing
+        // Exactly once -- :fb_thing
         return $this->validateChildrenRule($expr, $index);
       case XHPChildrenExpressionType::ANY_NUMBER:
-        // Zero or more times -- :fb-thing*
+        // Zero or more times -- :fb_thing*
         do {
           list($ret, $index) = $this->validateChildrenRule($expr, $index);
         } while ($ret);
         return tuple(true, $index);
 
       case XHPChildrenExpressionType::ZERO_OR_ONE:
-        // Zero or one times -- :fb-thing?
+        // Zero or one times -- :fb_thing?
         list($_, $index) = $this->validateChildrenRule($expr, $index);
         return tuple(true, $index);
 
       case XHPChildrenExpressionType::ONE_OR_MORE:
-        // One or more times -- :fb-thing+
+        // One or more times -- :fb_thing+
         list($ret, $index) = $this->validateChildrenRule($expr, $index);
         if (!$ret) {
           return tuple(false, $index);
@@ -563,7 +563,7 @@ abstract xhp class x:composable_element extends :xhp {
         return tuple(true, $index);
 
       case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
-        // Specific order -- :fb-thing, :fb-other-thing
+        // Specific order -- :fb_thing, :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
         list($ret, $index) = $this->validateChildrenExpression(
@@ -582,7 +582,7 @@ abstract xhp class x:composable_element extends :xhp {
         return tuple(false, $oindex);
 
       case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
-        // Either or -- :fb-thing | :fb-other-thing
+        // Either or -- :fb_thing | :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
         list($ret, $index) = $this->validateChildrenExpression(

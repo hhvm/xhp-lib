@@ -83,4 +83,4 @@ array(
 )
 ```
 
-These constants are currently declared in `:x:composable-element`.
+These constants are currently declared in `:x:composable_element`.
