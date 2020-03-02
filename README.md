@@ -222,7 +222,7 @@ There are certain conventions that you should comply with while using XHP.
 
 ```hack
 class :fb:thing extends :x:element {
-  protected async function renderAsync(): Awaitable<XHPRoot? {
+  protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div class="thing">thing</div>;
   }
 }
