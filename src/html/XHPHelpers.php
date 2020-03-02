@@ -9,7 +9,7 @@
  */
 
 use namespace Facebook\XHP\_Private;
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Dict};
 
 interface HasXHPHelpers
   extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
@@ -32,7 +32,7 @@ trait XHPHelpers implements HasXHPHelpers {
    * $target.
    */
   final public function copyAllAttributes(:x:composable_element $target): void {
-    $this->transferAttributesImpl($target, ImmSet {});
+    $this->transferAttributesImpl($target, keyset[]);
   }
 
   /*
@@ -51,7 +51,7 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final public function copyAttributesExcept(
     :x:composable_element $target,
-    _Private\SetLike<string> $ignore,
+    keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
   }
@@ -63,7 +63,7 @@ trait XHPHelpers implements HasXHPHelpers {
   final public function transferAllAttributes(
     :x:composable_element $target,
   ): void {
-    $this->transferAttributesImpl($target, ImmSet {});
+    $this->transferAttributesImpl($target, keyset[]);
   }
 
   /**
@@ -83,7 +83,7 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final public function transferAttributesExcept(
     :x:composable_element $target,
-    _Private\SetLike<string> $ignore,
+    keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
   }
@@ -94,17 +94,13 @@ trait XHPHelpers implements HasXHPHelpers {
    */
   final private function transferAttributesImpl(
     :x:composable_element $target,
-    ?_Private\SetLike<string> $ignore = null,
+    ?keyset<string> $ignore = null,
     bool $remove = false,
   ): void {
-    if ($ignore === null) {
-      $ignore = :xhp:html_element::__xhpAttributeDeclaration();
-    } else {
-      $ignore = array_fill_keys(keyset($ignore), true);
-    }
+    $ignore ??= :xhp:html_element::__xhpAttributeDeclaration();
 
     $compatible = $target::__xhpAttributeDeclaration();
-    $transferAttributes = array_diff_key($this->getAttributes(), $ignore);
+    $transferAttributes = Dict\diff_by_key($this->getAttributes(), $ignore);
     foreach ($transferAttributes as $attribute => $value) {
       if ($target->isAttributeSet($attribute)) {
         continue;
