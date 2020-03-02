@@ -33,6 +33,7 @@ abstract xhp class x:composable_element extends :xhp {
    *
    * @param $attributes    map of attributes to values
    * @param $children      list of children
+   * @param $debug_info    will in the source when childValidation is enabled
    */
   final public function __construct(
     KeyedTraversable<string, mixed> $attributes,
@@ -57,8 +58,6 @@ abstract xhp class x:composable_element extends :xhp {
     }
 
     if (:xhp::isChildValidationEnabled()) {
-      // There is some cost to having defaulted unused arguments on a function
-      // so we leave these out and get them with func_get_args().
       if (C\count($debug_info) >= 2) {
         $this->source = $debug_info[0].':'.$debug_info[1];
       } else {
@@ -73,10 +72,10 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Adds a child to the end of this node. If you give an array to this method
+   * Adds a child to the end of this node. If you give a Traversable to this method
    * then it will behave like a DocumentFragment.
    *
-   * @param $child     single child or array of children
+   * @param $child     single child or a Traversable of children
    */
   final public function appendChild(mixed $child): this {
     invariant(!$this->__isRendered, "Can't appendChild after render");
@@ -96,10 +95,9 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Replaces all children in this node. You may pass a single array or
-   * multiple parameters.
+   * Replaces all children in this node.
    *
-   * @param $children  Single child or array of children
+   * @param $children  single child or a Traversable of children
    */
   final public function replaceChildren(XHPChild ...$children): this {
     invariant(!$this->__isRendered, "Can't appendChild after render");
@@ -133,7 +131,6 @@ abstract xhp class x:composable_element extends :xhp {
    * name or category (or all children if none is given)
    *
    * @param $selector   tag name or category (optional)
-   * @return array
    */
   final public function getChildren(
     ?string $selector = null,
@@ -167,9 +164,9 @@ abstract xhp class x:composable_element extends :xhp {
    * Fetches the first direct child of the element, or the first child that
    * matches the tag if one is given
    *
-   * @param $selector   string   tag name or category (optional)
-   * @return            element  the first child node (with the given selector),
-   *                             false if there are no (matching) children
+   * @param $selector  tag name or category (optional)
+   * @return           the first child node (with the given selector),
+   *                       null if there are no (matching) children
    */
   final public function getFirstChild(?string $selector = null): ?XHPChild {
     if ($selector === null) {
@@ -196,9 +193,9 @@ abstract xhp class x:composable_element extends :xhp {
    * Fetches the last direct child of the element, or the last child that
    * matches the tag or category if one is given
    *
-   * @param $selector  string   tag name or category (optional)
-   * @return           element  the last child node (with the given selector),
-   *                            false if there are no (matching) children
+   * @param $selector  tag name or category (optional)
+   * @return           the last child node (with the given selector),
+   *                       null if there are no (matching) children
    */
   final public function getLastChild(?string $selector = null): ?XHPChild {
     return $this->getChildren($selector) |> C\last($$);
@@ -325,10 +322,7 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Sets an attribute in this element's attribute store. If the attribute is
-   * not defined in the store and is not a data- or aria- attribute an
-   * exception will be thrown. An exception will also be thrown if the
-   * attribute value is invalid.
+   * Sets an attribute in this element's attribute store.
    *
    * @param $attr      attribute to set
    * @param $val       value
@@ -340,9 +334,9 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Takes an array of key/value pairs and adds each as an attribute.
+   * Takes a KeyedContainer and adds each as an attribute.
    *
-   * @param $attrs    array of attributes
+   * @param $attrs    KeyedContainer of attributes
    */
   final public function setAttributes(
     KeyedTraversable<string, mixed> $attrs,
@@ -354,7 +348,7 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Whether the attribute has been explicitly set to a non-null value by the
+   * Whether the attribute has been explicitly set to a nonnull value by the
    * caller (vs. using the default set by "attribute" in the class definition).
    *
    * @param $attr attribute to check
@@ -364,11 +358,9 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * Removes an attribute from this element's attribute store. An exception
-   * will be thrown if $attr is not supported.
+   * Removes an attribute from this element's attribute store.
    *
    * @param $attr      attribute to remove
-   * @param $val       value
    */
   final public function removeAttribute(string $attr): this {
     invariant(!$this->__isRendered, "Can't removeAttribute after render");
@@ -377,6 +369,8 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
+   * @deprecated This functionality will be removed in a future release.
+   *
    * Sets an attribute in this element's attribute store. Always foregoes
    * validation.
    *
@@ -391,7 +385,7 @@ abstract xhp class x:composable_element extends :xhp {
   /**
    * Returns all contexts currently set.
    *
-   * @return array  All contexts
+   * @return           All contexts
    */
   final public function getAllContexts(): dict<string, mixed> {
     return $this->context;
@@ -400,9 +394,9 @@ abstract xhp class x:composable_element extends :xhp {
   /**
    * Returns a specific context value. Can include a default if not set.
    *
-   * @param string $key     The context key
-   * @param mixed $default  The value to return if not set (optional)
-   * @return mixed          The context value or $default
+   * @param   $key     The context key
+   * @param   $default The value to return if not set (optional)
+   * @return           The context value or $default
    */
   final public function getContext(string $key, mixed $default = null): mixed {
     // You can't use ?? here, since the context may contain nulls.
@@ -419,9 +413,9 @@ abstract xhp class x:composable_element extends :xhp {
    * that are rendered as children of that root element will receive this
    * context WHEN RENDERED. The context will not be available before render.
    *
-   * @param mixed $key      Either a key, or an array of key/value pairs
-   * @param mixed $default  if $key is a string, the value to set
-   * @return :xhp           $this
+   * @param $key       The key
+   * @param $default   The value to set
+   * @return           $this
    */
   final public function setContext(string $key, mixed $value): this {
     invariant(!$this->__isRendered, "Can't setContext after render");
@@ -437,7 +431,7 @@ abstract xhp class x:composable_element extends :xhp {
    * context WHEN RENDERED. The context will not be available before render.
    *
    * @param KeyedContainer $context  A map of key/value pairs
-   * @return :xhp                    $this
+   * @return               $this
    */
   final public function addContextMap(
     KeyedContainer<string, mixed> $context,
@@ -452,7 +446,7 @@ abstract xhp class x:composable_element extends :xhp {
    * for rendering because we don't want a parent's context to replace a
    * child's context if they have the same key.
    *
-   * @param array $parentContext  The context to transfer
+   * @param $parentContext  The context to transfer
    */
   final protected function __transferContext(
     KeyedContainer<string, mixed> $parentContext,
