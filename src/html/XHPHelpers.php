@@ -148,36 +148,6 @@ trait XHPHelpers implements HasXHPHelpers {
   final public function transferAttributesToRenderedRoot(
     :x:composable_element $root,
   ): void {
-    if (:xhp::isAttributeValidationEnabled() && $root is :x:element) {
-      if (!($root is HasXHPHelpers)) {
-        throw new XHPClassException(
-          $this,
-          'render() must return an object using the XHPHelpers trait.',
-        );
-      }
-
-      $rootID = $root->getAttribute('id') ?? null;
-      $thisID = $this->getAttribute('id') ?? null;
-
-      if ($rootID !== null && $thisID !== null && $rootID != $thisID) {
-        throw new XHPException(
-          'ID Collision. '.
-          (:xhp::class2element(self::class)).
-          ' has an ID '.
-          'of "'.
-          ($thisID as arraykey).
-          '" but it renders into a(n) '.
-          (:xhp::class2element(get_class($root))).
-          ' which has an ID of "'.
-          ($rootID as arraykey).
-          '". The latter will get '.
-          'overwritten (most often unexpectedly). If you are intending for '.
-          'this behavior consider calling $this->removeAttribute(\'id\') '.
-          'before returning your node from compose().',
-        );
-      }
-    }
-
     $attributes = $this->getAttributes();
 
     // We want to append classes to the root node, instead of replace them,

@@ -24,15 +24,6 @@ xhp class test:hack_enum_attribute extends :x:element {
 }
 
 class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
-  public async function beforeEachTestAsync(): Awaitable<void> {
-    /*HH_FIXME[4128] Deprecated, because we are trying to remove this.*/
-    :xhp::enableAttributeValidation();
-  }
-
-  public async function afterEachTestAsync(): Awaitable<void> {
-    :xhp::disableAttributeValidation();
-  }
-
   public async function testValidValues(): Awaitable<void> {
     $x = <test:hack_enum_attribute foo={TestEnum::HERP} />;
     expect(await $x->toStringAsync())->toEqual('<div>HERP</div>');
@@ -52,14 +43,5 @@ class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
         foo={/* HH_IGNORE_ERROR[4110] *//* HH_IGNORE_ERROR[4343] */2}
       />;
     expect(await $x->toStringAsync())->toEqual('<div>DERP</div>');
-  }
-
-  public async function testInvalidValue(): Awaitable<void> {
-    expect(() ==> {
-      $x =
-        <test:hack_enum_attribute
-          foo={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 0}
-        />;
-    })->toThrow(XHPInvalidAttributeException::class);
   }
 }

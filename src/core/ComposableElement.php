@@ -351,11 +351,6 @@ abstract xhp class x:composable_element extends :xhp {
    * @param $val       value
    */
   final public function setAttribute(string $attr, mixed $value): this {
-    if (:xhp::isAttributeValidationEnabled()) {
-      if (!ReflectionXHPAttribute::IsSpecial($attr)) {
-        $value = $this->validateEnumValuesAndCoerceScalars($attr, $value);
-      }
-    }
     invariant(!$this->__isRendered, "Can't setAttribute after render");
     $this->attributes[$attr] = $value;
     return $this;
@@ -522,73 +517,6 @@ abstract xhp class x:composable_element extends :xhp {
    */
   protected function __xhpChildrenDeclaration(): mixed {
     return self::__NO_LEGACY_CHILDREN_DECLARATION;
-  }
-
-  /**
-   * Throws an exception if $val is not a valid value for the attribute $attr
-   * on this element and this type appears to be an enum.
-   * If this type is a scalar however, we will coerce it to that type.
-   * This is something from the past and should ideally not be relied upon.
-   * The fact that :xhp::enableAttributeValidation() enables these coercions
-   * is misleading.
-   */
-  final protected function validateEnumValuesAndCoerceScalars(
-    string $attr,
-    mixed $val,
-  ): mixed {
-    if ($val is null) {
-      return null;
-    }
-    $decl = static::__xhpReflectionAttribute($attr);
-    if ($decl is null) {
-      throw new XHPAttributeNotSupportedException($this, $attr);
-    }
-
-    switch ($decl->getValueType()) {
-      case XHPAttributeType::TYPE_OBJECT:
-        $class = $decl->getValueClass();
-        if (enum_exists($class)) {
-          /* HH_FIXME[4026] $class as enumname<_> */
-          if (!$class::isValid($val)) {
-            throw new XHPInvalidAttributeException($this, $class, $attr, $val);
-          }
-        }
-        break;
-      case XHPAttributeType::TYPE_ENUM:
-        if (!(($val is string) && $decl->getEnumValues()->contains($val))) {
-          $enums = 'enum("'.Str\join($decl->getEnumValues(), '","').'")';
-          throw new XHPInvalidAttributeException($this, $enums, $attr, $val);
-        }
-        break;
-
-      // Coercion should ideally not be relied on, but it is not causing trouble (yet)
-      case XHPAttributeType::TYPE_STRING:
-        if (!($val is string)) {
-          $val = XHPAttributeCoercion::CoerceToString($this, $attr, $val);
-        }
-        break;
-
-      case XHPAttributeType::TYPE_BOOL:
-        if (!($val is bool)) {
-          $val = XHPAttributeCoercion::CoerceToBool($this, $attr, $val);
-        }
-        break;
-
-      case XHPAttributeType::TYPE_INTEGER:
-        if (!($val is int)) {
-          $val = XHPAttributeCoercion::CoerceToInt($this, $attr, $val);
-        }
-        break;
-
-      case XHPAttributeType::TYPE_FLOAT:
-        if (!($val is float)) {
-          $val = XHPAttributeCoercion::CoerceToFloat($this, $attr, $val);
-        }
-        break;
-      default:
-        return $val;
-    }
-    return $val;
   }
 
   /**

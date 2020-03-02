@@ -55,7 +55,6 @@ abstract xhp class xhp implements XHPChild {
    * though.
    */
   private static bool $validateChildren = true;
-  private static bool $validateAttributes = false;
 
   public static function disableChildValidation(): void {
     self::$validateChildren = false;
@@ -68,24 +67,6 @@ abstract xhp class xhp implements XHPChild {
   public static function isChildValidationEnabled(): bool {
     return self::$validateChildren;
   }
-
-  public static function disableAttributeValidation(): void {
-    self::$validateAttributes = false;
-  }
-
-  <<__Deprecated(
-    'The validation rules have been changed.'.
-    'They will now only apply for enums (both Hack and XHP enums).'.
-    'This funcionality will be remove completely at some point.',
-  )>>
-  public static function enableAttributeValidation(): void {
-    self::$validateAttributes = true;
-  }
-
-  public static function isAttributeValidationEnabled(): bool {
-    return self::$validateAttributes;
-  }
-
 
   final protected static async function renderChildAsync(XHPChild $child): Awaitable<string> {
     if ($child is :xhp) {
