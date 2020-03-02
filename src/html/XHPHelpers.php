@@ -97,11 +97,7 @@ trait XHPHelpers implements HasXHPHelpers {
     ?keyset<string> $ignore = null,
     bool $remove = false,
   ): void {
-    if ($ignore === null) {
-      $ignore = :xhp:html_element::__xhpAttributeDeclaration();
-    } else {
-      $ignore = keyset($ignore);
-    }
+    $ignore ??= :xhp:html_element::__xhpAttributeDeclaration();
 
     $compatible = $target::__xhpAttributeDeclaration();
     $transferAttributes = Dict\diff_by_key($this->getAttributes(), $ignore);
