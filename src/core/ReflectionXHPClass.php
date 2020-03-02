@@ -8,6 +8,8 @@
  *
  */
 
+use namespace HH\Lib\C;
+
 class ReflectionXHPClass {
   public function __construct(
     private classname<:x:composable_element> $className,
@@ -39,7 +41,7 @@ class ReflectionXHPClass {
   public function getAttribute(string $name): ReflectionXHPAttribute {
     $map = $this->getAttributes();
     invariant(
-      $map->containsKey($name),
+      C\contains_key($map, $name),
       'Tried to get attribute %s for XHP element %s, which does not exist',
       $name,
       $this->getElementName(),
@@ -47,12 +49,12 @@ class ReflectionXHPClass {
     return $map[$name];
   }
 
-  public function getAttributes(): Map<string, ReflectionXHPAttribute> {
+  public function getAttributes(): dict<string, ReflectionXHPAttribute> {
     $class = $this->getClassName();
     return $class::__xhpReflectionAttributes();
   }
 
-  public function getCategories(): Set<string> {
+  public function getCategories(): keyset<string> {
     $class = $this->getClassName();
     return $class::__xhpReflectionCategoryDeclaration();
   }

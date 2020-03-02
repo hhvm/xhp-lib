@@ -11,6 +11,7 @@
 use function Facebook\FBExpect\expect;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
+use namespace HH\Lib\Dict;
 
 xhp class test:for_reflection extends :x:element {
   use XHPChildValidation;
@@ -63,8 +64,8 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testGetAttributes(): void {
     $attrs = $this->rxc?->getAttributes();
     expect($attrs)->toNotBeEmpty();
-    expect($attrs?->map($attr ==> /* HH_FIXME[4281] */(string)$attr))
-      ->toHaveSameContentAs(
+    expect(Dict\map($attrs as nonnull, ($attr ==> $attr->__toString())))
+      ->toEqual(
         dict[
           'mystring' => 'string mystring @required',
           'myenum' => "enum {'herp', 'derp'} myenum",

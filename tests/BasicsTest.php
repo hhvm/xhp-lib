@@ -9,6 +9,7 @@
  */
 
 use function Facebook\FBExpect\expect;
+use namespace HH\Lib\C;
 
 xhp class test:renders_primitive extends :x:element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -45,7 +46,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     $x = 'herp';
     $y = 'derp';
     $frag = <x:frag>{$x}{$y}</x:frag>;
-    expect($frag->getChildren()->count())->toEqual(2);
+    expect(C\count($frag->getChildren()))->toEqual(2);
     $xhp = <div>{$frag}</div>;
     expect(await $xhp->toStringAsync())->toEqual('<div>herpderp</div>');
   }

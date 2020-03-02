@@ -9,6 +9,7 @@
  */
 
 use function Facebook\FBExpect\expect;
+use namespace HH\Lib\Vec;
 
 type TMyTestShape = shape('foo' => string, 'bar' => ?string);
 xhp class test:attribute_types extends :x:element {
@@ -239,7 +240,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect($y->:myint)->toEqual(5);
     expect($y->:mybool)->toEqual(true);
 
-    $attrs = $y->getAttributes()->keys();
-    expect($attrs)->toHaveSameContentAs(Vector {'mystring', 'mybool', 'myint'});
+    $attrs = Vec\keys($y->getAttributes());
+    expect($attrs)->toEqual(vec['mystring', 'mybool', 'myint']);
   }
 }
