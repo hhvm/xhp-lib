@@ -76,6 +76,6 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
 
   public function testGetCategories(): void {
     $categories = $this->rxc?->getCategories();
-    expect($categories)->toHaveSameContentAs(Set {'herp', 'derp'});
+    expect($categories)->toEqual(keyset['herp', 'derp']);
   }
 }
