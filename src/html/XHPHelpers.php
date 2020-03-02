@@ -137,8 +137,8 @@ trait XHPHelpers implements HasXHPHelpers {
   }
 
   protected function getAttributeNamesThatAppendValuesOnTransfer(
-  ): ImmSet<string> {
-    return ImmSet {'class'};
+  ): keyset<string> {
+    return keyset['class'];
   }
 
   final public function transferAttributesToRenderedRoot(

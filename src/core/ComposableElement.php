@@ -137,31 +137,29 @@ abstract xhp class x:composable_element extends :xhp {
    */
   final public function getChildren(
     ?string $selector = null,
-  ): Vector<XHPChild> {
-    if ($selector is string && $selector !== '') {
-      $children = vec[];
-      if ($selector[0] == '%') {
-        $selector = substr($selector, 1);
-        foreach ($this->children as $child) {
-          if ($child is :xhp && $child->categoryOf($selector)) {
-            $children[] = $child;
-          }
-        }
-      } else {
-        $selector = :xhp::element2class($selector);
-        foreach ($this->children as $child) {
-          if (is_a($child, $selector, /* allow strings = */ true)) {
-            $children[] = $child;
-          }
+  ): vec<XHPChild> {
+    if($selector is null || $selector === ''){
+      return $this->children;
+    }
+
+    $children = vec[];
+    if ($selector[0] == '%') {
+      $selector = Str\slice($selector, 1);
+      foreach ($this->children as $child) {
+        if ($child is :xhp && $child->categoryOf($selector)) {
+          $children[] = $child;
         }
       }
     } else {
-      // Clone the private Vector
-      return new Vector($this->children);
+      $selector = :xhp::element2class($selector);
+      foreach ($this->children as $child) {
+        if (is_a($child, $selector, /* allow strings = */ true)) {
+          $children[] = $child;
+        }
+      }
     }
 
-    // Transform the vec into a Vector
-    return new Vector($children);
+    return $children;
   }
 
 
@@ -203,12 +201,7 @@ abstract xhp class x:composable_element extends :xhp {
    *                            false if there are no (matching) children
    */
   final public function getLastChild(?string $selector = null): ?XHPChild {
-    $temp = $this->getChildren($selector);
-    if ($temp->count() > 0) {
-      $count = $temp->count();
-      return $temp->at($count - 1);
-    }
-    return null;
+    return $this->getChildren($selector) |> C\last($$);
   }
 
   /**
@@ -245,25 +238,17 @@ abstract xhp class x:composable_element extends :xhp {
   final public static function __xhpReflectionAttribute(
     string $attr,
   ): ?ReflectionXHPAttribute {
-    $map = static::__xhpReflectionAttributes();
-    if ($map->containsKey($attr)) {
-      return $map[$attr];
-    }
-    return null;
+    return static::__xhpReflectionAttributes()[$attr] ?? null;
   }
 
-  // @reviewer, the memoize would make it so that changes made
-  // to this map are observable to the next caller.
-  // This would be a mild bc break, but one to note non the less.
   <<__MemoizeLSB>>
   final public static function __xhpReflectionAttributes(
-  ): Map<string, ReflectionXHPAttribute> {
-    $map = Map {};
+  ): dict<string, ReflectionXHPAttribute> {
     $decl = static::__xhpAttributeDeclaration();
-    foreach ($decl as $name => $attr_decl) {
-      $map[$name] = new ReflectionXHPAttribute($name, $attr_decl);
-    }
-    return $map;
+    return Dict\map_with_key(
+      $decl, 
+      ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl)
+    );
   }
 
   protected static function __legacySerializedXHPChildrenDeclaration(): mixed {
@@ -284,10 +269,8 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   final public static function __xhpReflectionCategoryDeclaration(
-  ): Set<string> {
-    return new Set(
-      Keyset\keys(self::emptyInstance()->__xhpCategoryDeclaration()),
-    );
+  ): keyset<string> {
+    return Keyset\keys(self::emptyInstance()->__xhpCategoryDeclaration());
   }
 
   // Work-around to call methods that should be static without a real
@@ -299,8 +282,8 @@ abstract xhp class x:composable_element extends :xhp {
     )->newInstanceWithoutConstructor();
   }
 
-  final public function getAttributes(): Map<string, mixed> {
-    return new Map($this->attributes);
+  final public function getAttributes(): dict<string, mixed> {
+    return $this->attributes;
   }
 
   /**
@@ -410,8 +393,8 @@ abstract xhp class x:composable_element extends :xhp {
    *
    * @return array  All contexts
    */
-  final public function getAllContexts(): Map<string, mixed> {
-    return new Map($this->context);
+  final public function getAllContexts(): dict<string, mixed> {
+    return $this->context;
   }
 
   /**

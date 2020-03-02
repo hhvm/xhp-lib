@@ -227,12 +227,12 @@ xhp class test:needs_comma_category extends :x:element {
 
 class ChildRuleTest extends Facebook\HackTest\HackTest {
   public async function testNoChild(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:no_children />,
       <test:any_children />,
       <test:optional_child />,
       <test:any_number_of_child />,
-    };
+    ];
     foreach ($elems as $elem) {
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
@@ -246,7 +246,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testSingleChild(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:any_children />,
       <test:single_child />,
       <test:optional_child />,
@@ -256,7 +256,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any_of_three_children />,
       <test:nested_rule />,
       <test:category_child />,
-    };
+    ];
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
@@ -290,13 +290,13 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testExpectedChild(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:single_child />,
       <test:at_least_one_child />,
       <test:either_of_two_children />,
       <test:nested_rule />,
       <test:pcdata_child />,
-    };
+    ];
     foreach ($elems as $elem) {
       expect(async () ==> await $elem->toStringAsync())
         ->toThrow(XHPInvalidChildrenException::class);
@@ -304,7 +304,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testTooManyChildren(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:single_child />,
       <test:optional_child />,
       <test:two_children />,
@@ -312,7 +312,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:either_of_two_children />,
       <test:nested_rule />,
       <test:category_child />,
-    };
+    ];
     foreach ($elems as $elem) {
       $exception = null;
       $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
@@ -322,7 +322,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testIncorrectChild(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:single_child />,
       <test:optional_child />,
       <test:any_number_of_child />,
@@ -331,7 +331,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any_of_three_children />,
       <test:nested_rule />,
       <test:category_child />,
-    };
+    ];
     foreach ($elems as $elem) {
       $exception = null;
       $elem->appendChild(<thead />);
@@ -345,11 +345,11 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testTwoChildren(): Awaitable<void> {
-    $elems = Vector {
+    $elems = vec[
       <test:any_number_of_child />,
       <test:at_least_one_child />,
       <test:two_children />,
-    };
+    ];
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
@@ -357,7 +357,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testThreeChildren(): Awaitable<void> {
-    $elems = Vector {<test:any_number_of_child />, <test:at_least_one_child />};
+    $elems = vec[<test:any_number_of_child />, <test:at_least_one_child />];
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
       expect(await $elem->toStringAsync())->toEqual('<div></div>');

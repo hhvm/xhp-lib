@@ -8,7 +8,7 @@
  *
  */
 
-use namespace HH\Lib\C;
+use namespace HH\Lib\{C, Str, Vec};
 
 enum XHPAttributeType: int {
   TYPE_STRING = 1;
@@ -79,9 +79,8 @@ class ReflectionXHPAttribute {
     return $v;
   }
 
-  // @reviewer modified sets may be observed by the next caller
   <<__Memoize>>
-  public function getEnumValues(): Set<string> {
+  public function getEnumValues(): keyset<string> {
     $t = $this->getValueType();
     invariant(
       $this->getValueType() === XHPAttributeType::TYPE_ENUM,
@@ -95,7 +94,7 @@ class ReflectionXHPAttribute {
       'Class name for attribute %s is not a string',
       $this->getName(),
     );
-    return new Set($v);
+    return keyset($v);
   }
 
   /**
@@ -130,7 +129,10 @@ class ReflectionXHPAttribute {
         break;
       case XHPAttributeType::TYPE_ENUM:
         $out = 'enum {';
-        $out .= implode(', ', $this->getEnumValues()->map($x ==> "'".$x."'"));
+        $out .= Str\join(
+          Vec\map($this->getEnumValues(), $x ==> "'".$x."'"),
+          ', ',
+        );
         $out .= '}';
         break;
       case XHPAttributeType::TYPE_FLOAT:

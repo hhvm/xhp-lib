@@ -24,11 +24,11 @@ abstract xhp class xhp implements XHPChild {
   abstract public function replaceChildren(...): this;
   abstract public function getChildren(
     ?string $selector = null,
-  ): Vector<XHPChild>;
+  ): vec<XHPChild>;
   abstract public function getFirstChild(?string $selector = null): ?XHPChild;
   abstract public function getLastChild(?string $selector = null): ?XHPChild;
   abstract public function getAttribute(string $attr): mixed;
-  abstract public function getAttributes(): Map<string, mixed>;
+  abstract public function getAttributes(): dict<string, mixed>;
   abstract public function setAttribute(string $attr, mixed $val): this;
   abstract public function setAttributes(
     KeyedTraversable<string, mixed> $attrs,
