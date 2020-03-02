@@ -37,7 +37,7 @@ xhp class async:par_test extends :x:element {
 
   attribute string label @required;
 
-  public static Vector<(string, string)> $log = Vector {};
+  public static vec<(string, string)> $log = vec[];
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
     $label = $this->:label;
@@ -91,7 +91,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('parallelizationContainersProvider')>>
   public async function testParallelization(:x:element $container): Awaitable<void> {
-    :async:par_test::$log = Vector {};
+    :async:par_test::$log = vec[];
 
     $a = <async:par_test label="a" />;
     $b = <async:par_test label="b" />;
