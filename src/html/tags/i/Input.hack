@@ -49,7 +49,7 @@ xhp class input extends :xhp:html_singleton {
     bool required,
     int size,
     string src,
-    float step,
+    mixed step, // float or 'any'
     enum {
       'hidden',
       'text',
