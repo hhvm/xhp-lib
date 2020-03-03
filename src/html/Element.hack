@@ -16,7 +16,7 @@ use namespace HH\Lib\{Str, Vec};
  * own elements.
  */
 abstract xhp class xhp:html_element extends :x:primitive {
-  use XHPBaseHTMLHelpers;
+  use XHPHTMLHelpers;
 
   // enum { 'true', 'false' } attributes: these are actually tri-state -
   // the implied third value is usually 'auto' or 'inherit'; for example,

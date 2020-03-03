@@ -8,7 +8,7 @@
  */
 
 
-trait XHPBaseHTMLHelpers implements HasXHPBaseHTMLHelpers {
+trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
   require extends :x:composable_element;
 
   /*
