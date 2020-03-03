@@ -242,17 +242,16 @@ abstract xhp class x:composable_element extends :xhp {
   ): dict<string, ReflectionXHPAttribute> {
     $decl = static::__xhpAttributeDeclaration();
     return Dict\map_with_key(
-      $decl, 
+      $decl,
       ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl)
     );
   }
 
   protected static function __legacySerializedXHPChildrenDeclaration(): mixed {
-    $decl = self::emptyInstance()->__xhpChildrenDeclaration();
-    if ($decl === self::__NO_LEGACY_CHILDREN_DECLARATION) {
-      return 1; // any children
-    }
-    return $decl;
+    invariant(self::emptyInstance()->__xhpChildrenDeclaration() === self::__NO_LEGACY_CHILDREN_DECLARATION,
+      "Legacy XHP children declaration syntax is no longer supported"
+    );
+    return 1; // any children
   }
 
   <<__MemoizeLSB>>
