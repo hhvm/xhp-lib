@@ -9,7 +9,7 @@
  */
 
 /**
- * Subclasses of :xhp:html-singleton may not contain children. When
+ * Subclasses of :xhp:html_singleton may not contain children. When
  * rendered they will be in singleton (<img />, <br />) form.
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;

@@ -20,7 +20,7 @@ interface HasXHPHelpers
  * Use of this trait assumes you have inherited attributes from an HTML element.
  * For the bare minimum, use:
  *
- * attribute :xhp:html-element;
+ * attribute :xhp:html_element;
  */
 trait XHPHelpers implements HasXHPHelpers {
   require extends :x:composable_element;

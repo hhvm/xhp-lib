@@ -9,7 +9,7 @@
  */
 
 /**
- * Subclasses of :xhp:raw-pcdata-element must contain only string children.
+ * Subclasses of :xhp:raw_pcdata_element must contain only string children.
  * However, the strings will not be escaped. This is intended for tags like
  * <script> or <style> whose content is interpreted literally by the browser.
  *

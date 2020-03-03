@@ -9,7 +9,7 @@
  */
 
 /**
- * Subclasses of :xhp:pcdata-elements may contain only string children.
+ * Subclasses of :xhp:pcdata_elements may contain only string children.
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 

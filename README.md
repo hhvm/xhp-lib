@@ -127,7 +127,7 @@ You can also steal another element's attributes by specifying only a tag name in
 All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an `<input />` to appear directly inside of a `<body />` tag (it must be inside a form). XHP allows you to define a content model which documents must adhere to. This is done with the `children` keyword, which uses a syntax similar to regular expressions. Note, that unlike `attribute`, `children` may only appear once inside any class.
 
 ```hack
-class :fb:thing-container extends :x:element {
+class :fb:thing_container extends :x:element {
   children (:fb:thing1 | :fb:thing2)*;
 }
 ```
@@ -140,7 +140,7 @@ A children declaration supports the following postfix operators:
 If no operator is specified then the declaration must be matched exactly one time. You may also use the `,` or `|` operator to combine multiple declarations into one. The `,` operator specifies a list of declarations that must appear in order, and a `|` specifies a list of declarations, of which one must match. For instance if you are defining a page layout your children declaration may look like:
 
 ```hack
-  children (:fb:left-column?, :fb:content, :fb:right-column?);
+  children (:fb:left_column?, :fb:content, :fb:right_column?);
 ```
 
 This specifies an optional left column followed by a required content and an optional right column.
@@ -162,7 +162,7 @@ class :fb:thing2 extends :x:element {
   category %fb:thing;
 }
 
-class :fb:thing-container extends :x:element {
+class :fb:thing_container extends :x:element {
   children (%fb:thing)*;
 }
 ```
@@ -173,6 +173,9 @@ XHP supports Hack's 'async' functionality, allowing you to build components that
 efficiently fetch the data that they require:
 
 ```hack
+// @fredemmott I think you changed some of the function names here.
+// Could you please validate that this example is still correct?
+// I think we might want to use `xhp class` here.
 class :async-thing extends :x:element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
     $db = await AsyncMysqlClient::connect(...);
