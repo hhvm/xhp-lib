@@ -7,7 +7,7 @@
  *
  */
 
-interface HasXHPBaseHTMLHelpers {
+interface HasXHPHTMLHelpers {
   require extends :x:composable_element;
 
   public function addClass(string $class): this;

@@ -38,7 +38,7 @@ abstract xhp class x:element extends :x:composable_element implements XHPRoot {
     $composed = await $this->renderAsync();
 
     $composed->__transferContext($this->getAllContexts());
-    if ($this is XHPHasTransferAttributes) {
+    if ($this is HasXHPAttributeClobbering_DEPRECATED) {
       $this->transferAttributesToRenderedRoot($composed);
     }
 

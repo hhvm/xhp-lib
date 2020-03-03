@@ -10,7 +10,7 @@
 use function Facebook\FBExpect\expect;
 
 xhp class test:no_xhphelpers extends :x:element {
-  use XHPBaseHTMLHelpers;
+  use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -19,7 +19,7 @@ xhp class test:no_xhphelpers extends :x:element {
 }
 
 xhp class test:xhphelpers extends :x:element {
-  use XHPHelpers;
+  use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -28,7 +28,7 @@ xhp class test:xhphelpers extends :x:element {
 }
 
 xhp class test:async:no_xhphelpers extends :x:element {
-  use XHPBaseHTMLHelpers;
+  use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -37,7 +37,7 @@ xhp class test:async:no_xhphelpers extends :x:element {
 }
 
 xhp class test:async:xhphelpers extends :x:element {
-  use XHPHelpers;
+  use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -46,7 +46,7 @@ xhp class test:async:xhphelpers extends :x:element {
 }
 
 xhp class test:with_class_on_root extends :x:element {
-  use XHPHelpers;
+  use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -54,7 +54,7 @@ xhp class test:with_class_on_root extends :x:element {
   }
 }
 
-class XHPHelpersTest extends Facebook\HackTest\HackTest {
+class XHPAttributeClobbering_DEPRECATEDTest extends Facebook\HackTest\HackTest {
   public async function testTransferAttributesWithoutHelpers(): Awaitable<void> {
     $x = <test:no_xhphelpers data-foo="bar" />;
     expect(await $x->toStringAsync())->toEqual('<div></div>');

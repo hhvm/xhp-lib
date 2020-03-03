@@ -10,10 +10,11 @@
 use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\{C, Dict};
 
-interface HasXHPHelpers
-  extends HasXHPBaseHTMLHelpers, XHPHasTransferAttributes {
+interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
+  public function transferAttributesToRenderedRoot(
+    :x:composable_element $root,
+  ): void;
 }
-;
 
 /*
  * Use of this trait assumes you have inherited attributes from an HTML element.
@@ -21,10 +22,11 @@ interface HasXHPHelpers
  *
  * attribute :xhp:html_element;
  */
-trait XHPHelpers implements HasXHPHelpers {
+trait XHPAttributeClobbering_DEPRECATED
+  implements HasXHPAttributeClobbering_DEPRECATED {
   require extends :x:composable_element;
 
-  use XHPBaseHTMLHelpers;
+  use XHPHTMLHelpers;
 
   /*
    * Copies all attributes that are set on $this and valid on $target to
