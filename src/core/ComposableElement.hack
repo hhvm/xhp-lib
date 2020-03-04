@@ -294,28 +294,31 @@ abstract xhp class x:composable_element extends :xhp {
    *   <foo attr1="bar" {...$xhp} />
    *
    * This will only copy defined attributes on $xhp to when they are also
-   * defined on $this. "Special" data-/aria- attributes will still need to be
-   * implicitly transferred, since the typechecker never knows about them.
+   * defined on $this, or if they are "special" data-/aria- attributes.
    *
    * Defaults from $xhp are copied as well, if they are present.
    */
   protected final function spreadElementImpl(
     :x:composable_element $element,
   ): void {
-    foreach ($element::__xhpReflectionAttributes() as $attr_name => $attr) {
-      $our_attr = static::__xhpReflectionAttribute($attr_name);
-      if ($our_attr === null) {
-        continue;
-      }
-
-      $val = $element->getAttribute($attr_name);
-      if ($val === null) {
+    $attrs = $element::__xhpReflectionAttributes()
+      |> Dict\filter($$, $attr ==> $attr->hasDefaultValue())
+      |> Dict\map($$, $attr ==> $attr->getDefaultValue())
+      |> Dict\merge($$, $element->getAttributes());
+    foreach ($attrs as $attr_name => $value) {
+      if (
+        $value === null ||
+        !(
+          ReflectionXHPAttribute::IsSpecial($attr_name) ||
+          (static::__xhpReflectionAttribute($attr_name) !== null)
+        )
+      ) {
         continue;
       }
 
       // If the receiving class has the same attribute and we had a value or
       // a default, then copy it over.
-      $this->setAttribute($attr_name, $val);
+      $this->setAttribute($attr_name, $value);
     }
   }
 

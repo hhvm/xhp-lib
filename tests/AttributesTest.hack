@@ -161,13 +161,41 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testAttributeSpread(): Awaitable<void> {
-    $x = <test:attribute_types mystring="foo" mybool={true} />;
+    $x =
+      <test:attribute_types
+        mystring="foo"
+        mybool={true}
+        data-foo="bar"
+        aria-foo="bar"
+      />;
     $y = <test:attribute_types mystring="bar" {...$x} myint={5} />;
+    $attrs = Vec\keys($y->getAttributes());
+    expect($attrs)->toEqual(
+      vec['mystring', 'mybool', 'data-foo', 'aria-foo', 'myint'],
+    );
+
     expect($y->:mystring)->toEqual('foo');
     expect($y->:myint)->toEqual(5);
     expect($y->:mybool)->toEqual(true);
+    expect($y->:data-foo)->toEqual('bar');
+    expect($y->:aria-foo)->toEqual('bar');
 
-    $attrs = Vec\keys($y->getAttributes());
-    expect($attrs)->toEqual(vec['mystring', 'mybool', 'myint']);
+    $x = <test:default_attributes />;
+    $y = <test:attribute_types {...$x} />;
+    expect($y->:mystring)->toEqual('mydefault');
+    // make sure the default was copied, not present on this class
+    expect((<test:attribute_types />)->:mystring)->toBeNull();
+
+    $x = <test:default_attributes mystring="notthedefault" />;
+    $y = <test:attribute_types {...$x} />;
+    expect($y->:mystring)->toEqual('notthedefault');
+
+    $x = <test:default_attributes />;
+    $y = <test:attribute_types {...$x} mystring="foo" />;
+    expect($y->:mystring)->toEqual('foo');
+
+    $x = <test:default_attributes />;
+    $y = <test:attribute_types mystring="foo" {...$x} />;
+    expect($y->:mystring)->toEqual('mydefault');
   }
 }
