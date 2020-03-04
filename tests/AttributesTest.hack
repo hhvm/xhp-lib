@@ -83,38 +83,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public async function testShapeWithExtraKey(): Awaitable<void> {
-    self::markTestSkipped('Only enums are validated at runtime.');
-    expect(async () ==> {
-      $x =
-        <test:attribute_types
-          /* HH_IGNORE_ERROR[4110] */
-          /* HH_IGNORE_ERROR[4343] */
-          /* HH_IGNORE_ERROR[4166] */
-          myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
-        />;
-      expect(await $x->toStringAsync())->toEqual('<div></div>');
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
-  public async function testShapeWithMissingOptionalKey(): Awaitable<void> {
-    self::markTestSkipped('Only enums are validated at runtime.');
-    expect(async () ==> {
-
-      /* HH_IGNORE_ERROR[4057] */
-      $x = <test:attribute_types myshape={shape('foo' => 'herp')} />;
-      expect(await $x->toStringAsync())->toEqual('<div></div>');
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
-  public async function testShapeWithMissingRequiredKey(): Awaitable<void> {
-    self::markTestSkipped('Only enums are validated at runtime.');
-    expect(async () ==> {
-      /* HH_IGNORE_ERROR[4057] */
-      $x = <test:attribute_types myshape={shape()} />;
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
   public async function testValidArrayKeys(): Awaitable<void> {
     $x = <test:attribute_types myarraykey="foo" />;
     expect(await $x->toStringAsync())->toEqual('<div></div>');
@@ -122,34 +90,11 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
-  public async function testInvalidArrayKeys(): Awaitable<void> {
-    self::markTestSkipped('Only enums are validated at runtime.');
-    expect(() ==> {
-      $x =
-        <test:attribute_types
-          myarraykey={/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ 1.23}
-        />;
-      $x->toString();
-    })->toThrow(XHPInvalidAttributeException::class);
-  }
-
   public async function testValidNum(): Awaitable<void> {
     $x = <test:attribute_types mynum={123} />;
     expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:attribute_types mynum={1.23} />;
     expect(await $x->toStringAsync())->toEqual('<div></div>');
-  }
-
-  public async function testInvalidNum(): Awaitable<void> {
-    self::markTestSkipped('Only enums are validated at runtime.');
-
-    expect(() ==> {
-      $x =
-        <test:attribute_types
-          mynum=/* HH_FIXME[4110] */ /* HH_FIXME[4343] */ "123"
-        />;
-      $x->toString();
-    })->toThrow(XHPInvalidAttributeException::class);
   }
 
   public async function testNoAttributes(): Awaitable<void> {
@@ -213,31 +158,6 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     $x = <div data-foo="derp" />;
     $x->setAttribute('data-foo', null);
     expect(await $x->toStringAsync())->toEqual('<div></div>');
-  }
-
-  public async function testRenderCallableAttribute(): Awaitable<void> {
-    self::markTestSkipped('This type has been unsupported since 2.0');
-    expect(() ==> {
-      $x =
-        <test:callable_attribute
-          /* HH_IGNORE_ERROR[4110] */
-          /* HH_IGNORE_ERROR[4343] */
-          foo={function() {
-          }}
-        />;
-    })->toThrow(XHPUnsupportedAttributeTypeException::class);
-  }
-
-  public async function testReflectOnCallableAttribute(): Awaitable<void> {
-    self::markTestSkipped('This type has been unsupported since 2.0');
-    $rxhp = new ReflectionXHPClass(:test:callable_attribute::class);
-    $rattr = $rxhp->getAttribute('foo');
-    expect(
-      strstr($rattr->__toString(), "<UNSUPPORTED: legacy callable>") !== false,
-    )
-      ->toBeTrue(
-        "Incorrect reflection for unsupported `callable` attribute type",
-      );
   }
 
   public async function testAttributeSpread(): Awaitable<void> {
