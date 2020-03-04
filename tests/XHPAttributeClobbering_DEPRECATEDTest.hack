@@ -55,7 +55,8 @@ xhp class test:with_class_on_root extends :x:element {
 }
 
 class XHPAttributeClobbering_DEPRECATEDTest extends Facebook\HackTest\HackTest {
-  public async function testTransferAttributesWithoutHelpers(): Awaitable<void> {
+  public async function testTransferAttributesWithoutHelpers(
+  ): Awaitable<void> {
     $x = <test:no_xhphelpers data-foo="bar" />;
     expect(await $x->toStringAsync())->toEqual('<div></div>');
     $x = <test:no_xhphelpers data-foo="bar" />;
