@@ -24,6 +24,7 @@ xhp class x:doctype extends :x:primitive {
 
 
   protected async function stringifyAsync(): Awaitable<string> {
-    return '<!DOCTYPE html>'.(await :xhp::renderChildAsync(C\onlyx($this->getChildren())));
+    return '<!DOCTYPE html>'.
+      (await :xhp::renderChildAsync(C\onlyx($this->getChildren())));
   }
 }

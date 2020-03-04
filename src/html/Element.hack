@@ -7,7 +7,7 @@
  *
  */
 
- use namespace HH\Lib\{Str, Vec};
+use namespace HH\Lib\{Str, Vec};
 
 /**
  * This is the base library of HTML elements for use in XHP. This includes all
@@ -122,14 +122,10 @@ abstract xhp class xhp:html_element extends :x:primitive {
           if ($val is XHPUnsafeAttributeValue) {
             $val_str = $val->toHTMLString();
           } else {
-            $val_str = htmlspecialchars((string) $val, ENT_COMPAT);
+            $val_str = htmlspecialchars((string)$val, ENT_COMPAT);
           }
 
-          $buf .= ' '.
-            htmlspecialchars($key).
-            '="'.
-            $val_str.
-            '"';
+          $buf .= ' '.htmlspecialchars($key).'="'.$val_str.'"';
         }
       }
     }
@@ -141,7 +137,8 @@ abstract xhp class xhp:html_element extends :x:primitive {
     $buf .= await Vec\map_async(
       $this->getChildren(),
       async $child ==> await :xhp::renderChildAsync($child),
-    ) |> Str\join($$, '');
+    )
+      |> Str\join($$, '');
     $buf .= '</'.$this->tagName.'>';
     return $buf;
   }

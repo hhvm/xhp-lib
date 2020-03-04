@@ -52,7 +52,9 @@ class BasicsTest extends Facebook\HackTest\HackTest {
 
   public async function testEscaping(): Awaitable<void> {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
-    expect(await $xhp->toStringAsync())->toEqual('<div>foo&lt;SCRIPT&gt;bar</div>');
+    expect(await $xhp->toStringAsync())->toEqual(
+      '<div>foo&lt;SCRIPT&gt;bar</div>',
+    );
   }
 
   public async function testElement2Class(): Awaitable<void> {

@@ -131,10 +131,8 @@ abstract xhp class x:composable_element extends :xhp {
    *
    * @param $selector   tag name or category (optional)
    */
-  final public function getChildren(
-    ?string $selector = null,
-  ): vec<XHPChild> {
-    if($selector is null || $selector === ''){
+  final public function getChildren(?string $selector = null): vec<XHPChild> {
+    if ($selector is null || $selector === '') {
       return $this->children;
     }
 
@@ -243,13 +241,15 @@ abstract xhp class x:composable_element extends :xhp {
     $decl = static::__xhpAttributeDeclaration();
     return Dict\map_with_key(
       $decl,
-      ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl)
+      ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl),
     );
   }
 
   protected static function __legacySerializedXHPChildrenDeclaration(): mixed {
-    invariant(self::emptyInstance()->__xhpChildrenDeclaration() === self::__NO_LEGACY_CHILDREN_DECLARATION,
-      "Legacy XHP children declaration syntax is no longer supported"
+    invariant(
+      self::emptyInstance()->__xhpChildrenDeclaration() ===
+        self::__NO_LEGACY_CHILDREN_DECLARATION,
+      "Legacy XHP children declaration syntax is no longer supported",
     );
     return 1; // any children
   }

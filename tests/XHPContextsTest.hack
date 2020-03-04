@@ -29,7 +29,9 @@ class XHPContextsTest extends Facebook\HackTest\HackTest {
   public async function testContextInsideHTMLElement(): Awaitable<void> {
     $x = <div><test:contexts /></div>;
     $x->setContext('heading', 'herp');
-    expect(await $x->toStringAsync())->toEqual('<div><div><p>herp</p></div></div>');
+    expect(await $x->toStringAsync())->toEqual(
+      '<div><div><p>herp</p></div></div>',
+    );
   }
 
   public async function testNestedContexts(): Awaitable<void> {

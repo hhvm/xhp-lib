@@ -49,14 +49,20 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
   }
 
   <<DataProvider('xhpRootProvider')>>
-  public async function testSynchronous(XHPRoot $root, string $expected): Awaitable<void> {
+  public async function testSynchronous(
+    XHPRoot $root,
+    string $expected,
+  ): Awaitable<void> {
     $elem = <test:verbatim_root />;
     $elem->setContext('root', $root);
     expect(await $elem->toStringAsync())->toEqual($expected);
   }
 
   <<DataProvider('xhpRootProvider')>>
-  public async function testAsynchronous(XHPRoot $root, string $expected): Awaitable<void> {
+  public async function testAsynchronous(
+    XHPRoot $root,
+    string $expected,
+  ): Awaitable<void> {
     $elem = <test:verbatim_root:async />;
     $elem->setContext('root', $root);
     expect(await $elem->toStringAsync())->toEqual($expected);

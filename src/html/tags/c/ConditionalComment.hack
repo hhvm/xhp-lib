@@ -32,7 +32,8 @@ xhp class x:conditional_comment extends :x:primitive {
     $html .= await Vec\map_async(
       $this->getChildren(),
       async $child ==> await :xhp::renderChildAsync($child),
-    ) |> Str\join($$, '');
+    )
+      |> Str\join($$, '');
     $html .= '<![endif]-->';
     return $html;
   }

@@ -15,7 +15,9 @@ use namespace HH\Lib\Dict;
  * needs to directly implement stringify(). All other elements should subclass
  * from :x:element.
  */
-abstract xhp class x:primitive extends :x:composable_element implements XHPRoot {
+abstract xhp class x:primitive
+  extends :x:composable_element
+  implements XHPRoot {
   abstract protected function stringifyAsync(): Awaitable<string>;
 
   final public async function toStringAsync(): Awaitable<string> {

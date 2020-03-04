@@ -63,7 +63,9 @@ class AsyncTest extends Facebook\HackTest\HackTest {
 
   public async function testNested(): Awaitable<void> {
     $xhp = <async:test><async:test>herp derp</async:test></async:test>;
-    expect(await $xhp->toStringAsync())->toEqual('<div><div>herp derp</div></div>');
+    expect(await $xhp->toStringAsync())->toEqual(
+      '<div><div>herp derp</div></div>',
+    );
   }
 
   public async function testEmpty(): Awaitable<void> {
@@ -89,7 +91,9 @@ class AsyncTest extends Facebook\HackTest\HackTest {
   }
 
   <<DataProvider('parallelizationContainersProvider')>>
-  public async function testParallelization(:x:element $container): Awaitable<void> {
+  public async function testParallelization(
+    :x:element $container,
+  ): Awaitable<void> {
     :async:par_test::$log = vec[];
 
     $a = <async:par_test label="a" />;

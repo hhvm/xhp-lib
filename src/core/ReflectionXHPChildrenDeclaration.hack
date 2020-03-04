@@ -57,10 +57,10 @@ class ReflectionXHPChildrenDeclaration {
       // handled below
     }
 
-    throw new Exception (
+    throw new Exception(
       "Tried to get child expression for XHP class ".
       :xhp::class2element(get_class($this->context)).
-      ", but it does not have an expressions."
+      ", but it does not have an expressions.",
     );
   }
 
@@ -93,7 +93,7 @@ class ReflectionXHPChildrenExpression {
     $type = $this->getType();
     invariant(
       $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
-      $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
+        $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -118,7 +118,7 @@ class ReflectionXHPChildrenExpression {
     $type = $this->getType();
     invariant(
       $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
-      $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
+        $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -130,7 +130,7 @@ class ReflectionXHPChildrenExpression {
     $type = $this->getConstraintType();
     invariant(
       $type === XHPChildrenConstraintType::ELEMENT ||
-      $type === XHPChildrenConstraintType::CATEGORY,
+        $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
       :xhp::class2element(get_class($this->context)),
     );
@@ -155,10 +155,11 @@ class ReflectionXHPChildrenExpression {
       // handled below
     }
 
-    throw new Exception (
+    throw new Exception(
       'Expected a sub-expression, got a '.
       (is_object($data) ? get_class($data) : gettype($data)).
-      ' - in '. $this->context
+      ' - in '.
+      $this->context,
     );
   }
 

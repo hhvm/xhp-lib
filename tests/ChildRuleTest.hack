@@ -413,7 +413,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       )->toStringAsync(),
     )->toEqual('<div>foo</div>');
 
-    expect(async () ==> await (<test:new_child_declaration_only />)->toStringAsync())
+    expect(
+      async () ==> await (<test:new_child_declaration_only />)->toStringAsync(),
+    )
       ->toThrow(XHPInvalidChildrenException::class);
     expect(
       async () ==> await (
@@ -431,7 +433,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       )->toStringAsync(),
     )->toEqual('<div>foo</div>');
 
-    expect(async () ==> await (<test:old_child_declaration_only />)->toStringAsync())
+    expect(
+      async () ==> await (<test:old_child_declaration_only />)->toStringAsync(),
+    )
       ->toThrow(XHPInvalidChildrenException::class);
     expect(
       async () ==> await (

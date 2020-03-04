@@ -20,7 +20,12 @@ xhp class test:for_reflection extends :x:element {
     string mystringwithdefault = 'mydefault';
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\sequence(XHPChild\atLeastOneOf(XHPChild\ofType<:div>()), XHPChild\optional(XHPChild\sequence(XHPChild\ofType<:code>(), XHPChild\ofType<:a>(), )), );
+    return XHPChild\sequence(
+      XHPChild\atLeastOneOf(XHPChild\ofType<:div>()),
+      XHPChild\optional(
+        XHPChild\sequence(XHPChild\ofType<:code>(), XHPChild\ofType<:a>()),
+      ),
+    );
   }
 
   category %herp, %derp;

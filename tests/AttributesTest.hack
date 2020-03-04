@@ -153,7 +153,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testNoAttributes(): Awaitable<void> {
-    expect(await (<test:attribute_types />)->toStringAsync())->toEqual('<div></div>');
+    expect(await (<test:attribute_types />)->toStringAsync())->toEqual(
+      '<div></div>',
+    );
   }
 
   public async function testProvidingRequiredAttributes(): Awaitable<void> {
@@ -189,12 +191,18 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
     // verify that special attributes actually render
     $x = <div data-idonotexist="derp" />;
-    expect(await $x->toStringAsync())->toEqual('<div data-idonotexist="derp"></div>');
+    expect(await $x->toStringAsync())->toEqual(
+      '<div data-idonotexist="derp"></div>',
+    );
     // implicit string cast
     $x = <div data-idonotexist={123} />;
-    expect(await $x->toStringAsync())->toEqual('<div data-idonotexist="123"></div>');
+    expect(await $x->toStringAsync())->toEqual(
+      '<div data-idonotexist="123"></div>',
+    );
     $x = <div aria-idonotexist="derp" />;
-    expect(await $x->toStringAsync())->toEqual('<div aria-idonotexist="derp"></div>');
+    expect(await $x->toStringAsync())->toEqual(
+      '<div aria-idonotexist="derp"></div>',
+    );
 
     // special attributes should disappear when null, like all other attributes
     $x = <div data-idonotexist={null} />;

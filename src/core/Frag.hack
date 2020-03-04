@@ -7,7 +7,7 @@
  *
  */
 
- use namespace HH\Lib\{Str, Vec};
+use namespace HH\Lib\{Str, Vec};
 
 /**
  * An <x:frag /> is a transparent wrapper around any number of elements. When
@@ -20,6 +20,7 @@ xhp class x:frag extends :x:primitive {
     return await Vec\map_async(
       $this->getChildren(),
       async $child ==> await :xhp::renderChildAsync($child),
-    ) |> Str\join($$, '');
+    )
+      |> Str\join($$, '');
   }
 }
