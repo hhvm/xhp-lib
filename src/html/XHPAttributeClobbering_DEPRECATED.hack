@@ -110,29 +110,7 @@ trait XHPAttributeClobbering_DEPRECATED
         C\contains_key($compatible, $attribute) ||
         ReflectionXHPAttribute::IsSpecial($attribute)
       ) {
-        try {
-          $target->setAttribute($attribute, $value);
-        } catch (XHPInvalidAttributeException $error) {
-          // This only happens when an attribute name collision occurs but the
-          // two have different data types or different possible enum values.
-          // This can be dangerous because the result when validation is off
-          // will be different than when validation is on, so you should fix
-          // this by renaming one of the attributes.
-          $target = get_class($target);
-          throw new XHPException(
-            :xhp::class2element(static::class).
-            ' and '.
-            :xhp::class2element($target).
-            ' both support the "'.
-            $attribute.
-            '" '.
-            'attribute, but they have different signatures. This is a '.
-            'problem because the behavior when transfering or copying '.
-            'attributes while validation is on will be different than while '.
-            'validation is off. Rename the attribute on at least one of these '.
-            'elements to fix this.',
-          );
-        }
+        $target->setAttribute($attribute, $value);
       }
     }
   }

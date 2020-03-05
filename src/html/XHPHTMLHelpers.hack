@@ -15,18 +15,8 @@ trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
    * Appends a string to the "class" attribute (space separated).
    */
   public function addClass(string $class): this {
-    try {
-      $current_class = ($this->getAttributes()['class'] ?? '') as string;
-      return $this->setAttribute('class', trim($current_class.' '.$class));
-    } catch (XHPInvalidAttributeException $error) {
-      throw new XHPException(
-        'You are trying to add an HTML class to a(n) '.
-        :xhp::class2element(static::class).
-        ' element, but it does not support '.
-        'the "class" attribute. The best way to do this is to inherit '.
-        'the HTML attributes from the element your component will render into.',
-      );
-    }
+    $current_class = ($this->getAttributes()['class'] ?? '') as string;
+    return $this->setAttribute('class', trim($current_class.' '.$class));
   }
 
   /*
@@ -43,19 +33,8 @@ trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
   public function requireUniqueID(): string {
     $id = $this->getAttributes()['id'] ?? null;
     if ($id === null || $id === '') {
-      try {
-        $id = bin2hex(random_bytes(5));
-        $this->setAttribute('id', $id);
-      } catch (XHPInvalidAttributeException $error) {
-        throw new XHPException(
-          'You are trying to add an HTML id to a(n) '.
-          :xhp::class2element(static::class).
-          ' element, but it does not '.
-          'support the "id" attribute. The best way to do this is to inherit '.
-          'the HTML attributes from the element your component will render '.
-          'into.',
-        );
-      }
+      $id = bin2hex(random_bytes(5));
+      $this->setAttribute('id', $id);
     }
     return (string)$id;
   }
