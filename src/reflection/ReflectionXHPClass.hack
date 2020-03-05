@@ -11,7 +11,7 @@ use namespace HH\Lib\C;
 
 class ReflectionXHPClass {
   public function __construct(
-    private classname<:x:composable_element> $className,
+    private classname<:x:node> $className,
   ) {
     invariant(
       class_exists($this->className),
@@ -24,7 +24,7 @@ class ReflectionXHPClass {
     return new ReflectionClass($this->getClassName());
   }
 
-  public function getClassName(): classname<:x:composable_element> {
+  public function getClassName(): classname<:x:node> {
     return $this->className;
   }
 
