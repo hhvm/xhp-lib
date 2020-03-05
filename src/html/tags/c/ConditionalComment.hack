@@ -7,6 +7,8 @@
  *
  */
 
+
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\{Str, Vec};
 
 /**
@@ -15,13 +17,13 @@ use namespace HH\Lib\{Str, Vec};
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class x:conditional_comment extends :x:primitive {
+xhp class x:conditional_comment extends x\primitive {
   use XHPChildValidation;
   attribute string if @required;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<:xhp>()),
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<x\xhp>()),
     );
   }
 
@@ -31,7 +33,7 @@ xhp class x:conditional_comment extends :x:primitive {
     $html = '<!--[if '.$this->:if.']>';
     $html .= await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await :xhp::renderChildAsync($child),
+      async $child ==> await x\xhp::renderChildAsync($child),
     )
       |> Str\join($$, '');
     $html .= '<![endif]-->';

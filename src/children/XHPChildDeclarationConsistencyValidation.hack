@@ -7,11 +7,12 @@
  *
  */
 
-use namespace \Facebook\XHP\ChildValidation as XHPChild;
+use namespace Facebook\XHP\ChildValidation as XHPChild;
+use namespace Facebook\XHP\Elements\Core as x;
 
 /** Verify that a new child declaration matches the legacy codegen. */
 trait XHPChildDeclarationConsistencyValidation {
-  require extends :x:node;
+  require extends x\node;
 
   abstract protected static function getChildrenDeclaration(
   ): XHPChild\Constraint;

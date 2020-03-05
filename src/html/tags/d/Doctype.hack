@@ -7,15 +7,16 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\C;
+
+use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 /**
  * Render an <html /> element within a DOCTYPE, XHP has chosen to only support
  * the HTML5 doctype.
  */
-use namespace Facebook\XHP\ChildValidation as XHPChild;
-
-xhp class x:doctype extends :x:primitive {
+xhp class x:doctype extends x\primitive {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -25,6 +26,6 @@ xhp class x:doctype extends :x:primitive {
 
   protected async function stringifyAsync(): Awaitable<string> {
     return '<!DOCTYPE html>'.
-      (await :xhp::renderChildAsync(C\onlyx($this->getChildren())));
+      (await x\xhp::renderChildAsync(C\onlyx($this->getChildren())));
   }
 }

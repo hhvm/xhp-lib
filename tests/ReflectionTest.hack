@@ -9,10 +9,11 @@
 
 use function Facebook\FBExpect\expect;
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 use namespace HH\Lib\Dict;
 
-xhp class test:for_reflection extends :x:element {
+xhp class test:for_reflection extends x\element {
   use XHPChildValidation;
   attribute
     string mystring @required,

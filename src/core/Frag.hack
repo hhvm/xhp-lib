@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\Elements\Core;
+
 use namespace HH\Lib\{Str, Vec};
 
 /**
@@ -15,11 +17,11 @@ use namespace HH\Lib\{Str, Vec};
  * element the <x:frag /> will disappear and each child will be sequentially
  * appended to the element.
  */
-xhp class x:frag extends :x:primitive {
+xhp class frag extends primitive {
   protected async function stringifyAsync(): Awaitable<string> {
     return await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await :xhp::renderChildAsync($child),
+      async $child ==> await xhp::renderChildAsync($child),
     )
       |> Str\join($$, '');
   }

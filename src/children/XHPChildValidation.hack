@@ -7,11 +7,12 @@
  *
  */
 
-use namespace \Facebook\XHP\ChildValidation as XHPChild;
+use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 /** Verify that a new child declaration matches the legacy codegen. */
 trait XHPChildValidation {
-  require extends :x:node;
+  require extends x\node;
 
   abstract protected static function getChildrenDeclaration(
   ): XHPChild\Constraint;
@@ -25,7 +26,7 @@ trait XHPChildValidation {
   final public function validateChildren(): void {
     invariant(
       $this->__xhpChildrenDeclaration() ===
-        :x:element::__NO_LEGACY_CHILDREN_DECLARATION,
+        x\element::__NO_LEGACY_CHILDREN_DECLARATION,
       "The XHPChildValidation trait can not be used with a 'children' ".
       "declaration; override 'getChildrenDeclaration()'' instead",
     );

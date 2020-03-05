@@ -7,14 +7,18 @@
  *
  */
 
-class XHPAttributeNotSupportedException extends XHPException {
-  public function __construct(:xhp $that, string $attr) {
+namespace Facebook\XHP;
+
+use namespace Facebook\XHP\Elements\Core as x;
+
+class AttributeNotSupportedException extends namespace\Exception {
+  public function __construct(x\xhp $that, string $attr) {
     parent::__construct(
       'Attribute "'.
       $attr.
       '" is not supported in class '.
       '"'.
-      XHPException::getElementName($that).
+      self::getElementName($that).
       '"'.
       "\n\n".
       $that->source.

@@ -7,10 +7,11 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\C;
 
-xhp class test:renders_primitive extends :x:element {
+xhp class test:renders_primitive extends x\element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag><div>123</div></x:frag>;
   }
@@ -58,11 +59,11 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testElement2Class(): Awaitable<void> {
-    expect(:xhp::element2class('div'))->toEqual(:div::class);
+    expect(x\xhp::element2class('div'))->toEqual(:div::class);
   }
 
   public async function testClass2Element(): Awaitable<void> {
-    expect(:xhp::class2element(:div::class))->toEqual('div');
+    expect(x\xhp::class2element(:div::class))->toEqual('div');
   }
 
   public async function testRendersPrimitive(): Awaitable<void> {

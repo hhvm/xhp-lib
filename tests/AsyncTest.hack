@@ -7,32 +7,33 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
-xhp class async:test extends :x:element {
+xhp class async:test extends x\element {
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
     return <div>{$this->getChildren()}</div>;
   }
 }
 
-xhp class test:xfrag_wrap extends :x:element {
+xhp class test:xfrag_wrap extends x\element {
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
-xhp class test:async_xfrag_wrap extends :x:element {
+xhp class test:async_xfrag_wrap extends x\element {
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
-xhp class async:par_test extends :x:element {
+xhp class async:par_test extends x\element {
 
   attribute string label @required;
 
@@ -83,7 +84,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     expect(await $xhp->toStringAsync())->toEqual('<div><b>BE BOLD</b></div>');
   }
 
-  public function parallelizationContainersProvider(): varray<varray<:xhp>> {
+  public function parallelizationContainersProvider(): varray<varray<x\xhp>> {
     return varray[
       varray[<test:xfrag_wrap />],
       varray[<test:async_xfrag_wrap />],
@@ -92,7 +93,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('parallelizationContainersProvider')>>
   public async function testParallelization(
-    :x:element $container,
+    x\element $container,
   ): Awaitable<void> {
     :async:par_test::$log = vec[];
 

@@ -7,9 +7,10 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 
-xhp class test:contexts extends :x:element {
+xhp class test:contexts extends x\element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
     return
       <div>

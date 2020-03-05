@@ -7,6 +7,7 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 
 enum TestEnum: int {
@@ -14,7 +15,7 @@ enum TestEnum: int {
   DERP = 2;
 }
 
-xhp class test:hack_enum_attribute extends :x:element {
+xhp class test:hack_enum_attribute extends x\element {
   attribute TestEnum foo @required;
   protected async function renderAsync(): Awaitable<XHPRoot> {
     $foo = TestEnum::getNames()[$this->:foo];

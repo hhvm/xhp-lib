@@ -7,11 +7,12 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\Vec;
 
 type TMyTestShape = shape('foo' => string, 'bar' => ?string);
-xhp class test:attribute_types extends :x:element {
+xhp class test:attribute_types extends x\element {
   attribute
     string mystring,
     bool mybool,
@@ -31,7 +32,7 @@ xhp class test:attribute_types extends :x:element {
   }
 }
 
-xhp class test:required_attributes extends :x:element {
+xhp class test:required_attributes extends x\element {
   attribute string mystring @required;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -39,7 +40,7 @@ xhp class test:required_attributes extends :x:element {
   }
 }
 
-xhp class test:default_attributes extends :x:element {
+xhp class test:default_attributes extends x\element {
   attribute string mystring = 'mydefault';
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -47,7 +48,7 @@ xhp class test:default_attributes extends :x:element {
   }
 }
 
-xhp class test:callable_attribute extends :x:element {
+xhp class test:callable_attribute extends x\element {
   attribute
     /* HH_FIXME[2049]: callable is an invalid Hack type */
     callable foo; // unsupported in 2.0+
@@ -113,7 +114,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
     expect(() ==> {
       $x = <test:required_attributes />;
       expect($x->:mystring)->toBeNull();
-    })->toThrow(XHPAttributeRequiredException::class);
+    })->toThrow(Facebook\XHP\AttributeRequiredException::class);
   }
 
   public async function testProvidingDefaultAttributes(): Awaitable<void> {

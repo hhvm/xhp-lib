@@ -7,12 +7,11 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\C;
 
 class ReflectionXHPClass {
-  public function __construct(
-    private classname<:x:node> $className,
-  ) {
+  public function __construct(private classname<x\node> $className) {
     invariant(
       class_exists($this->className),
       'Invalid class name: %s',
@@ -24,12 +23,12 @@ class ReflectionXHPClass {
     return new ReflectionClass($this->getClassName());
   }
 
-  public function getClassName(): classname<:x:node> {
+  public function getClassName(): classname<x\node> {
     return $this->className;
   }
 
   public function getElementName(): string {
-    return :xhp::class2element($this->getClassName());
+    return x\xhp::class2element($this->getClassName());
   }
 
   public function getChildren(): ReflectionXHPChildrenDeclaration {

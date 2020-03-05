@@ -25,7 +25,7 @@ abstract xhp class xhp:raw_pcdata_element extends :xhp:pcdata_element {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
       if (!($child is string)) {
-        throw new XHPClassException($this, 'Child must be a string');
+        throw new \Facebook\XHP\ClassException($this, 'Child must be a string');
       }
       $buf .= $child;
     }

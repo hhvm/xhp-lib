@@ -7,9 +7,10 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 
-xhp class test:no_xhphelpers extends :x:element {
+xhp class test:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
@@ -18,7 +19,7 @@ xhp class test:no_xhphelpers extends :x:element {
   }
 }
 
-xhp class test:xhphelpers extends :x:element {
+xhp class test:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
@@ -27,7 +28,7 @@ xhp class test:xhphelpers extends :x:element {
   }
 }
 
-xhp class test:async:no_xhphelpers extends :x:element {
+xhp class test:async:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
@@ -36,7 +37,7 @@ xhp class test:async:no_xhphelpers extends :x:element {
   }
 }
 
-xhp class test:async:xhphelpers extends :x:element {
+xhp class test:async:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
@@ -45,7 +46,7 @@ xhp class test:async:xhphelpers extends :x:element {
   }
 }
 
-xhp class test:with_class_on_root extends :x:element {
+xhp class test:with_class_on_root extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 

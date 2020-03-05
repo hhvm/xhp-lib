@@ -7,11 +7,12 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 
 use type Facebook\HackTest\DataProvider;
 
-xhp class test:verbatim_root extends :x:element {
+xhp class test:verbatim_root extends x\element {
   attribute XHPRoot root @required;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -19,7 +20,7 @@ xhp class test:verbatim_root extends :x:element {
   }
 }
 
-xhp class test:verbatim_root:async extends :x:element {
+xhp class test:verbatim_root:async extends x\element {
 
   attribute XHPRoot root @required;
 
@@ -29,7 +30,7 @@ xhp class test:verbatim_root:async extends :x:element {
 }
 
 class XHPChildFlushTest extends Facebook\HackTest\HackTest {
-  public function xhpRootProvider(): vec<(:xhp, string)> {
+  public function xhpRootProvider(): vec<(x\xhp, string)> {
     return vec[
       tuple(<div />, '<div></div>'),
       tuple(<div><div /><div /></div>, '<div><div></div><div></div></div>'),

@@ -7,12 +7,13 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 
 // Please see MIGRATING.md for information on how these should be used in
 // practice; please don't create/use classes as unsafe as these examples.
 
-class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
+class ExampleUnsafeRenderable implements Facebook\XHP\UnsafeRenderable {
   public function __construct(public string $htmlString) {
   }
 
@@ -23,10 +24,10 @@ class ExampleUnsafeRenderable implements XHPUnsafeRenderable {
 
 class ExampleVeryUnsafeRenderable
   extends ExampleUnsafeRenderable
-  implements XHPUnsafeRenderable, XHPAlwaysValidChild {
+  implements Facebook\XHP\UnsafeRenderable, Facebook\XHP\AlwaysValidChild {
 }
 
-class ExampleUnsafeAttribute extends XHPUnsafeAttributeValue {
+class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue {
   public function __construct(public string $htmlString) {
   }
 
@@ -49,7 +50,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
       $x = new ExampleUnsafeRenderable('foo');
       $xhp = <html>{$x}<body /></html>;
       await $xhp->toStringAsync(); // validate, throw exception
-    })->toThrow(XHPInvalidChildrenException::class);
+    })->toThrow(Facebook\XHP\InvalidChildrenException::class);
   }
 
   public async function testAlwaysValidChild(): Awaitable<void> {

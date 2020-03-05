@@ -7,14 +7,15 @@
  *
  */
 
+namespace Facebook\XHP;
+
 /**
- * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
- * string.
+ * INCREDIBLY DANGEROUS: Marks an object as a valid child of *any* element,
+ * ignoring any child rules.
  *
  * This is useful when migrating to XHP as it allows you to embed non-XHP
- * content, usually in combination with XHPAlwaysValidChild; see MIGRATING.md
+ * content, usually in combination with XHPUnsafeRenderable; see MIGRATING.md
  * for more information.
  */
-interface XHPUnsafeRenderable extends XHPChild {
-  public function toHTMLStringAsync(): Awaitable<string>;
+interface AlwaysValidChild {
 }

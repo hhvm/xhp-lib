@@ -7,9 +7,10 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 
 trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
-  require extends :x:node;
+  require extends x\node;
 
   /*
    * Appends a string to the "class" attribute (space separated).

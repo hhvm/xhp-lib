@@ -7,11 +7,15 @@
  *
  */
 
-class XHPClassException extends XHPException {
-  public function __construct(:xhp $that, string $msg) {
+namespace Facebook\XHP;
+
+use namespace Facebook\XHP\Elements\Core as x;
+
+class ClassException extends namespace\Exception {
+  public function __construct(x\xhp $that, string $msg) {
     parent::__construct(
       'Exception in class `'.
-      XHPException::getElementName($that).
+      self::getElementName($that).
       "`\n\n".
       "$that->source\n\n".
       $msg,

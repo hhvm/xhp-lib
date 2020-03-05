@@ -7,13 +7,12 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\{C, Dict};
 
 interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
-  public function transferAttributesToRenderedRoot(
-    :x:node $root,
-  ): void;
+  public function transferAttributesToRenderedRoot(x\node $root): void;
 }
 
 /*
@@ -24,7 +23,7 @@ interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
  */
 trait XHPAttributeClobbering_DEPRECATED
   implements HasXHPAttributeClobbering_DEPRECATED {
-  require extends :x:node;
+  require extends x\node;
 
   use XHPHTMLHelpers;
 
@@ -32,7 +31,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * Copies all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public function copyAllAttributes(:x:node $target): void {
+  final public function copyAllAttributes(x\node $target): void {
     $this->transferAttributesImpl($target, keyset[]);
   }
 
@@ -40,9 +39,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * Copies only the non-HTML attributes that are set on $this and valid on
    * $target to $target.
    */
-  final public function copyCustomAttributes(
-    :x:node $target,
-  ): void {
+  final public function copyCustomAttributes(x\node $target): void {
     $this->transferAttributesImpl($target);
   }
 
@@ -51,7 +48,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * valid on $target to $target.
    */
   final public function copyAttributesExcept(
-    :x:node $target,
+    x\node $target,
     keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -61,9 +58,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * Transfers all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public function transferAllAttributes(
-    :x:node $target,
-  ): void {
+  final public function transferAllAttributes(x\node $target): void {
     $this->transferAttributesImpl($target, keyset[]);
   }
 
@@ -71,9 +66,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * Transfers only the non-HTML attributes that are set on $this and valid on
    * $target to $target.
    */
-  final public function transferCustomAttributes(
-    :x:node $target,
-  ): void {
+  final public function transferCustomAttributes(x\node $target): void {
     $this->transferAttributesImpl($target, null);
   }
 
@@ -83,7 +76,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * $this.
    */
   final public function transferAttributesExcept(
-    :x:node $target,
+    x\node $target,
     keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -94,7 +87,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * directly. Instead, use one of the transfer/copy flavors above.
    */
   final private function transferAttributesImpl(
-    :x:node $target,
+    x\node $target,
     ?keyset<string> $ignore = null,
     bool $remove = false,
   ): void {
@@ -120,9 +113,7 @@ trait XHPAttributeClobbering_DEPRECATED
     return keyset['class'];
   }
 
-  final public function transferAttributesToRenderedRoot(
-    :x:node $root,
-  ): void {
+  final public function transferAttributesToRenderedRoot(x\node $root): void {
     $attributes = $this->getAttributes();
 
     // We want to append classes to the root node, instead of replace them,
