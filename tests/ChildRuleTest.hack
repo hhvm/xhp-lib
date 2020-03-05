@@ -264,7 +264,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('toStringProvider')>>
   public function testToString(
-    :x:composable_element $elem,
+    :x:node $elem,
     string $expected,
   ): void {
     expect($elem->__getChildrenDeclaration())->toEqual($expected);
