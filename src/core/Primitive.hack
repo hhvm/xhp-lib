@@ -16,7 +16,7 @@ use namespace HH\Lib\Dict;
  * from :x:element.
  */
 abstract xhp class x:primitive
-  extends :x:composable_element
+  extends :x:node
   implements XHPRoot {
   abstract protected function stringifyAsync(): Awaitable<string>;
 
@@ -29,7 +29,7 @@ abstract xhp class x:primitive
     $children = $this->getChildren();
     $awaitables = dict[];
     foreach ($children as $idx => $child) {
-      if ($child is :x:composable_element) {
+      if ($child is :x:node) {
         $child->__transferContext($this->getAllContexts());
         $awaitables[$idx] = $child->__flushSubtree();
       }

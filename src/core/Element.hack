@@ -14,7 +14,7 @@
  * This is important because most elements should not be dealing with strings
  * of markup.
  */
-abstract xhp class x:element extends :x:composable_element implements XHPRoot {
+abstract xhp class x:element extends :x:node implements XHPRoot {
   abstract protected function renderAsync(): Awaitable<XHPRoot>;
 
   final public async function toStringAsync(): Awaitable<string> {

@@ -9,7 +9,7 @@
 
 
 trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
-  require extends :x:composable_element;
+  require extends :x:node;
 
   /*
    * Appends a string to the "class" attribute (space separated).

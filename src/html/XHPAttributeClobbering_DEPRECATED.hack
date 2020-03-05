@@ -12,7 +12,7 @@ use namespace HH\Lib\{C, Dict};
 
 interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
   public function transferAttributesToRenderedRoot(
-    :x:composable_element $root,
+    :x:node $root,
   ): void;
 }
 
@@ -24,7 +24,7 @@ interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
  */
 trait XHPAttributeClobbering_DEPRECATED
   implements HasXHPAttributeClobbering_DEPRECATED {
-  require extends :x:composable_element;
+  require extends :x:node;
 
   use XHPHTMLHelpers;
 
@@ -32,7 +32,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * Copies all attributes that are set on $this and valid on $target to
    * $target.
    */
-  final public function copyAllAttributes(:x:composable_element $target): void {
+  final public function copyAllAttributes(:x:node $target): void {
     $this->transferAttributesImpl($target, keyset[]);
   }
 
@@ -41,7 +41,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * $target to $target.
    */
   final public function copyCustomAttributes(
-    :x:composable_element $target,
+    :x:node $target,
   ): void {
     $this->transferAttributesImpl($target);
   }
@@ -51,7 +51,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * valid on $target to $target.
    */
   final public function copyAttributesExcept(
-    :x:composable_element $target,
+    :x:node $target,
     keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -62,7 +62,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * $target.
    */
   final public function transferAllAttributes(
-    :x:composable_element $target,
+    :x:node $target,
   ): void {
     $this->transferAttributesImpl($target, keyset[]);
   }
@@ -72,7 +72,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * $target to $target.
    */
   final public function transferCustomAttributes(
-    :x:composable_element $target,
+    :x:node $target,
   ): void {
     $this->transferAttributesImpl($target, null);
   }
@@ -83,7 +83,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * $this.
    */
   final public function transferAttributesExcept(
-    :x:composable_element $target,
+    :x:node $target,
     keyset<string> $ignore,
   ): void {
     $this->transferAttributesImpl($target, $ignore);
@@ -94,7 +94,7 @@ trait XHPAttributeClobbering_DEPRECATED
    * directly. Instead, use one of the transfer/copy flavors above.
    */
   final private function transferAttributesImpl(
-    :x:composable_element $target,
+    :x:node $target,
     ?keyset<string> $ignore = null,
     bool $remove = false,
   ): void {
@@ -121,7 +121,7 @@ trait XHPAttributeClobbering_DEPRECATED
   }
 
   final public function transferAttributesToRenderedRoot(
-    :x:composable_element $root,
+    :x:node $root,
   ): void {
     $attributes = $this->getAttributes();
 

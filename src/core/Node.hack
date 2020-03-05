@@ -11,7 +11,7 @@ use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
-abstract xhp class x:composable_element extends :xhp {
+abstract xhp class x:node extends :xhp {
   protected bool $__isRendered = false;
   private dict<string, mixed> $attributes = dict[];
   private vec<XHPChild> $children = vec[];
@@ -21,7 +21,7 @@ abstract xhp class x:composable_element extends :xhp {
   }
 
   /**
-   * A new :x:composable_element is instantiated for every literal tag
+   * A new :x:node is instantiated for every literal tag
    * expression in the script.
    *
    * The following code:
@@ -47,7 +47,7 @@ abstract xhp class x:composable_element extends :xhp {
     foreach ($attributes as $key => $value) {
       if (self::isSpreadKey($key)) {
         invariant(
-          $value is :x:composable_element,
+          $value is :x:node,
           "Only XHP can be used with an attribute spread operator",
         );
         $this->spreadElementImpl($value);
@@ -299,7 +299,7 @@ abstract xhp class x:composable_element extends :xhp {
    * Defaults from $xhp are copied as well, if they are present.
    */
   protected final function spreadElementImpl(
-    :x:composable_element $element,
+    :x:node $element,
   ): void {
     $attrs = $element::__xhpReflectionAttributes()
       |> Dict\filter($$, $attr ==> $attr->hasDefaultValue())

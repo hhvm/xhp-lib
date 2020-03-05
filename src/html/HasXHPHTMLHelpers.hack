@@ -8,7 +8,7 @@
  */
 
 interface HasXHPHTMLHelpers {
-  require extends :x:composable_element;
+  require extends :x:node;
 
   public function addClass(string $class): this;
   public function conditionClass(bool $cond, string $class): this;
