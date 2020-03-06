@@ -7,13 +7,17 @@
  *
  */
 
-class XHPCoreRenderException extends XHPException {
-  public function __construct(:xhp $that, mixed $rend) {
+namespace Facebook\XHP;
+
+use namespace Facebook\XHP\Elements\Core as x;
+
+class CoreRenderException extends namespace\Exception {
+  public function __construct(x\xhp $that, mixed $rend) {
     parent::__construct(
       ':x:element::render must reduce an object to an :x:primitive, but `'.
-      :xhp::class2element(get_class($that)).
+      x\xhp::class2element(\get_class($that)).
       '` reduced into `'.
-      gettype($rend).
+      \gettype($rend).
       "`.\n\n".
       $that->source,
     );

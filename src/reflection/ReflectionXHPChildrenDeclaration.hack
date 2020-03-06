@@ -8,6 +8,7 @@
  */
 
 use type Facebook\TypeAssert\IncorrectTypeException;
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace Facebook\TypeSpec;
 
 enum XHPChildrenDeclarationType: int {
@@ -59,7 +60,7 @@ class ReflectionXHPChildrenDeclaration {
 
     throw new Exception(
       "Tried to get child expression for XHP class ".
-      :xhp::class2element(get_class($this->context)).
+      x\xhp::class2element(get_class($this->context)).
       ", but it does not have an expressions.",
     );
   }
@@ -95,7 +96,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
         $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
-      :xhp::class2element(get_class($this->context)),
+      x\xhp::class2element(get_class($this->context)),
     );
     try {
       $sub_expr_1 = TypeSpec\dict_like_array(TypeSpec\int(), TypeSpec\mixed())
@@ -120,7 +121,7 @@ class ReflectionXHPChildrenExpression {
       $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
         $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
-      :xhp::class2element(get_class($this->context)),
+      x\xhp::class2element(get_class($this->context)),
     );
     return XHPChildrenConstraintType::assert($this->data[1]);
   }
@@ -132,7 +133,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenConstraintType::ELEMENT ||
         $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
-      :xhp::class2element(get_class($this->context)),
+      x\xhp::class2element(get_class($this->context)),
     );
     $data = $this->data[2];
     invariant($data is string, 'Expected string data');
@@ -196,7 +197,7 @@ class ReflectionXHPChildrenExpression {
         return 'pcdata';
 
       case XHPChildrenConstraintType::ELEMENT:
-        return ':'.:xhp::class2element($this->getConstraintString());
+        return ':'.x\xhp::class2element($this->getConstraintString());
 
       case XHPChildrenConstraintType::CATEGORY:
         return '%'.$this->getConstraintString();

@@ -7,14 +7,16 @@
  *
  */
 
+namespace Facebook\XHP\Elements\Core;
+
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
-abstract xhp class x:node extends :xhp {
+abstract xhp class node extends namespace\xhp {
   protected bool $__isRendered = false;
   private dict<string, mixed> $attributes = dict[];
-  private vec<XHPChild> $children = vec[];
+  private vec<\XHPChild> $children = vec[];
   private dict<string, mixed> $context = dict[];
 
   protected function init(): void {
@@ -36,7 +38,7 @@ abstract xhp class x:node extends :xhp {
    */
   final public function __construct(
     KeyedTraversable<string, mixed> $attributes,
-    Traversable<XHPChild> $children,
+    Traversable<\XHPChild> $children,
     dynamic ...$debug_info
   ) {
     parent::__construct($attributes, $children);
@@ -47,7 +49,7 @@ abstract xhp class x:node extends :xhp {
     foreach ($attributes as $key => $value) {
       if (self::isSpreadKey($key)) {
         invariant(
-          $value is :x:node,
+          $value is node,
           "Only XHP can be used with an attribute spread operator",
         );
         $this->spreadElementImpl($value);
@@ -56,7 +58,7 @@ abstract xhp class x:node extends :xhp {
       }
     }
 
-    if (:xhp::isChildValidationEnabled()) {
+    if (xhp::isChildValidationEnabled()) {
       if (C\count($debug_info) >= 2) {
         $this->source = $debug_info[0].':'.$debug_info[1];
       } else {
@@ -82,12 +84,12 @@ abstract xhp class x:node extends :xhp {
       foreach ($child as $c) {
         $this->appendChild($c);
       }
-    } else if ($child is :x:frag) {
+    } else if ($child is frag) {
       foreach ($child->getChildren() as $new_child) {
         $this->children[] = $new_child;
       }
     } else if ($child !== null) {
-      assert($child is XHPChild);
+      assert($child is \XHPChild);
       $this->children[] = $child;
     }
     return $this;
@@ -98,12 +100,12 @@ abstract xhp class x:node extends :xhp {
    *
    * @param $children  single child or a Traversable of children
    */
-  final public function replaceChildren(XHPChild ...$children): this {
+  final public function replaceChildren(\XHPChild ...$children): this {
     invariant(!$this->__isRendered, "Can't appendChild after render");
     // This function has been micro-optimized
     $new_children = vec[];
     foreach ($children as $xhp) {
-      if ($xhp is :x:frag) {
+      if ($xhp is frag) {
         foreach ($xhp->children as $child) {
           $new_children[] = $child;
         }
@@ -111,12 +113,12 @@ abstract xhp class x:node extends :xhp {
         $new_children[] = $xhp;
       } else {
         foreach ($xhp as $element) {
-          if ($element is :x:frag) {
+          if ($element is frag) {
             foreach ($element->children as $child) {
               $new_children[] = $child;
             }
           } else if ($element !== null) {
-            $new_children[] = $element as XHPChild;
+            $new_children[] = $element as \XHPChild;
           }
         }
       }
@@ -131,7 +133,7 @@ abstract xhp class x:node extends :xhp {
    *
    * @param $selector   tag name or category (optional)
    */
-  final public function getChildren(?string $selector = null): vec<XHPChild> {
+  final public function getChildren(?string $selector = null): vec<\XHPChild> {
     if ($selector is null || $selector === '') {
       return $this->children;
     }
@@ -140,14 +142,14 @@ abstract xhp class x:node extends :xhp {
     if ($selector[0] == '%') {
       $selector = Str\slice($selector, 1);
       foreach ($this->children as $child) {
-        if ($child is :xhp && $child->categoryOf($selector)) {
+        if ($child is xhp && $child->categoryOf($selector)) {
           $children[] = $child;
         }
       }
     } else {
-      $selector = :xhp::element2class($selector);
+      $selector = xhp::element2class($selector);
       foreach ($this->children as $child) {
-        if (is_a($child, $selector, /* allow strings = */ true)) {
+        if (\is_a($child, $selector, /* allow strings = */ true)) {
           $children[] = $child;
         }
       }
@@ -165,20 +167,20 @@ abstract xhp class x:node extends :xhp {
    * @return           the first child node (with the given selector),
    *                       null if there are no (matching) children
    */
-  final public function getFirstChild(?string $selector = null): ?XHPChild {
+  final public function getFirstChild(?string $selector = null): ?\XHPChild {
     if ($selector === null) {
       return $this->children[0] ?? null;
     } else if ($selector[0] == '%') {
-      $selector = substr($selector, 1);
+      $selector = \substr($selector, 1);
       foreach ($this->children as $child) {
-        if ($child is :xhp && $child->categoryOf($selector)) {
+        if ($child is xhp && $child->categoryOf($selector)) {
           return $child;
         }
       }
     } else {
-      $selector = :xhp::element2class($selector);
+      $selector = xhp::element2class($selector);
       foreach ($this->children as $child) {
-        if (is_a($child, $selector, /* allow strings = */ true)) {
+        if (\is_a($child, $selector, /* allow strings = */ true)) {
           return $child;
         }
       }
@@ -194,7 +196,7 @@ abstract xhp class x:node extends :xhp {
    * @return           the last child node (with the given selector),
    *                       null if there are no (matching) children
    */
-  final public function getLastChild(?string $selector = null): ?XHPChild {
+  final public function getLastChild(?string $selector = null): ?\XHPChild {
     return $this->getChildren($selector) |> C\last($$);
   }
 
@@ -213,14 +215,14 @@ abstract xhp class x:node extends :xhp {
       return $this->attributes[$attr];
     }
 
-    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
+    if (!\ReflectionXHPAttribute::IsSpecial($attr)) {
       // Get the declaration
       $decl = static::__xhpReflectionAttribute($attr);
 
       if ($decl === null) {
-        throw new XHPAttributeNotSupportedException($this, $attr);
+        throw new \Facebook\XHP\AttributeNotSupportedException($this, $attr);
       } else if ($decl->isRequired()) {
-        throw new XHPAttributeRequiredException($this, $attr);
+        throw new \Facebook\XHP\AttributeRequiredException($this, $attr);
       } else {
         return $decl->getDefaultValue();
       }
@@ -231,17 +233,17 @@ abstract xhp class x:node extends :xhp {
 
   final public static function __xhpReflectionAttribute(
     string $attr,
-  ): ?ReflectionXHPAttribute {
+  ): ?\ReflectionXHPAttribute {
     return static::__xhpReflectionAttributes()[$attr] ?? null;
   }
 
   <<__MemoizeLSB>>
   final public static function __xhpReflectionAttributes(
-  ): dict<string, ReflectionXHPAttribute> {
+  ): dict<string, \ReflectionXHPAttribute> {
     $decl = static::__xhpAttributeDeclaration();
     return Dict\map_with_key(
       $decl,
-      ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl),
+      ($name, $attr_decl) ==> new \ReflectionXHPAttribute($name, $attr_decl),
     );
   }
 
@@ -256,9 +258,9 @@ abstract xhp class x:node extends :xhp {
 
   <<__MemoizeLSB>>
   final public static function __xhpReflectionChildrenDeclaration(
-  ): ReflectionXHPChildrenDeclaration {
-    return new ReflectionXHPChildrenDeclaration(
-      :xhp::class2element(static::class),
+  ): \ReflectionXHPChildrenDeclaration {
+    return new \ReflectionXHPChildrenDeclaration(
+      xhp::class2element(static::class),
       static::__legacySerializedXHPChildrenDeclaration(),
     );
   }
@@ -286,7 +288,7 @@ abstract xhp class x:node extends :xhp {
    * in the constructor.
    */
   private static function isSpreadKey(string $key): bool {
-    return substr($key, 0, strlen(:xhp::SPREAD_PREFIX)) === :xhp::SPREAD_PREFIX;
+    return Str\starts_with($key, xhp::SPREAD_PREFIX);
   }
 
   /**
@@ -298,9 +300,7 @@ abstract xhp class x:node extends :xhp {
    *
    * Defaults from $xhp are copied as well, if they are present.
    */
-  protected final function spreadElementImpl(
-    :x:node $element,
-  ): void {
+  protected final function spreadElementImpl(node $element): void {
     $attrs = $element::__xhpReflectionAttributes()
       |> Dict\filter($$, $attr ==> $attr->hasDefaultValue())
       |> Dict\map($$, $attr ==> $attr->getDefaultValue())
@@ -309,7 +309,7 @@ abstract xhp class x:node extends :xhp {
       if (
         $value === null ||
         !(
-          ReflectionXHPAttribute::IsSpecial($attr_name) ||
+          \ReflectionXHPAttribute::IsSpecial($attr_name) ||
           (static::__xhpReflectionAttribute($attr_name) !== null)
         )
       ) {
@@ -460,7 +460,7 @@ abstract xhp class x:node extends :xhp {
     }
   }
 
-  abstract protected function __flushSubtree(): Awaitable<:x:primitive>;
+  abstract protected function __flushSubtree(): Awaitable<primitive>;
 
   /**
    * Defined in elements by the `attribute` keyword. The declaration is simple.
@@ -504,12 +504,12 @@ abstract xhp class x:node extends :xhp {
   protected function validateChildren(): void {
     $decl = self::__xhpReflectionChildrenDeclaration();
     $type = $decl->getType();
-    if ($type === XHPChildrenDeclarationType::ANY_CHILDREN) {
+    if ($type === \XHPChildrenDeclarationType::ANY_CHILDREN) {
       return;
     }
-    if ($type === XHPChildrenDeclarationType::NO_CHILDREN) {
+    if ($type === \XHPChildrenDeclarationType::NO_CHILDREN) {
       if ($this->children) {
-        throw new XHPInvalidChildrenException($this, 0);
+        throw new \Facebook\XHP\InvalidChildrenException($this, 0);
       } else {
         return;
       }
@@ -519,34 +519,34 @@ abstract xhp class x:node extends :xhp {
       0,
     );
     if (!$ret || $ii < C\count($this->children)) {
-      if (($this->children[$ii] ?? null) is XHPAlwaysValidChild) {
+      if (($this->children[$ii] ?? null) is \Facebook\XHP\AlwaysValidChild) {
         return;
       }
-      throw new XHPInvalidChildrenException($this, $ii);
+      throw new \Facebook\XHP\InvalidChildrenException($this, $ii);
     }
   }
 
   final private function validateChildrenExpression(
-    ReflectionXHPChildrenExpression $expr,
+    \ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
     switch ($expr->getType()) {
-      case XHPChildrenExpressionType::SINGLE:
+      case \XHPChildrenExpressionType::SINGLE:
         // Exactly once -- :fb_thing
         return $this->validateChildrenRule($expr, $index);
-      case XHPChildrenExpressionType::ANY_NUMBER:
+      case \XHPChildrenExpressionType::ANY_NUMBER:
         // Zero or more times -- :fb_thing*
         do {
           list($ret, $index) = $this->validateChildrenRule($expr, $index);
         } while ($ret);
         return tuple(true, $index);
 
-      case XHPChildrenExpressionType::ZERO_OR_ONE:
+      case \XHPChildrenExpressionType::ZERO_OR_ONE:
         // Zero or one times -- :fb_thing?
         list($_, $index) = $this->validateChildrenRule($expr, $index);
         return tuple(true, $index);
 
-      case XHPChildrenExpressionType::ONE_OR_MORE:
+      case \XHPChildrenExpressionType::ONE_OR_MORE:
         // One or more times -- :fb_thing+
         list($ret, $index) = $this->validateChildrenRule($expr, $index);
         if (!$ret) {
@@ -557,7 +557,7 @@ abstract xhp class x:node extends :xhp {
         } while ($ret);
         return tuple(true, $index);
 
-      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
+      case \XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
         // Specific order -- :fb_thing, :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
@@ -576,7 +576,7 @@ abstract xhp class x:node extends :xhp {
         }
         return tuple(false, $oindex);
 
-      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
+      case \XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
         // Either or -- :fb_thing | :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
@@ -598,39 +598,39 @@ abstract xhp class x:node extends :xhp {
   }
 
   final private function validateChildrenRule(
-    ReflectionXHPChildrenExpression $expr,
+    \ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
     switch ($expr->getConstraintType()) {
-      case XHPChildrenConstraintType::ANY:
+      case \XHPChildrenConstraintType::ANY:
         if (C\contains_key($this->children, $index)) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case XHPChildrenConstraintType::PCDATA:
+      case \XHPChildrenConstraintType::PCDATA:
         if (
           C\contains_key($this->children, $index) &&
-          !($this->children[$index] is :xhp)
+          !($this->children[$index] is xhp)
         ) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case XHPChildrenConstraintType::ELEMENT:
+      case \XHPChildrenConstraintType::ELEMENT:
         $class = $expr->getConstraintString();
         if (
           C\contains_key($this->children, $index) &&
-          is_a($this->children[$index], $class, true)
+          \is_a($this->children[$index], $class, true)
         ) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case XHPChildrenConstraintType::CATEGORY:
+      case \XHPChildrenConstraintType::CATEGORY:
         if (
           !C\contains_key($this->children, $index) ||
-          !($this->children[$index] is :xhp)
+          !($this->children[$index] is xhp)
         ) {
           return tuple(false, $index);
         }
@@ -638,14 +638,14 @@ abstract xhp class x:node extends :xhp {
           |> Str\replace($$, '__', ':')
           |> Str\replace($$, '_', '-');
         $child = $this->children[$index];
-        assert($child is :xhp);
+        assert($child is xhp);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);
         }
         return tuple(true, $index + 1);
 
-      case XHPChildrenConstraintType::SUB_EXPR:
+      case \XHPChildrenConstraintType::SUB_EXPR:
         return $this->validateChildrenExpression(
           $expr->getSubExpression(),
           $index,
@@ -673,18 +673,18 @@ abstract xhp class x:node extends :xhp {
   final public function __getChildrenDescription(): string {
     $desc = varray[];
     foreach ($this->children as $child) {
-      if ($child is :xhp) {
-        $tmp = ':'.:xhp::class2element(get_class($child));
+      if ($child is xhp) {
+        $tmp = ':'.xhp::class2element(\get_class($child));
         $categories = $child->__xhpCategoryDeclaration();
         if (C\count($categories) > 0) {
-          $tmp .= '[%'.implode(',%', array_keys($categories)).']';
+          $tmp .= '[%'.Str\join(Vec\keys($categories), ',%').']';
         }
         $desc[] = $tmp;
       } else {
         $desc[] = 'pcdata';
       }
     }
-    return implode(',', $desc);
+    return Str\join($desc, ',');
   }
 
   final public function categoryOf(string $c): bool {
@@ -693,7 +693,7 @@ abstract xhp class x:node extends :xhp {
       return true;
     }
     // XHP parses the category string
-    $c = str_replace(varray[':', '-'], varray['__', '_'], $c);
+    $c = \str_replace(varray[':', '-'], varray['__', '_'], $c);
     return ($categories[$c] ?? null) !== null;
   }
 }

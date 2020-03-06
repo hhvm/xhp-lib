@@ -7,11 +7,12 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class test:new_child_declaration_only extends :x:element {
+xhp class test:new_child_declaration_only extends x\element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -23,7 +24,7 @@ xhp class test:new_child_declaration_only extends :x:element {
   }
 }
 
-xhp class test:new_and_old_child_declarations extends :x:element {
+xhp class test:new_and_old_child_declarations extends x\element {
   // Providing all of these is invalid; for a migration consistency check, use
   // the XHPChildDeclarationConsistencyValidation trait instead.
   use XHPChildValidation;
@@ -36,7 +37,7 @@ xhp class test:new_and_old_child_declarations extends :x:element {
   }
 }
 
-xhp class test:old_child_declaration_only extends :x:element {
+xhp class test:old_child_declaration_only extends x\element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -49,7 +50,7 @@ xhp class test:old_child_declaration_only extends :x:element {
   }
 }
 
-xhp class test:any_children extends :x:element {
+xhp class test:any_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any();
@@ -60,7 +61,7 @@ xhp class test:any_children extends :x:element {
   }
 }
 
-xhp class test:no_children extends :x:element {
+xhp class test:no_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();
@@ -71,7 +72,7 @@ xhp class test:no_children extends :x:element {
   }
 }
 
-xhp class test:single_child extends :x:element {
+xhp class test:single_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\ofType<:div>();
@@ -82,7 +83,7 @@ xhp class test:single_child extends :x:element {
   }
 }
 
-xhp class test:optional_child extends :x:element {
+xhp class test:optional_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\optional(XHPChild\ofType<:div>());
@@ -93,7 +94,7 @@ xhp class test:optional_child extends :x:element {
   }
 }
 
-xhp class test:any_number_of_child extends :x:element {
+xhp class test:any_number_of_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
@@ -104,7 +105,7 @@ xhp class test:any_number_of_child extends :x:element {
   }
 }
 
-xhp class test:at_least_one_child extends :x:element {
+xhp class test:at_least_one_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
@@ -115,7 +116,7 @@ xhp class test:at_least_one_child extends :x:element {
   }
 }
 
-xhp class test:two_children extends :x:element {
+xhp class test:two_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
@@ -126,7 +127,7 @@ xhp class test:two_children extends :x:element {
   }
 }
 
-xhp class test:three_children extends :x:element {
+xhp class test:three_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
@@ -142,7 +143,7 @@ xhp class test:three_children extends :x:element {
 }
 
 
-xhp class test:either_of_two_children extends :x:element {
+xhp class test:either_of_two_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
@@ -153,7 +154,7 @@ xhp class test:either_of_two_children extends :x:element {
   }
 }
 
-xhp class test:any_of_three_children extends :x:element {
+xhp class test:any_of_three_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
@@ -169,7 +170,7 @@ xhp class test:any_of_three_children extends :x:element {
 }
 
 
-xhp class test:nested_rule extends :x:element {
+xhp class test:nested_rule extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
@@ -183,7 +184,7 @@ xhp class test:nested_rule extends :x:element {
   }
 }
 
-xhp class test:pcdata_child extends :x:element {
+xhp class test:pcdata_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
@@ -194,7 +195,7 @@ xhp class test:pcdata_child extends :x:element {
   }
 }
 
-xhp class test:category_child extends :x:element {
+xhp class test:category_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%flow');
@@ -205,7 +206,7 @@ xhp class test:category_child extends :x:element {
   }
 }
 
-xhp class test:has_comma_category extends :x:element {
+xhp class test:has_comma_category extends x\element {
   category %foo:bar;
 
   protected async function renderAsync(): Awaitable<XHPRoot> {
@@ -213,7 +214,7 @@ xhp class test:has_comma_category extends :x:element {
   }
 }
 
-xhp class test:needs_comma_category extends :x:element {
+xhp class test:needs_comma_category extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
@@ -241,7 +242,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect(async () ==> {
       $x = <test:no_children><div /></test:no_children>;
       await $x->toStringAsync();
-    })->toThrow(XHPInvalidChildrenException::class);
+    })->toThrow(Facebook\XHP\InvalidChildrenException::class);
   }
 
   public async function testSingleChild(): Awaitable<void> {
@@ -263,14 +264,11 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   <<DataProvider('toStringProvider')>>
-  public function testToString(
-    :x:node $elem,
-    string $expected,
-  ): void {
+  public function testToString(x\node $elem, string $expected): void {
     expect($elem->__getChildrenDeclaration())->toEqual($expected);
   }
 
-  public function toStringProvider(): vec<(:xhp, string)> {
+  public function toStringProvider(): vec<(x\xhp, string)> {
     return vec[
       tuple(<test:any_children />, 'any'),
       tuple(<test:no_children />, 'empty'),
@@ -298,7 +296,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     ];
     foreach ($elems as $elem) {
       expect(async () ==> await $elem->toStringAsync())
-        ->toThrow(XHPInvalidChildrenException::class);
+        ->toThrow(Facebook\XHP\InvalidChildrenException::class);
     }
   }
 
@@ -316,7 +314,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       $exception = null;
       $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
       expect(async () ==> await $elem->toStringAsync())
-        ->toThrow(XHPInvalidChildrenException::class);
+        ->toThrow(Facebook\XHP\InvalidChildrenException::class);
     }
   }
 
@@ -339,7 +337,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       } catch (Exception $e) {
         $exception = $e;
       }
-      expect($exception)->toBeInstanceOf(XHPInvalidChildrenException::class);
+      expect($exception)->toBeInstanceOf(
+        Facebook\XHP\InvalidChildrenException::class,
+      );
     }
   }
 
@@ -401,7 +401,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect(async () ==> {
       $x = <div><test:at_least_one_child /></div>;
       await $x->toStringAsync();
-    })->toThrow(XHPInvalidChildrenException::class);
+    })->toThrow(Facebook\XHP\InvalidChildrenException::class);
   }
 
   public async function testNewChildDeclarations(): Awaitable<void> {
@@ -416,12 +416,12 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect(
       async () ==> await (<test:new_child_declaration_only />)->toStringAsync(),
     )
-      ->toThrow(XHPInvalidChildrenException::class);
+      ->toThrow(Facebook\XHP\InvalidChildrenException::class);
     expect(
       async () ==> await (
         <test:new_child_declaration_only><p /></test:new_child_declaration_only>
       )->toStringAsync(),
-    )->toThrow(XHPInvalidChildrenException::class);
+    )->toThrow(Facebook\XHP\InvalidChildrenException::class);
   }
 
   public async function testOldChildDeclarations(): Awaitable<void> {
@@ -436,11 +436,11 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect(
       async () ==> await (<test:old_child_declaration_only />)->toStringAsync(),
     )
-      ->toThrow(XHPInvalidChildrenException::class);
+      ->toThrow(Facebook\XHP\InvalidChildrenException::class);
     expect(
       async () ==> await (
         <test:old_child_declaration_only><p /></test:old_child_declaration_only>
       )->toStringAsync(),
-    )->toThrow(XHPInvalidChildrenException::class);
+    )->toThrow(Facebook\XHP\InvalidChildrenException::class);
   }
 }

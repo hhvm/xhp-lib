@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP;
+
 /**
  * INCREDIBLY DANGEROUS: Marks an object as being able to provide an HTML
  * string.
@@ -16,7 +18,7 @@
  *
  * This must be used via `forceAttribute()`.
  */
-abstract class XHPUnsafeAttributeValue {
+abstract class UnsafeAttributeValue {
   abstract public function toHTMLString(): string;
 
   final public function __toString(): string {

@@ -7,15 +7,17 @@
  *
  */
 
+namespace Facebook\XHP\Elements\Core;
+
 /**
- * :x:element defines an interface that all user-land elements should subclass
- * from. The main difference between :x:element and :x:primitive is that
- * subclasses of :x:element should implement `render()` instead of `stringify`.
+ * element defines an interface that all user-land elements should subclass
+ * from. The main difference between element and primitive is that
+ * subclasses of element should implement `render()` instead of `stringify`.
  * This is important because most elements should not be dealing with strings
  * of markup.
  */
-abstract xhp class x:element extends :x:node implements XHPRoot {
-  abstract protected function renderAsync(): Awaitable<XHPRoot>;
+abstract xhp class element extends node implements \XHPRoot {
+  abstract protected function renderAsync(): Awaitable<\XHPRoot>;
 
   final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushRenderedRootElement();
@@ -23,22 +25,22 @@ abstract xhp class x:element extends :x:node implements XHPRoot {
     return $ret;
   }
 
-  final protected async function __flushSubtree(): Awaitable<:x:primitive> {
+  final protected async function __flushSubtree(): Awaitable<primitive> {
     $that = await $this->__flushRenderedRootElement();
     return await $that->__flushSubtree();
   }
 
-  protected async function __renderAndProcess(): Awaitable<XHPRoot> {
+  protected async function __renderAndProcess(): Awaitable<\XHPRoot> {
     invariant(!$this->__isRendered, "Attempted to render XHP element twice");
     $this->__isRendered = true;
-    if (:xhp::isChildValidationEnabled()) {
+    if (xhp::isChildValidationEnabled()) {
       $this->validateChildren();
     }
 
     $composed = await $this->renderAsync();
 
     $composed->__transferContext($this->getAllContexts());
-    if ($this is HasXHPAttributeClobbering_DEPRECATED) {
+    if ($this is \HasXHPAttributeClobbering_DEPRECATED) {
       $this->transferAttributesToRenderedRoot($composed);
     }
 
@@ -46,18 +48,18 @@ abstract xhp class x:element extends :x:node implements XHPRoot {
   }
 
   final protected async function __flushRenderedRootElement(
-  ): Awaitable<:x:primitive> {
+  ): Awaitable<primitive> {
     $that = $this;
-    // Flush root elements returned from render() to an :x:primitive
-    while ($that is :x:element) {
+    // Flush root elements returned from render() to an primitive
+    while ($that is element) {
       $that = await $that->__renderAndProcess();
     }
 
-    if ($that is :x:primitive) {
+    if ($that is primitive) {
       return $that;
     }
 
-    // render() must always (eventually) return :x:primitive
-    throw new XHPCoreRenderException($this, $that);
+    // render() must always (eventually) return primitive
+    throw new \Facebook\XHP\CoreRenderException($this, $that);
   }
 }

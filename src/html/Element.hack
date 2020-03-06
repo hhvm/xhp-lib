@@ -7,6 +7,7 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\{Str, Vec};
 
 /**
@@ -15,7 +16,7 @@ use namespace HH\Lib\{Str, Vec};
  * close to spec as possible. Facebook-specific extensions should go into their
  * own elements.
  */
-abstract xhp class xhp:html_element extends :x:primitive {
+abstract xhp class xhp:html_element extends x\primitive {
   use XHPHTMLHelpers;
 
   // enum { 'true', 'false' } attributes: these are actually tri-state -
@@ -119,7 +120,7 @@ abstract xhp class xhp:html_element extends :x:primitive {
         if ($val === true) {
           $buf .= ' '.htmlspecialchars($key);
         } else {
-          if ($val is XHPUnsafeAttributeValue) {
+          if ($val is \Facebook\XHP\UnsafeAttributeValue) {
             $val_str = $val->toHTMLString();
           } else {
             $val_str = htmlspecialchars((string)$val, ENT_COMPAT);
@@ -136,7 +137,7 @@ abstract xhp class xhp:html_element extends :x:primitive {
     $buf = $this->renderBaseAttrs().'>';
     $buf .= await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await :xhp::renderChildAsync($child),
+      async $child ==> await x\xhp::renderChildAsync($child),
     )
       |> Str\join($$, '');
     $buf .= '</'.$this->tagName.'>';

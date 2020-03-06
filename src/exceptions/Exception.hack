@@ -7,13 +7,17 @@
  *
  */
 
-class XHPException extends Exception {
-  protected static function getElementName(:xhp $that): string {
-    $name = get_class($that);
-    if (substr($name, 0, 4) !== 'xhp_') {
-      return $name;
-    } else {
-      return :xhp::class2element($name);
+namespace Facebook\XHP;
+
+use namespace Facebook\XHP\Elements\Core as x;
+use namespace HH\Lib\Str;
+
+class Exception extends \Exception {
+  protected static function getElementName(x\xhp $that): string {
+    $name = \get_class($that);
+    if (Str\starts_with($name, 'xhp_')) {
+      return x\xhp::class2element($name);
     }
+    return $name;
   }
 }

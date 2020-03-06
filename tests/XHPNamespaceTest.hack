@@ -7,10 +7,12 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
+
 namespace MyTestNS {
 
   /** Intentionally conflicting name */
-  xhp class div extends :x:element {
+  xhp class div extends x\element {
     protected async function renderAsync(): Awaitable<\XHPRoot> {
       return
         <:div>
@@ -25,7 +27,7 @@ namespace MyTestNS {
   xhp class divsubclass2 extends :MyTestNS:div {
   }
 
-  xhp class useswithinnamespace extends :x:element {
+  xhp class useswithinnamespace extends x\element {
     protected async function renderAsync(): Awaitable<\XHPRoot> {
       return
         <:dl>
@@ -37,8 +39,8 @@ namespace MyTestNS {
           <:dd><divsubclass>content</divsubclass></:dd>
           <:dt>divsubclass2</:dt>
           <:dd><divsubclass2>content</divsubclass2></:dd>
-          <:dt>:x:frag</:dt>
-          <:dd><:x:frag>foo</:x:frag></:dd>
+          <:dt>x\frag</:dt>
+          <:dd><x:frag>foo</x:frag></:dd>
         </:dl>;
     }
   }
@@ -90,7 +92,7 @@ namespace {
             <dd>
               <div> -MyTestNS\divsubclass2-content-/MyTestNS\divsubclass2- </div>
             </dd>
-            <dt>:x:frag</dt>
+            <dt>x\frag</dt>
             <dd>foo</dd>
           </dl>
         )->toStringAsync(),

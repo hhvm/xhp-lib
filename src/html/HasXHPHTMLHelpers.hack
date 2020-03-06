@@ -7,8 +7,10 @@
  *
  */
 
+use namespace Facebook\XHP\Elements\Core as x;
+
 interface HasXHPHTMLHelpers {
-  require extends :x:node;
+  require extends x\node;
 
   public function addClass(string $class): this;
   public function conditionClass(bool $cond, string $class): this;

@@ -7,11 +7,16 @@
  *
  */
 
-class XHPInvalidChildrenException extends XHPException {
-  public function __construct(:x:node $that, int $index) {
+
+namespace Facebook\XHP;
+
+use namespace Facebook\XHP\Elements\Core as x;
+
+class InvalidChildrenException extends namespace\Exception {
+  public function __construct(x\node $that, int $index) {
     parent::__construct(
       'Element `'.
-      XHPException::getElementName($that).
+      self::getElementName($that).
       '` was rendered with '.
       "invalid children.\n\n".
       "$that->source\n\n".

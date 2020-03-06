@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\Elements\Core;
+
 use namespace HH\Lib\Dict;
 
 /**
@@ -15,9 +17,7 @@ use namespace HH\Lib\Dict;
  * needs to directly implement stringify(). All other elements should subclass
  * from :x:element.
  */
-abstract xhp class x:primitive
-  extends :x:node
-  implements XHPRoot {
+abstract xhp class primitive extends node implements \XHPRoot {
   abstract protected function stringifyAsync(): Awaitable<string>;
 
   final public async function toStringAsync(): Awaitable<string> {
@@ -29,7 +29,7 @@ abstract xhp class x:primitive
     $children = $this->getChildren();
     $awaitables = dict[];
     foreach ($children as $idx => $child) {
-      if ($child is :x:node) {
+      if ($child is node) {
         $child->__transferContext($this->getAllContexts());
         $awaitables[$idx] = $child->__flushSubtree();
       }
@@ -43,9 +43,9 @@ abstract xhp class x:primitive
     $this->replaceChildren($children);
   }
 
-  final protected async function __flushSubtree(): Awaitable<:x:primitive> {
+  final protected async function __flushSubtree(): Awaitable<primitive> {
     await $this->__flushElementChildren();
-    if (:xhp::isChildValidationEnabled()) {
+    if (xhp::isChildValidationEnabled()) {
       $this->validateChildren();
     }
     return $this;

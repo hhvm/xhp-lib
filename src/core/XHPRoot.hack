@@ -7,6 +7,9 @@
  *
  */
 
+// Leaving this in the root namespace for consistency with the builtin
+// XHPChild namespace
+
 interface XHPRoot extends XHPChild {
-  require extends :x:node;
+  require extends \Facebook\XHP\Elements\Core\node;
 }

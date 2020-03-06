@@ -7,5 +7,7 @@
  *
  */
 
-class XHPRenderArrayException extends XHPException {
+namespace Facebook\XHP;
+
+class RenderArrayException extends namespace\Exception {
 }

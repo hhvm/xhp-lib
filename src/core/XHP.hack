@@ -7,23 +7,27 @@
  *
  */
 
+namespace Facebook\XHP\Elements\Core;
+
 use namespace HH\Lib\Str;
 
-abstract xhp class xhp implements XHPChild {
+abstract xhp class xhp implements \XHPChild {
   // Must be kept in sync with code generation for XHP
   const string SPREAD_PREFIX = '...$';
 
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
-    Traversable<XHPChild> $children,
+    Traversable<\XHPChild> $children,
   ): void {
   }
   abstract public function toStringAsync(): Awaitable<string>;
   abstract public function appendChild(mixed $child): this;
   abstract public function replaceChildren(...): this;
-  abstract public function getChildren(?string $selector = null): vec<XHPChild>;
-  abstract public function getFirstChild(?string $selector = null): ?XHPChild;
-  abstract public function getLastChild(?string $selector = null): ?XHPChild;
+  abstract public function getChildren(
+    ?string $selector = null,
+  ): vec<\XHPChild>;
+  abstract public function getFirstChild(?string $selector = null): ?\XHPChild;
+  abstract public function getLastChild(?string $selector = null): ?\XHPChild;
   abstract public function getAttribute(string $attr): mixed;
   abstract public function getAttributes(): dict<string, mixed>;
   abstract public function setAttribute(string $attr, mixed $val): this;
@@ -66,52 +70,29 @@ abstract xhp class xhp implements XHPChild {
   }
 
   final protected static async function renderChildAsync(
-    XHPChild $child,
+    \XHPChild $child,
   ): Awaitable<string> {
-    if ($child is :xhp) {
+    if ($child is xhp) {
       return await $child->toStringAsync();
     }
-    if ($child is XHPUnsafeRenderable) {
+    if ($child is \Facebook\XHP\UnsafeRenderable) {
       return await $child->toHTMLStringAsync();
     }
     if ($child is Traversable<_>) {
-      throw new XHPRenderArrayException('Can not render traversables!');
+      throw new \Facebook\XHP\RenderArrayException(
+        'Can not render traversables!',
+      );
     }
 
     /* HH_FIXME[4281] stringish migration */
-    return htmlspecialchars((string)$child);
+    return \htmlspecialchars((string)$child);
   }
 
   public static function element2class(string $element): string {
-    if (self::areXHPNamespacesEnabled()) {
-      return Str\replace($element, ':', '\\');
-    }
-    return $element
-      |> Str\replace($$, ':', '__')
-      |> Str\replace($$, '-', '_')
-      |> 'xhp_'.$$;
+    return Str\replace($element, ':', '\\');
   }
 
   public static function class2element(string $class): string {
-    if (self::areXHPNamespacesEnabled()) {
-      return Str\replace($class, '\\', ':');
-    }
-
-    $elem = Str\strip_prefix($class, 'xhp_')
-      |> Str\replace($$, '__', ':');
-    if (self::areHyphensMangled()) {
-      return Str\replace($elem, '_', '-');
-    }
-    return $elem;
-  }
-
-  <<__Memoize>>
-  private static function areXHPNamespacesEnabled(): bool {
-    return !Str\starts_with(:x:element::class, 'xhp_');
-  }
-
-  <<__Memoize>>
-  private static function areHyphensMangled(): bool {
-    return !(ini_get('hhvm.hack.lang.disable_xhp_element_mangling') ?? false);
+    return Str\replace($class, '\\', ':');
   }
 }
