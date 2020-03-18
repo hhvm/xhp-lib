@@ -14,11 +14,15 @@ use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
 <<__Sealed(primitive::class, element::class)>>
-abstract xhp class node extends namespace\xhp {
+abstract xhp class node implements \XHPChild {
+  // Must be kept in sync with compiler
+  const string SPREAD_PREFIX = '...$';
+
   protected bool $__isRendered = false;
   private dict<string, mixed> $attributes = dict[];
   private vec<\XHPChild> $children = vec[];
   private dict<string, mixed> $context = dict[];
+  public ?string $source;
 
   protected function init(): void {
   }
@@ -42,7 +46,6 @@ abstract xhp class node extends namespace\xhp {
     Traversable<\XHPChild> $children,
     dynamic ...$debug_info
   ) {
-    parent::__construct($attributes, $children);
     foreach ($children as $child) {
       $this->appendChild($child);
     }
@@ -59,7 +62,7 @@ abstract xhp class node extends namespace\xhp {
       }
     }
 
-    if (xhp::isChildValidationEnabled()) {
+    if (\Facebook\XHP\ChildValidation\is_enabled()) {
       if (C\count($debug_info) >= 2) {
         $this->source = $debug_info[0].':'.$debug_info[1];
       } else {
@@ -72,6 +75,8 @@ abstract xhp class node extends namespace\xhp {
     }
     $this->init();
   }
+
+  abstract public function toStringAsync(): Awaitable<string>;
 
   /**
    * Adds a child to the end of this node. If you give a Traversable to this method
@@ -143,12 +148,12 @@ abstract xhp class node extends namespace\xhp {
     if ($selector[0] == '%') {
       $selector = Str\slice($selector, 1);
       foreach ($this->children as $child) {
-        if ($child is xhp && $child->categoryOf($selector)) {
+        if ($child is node && $child->categoryOf($selector)) {
           $children[] = $child;
         }
       }
     } else {
-      $selector = xhp::element2class($selector);
+      $selector = \Facebook\XHP\element2class($selector);
       foreach ($this->children as $child) {
         if (\is_a($child, $selector, /* allow strings = */ true)) {
           $children[] = $child;
@@ -174,12 +179,12 @@ abstract xhp class node extends namespace\xhp {
     } else if ($selector[0] == '%') {
       $selector = \substr($selector, 1);
       foreach ($this->children as $child) {
-        if ($child is xhp && $child->categoryOf($selector)) {
+        if ($child is node && $child->categoryOf($selector)) {
           return $child;
         }
       }
     } else {
-      $selector = xhp::element2class($selector);
+      $selector = \Facebook\XHP\element2class($selector);
       foreach ($this->children as $child) {
         if (\is_a($child, $selector, /* allow strings = */ true)) {
           return $child;
@@ -261,7 +266,7 @@ abstract xhp class node extends namespace\xhp {
   final public static function __xhpReflectionChildrenDeclaration(
   ): \ReflectionXHPChildrenDeclaration {
     return new \ReflectionXHPChildrenDeclaration(
-      xhp::class2element(static::class),
+      \Facebook\XHP\class2element(static::class),
       static::__legacySerializedXHPChildrenDeclaration(),
     );
   }
@@ -289,7 +294,7 @@ abstract xhp class node extends namespace\xhp {
    * in the constructor.
    */
   private static function isSpreadKey(string $key): bool {
-    return Str\starts_with($key, xhp::SPREAD_PREFIX);
+    return Str\starts_with($key, self::SPREAD_PREFIX);
   }
 
   /**
@@ -612,7 +617,7 @@ abstract xhp class node extends namespace\xhp {
       case \XHPChildrenConstraintType::PCDATA:
         if (
           C\contains_key($this->children, $index) &&
-          !($this->children[$index] is xhp)
+          !($this->children[$index] is node)
         ) {
           return tuple(true, $index + 1);
         }
@@ -631,7 +636,7 @@ abstract xhp class node extends namespace\xhp {
       case \XHPChildrenConstraintType::CATEGORY:
         if (
           !C\contains_key($this->children, $index) ||
-          !($this->children[$index] is xhp)
+          !($this->children[$index] is node)
         ) {
           return tuple(false, $index);
         }
@@ -639,7 +644,7 @@ abstract xhp class node extends namespace\xhp {
           |> Str\replace($$, '__', ':')
           |> Str\replace($$, '_', '-');
         $child = $this->children[$index];
-        assert($child is xhp);
+        assert($child is node);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);
@@ -674,8 +679,8 @@ abstract xhp class node extends namespace\xhp {
   final public function __getChildrenDescription(): string {
     $desc = varray[];
     foreach ($this->children as $child) {
-      if ($child is xhp) {
-        $tmp = ':'.xhp::class2element(\get_class($child));
+      if ($child is node) {
+        $tmp = ':'.\Facebook\XHP\class2element(\get_class($child));
         $categories = $child->__xhpCategoryDeclaration();
         if (C\count($categories) > 0) {
           $tmp .= '[%'.Str\join(Vec\keys($categories), ',%').']';
@@ -696,5 +701,24 @@ abstract xhp class node extends namespace\xhp {
     // XHP parses the category string
     $c = \str_replace(varray[':', '-'], varray['__', '_'], $c);
     return ($categories[$c] ?? null) !== null;
+  }
+
+  final protected static async function renderChildAsync(
+    \XHPChild $child,
+  ): Awaitable<string> {
+    if ($child is node) {
+      return await $child->toStringAsync();
+    }
+    if ($child is \Facebook\XHP\UnsafeRenderable) {
+      return await $child->toHTMLStringAsync();
+    }
+    if ($child is Traversable<_>) {
+      throw new \Facebook\XHP\RenderArrayException(
+        'Can not render traversables!',
+      );
+    }
+
+    /* HH_FIXME[4281] stringish migration */
+    return \htmlspecialchars((string)$child);
   }
 }

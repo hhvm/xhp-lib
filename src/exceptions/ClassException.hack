@@ -12,7 +12,7 @@ namespace Facebook\XHP;
 use namespace Facebook\XHP\Elements\Core as x;
 
 class ClassException extends namespace\Exception {
-  public function __construct(x\xhp $that, string $msg) {
+  public function __construct(x\node $that, string $msg) {
     parent::__construct(
       'Exception in class `'.
       self::getElementName($that).

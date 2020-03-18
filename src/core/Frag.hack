@@ -21,7 +21,7 @@ xhp class frag extends primitive {
   protected async function stringifyAsync(): Awaitable<string> {
     return await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await xhp::renderChildAsync($child),
+      async $child ==> await self::renderChildAsync($child),
     )
       |> Str\join($$, '');
   }

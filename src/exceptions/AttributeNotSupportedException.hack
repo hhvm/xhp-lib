@@ -12,7 +12,7 @@ namespace Facebook\XHP;
 use namespace Facebook\XHP\Elements\Core as x;
 
 class AttributeNotSupportedException extends namespace\Exception {
-  public function __construct(x\xhp $that, string $attr) {
+  public function __construct(x\node $that, string $attr) {
     parent::__construct(
       'Attribute "'.
       $attr.

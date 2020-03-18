@@ -9,11 +9,8 @@
 
 namespace Facebook\XHP;
 
-use namespace Facebook\XHP\Elements\Core as x;
 use namespace HH\Lib\Str;
 
-class Exception extends \Exception {
-  protected static function getElementName(x\node $that): string {
-    return \get_class($that);
-  }
+function class2element(string $class): string {
+  return Str\replace($class, '\\', ':');
 }

@@ -45,7 +45,7 @@ abstract xhp class primitive extends node {
 
   final protected async function __flushSubtree(): Awaitable<primitive> {
     await $this->__flushElementChildren();
-    if (xhp::isChildValidationEnabled()) {
+    if (\Facebook\XHP\ChildValidation\is_enabled()) {
       $this->validateChildren();
     }
     return $this;

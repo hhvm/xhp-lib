@@ -268,7 +268,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     expect($elem->__getChildrenDeclaration())->toEqual($expected);
   }
 
-  public function toStringProvider(): vec<(x\xhp, string)> {
+  public function toStringProvider(): vec<(x\node, string)> {
     return vec[
       tuple(<test:any_children />, 'any'),
       tuple(<test:no_children />, 'empty'),

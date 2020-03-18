@@ -28,7 +28,7 @@ class ReflectionXHPClass {
   }
 
   public function getElementName(): string {
-    return x\xhp::class2element($this->getClassName());
+    return \Facebook\XHP\class2element($this->getClassName());
   }
 
   public function getChildren(): ReflectionXHPChildrenDeclaration {

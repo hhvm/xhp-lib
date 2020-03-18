@@ -23,7 +23,7 @@ xhp class x:conditional_comment extends x\primitive {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<x\xhp>()),
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<x\node>()),
     );
   }
 
@@ -33,7 +33,7 @@ xhp class x:conditional_comment extends x\primitive {
     $html = '<!--[if '.$this->:if.']>';
     $html .= await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await x\xhp::renderChildAsync($child),
+      async $child ==> await self::renderChildAsync($child),
     )
       |> Str\join($$, '');
     $html .= '<![endif]-->';

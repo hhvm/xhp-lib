@@ -30,7 +30,7 @@ xhp class test:verbatim_root:async extends x\element {
 }
 
 class XHPChildFlushTest extends Facebook\HackTest\HackTest {
-  public function xhpRootProvider(): vec<(x\xhp, string)> {
+  public function xhpRootProvider(): vec<(x\node, string)> {
     return vec[
       tuple(<div />, '<div></div>'),
       tuple(<div><div /><div /></div>, '<div><div></div><div></div></div>'),

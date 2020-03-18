@@ -137,7 +137,7 @@ abstract xhp class xhp:html_element extends x\primitive {
     $buf = $this->renderBaseAttrs().'>';
     $buf .= await Vec\map_async(
       $this->getChildren(),
-      async $child ==> await x\xhp::renderChildAsync($child),
+      async $child ==> await self::renderChildAsync($child),
     )
       |> Str\join($$, '');
     $buf .= '</'.$this->tagName.'>';
