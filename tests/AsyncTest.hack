@@ -14,21 +14,21 @@ use type Facebook\HackTest\DataProvider;
 
 xhp class async:test extends x\element {
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
   }
 }
 
 xhp class test:xfrag_wrap extends x\element {
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
 
 xhp class test:async_xfrag_wrap extends x\element {
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
 }
@@ -39,7 +39,7 @@ xhp class async:par_test extends x\element {
 
   public static vec<(string, string)> $log = vec[];
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     $label = $this->:label;
     self::$log[] = tuple($label, 'start');
     await RescheduleWaitHandle::create(RescheduleWaitHandle::QUEUE_DEFAULT, 0);

@@ -31,7 +31,7 @@ xhp class test:for_reflection extends x\element {
 
   category %herp, %derp;
 
-  public async function renderAsync(): Awaitable<XHPRoot> {
+  public async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
 }

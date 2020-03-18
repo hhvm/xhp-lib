@@ -14,7 +14,7 @@ xhp class test:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
 }
@@ -23,7 +23,7 @@ xhp class test:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
   }
 }
@@ -32,7 +32,7 @@ xhp class test:async:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :xhp:html_element;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
 }
@@ -41,7 +41,7 @@ xhp class test:async:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
 }
@@ -50,7 +50,7 @@ xhp class test:with_class_on_root extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :xhp:html_element;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div class="rootClass" />;
   }
 }
