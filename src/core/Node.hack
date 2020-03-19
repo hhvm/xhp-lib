@@ -13,6 +13,7 @@ use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 
+<<__Sealed(primitive::class, element::class)>>
 abstract xhp class node extends namespace\xhp {
   protected bool $__isRendered = false;
   private dict<string, mixed> $attributes = dict[];

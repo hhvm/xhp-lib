@@ -13,18 +13,18 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
 xhp class test:verbatim_root extends x\element {
-  attribute XHPRoot root @required;
+  attribute x\node root @required;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return $this->:root;
   }
 }
 
 xhp class test:verbatim_root:async extends x\element {
 
-  attribute XHPRoot root @required;
+  attribute x\node root @required;
 
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+  protected async function renderAsync(): Awaitable<x\node> {
     return $this->:root;
   }
 }
@@ -51,7 +51,7 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('xhpRootProvider')>>
   public async function testSynchronous(
-    XHPRoot $root,
+    x\node $root,
     string $expected,
   ): Awaitable<void> {
     $elem = <test:verbatim_root />;
@@ -61,7 +61,7 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
 
   <<DataProvider('xhpRootProvider')>>
   public async function testAsynchronous(
-    XHPRoot $root,
+    x\node $root,
     string $expected,
   ): Awaitable<void> {
     $elem = <test:verbatim_root:async />;

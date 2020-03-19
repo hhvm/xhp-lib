@@ -16,8 +16,8 @@ namespace Facebook\XHP\Elements\Core;
  * This is important because most elements should not be dealing with strings
  * of markup.
  */
-abstract xhp class element extends node implements \XHPRoot {
-  abstract protected function renderAsync(): Awaitable<\XHPRoot>;
+abstract xhp class element extends node {
+  abstract protected function renderAsync(): Awaitable<node>;
 
   final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushRenderedRootElement();
@@ -30,7 +30,7 @@ abstract xhp class element extends node implements \XHPRoot {
     return await $that->__flushSubtree();
   }
 
-  protected async function __renderAndProcess(): Awaitable<\XHPRoot> {
+  protected async function __renderAndProcess(): Awaitable<node> {
     invariant(!$this->__isRendered, "Attempted to render XHP element twice");
     $this->__isRendered = true;
     if (xhp::isChildValidationEnabled()) {
