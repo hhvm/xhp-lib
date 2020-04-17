@@ -84,10 +84,10 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     expect(await $xhp->toStringAsync())->toEqual('<div><b>BE BOLD</b></div>');
   }
 
-  public function parallelizationContainersProvider(): varray<varray<x\node>> {
-    return varray[
-      varray[<test:xfrag_wrap />],
-      varray[<test:async_xfrag_wrap />],
+  public function parallelizationContainersProvider(): vec<(x\node)> {
+    return vec[
+      tuple(<test:xfrag_wrap />),
+      tuple(<test:async_xfrag_wrap />),
     ];
   }
 
