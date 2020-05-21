@@ -40,7 +40,7 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   abstract protected function __xhpCategoryDeclaration(): darray<string, int>;
   abstract protected function __xhpChildrenDeclaration(): mixed;
   protected static function __xhpAttributeDeclaration(
-  ): darray<string, darray<int, mixed>> {
+  ): darray<string, varray<mixed>> {
     return darray[];
   }
 
