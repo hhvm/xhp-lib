@@ -478,7 +478,7 @@ abstract xhp class node implements \XHPChild {
    * Attribute types are suggested by the TYPE_* constants.
    */
   protected static function __xhpAttributeDeclaration(
-  ): darray<string, darray<int, mixed>> {
+  ): darray<string, varray<mixed>> {
     return darray[];
   }
 
