@@ -6,7 +6,7 @@
     "license": ["MIT"],
     "require": {
         "hhvm": "^4.25",
-        "hhvm/type-assert": "^3.0"
+        "hhvm/type-assert": "^3.0|^4.0"
     },
     "require-dev": {
         "facebook/fbexpect": "^2.0.0",
