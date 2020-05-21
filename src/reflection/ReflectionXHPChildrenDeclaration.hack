@@ -51,7 +51,7 @@ class ReflectionXHPChildrenDeclaration {
   <<__Memoize>>
   public function getExpression(): ReflectionXHPChildrenExpression {
     try {
-      $data = TypeSpec\dict_like_array(TypeSpec\int(), TypeSpec\mixed())
+      $data = TypeSpec\varray(TypeSpec\mixed())
         ->assertType($this->data);
       return new ReflectionXHPChildrenExpression($this->context, $data);
     } catch (IncorrectTypeException $_) {
@@ -79,7 +79,7 @@ class ReflectionXHPChildrenDeclaration {
 class ReflectionXHPChildrenExpression {
   public function __construct(
     private string $context,
-    private array<int, mixed> $data,
+    private varray<mixed> $data,
   ) {
   }
 
@@ -99,9 +99,9 @@ class ReflectionXHPChildrenExpression {
       \Facebook\XHP\class2element(get_class($this->context)),
     );
     try {
-      $sub_expr_1 = TypeSpec\dict_like_array(TypeSpec\int(), TypeSpec\mixed())
+      $sub_expr_1 = TypeSpec\varray(TypeSpec\mixed())
         ->assertType($this->data[1]);
-      $sub_expr_2 = TypeSpec\dict_like_array(TypeSpec\int(), TypeSpec\mixed())
+      $sub_expr_2 = TypeSpec\varray(TypeSpec\mixed())
         ->assertType($this->data[2]);
       return tuple(
         new ReflectionXHPChildrenExpression($this->context, $sub_expr_1),
@@ -149,7 +149,7 @@ class ReflectionXHPChildrenExpression {
     );
     $data = $this->data[2];
     try {
-      $data = TypeSpec\dict_like_array(TypeSpec\int(), TypeSpec\mixed())
+      $data = TypeSpec\varray(TypeSpec\mixed())
         ->assertType($this->data[2]);
       return new ReflectionXHPChildrenExpression($this->context, $data);
     } catch (IncorrectTypeException $_) {
