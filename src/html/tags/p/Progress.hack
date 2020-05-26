@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class progress extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class progress extends element {
+  use \XHPChildValidation;
   attribute
     float max,
     float value;

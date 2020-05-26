@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class select extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class select extends element {
+  use \XHPChildValidation;
   attribute
     bool autofocus,
     bool disabled,
@@ -23,7 +25,7 @@ xhp class select extends :xhp:html_element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\ofType<:option>(), XHPChild\ofType<:optgroup>()),
+      XHPChild\anyOf(XHPChild\ofType<option>(), XHPChild\ofType<optgroup>()),
     );
   }
 

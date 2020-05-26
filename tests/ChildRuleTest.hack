@@ -8,15 +8,18 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use type Facebook\XHP\HTML\{code, div, p, thead};
+
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
+use namespace HH\Lib\Str;
 
 xhp class test:new_child_declaration_only extends x\element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<:div>();
+    return XHPChild\ofType<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -29,7 +32,7 @@ xhp class test:new_and_old_child_declarations extends x\element {
   // the XHPChildDeclarationConsistencyValidation trait instead.
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<:div>();
+    return XHPChild\ofType<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -41,7 +44,7 @@ xhp class test:old_child_declaration_only extends x\element {
   use XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<:div>();
+    return XHPChild\ofType<div>();
   }
 
 
@@ -75,7 +78,7 @@ xhp class test:no_children extends x\element {
 xhp class test:single_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<:div>();
+    return XHPChild\ofType<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -86,7 +89,7 @@ xhp class test:single_child extends x\element {
 xhp class test:optional_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\optional(XHPChild\ofType<:div>());
+    return XHPChild\optional(XHPChild\ofType<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -97,7 +100,7 @@ xhp class test:optional_child extends x\element {
 xhp class test:any_number_of_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<:div>());
+    return XHPChild\anyNumberOf(XHPChild\ofType<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -108,7 +111,7 @@ xhp class test:any_number_of_child extends x\element {
 xhp class test:at_least_one_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\atLeastOneOf(XHPChild\ofType<:div>());
+    return XHPChild\atLeastOneOf(XHPChild\ofType<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -119,7 +122,7 @@ xhp class test:at_least_one_child extends x\element {
 xhp class test:two_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\sequence(XHPChild\ofType<:div>(), XHPChild\ofType<:div>());
+    return XHPChild\sequence(XHPChild\ofType<div>(), XHPChild\ofType<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -131,9 +134,9 @@ xhp class test:three_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<:div>(),
-      XHPChild\ofType<:div>(),
-      XHPChild\ofType<:div>(),
+      XHPChild\ofType<div>(),
+      XHPChild\ofType<div>(),
+      XHPChild\ofType<div>(),
     );
   }
 
@@ -146,7 +149,7 @@ xhp class test:three_children extends x\element {
 xhp class test:either_of_two_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(XHPChild\ofType<:div>(), XHPChild\ofType<:code>());
+    return XHPChild\anyOf(XHPChild\ofType<div>(), XHPChild\ofType<code>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -158,9 +161,9 @@ xhp class test:any_of_three_children extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
-      XHPChild\ofType<:div>(),
-      XHPChild\ofType<:code>(),
-      XHPChild\ofType<:p>(),
+      XHPChild\ofType<div>(),
+      XHPChild\ofType<code>(),
+      XHPChild\ofType<p>(),
     );
   }
 
@@ -174,8 +177,8 @@ xhp class test:nested_rule extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
-      XHPChild\ofType<:div>(),
-      XHPChild\atLeastOneOf(XHPChild\ofType<:code>()),
+      XHPChild\ofType<div>(),
+      XHPChild\atLeastOneOf(XHPChild\ofType<code>()),
     );
   }
 
@@ -184,7 +187,7 @@ xhp class test:nested_rule extends x\element {
   }
 }
 
-xhp class test:pcdata_child extends x\element {
+xhp class testpcdata_child extends x\element {
   use XHPChildValidation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
@@ -272,16 +275,16 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     return vec[
       tuple(<test:any_children />, 'any'),
       tuple(<test:no_children />, 'empty'),
-      tuple(<test:single_child />, ':div'),
-      tuple(<test:optional_child />, ':div?'),
-      tuple(<test:any_number_of_child />, ':div*'),
-      tuple(<test:at_least_one_child />, ':div+'),
-      tuple(<test:two_children />, ':div,:div'),
-      tuple(<test:three_children />, ':div,:div,:div'),
-      tuple(<test:either_of_two_children />, ':div|:code'),
-      tuple(<test:any_of_three_children />, ':div|:code|:p'),
-      tuple(<test:nested_rule />, ':div|:code+'),
-      tuple(<test:pcdata_child />, 'pcdata'),
+      tuple(<test:single_child />, '\\'.div::class),
+      tuple(<test:optional_child />, '\\'.div::class.'?'),
+      tuple(<test:any_number_of_child />, '\\'.div::class.'*'),
+      tuple(<test:at_least_one_child />, '\\'.div::class.'+'),
+      tuple(<test:two_children />, Str\format('\\%s,\\%s', div::class, div::class)),
+      tuple(<test:three_children />, Str\format('\\%s,\\%s,\\%s', div::class, div::class, div::class)),
+      tuple(<test:either_of_two_children />, Str\format('\\%s|\\%s', div::class, code::class)),
+      tuple(<test:any_of_three_children />,  Str\format('\\%s|\\%s|\\%s', div::class ,code::class, p::class)),
+      tuple(<test:nested_rule />, Str\format('\\%s|\\%s+', div::class, code::class)),
+      tuple(<testpcdata_child />, 'pcdata'),
       tuple(<test:category_child />, '%flow'),
     ];
   }
@@ -292,7 +295,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:at_least_one_child />,
       <test:either_of_two_children />,
       <test:nested_rule />,
-      <test:pcdata_child />,
+      <testpcdata_child />,
     ];
     foreach ($elems as $elem) {
       expect(async () ==> await $elem->toStringAsync())
@@ -378,9 +381,9 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testPCDataChild(): Awaitable<void> {
-    $x = <test:pcdata_child>herp derp</test:pcdata_child>;
+    $x = <testpcdata_child>herp derp</testpcdata_child>;
     expect(await $x->toStringAsync())->toEqual('<div>herp derp</div>');
-    $x = <test:pcdata_child>{123}</test:pcdata_child>;
+    $x = <testpcdata_child>{123}</testpcdata_child>;
     expect(await $x->toStringAsync())->toEqual('<div>123</div>');
   }
 

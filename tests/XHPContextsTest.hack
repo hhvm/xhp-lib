@@ -8,6 +8,7 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use type Facebook\XHP\HTML\{div, p};
 use function Facebook\FBExpect\expect;
 
 xhp class test:contexts extends x\element {

@@ -7,10 +7,13 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class a extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class a extends element {
+  use \XHPChildValidation;
+
   attribute
     string download,
     string href,

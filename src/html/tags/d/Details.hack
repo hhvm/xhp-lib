@@ -7,16 +7,18 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class details extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class details extends element {
+  use \XHPChildValidation;
   attribute bool open;
   category %flow, %phrase, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<:summary>(),
+      XHPChild\ofType<summary>(),
       XHPChild\atLeastOneOf(XHPChild\category('%flow')),
     );
   }

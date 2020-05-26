@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class body extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class body extends element {
+  use \XHPChildValidation;
   attribute
     string onafterprint,
     string onbeforeprint,

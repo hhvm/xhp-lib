@@ -7,7 +7,9 @@
  *
  */
 
-xhp class keygen extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class keygen extends singleton {
   attribute
     bool autofocus,
     string challenge,

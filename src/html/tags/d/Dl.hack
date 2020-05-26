@@ -7,16 +7,18 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class dl extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class dl extends element {
+  use \XHPChildValidation;
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\sequence(
-      XHPChild\atLeastOneOf(XHPChild\ofType<:dt>()),
-      XHPChild\atLeastOneOf(XHPChild\ofType<:dd>()),
+      XHPChild\atLeastOneOf(XHPChild\ofType<dt>()),
+      XHPChild\atLeastOneOf(XHPChild\ofType<dd>()),
     ));
   }
 

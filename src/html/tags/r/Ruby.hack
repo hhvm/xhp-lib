@@ -7,22 +7,24 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class ruby extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class ruby extends element {
+  use \XHPChildValidation;
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\atLeastOneOf(
-        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<:rb>()),
+        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<rb>()),
       ),
       XHPChild\atLeastOneOf(XHPChild\anyOf(
-        XHPChild\sequence(XHPChild\ofType<:rp>(), XHPChild\ofType<:rt>()),
-        XHPChild\sequence(XHPChild\ofType<:rp>(), XHPChild\ofType<:rtc>()),
-        XHPChild\sequence(XHPChild\ofType<:rt>(), XHPChild\ofType<:rp>()),
-        XHPChild\sequence(XHPChild\ofType<:rtc>(), XHPChild\ofType<:rp>()),
+        XHPChild\sequence(XHPChild\ofType<rp>(), XHPChild\ofType<rt>()),
+        XHPChild\sequence(XHPChild\ofType<rp>(), XHPChild\ofType<rtc>()),
+        XHPChild\sequence(XHPChild\ofType<rt>(), XHPChild\ofType<rp>()),
+        XHPChild\sequence(XHPChild\ofType<rtc>(), XHPChild\ofType<rp>()),
       )),
     );
   }

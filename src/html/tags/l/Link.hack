@@ -7,7 +7,9 @@
  *
  */
 
-xhp class link extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class link extends singleton {
   attribute
     string as,
     enum {'anonymous', 'use-credentials'} crossorigin,

@@ -7,7 +7,9 @@
  *
  */
 
-xhp class col extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class col extends singleton {
   attribute int span;
   protected string $tagName = 'col';
 }

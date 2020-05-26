@@ -7,14 +7,16 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class tr extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class tr extends element {
+  use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\ofType<:th>(), XHPChild\ofType<:td>()),
+      XHPChild\anyOf(XHPChild\ofType<th>(), XHPChild\ofType<td>()),
     );
   }
 

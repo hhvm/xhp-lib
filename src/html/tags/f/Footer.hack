@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class footer extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class footer extends element {
+  use \XHPChildValidation;
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

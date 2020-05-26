@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class label extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class label extends element {
+  use \XHPChildValidation;
   attribute
     string for,
     string form;

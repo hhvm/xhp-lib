@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\{Str, Vec};
 
@@ -16,7 +18,7 @@ use namespace HH\Lib\{Str, Vec};
  * close to spec as possible. Facebook-specific extensions should go into their
  * own elements.
  */
-abstract xhp class xhp:html_element extends x\primitive {
+abstract xhp class element extends x\primitive {
   use XHPHTMLHelpers;
 
   // enum { 'true', 'false' } attributes: these are actually tri-state -
@@ -118,15 +120,15 @@ abstract xhp class xhp:html_element extends x\primitive {
     foreach ($this->getAttributes() as $key => $val) {
       if ($val !== null && $val !== false) {
         if ($val === true) {
-          $buf .= ' '.htmlspecialchars($key);
+          $buf .= ' '.\htmlspecialchars($key);
         } else {
           if ($val is \Facebook\XHP\UnsafeAttributeValue) {
             $val_str = $val->toHTMLString();
           } else {
-            $val_str = htmlspecialchars((string)$val, ENT_COMPAT);
+            $val_str = \htmlspecialchars((string)$val, \ENT_COMPAT);
           }
 
-          $buf .= ' '.htmlspecialchars($key).'="'.$val_str.'"';
+          $buf .= ' '.\htmlspecialchars($key).'="'.$val_str.'"';
         }
       }
     }

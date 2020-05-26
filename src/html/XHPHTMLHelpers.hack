@@ -7,6 +7,9 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
+use namespace HH\Lib\Str;
 use namespace Facebook\XHP\Core as x;
 
 trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
@@ -17,7 +20,7 @@ trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
    */
   public function addClass(string $class): this {
     $current_class = ($this->getAttributes()['class'] ?? '') as string;
-    return $this->setAttribute('class', trim($current_class.' '.$class));
+    return $this->setAttribute('class', Str\trim($current_class.' '.$class));
   }
 
   /*
@@ -34,7 +37,7 @@ trait XHPHTMLHelpers implements HasXHPHTMLHelpers {
   public function requireUniqueID(): string {
     $id = $this->getAttributes()['id'] ?? null;
     if ($id === null || $id === '') {
-      $id = bin2hex(random_bytes(5));
+      $id = \bin2hex(\random_bytes(5));
       $this->setAttribute('id', $id);
     }
     return (string)$id;

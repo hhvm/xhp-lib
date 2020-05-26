@@ -7,7 +7,9 @@
  *
  */
 
-xhp class img extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class img extends singleton {
   attribute
     string alt,
     enum {'anonymous', 'use-credentials'} crossorigin,

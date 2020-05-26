@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\{C, Dict};
@@ -91,7 +93,7 @@ trait XHPAttributeClobbering_DEPRECATED
     ?keyset<string> $ignore = null,
     bool $remove = false,
   ): void {
-    $ignore ??= :xhp:html_element::__xhpAttributeDeclaration();
+    $ignore ??= element::__xhpAttributeDeclaration();
 
     $compatible = $target::__xhpAttributeDeclaration();
     $transferAttributes = Dict\diff_by_key($this->getAttributes(), $ignore);
@@ -101,7 +103,7 @@ trait XHPAttributeClobbering_DEPRECATED
       }
       if (
         C\contains_key($compatible, $attribute) ||
-        ReflectionXHPAttribute::IsSpecial($attribute)
+        \ReflectionXHPAttribute::IsSpecial($attribute)
       ) {
         $target->setAttribute($attribute, $value);
       }
@@ -120,7 +122,7 @@ trait XHPAttributeClobbering_DEPRECATED
     // so do this attribute manually and then remove it.
     foreach ($this->getAttributeNamesThatAppendValuesOnTransfer() as $attr) {
       if (
-        !(array_key_exists($attr, $attributes) && $root->isAttributeSet($attr))
+        !(\array_key_exists($attr, $attributes) && $root->isAttributeSet($attr))
       ) {
         continue;
       }

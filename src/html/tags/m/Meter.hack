@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class meter extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class meter extends element {
+  use \XHPChildValidation;
   attribute
     float high,
     float low,

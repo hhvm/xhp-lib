@@ -7,7 +7,9 @@
  *
  */
 
-xhp class input extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class input extends singleton {
   attribute
     string accept,
     string alt,

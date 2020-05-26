@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class fieldset extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class fieldset extends element {
+  use \XHPChildValidation;
   attribute
     bool disabled,
     string form,
@@ -19,7 +21,7 @@ xhp class fieldset extends :xhp:html_element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\optional(XHPChild\ofType<:legend>()),
+      XHPChild\optional(XHPChild\ofType<legend>()),
       XHPChild\anyNumberOf(
         XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
       ),

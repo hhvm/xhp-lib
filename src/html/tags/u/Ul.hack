@@ -7,14 +7,16 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class ul extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class ul extends element {
+  use \XHPChildValidation;
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<:li>());
+    return XHPChild\anyNumberOf(XHPChild\ofType<li>());
   }
 
   protected string $tagName = 'ul';

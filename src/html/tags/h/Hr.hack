@@ -7,7 +7,9 @@
  *
  */
 
-xhp class hr extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class hr extends singleton {
   category %flow;
   protected string $tagName = 'hr';
 }

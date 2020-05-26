@@ -7,7 +7,9 @@
  *
  */
 
-xhp class track extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class track extends singleton {
   attribute
     bool default,
     enum {'subtitles', 'captions', 'descriptions', 'chapters', 'metadata'} kind,

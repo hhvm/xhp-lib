@@ -7,7 +7,9 @@
  *
  */
 
-xhp class template extends :xhp:html_element {
+namespace Facebook\XHP\HTML;
+
+xhp class template extends element {
   category %flow, %phrase, %metadata;
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.

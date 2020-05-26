@@ -7,7 +7,9 @@
  *
  */
 
-xhp class menuitem extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class menuitem extends singleton {
   attribute
     bool checked,
     string command,

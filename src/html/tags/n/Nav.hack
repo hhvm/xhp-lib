@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class nav extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class nav extends element {
+  use \XHPChildValidation;
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

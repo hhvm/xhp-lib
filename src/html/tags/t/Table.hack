@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class table extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class table extends element {
+  use \XHPChildValidation;
   attribute
     int border,
     bool sortable;
@@ -18,23 +20,23 @@ xhp class table extends :xhp:html_element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\optional(XHPChild\ofType<:caption>()),
-      XHPChild\anyNumberOf(XHPChild\ofType<:colgroup>()),
-      XHPChild\optional(XHPChild\ofType<:thead>()),
+      XHPChild\optional(XHPChild\ofType<caption>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<colgroup>()),
+      XHPChild\optional(XHPChild\ofType<thead>()),
       XHPChild\anyOf(
         XHPChild\sequence(
-          XHPChild\ofType<:tfoot>(),
+          XHPChild\ofType<tfoot>(),
           XHPChild\anyOf(
-            XHPChild\atLeastOneOf(XHPChild\ofType<:tbody>()),
-            XHPChild\anyNumberOf(XHPChild\ofType<:tr>()),
+            XHPChild\atLeastOneOf(XHPChild\ofType<tbody>()),
+            XHPChild\anyNumberOf(XHPChild\ofType<tr>()),
           ),
         ),
         XHPChild\sequence(
           XHPChild\anyOf(
-            XHPChild\atLeastOneOf(XHPChild\ofType<:tbody>()),
-            XHPChild\anyNumberOf(XHPChild\ofType<:tr>()),
+            XHPChild\atLeastOneOf(XHPChild\ofType<tbody>()),
+            XHPChild\anyNumberOf(XHPChild\ofType<tr>()),
           ),
-          XHPChild\optional(XHPChild\ofType<:tfoot>()),
+          XHPChild\optional(XHPChild\ofType<tfoot>()),
         ),
       ),
     );

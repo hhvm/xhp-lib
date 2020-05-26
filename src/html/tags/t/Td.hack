@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class td extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class td extends element {
+  use \XHPChildValidation;
   attribute
     int colspan,
     string headers,

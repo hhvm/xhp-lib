@@ -7,7 +7,9 @@
  *
  */
 
-xhp class meta extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class meta extends singleton {
   attribute
     // The correct definition of http-equiv is an enum, but there are legacy
     // values still used and any strictness here would only be frustrating.

@@ -7,7 +7,9 @@
  *
  */
 
-xhp class base extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class base extends singleton {
   attribute
     string href,
     string target;

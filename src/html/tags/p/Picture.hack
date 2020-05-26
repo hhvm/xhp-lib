@@ -7,16 +7,18 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class picture extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class picture extends element {
+  use \XHPChildValidation;
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<:source>()),
-      XHPChild\ofType<:img>(),
+      XHPChild\anyNumberOf(XHPChild\ofType<source>()),
+      XHPChild\ofType<img>(),
     );
   }
 

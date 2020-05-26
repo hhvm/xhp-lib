@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class menu extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class menu extends element {
+  use \XHPChildValidation;
   attribute
     string label,
     enum {'popup', 'toolbar'} type;
@@ -19,11 +21,11 @@ xhp class menu extends :xhp:html_element {
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\anyNumberOf(XHPChild\anyOf(
-        XHPChild\ofType<:menuitem>(),
-        XHPChild\ofType<:hr>(),
-        XHPChild\ofType<:menu>(),
+        XHPChild\ofType<menuitem>(),
+        XHPChild\ofType<hr>(),
+        XHPChild\ofType<menu>(),
       )),
-      XHPChild\anyNumberOf(XHPChild\ofType<:li>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<li>()),
       XHPChild\anyNumberOf(XHPChild\category('%flow')),
     );
   }

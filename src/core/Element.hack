@@ -9,6 +9,8 @@
 
 namespace Facebook\XHP\Core;
 
+use namespace Facebook\XHP\HTML;
+
 /**
  * element defines an interface that all user-land elements should subclass
  * from. The main difference between element and primitive is that
@@ -40,7 +42,7 @@ abstract xhp class element extends node {
     $composed = await $this->renderAsync();
 
     $composed->__transferContext($this->getAllContexts());
-    if ($this is \HasXHPAttributeClobbering_DEPRECATED) {
+    if ($this is HTML\HasXHPAttributeClobbering_DEPRECATED) {
       $this->transferAttributesToRenderedRoot($composed);
     }
 

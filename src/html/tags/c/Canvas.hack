@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class canvas extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class canvas extends element {
+  use \XHPChildValidation;
   attribute
     int height,
     int width;

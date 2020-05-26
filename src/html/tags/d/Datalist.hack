@@ -7,16 +7,18 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class datalist extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class datalist extends element {
+  use \XHPChildValidation;
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\atLeastOneOf(XHPChild\category('%phrase')),
-      XHPChild\anyNumberOf(XHPChild\ofType<:option>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<option>()),
     );
   }
 

@@ -7,15 +7,17 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 /**
  * Subclasses of :xhp:pcdata_elements may contain only string children.
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-abstract xhp class xhp:pcdata_element extends :xhp:html_element {
-  use XHPChildValidation;
+abstract xhp class pcdata_element extends element {
+  use \XHPChildValidation;
 
-  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+  final protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\pcdata());
   }
 

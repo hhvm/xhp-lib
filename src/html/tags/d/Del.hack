@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class del extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class del extends element {
+  use \XHPChildValidation;
   attribute
     string cite,
     string datetime;

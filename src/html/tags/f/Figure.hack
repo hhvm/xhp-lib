@@ -7,21 +7,23 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class figure extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class figure extends element {
+  use \XHPChildValidation;
   category %flow, %sectioning;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyOf(
       XHPChild\sequence(
-        XHPChild\ofType<:figcaption>(),
+        XHPChild\ofType<figcaption>(),
         XHPChild\atLeastOneOf(XHPChild\category('%flow')),
       ),
       XHPChild\sequence(
         XHPChild\atLeastOneOf(XHPChild\category('%flow')),
-        XHPChild\optional(XHPChild\ofType<:figcaption>()),
+        XHPChild\optional(XHPChild\ofType<figcaption>()),
       ),
     );
   }

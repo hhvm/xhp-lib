@@ -11,7 +11,9 @@ use function Facebook\FBExpect\expect;
 
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
-use namespace HH\Lib\Dict;
+use type Facebook\XHP\HTML\{a, code, div};
+
+use namespace HH\Lib\{Dict, Str};
 
 xhp class test:for_reflection extends x\element {
   use XHPChildValidation;
@@ -22,9 +24,9 @@ xhp class test:for_reflection extends x\element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\atLeastOneOf(XHPChild\ofType<:div>()),
+      XHPChild\atLeastOneOf(XHPChild\ofType<div>()),
       XHPChild\optional(
-        XHPChild\sequence(XHPChild\ofType<:code>(), XHPChild\ofType<:a>()),
+        XHPChild\sequence(XHPChild\ofType<code>(), XHPChild\ofType<a>()),
       ),
     );
   }
@@ -56,7 +58,8 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
   public function testGetChildren(): void {
     $children = $this->rxc?->getChildren();
     expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
-    expect($children?->__toString())->toEqual(':div+,(:code,:a)?');
+    expect($children?->__toString())->toEqual(
+      Str\format('\\%s+,(\\%s,\\%s)?', div::class, code::class, a::class));
   }
 
   public function testGetAttributes(): void {

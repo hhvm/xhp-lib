@@ -7,7 +7,9 @@
  *
  */
 
-xhp class wbr extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class wbr extends singleton {
   category %flow, %phrase;
   protected string $tagName = 'wbr';
 }

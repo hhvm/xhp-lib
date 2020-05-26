@@ -7,7 +7,9 @@
  *
  */
 
-xhp class textarea extends :xhp:pcdata_element {
+namespace Facebook\XHP\HTML;
+
+xhp class textarea extends pcdata_element {
   attribute
     enum {'on', 'off'} autocomplete,
     bool autofocus,

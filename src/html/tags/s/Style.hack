@@ -7,7 +7,9 @@
  *
  */
 
-xhp class style extends :xhp:raw_pcdata_element {
+namespace Facebook\XHP\HTML;
+
+xhp class style extends unescaped_pcdata_element {
   attribute
     string media,
     bool scoped,

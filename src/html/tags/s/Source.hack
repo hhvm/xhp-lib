@@ -7,7 +7,9 @@
  *
  */
 
-xhp class source extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class source extends singleton {
   attribute
     string media,
     string sizes,

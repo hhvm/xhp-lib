@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class form extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class form extends element {
+  use \XHPChildValidation;
   attribute
     string action,
     string accept-charset,

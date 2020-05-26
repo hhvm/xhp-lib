@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 
 use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\{Str, Vec};
@@ -18,7 +20,7 @@ use namespace HH\Lib\{Str, Vec};
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class x:conditional_comment extends x\primitive {
-  use XHPChildValidation;
+  use \XHPChildValidation;
   attribute string if @required;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

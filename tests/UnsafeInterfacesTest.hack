@@ -8,6 +8,7 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use type Facebook\XHP\HTML\{body, div, html};
 use function Facebook\FBExpect\expect;
 
 // Please see MIGRATING.md for information on how these should be used in

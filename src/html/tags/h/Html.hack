@@ -7,18 +7,20 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class html extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class html extends element {
+  use \XHPChildValidation;
   attribute
     string manifest,
     string xmlns;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<:head>(),
-      XHPChild\ofType<:body>(),
+      XHPChild\ofType<head>(),
+      XHPChild\ofType<body>(),
     );
   }
 

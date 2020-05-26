@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class blockquote extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class blockquote extends element {
+  use \XHPChildValidation;
   attribute string cite;
   category %flow, %sectioning;
 

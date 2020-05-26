@@ -7,7 +7,9 @@
  *
  */
 
-xhp class script extends :xhp:raw_pcdata_element {
+namespace Facebook\XHP\HTML;
+
+xhp class script extends unescaped_pcdata_element {
   attribute
     bool async,
     string charset,

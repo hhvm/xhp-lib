@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class video extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class video extends element {
+  use \XHPChildValidation;
   attribute
     bool autoplay,
     bool controls,
@@ -27,8 +29,8 @@ xhp class video extends :xhp:html_element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<:source>()),
-      XHPChild\anyNumberOf(XHPChild\ofType<:track>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<source>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<track>()),
       XHPChild\anyNumberOf(
         XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
       ),

@@ -7,6 +7,9 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+use namespace Facebook\XHP\ChildValidation;
+
 /**
  * Subclasses of :xhp:raw_pcdata_element must contain only string children.
  * However, the strings will not be escaped. This is intended for tags like
@@ -20,7 +23,10 @@
  * the end of the s content. In valid documents, this would be the end tag for
  * the element."
  */
-abstract xhp class xhp:raw_pcdata_element extends :xhp:pcdata_element {
+abstract xhp class unescaped_pcdata_element
+  extends pcdata_element
+  implements \Facebook\XHP\UnsafeRenderable {
+
   protected function stringify(): string {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
@@ -31,5 +37,9 @@ abstract xhp class xhp:raw_pcdata_element extends :xhp:pcdata_element {
     }
     $buf .= '</'.$this->tagName.'>';
     return $buf;
+  }
+
+  final public async function toHTMLStringAsync(): Awaitable<string> {
+    return $this->stringify();
   }
 }

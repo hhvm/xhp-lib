@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class object extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class object extends element {
+  use \XHPChildValidation;
   attribute
     string data,
     int height,
@@ -24,7 +26,7 @@ xhp class object extends :xhp:html_element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<:param>()),
+      XHPChild\anyNumberOf(XHPChild\ofType<param>()),
       XHPChild\anyNumberOf(
         XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
       ),

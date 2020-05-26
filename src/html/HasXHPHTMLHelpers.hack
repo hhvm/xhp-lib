@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\Core as x;
 
 interface HasXHPHTMLHelpers {

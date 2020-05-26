@@ -7,13 +7,15 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class tbody extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class tbody extends element {
+  use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<:tr>());
+    return XHPChild\anyNumberOf(XHPChild\ofType<tr>());
   }
 
   protected string $tagName = 'tbody';

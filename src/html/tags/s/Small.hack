@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class small extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class small extends element {
+  use \XHPChildValidation;
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

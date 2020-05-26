@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\C;
 
@@ -17,10 +19,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
  * the HTML5 doctype.
  */
 xhp class x:doctype extends x\primitive {
-  use XHPChildValidation;
+  use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<:html>();
+    return XHPChild\ofType<html>();
   }
 
 

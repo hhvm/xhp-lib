@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class ol extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class ol extends element {
+  use \XHPChildValidation;
   attribute
     bool reversed,
     int start,
@@ -18,7 +20,7 @@ xhp class ol extends :xhp:html_element {
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<:li>());
+    return XHPChild\anyNumberOf(XHPChild\ofType<li>());
   }
 
   protected string $tagName = 'ol';

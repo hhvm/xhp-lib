@@ -8,16 +8,18 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use namespace Facebook\XHP\HTML as h;
 
 namespace MyTestNS {
+  use type Facebook\XHP\HTML\{dl, dt, dd};
 
   /** Intentionally conflicting name */
   xhp class div extends x\element {
     protected async function renderAsync(): Awaitable<x\node> {
       return
-        <:div>
+        <h:div>
           -{static::class}-{$this->getChildren()}-/{static::class}-
-        </:div>;
+        </h:div>;
     }
   }
 
@@ -30,24 +32,25 @@ namespace MyTestNS {
   xhp class useswithinnamespace extends x\element {
     protected async function renderAsync(): Awaitable<x\node> {
       return
-        <:dl>
-          <:dt>:div</:dt>
-          <:dd><:div>content</:div></:dd>
-          <:dt>div</:dt>
-          <:dd><div>content</div></:dd>
-          <:dt>divsubclass</:dt>
-          <:dd><divsubclass>content</divsubclass></:dd>
-          <:dt>divsubclass2</:dt>
-          <:dd><divsubclass2>content</divsubclass2></:dd>
-          <:dt>x\frag</:dt>
-          <:dd><x:frag>foo</x:frag></:dd>
-        </:dl>;
+        <dl>
+          <dt>h:div</dt>
+          <dd><h:div>content</h:div></dd>
+          <dt>div</dt>
+          <dd><div>content</div></dd>
+          <dt>divsubclass</dt>
+          <dd><divsubclass>content</divsubclass></dd>
+          <dt>divsubclass2</dt>
+          <dd><divsubclass2>content</divsubclass2></dd>
+          <dt>x\frag</dt>
+          <dd><x:frag>foo</x:frag></dd>
+        </dl>;
     }
   }
 
 } // namespace MyTestNS
 
 namespace {
+  use type Facebook\XHP\HTML\{div, dl, dt, dd};
 
   use function Facebook\FBExpect\expect;
   use type MyTestNS\div as aliaseddiv;
@@ -80,8 +83,8 @@ namespace {
       )->toEqual(
         await (
           <dl>
-            <dt>:div</dt>
-            <dd><div>content</div></dd>
+            <dt>h:div</dt>
+            <dd><h:div>content</h:div></dd>
             <dt>div</dt>
             <dd><div> -MyTestNS\div-content-/MyTestNS\div- </div></dd>
             <dt>divsubclass</dt>

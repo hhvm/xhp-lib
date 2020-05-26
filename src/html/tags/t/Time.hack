@@ -7,10 +7,12 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class time extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class time extends element {
+  use \XHPChildValidation;
   attribute string datetime;
   category %flow, %phrase;
 

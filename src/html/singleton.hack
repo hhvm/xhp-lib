@@ -7,14 +7,16 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 /**
  * Subclasses of :xhp:html_singleton may not contain children. When
  * rendered they will be in singleton (<img />, <br />) form.
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-abstract xhp class xhp:html_singleton extends :xhp:html_element {
-  use XHPChildValidation;
+abstract xhp class singleton extends element {
+  use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();

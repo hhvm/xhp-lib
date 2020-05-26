@@ -8,11 +8,12 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use type Facebook\XHP\HTML\{div, XHPAttributeClobbering_DEPRECATED, XHPHTMLHelpers};
 use function Facebook\FBExpect\expect;
 
 xhp class test:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
-  attribute :xhp:html_element;
+  attribute :Facebook:XHP:HTML:element;
 
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
@@ -21,7 +22,7 @@ xhp class test:no_xhphelpers extends x\element {
 
 xhp class test:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
-  attribute :xhp:html_element;
+  attribute :Facebook:XHP:HTML:element;
 
   protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
@@ -30,7 +31,7 @@ xhp class test:xhphelpers extends x\element {
 
 xhp class test:async:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
-  attribute :xhp:html_element;
+  attribute :Facebook:XHP:HTML:element;
 
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
@@ -39,7 +40,7 @@ xhp class test:async:no_xhphelpers extends x\element {
 
 xhp class test:async:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
-  attribute :xhp:html_element;
+  attribute :Facebook:XHP:HTML:element;
 
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
@@ -48,7 +49,7 @@ xhp class test:async:xhphelpers extends x\element {
 
 xhp class test:with_class_on_root extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
-  attribute :xhp:html_element;
+  attribute :Facebook:XHP:HTML:element;
 
   protected async function renderAsync(): Awaitable<x\node> {
     return <div class="rootClass" />;

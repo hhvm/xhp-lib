@@ -7,14 +7,16 @@
  *
  */
 
+namespace Facebook\XHP\HTML;
+
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class colgroup extends :xhp:html_element {
-  use XHPChildValidation;
+xhp class colgroup extends element {
+  use \XHPChildValidation;
   attribute int span;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<:col>());
+    return XHPChild\anyNumberOf(XHPChild\ofType<col>());
   }
 
   protected string $tagName = 'colgroup';

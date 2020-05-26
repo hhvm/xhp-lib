@@ -7,7 +7,9 @@
  *
  */
 
-xhp class area extends :xhp:html_singleton {
+namespace Facebook\XHP\HTML;
+
+xhp class area extends singleton {
   attribute
     string alt,
     string coords,

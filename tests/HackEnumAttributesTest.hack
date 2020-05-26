@@ -8,6 +8,8 @@
  */
 
 use namespace Facebook\XHP\Core as x;
+use type Facebook\XHP\HTML\div;
+
 use function Facebook\FBExpect\expect;
 
 enum TestEnum: int {

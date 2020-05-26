@@ -7,7 +7,9 @@
  *
  */
 
-xhp class param extends :xhp:pcdata_element {
+namespace Facebook\XHP\HTML;
+
+xhp class param extends pcdata_element {
   attribute
     string name,
     string value;
