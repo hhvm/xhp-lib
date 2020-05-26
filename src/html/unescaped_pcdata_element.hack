@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation;
 
 /**
- * Subclasses of :xhp:raw_pcdata_element must contain only string children.
+ * Subclasses of unescaped_pcdata_element must contain only string children.
  * However, the strings will not be escaped. This is intended for tags like
  * <script> or <style> whose content is interpreted literally by the browser.
  *
@@ -23,6 +23,7 @@ use namespace Facebook\XHP\ChildValidation;
  * the end of the s content. In valid documents, this would be the end tag for
  * the element."
  */
+<<__Sealed(script::class, style::class)>>
 abstract xhp class unescaped_pcdata_element
   extends pcdata_element
   implements \Facebook\XHP\UnsafeRenderable {
