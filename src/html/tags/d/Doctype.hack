@@ -18,7 +18,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
  * Render an <html /> element within a DOCTYPE, XHP has chosen to only support
  * the HTML5 doctype.
  */
-xhp class x:doctype extends x\primitive {
+xhp class doctype extends x\primitive {
   use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
