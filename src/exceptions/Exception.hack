@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP;
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\Str;
 
 class Exception extends \Exception {

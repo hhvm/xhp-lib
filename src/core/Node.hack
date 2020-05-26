@@ -7,7 +7,7 @@
  *
  */
 
-namespace Facebook\XHP\Elements\Core;
+namespace Facebook\XHP\Core;
 
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;

@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP;
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 
 class AttributeRequiredException extends namespace\Exception {
   public function __construct(x\node $that, string $attr) {

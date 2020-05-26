@@ -7,7 +7,7 @@
  *
  */
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use function Facebook\FBExpect\expect;
 
 // Please see MIGRATING.md for information on how these should be used in

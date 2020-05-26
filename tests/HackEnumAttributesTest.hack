@@ -7,7 +7,7 @@
  *
  */
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use function Facebook\FBExpect\expect;
 
 enum TestEnum: int {

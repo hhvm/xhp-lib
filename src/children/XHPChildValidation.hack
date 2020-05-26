@@ -7,7 +7,7 @@
  *
  */
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 /** Verify that a new child declaration matches the legacy codegen. */

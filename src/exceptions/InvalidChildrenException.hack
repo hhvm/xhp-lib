@@ -10,7 +10,7 @@
 
 namespace Facebook\XHP;
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 
 class InvalidChildrenException extends namespace\Exception {
   public function __construct(x\node $that, int $index) {

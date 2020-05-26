@@ -7,7 +7,7 @@
  *
  */
 
-namespace Facebook\XHP\Elements\Core;
+namespace Facebook\XHP\Core;
 
 use namespace HH\Lib\Dict;
 

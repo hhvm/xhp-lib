@@ -7,7 +7,7 @@
  *
  */
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;

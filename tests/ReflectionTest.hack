@@ -9,7 +9,7 @@
 
 use function Facebook\FBExpect\expect;
 
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 use namespace HH\Lib\Dict;
 

@@ -7,7 +7,7 @@
  *
  */
 
-namespace Facebook\XHP\Elements\Core;
+namespace Facebook\XHP\Core;
 
 /**
  * element defines an interface that all user-land elements should subclass

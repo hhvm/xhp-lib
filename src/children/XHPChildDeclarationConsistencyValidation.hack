@@ -8,7 +8,7 @@
  */
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
-use namespace Facebook\XHP\Elements\Core as x;
+use namespace Facebook\XHP\Core as x;
 
 /** Verify that a new child declaration matches the legacy codegen. */
 trait XHPChildDeclarationConsistencyValidation {
