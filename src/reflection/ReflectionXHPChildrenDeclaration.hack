@@ -60,7 +60,7 @@ class ReflectionXHPChildrenDeclaration {
 
     throw new Exception(
       "Tried to get child expression for XHP class ".
-      \Facebook\XHP\class2element(get_class($this->context)).
+      get_class($this->context).
       ", but it does not have an expressions.",
     );
   }
@@ -96,7 +96,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
         $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
-      \Facebook\XHP\class2element(get_class($this->context)),
+      get_class($this->context),
     );
     try {
       $sub_expr_1 = TypeSpec\varray(TypeSpec\mixed())
@@ -121,7 +121,7 @@ class ReflectionXHPChildrenExpression {
       $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
         $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
-      Facebook\XHP\class2element(get_class($this->context)),
+      get_class($this->context),
     );
     return XHPChildrenConstraintType::assert($this->data[1]);
   }
@@ -133,7 +133,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenConstraintType::ELEMENT ||
         $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
-      \Facebook\XHP\class2element(get_class($this->context)),
+      get_class($this->context),
     );
     $data = $this->data[2];
     invariant($data is string, 'Expected string data');
@@ -197,7 +197,7 @@ class ReflectionXHPChildrenExpression {
         return 'pcdata';
 
       case XHPChildrenConstraintType::ELEMENT:
-        return ':'.\Facebook\XHP\class2element($this->getConstraintString());
+        return '\\'.$this->getConstraintString();
 
       case XHPChildrenConstraintType::CATEGORY:
         return '%'.$this->getConstraintString();

@@ -27,10 +27,6 @@ class ReflectionXHPClass {
     return $this->className;
   }
 
-  public function getElementName(): string {
-    return \Facebook\XHP\class2element($this->getClassName());
-  }
-
   public function getChildren(): ReflectionXHPChildrenDeclaration {
     $class = $this->getClassName();
     return $class::__xhpReflectionChildrenDeclaration();
@@ -42,7 +38,7 @@ class ReflectionXHPClass {
       C\contains_key($map, $name),
       'Tried to get attribute %s for XHP element %s, which does not exist',
       $name,
-      $this->getElementName(),
+      $this->getClassName(),
     );
     return $map[$name];
   }

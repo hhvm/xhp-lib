@@ -153,7 +153,6 @@ abstract xhp class node implements \XHPChild {
         }
       }
     } else {
-      $selector = \Facebook\XHP\element2class($selector);
       foreach ($this->children as $child) {
         if (\is_a($child, $selector, /* allow strings = */ true)) {
           $children[] = $child;
@@ -184,7 +183,6 @@ abstract xhp class node implements \XHPChild {
         }
       }
     } else {
-      $selector = \Facebook\XHP\element2class($selector);
       foreach ($this->children as $child) {
         if (\is_a($child, $selector, /* allow strings = */ true)) {
           return $child;
@@ -266,7 +264,7 @@ abstract xhp class node implements \XHPChild {
   final public static function __xhpReflectionChildrenDeclaration(
   ): \ReflectionXHPChildrenDeclaration {
     return new \ReflectionXHPChildrenDeclaration(
-      \Facebook\XHP\class2element(static::class),
+      static::class,
       static::__legacySerializedXHPChildrenDeclaration(),
     );
   }
@@ -680,7 +678,7 @@ abstract xhp class node implements \XHPChild {
     $desc = varray[];
     foreach ($this->children as $child) {
       if ($child is node) {
-        $tmp = ':'.\Facebook\XHP\class2element(\get_class($child));
+        $tmp = '\\'.\get_class($child);
         $categories = $child->__xhpCategoryDeclaration();
         if (C\count($categories) > 0) {
           $tmp .= '[%'.Str\join(Vec\keys($categories), ',%').']';

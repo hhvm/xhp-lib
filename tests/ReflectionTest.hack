@@ -47,13 +47,6 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
     expect($this->rxc?->getClassName())->toEqual(:test:for_reflection::class);
   }
 
-  public function testElementName(): void {
-    $name = $this->rxc?->getElementName() ?? 'NULL';
-    expect(keyset['test:for-reflection', 'test:for_reflection'])->toContainKey(
-      $name,
-    );
-  }
-
   public function testReflectionClass(): void {
     $rc = $this->rxc?->getReflectionClass();
     expect($rc)->toBeInstanceOf(ReflectionClass::class);

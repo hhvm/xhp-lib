@@ -58,14 +58,6 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     );
   }
 
-  public async function testElement2Class(): Awaitable<void> {
-    expect(\Facebook\XHP\element2class('div'))->toEqual(:div::class);
-  }
-
-  public async function testClass2Element(): Awaitable<void> {
-    expect(\Facebook\XHP\class2element(:div::class))->toEqual('div');
-  }
-
   public async function testRendersPrimitive(): Awaitable<void> {
     $xhp = <test:renders_primitive />;
     expect(await $xhp->toStringAsync())->toEqual('<div>123</div>');
