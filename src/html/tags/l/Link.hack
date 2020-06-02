@@ -19,6 +19,6 @@ xhp class link extends singleton {
     string rel @required,
     string sizes,
     string type;
-  category %metadata;
+  category %metadata, %phrase, %flow;
   protected string $tagName = 'link';
 }
