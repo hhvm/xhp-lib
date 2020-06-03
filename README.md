@@ -173,9 +173,6 @@ XHP supports Hack's 'async' functionality, allowing you to build components that
 efficiently fetch the data that they require:
 
 ```hack
-// @fredemmott I think you changed some of the function names here.
-// Could you please validate that this example is still correct?
-// I think we might want to use `xhp class` here.
 class :async-thing extends :x:element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
     $db = await AsyncMysqlClient::connect(...);
