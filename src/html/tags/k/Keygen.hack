@@ -11,7 +11,6 @@ namespace Facebook\XHP\HTML;
 
 xhp class keygen extends singleton {
   attribute
-    bool autofocus,
     string challenge,
     bool disabled,
     string form,

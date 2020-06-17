@@ -37,6 +37,7 @@ abstract xhp class element extends x\primitive {
       'words',
       'characters',
     } autocapitalize,
+    bool autofocus,
     string class,
     enum {'true', 'false'} contenteditable,
     string contextmenu,

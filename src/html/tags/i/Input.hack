@@ -14,7 +14,6 @@ xhp class input extends singleton {
     string accept,
     string alt,
     string autocomplete,
-    bool autofocus,
     bool checked,
     string dirname,
     bool disabled,
