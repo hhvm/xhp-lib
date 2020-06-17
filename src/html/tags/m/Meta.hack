@@ -14,7 +14,7 @@ xhp class meta extends singleton {
     // The correct definition of http-equiv is an enum, but there are legacy
     // values still used and any strictness here would only be frustrating.
     string charset,
-    string content @required,
+    string content,
     string http-equiv,
     string name,
     // Facebook OG
