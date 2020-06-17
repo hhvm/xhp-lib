@@ -6,11 +6,12 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 
 ### Changes
 
-|                                           Message | Spec Links                                                  |
-| ------------------------------------------------: | :---------------------------------------------------------- |
-|                                   Added Changelog | N/A                                                         |
-| Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`      |
-|      Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute` |
+|                                           Message | Spec Links                                                                       |
+| ------------------------------------------------: | :------------------------------------------------------------------------------- |
+|                                   Added Changelog | N/A                                                                              |
+| Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`                           |
+|      Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                      |
+|   Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute` |
 
 ### Links
 
@@ -19,6 +20,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
 - [6.5.7](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
+- [6.7.8 Input modalities: the enterkeyhint attribute](https://html.spec.whatwg.org/#input-modalities:-the-enterkeyhint-attribute)
 
 ### Footnotes
 
