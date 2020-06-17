@@ -55,6 +55,7 @@ abstract xhp class element extends x\primitive {
     } enterkeyhint,
     bool hidden,
     string id,
+    string is, // needs to be a name of a defined custom element
     bool inert,
     string itemid,
     string itemprop,
