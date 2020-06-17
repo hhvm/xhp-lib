@@ -84,6 +84,7 @@ abstract xhp class element extends x\primitive {
     string oncontextmenu,
     string oncopy,
     string oncuechange,
+    string oncut,
     string ondblclick,
     string ondrag,
     string ondragend,
