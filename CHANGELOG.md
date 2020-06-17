@@ -29,6 +29,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 
 - [2.6.6 Nonce attributes](https://html.spec.whatwg.org/#nonce-attributes)
 - [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
+- [3.2.6.4 The dir attribute](https://html.spec.whatwg.org/#the-dir-attribute)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
@@ -41,3 +42,7 @@ This section contains a longer explanations for changes when needed.
 
 - I removed 'autofocus' from Button, Input, Keyget, Select, and Textarea. They have gotten it back via extending HTML\element. This attribute should be available to all HTML elements. According to the HTML spec: _The following attributes are common to and may be specified on all HTML elements_, see `3.2.6 Global attributes`.
 - The 'is' attribute should be a name of a defined Custom Element. This /could/ be classname\<\_>, however, this is too restricive. Non-XHP js code may define these on the fly. Therefore, the 'string' typehint was used.
+
+### Breaking changes that could be made to XHP
+
+`HTML\\element::dir` has type `string`, this should really be `enum {'ltr', 'rtl', 'auto'}`, see `3.2.6.4 The dir attribute`

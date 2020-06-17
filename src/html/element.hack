@@ -41,7 +41,7 @@ abstract xhp class element extends x\primitive {
     string class,
     enum {'true', 'false'} contenteditable,
     string contextmenu,
-    string dir,
+    string dir, // acceptable values are 'ltr', 'rtl', 'auto'
     enum {'true', 'false'} draggable,
     string dropzone,
     enum {
