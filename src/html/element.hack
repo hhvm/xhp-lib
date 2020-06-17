@@ -126,6 +126,7 @@ abstract xhp class element extends x\primitive {
     string onreset,
     string onresize,
     string onscroll,
+    string onsecuritypolicyviolation,
     string onseeked,
     string onseeking,
     string onselect,
