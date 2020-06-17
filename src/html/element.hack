@@ -73,6 +73,7 @@ abstract xhp class element extends x\primitive {
 
     // Javascript events
     string onabort,
+    string onauxclick,
     string onblur,
     string oncancel,
     string oncanplay,

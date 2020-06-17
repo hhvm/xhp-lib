@@ -6,14 +6,15 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 
 ### Changes
 
-|                                           Message | Spec Links                                                                       |
-| ------------------------------------------------: | :------------------------------------------------------------------------------- |
-|                                   Added Changelog | N/A                                                                              |
-| Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`                           |
-|      Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                      |
-|   Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute` |
-|             Added 'is' attribute to HTML\\element | `3.2.6 Global attributes` & `4.13.3 Core concepts`                               |
-|          Added 'nonce' attribute to HTML\\element | `2.6.6 Nonce attributes` & `3.2.6 Global attributes`                             |
+|                                           Message | Spec Links                                                                                             |
+| ------------------------------------------------: | :----------------------------------------------------------------------------------------------------- |
+|                                   Added Changelog | N/A                                                                                                    |
+| Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`                                                 |
+|      Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                                            |
+|   Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute`                       |
+|             Added 'is' attribute to HTML\\element | `3.2.6 Global attributes` & `4.13.3 Core concepts`                                                     |
+|          Added 'nonce' attribute to HTML\\element | `2.6.6 Nonce attributes` & `3.2.6 Global attributes`                                                   |
+|     Added 'onauxclick' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 
 ### Links
 
@@ -25,6 +26,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
 - [6.7.8 Input modalities: the enterkeyhint attribute](https://html.spec.whatwg.org/#input-modalities:-the-enterkeyhint-attribute)
+- [8.1.5.2 Event handlers on elements, Document objects, and Window objects](https://html.spec.whatwg.org/#event-handlers-on-elements,-document-objects,-and-window-objects)
 
 ### Footnotes
 
