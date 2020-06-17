@@ -99,6 +99,7 @@ abstract xhp class element extends x\primitive {
     string onended,
     string onerror,
     string onfocus,
+    string onformdata,
     string oninput,
     string oninvalid,
     string onkeydown,
