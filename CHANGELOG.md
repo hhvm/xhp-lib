@@ -20,6 +20,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |                Added 'onformdata' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 |                   Added 'onpaste' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 | Added 'onsecuritypolicyviolation' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|              Added 'onslotchange' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 
 ### Links
 

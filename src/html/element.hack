@@ -131,6 +131,7 @@ abstract xhp class element extends x\primitive {
     string onseeking,
     string onselect,
     string onshow,
+    string onslotchange,
     string onstalled,
     string onsubmit,
     string onsuspend,
