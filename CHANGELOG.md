@@ -13,11 +13,13 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |      Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                      |
 |   Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute` |
 |             Added 'is' attribute to HTML\\element | `3.2.6 Global attributes` & `4.13.3 Core concepts`                               |
+|          Added 'nonce' attribute to HTML\\element | `2.6.6 Nonce attributes` & `3.2.6 Global attributes`                             |
 
 ### Links
 
 Because the above table becomes unreadable in markdown once urls are added, the urls for the different codes can be found here.
 
+- [2.6.6 Nonce attributes](https://html.spec.whatwg.org/#nonce-attributes)
 - [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)

@@ -63,6 +63,7 @@ abstract xhp class element extends x\primitive {
     string itemscope,
     string itemtype,
     string lang,
+    string nonce,
     string role,
     enum {'true', 'false'} spellcheck,
     string style,
