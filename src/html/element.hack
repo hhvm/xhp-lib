@@ -29,6 +29,14 @@ abstract xhp class element extends x\primitive {
   attribute
     // Global HTML attributes
     string accesskey,
+    enum {
+      'off', // identical to none
+      'none',
+      'on', // identical to sentences
+      'sentences',
+      'words',
+      'characters',
+    } autocapitalize,
     string class,
     enum {'true', 'false'} contenteditable,
     string contextmenu,

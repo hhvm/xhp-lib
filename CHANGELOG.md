@@ -6,6 +6,14 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 
 ### Changes
 
-|         Message | Spec Link |
-| --------------: | :-------- |
-| Added Changelog | N/A       |
+|                                           Message | Spec Links                                             |
+| ------------------------------------------------: | :----------------------------------------------------- |
+|                                   Added Changelog | N/A                                                    |
+| Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization` |
+
+### Links
+
+Because the above table becomes unreadable in markdown once urls are added, the urls for the different codes can be found here.
+
+- [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
+- [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
