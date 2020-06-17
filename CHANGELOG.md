@@ -22,14 +22,24 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 | Added 'onsecuritypolicyviolation' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 |              Added 'onslotchange' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
 |                   Added 'onwheel' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                        Added 'color' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|                     Added 'disabled' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|                   Added 'imagesizes' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
+|                  Added 'imagesrcset' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
+|                    Added 'integrity' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|               Added 'referrerpolicy' attribute to HTML\\Link | `2.6.5 Referrer policy attributes` & `4.2.4 The link element` & `Referrer Policy`                      |
 
 ### Links
 
 Because the above table becomes unreadable in markdown once urls are added, the urls for the different codes can be found here.
 
+- [Referrer Policy](https://w3c.github.io/webappsec-referrer-policy/)
+- [2.6.5 Referrer policy attributes](https://html.spec.whatwg.org/#referrer-policy-attribute)
 - [2.6.6 Nonce attributes](https://html.spec.whatwg.org/#nonce-attributes)
 - [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
 - [3.2.6.4 The dir attribute](https://html.spec.whatwg.org/#the-dir-attribute)
+- [4.2.4 The link element](https://html.spec.whatwg.org/#the-link-element)
+- [4.8.4.2.1 Srcset attributes](https://html.spec.whatwg.org/#srcset-attributes)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
