@@ -117,6 +117,7 @@ abstract xhp class element extends x\primitive {
     string onmouseover,
     string onmouseup,
     string onmousewheel,
+    string onpaste,
     string onpause,
     string onplay,
     string onplaying,
