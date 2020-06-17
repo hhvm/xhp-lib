@@ -19,12 +19,15 @@ xhp class body extends element {
     string onbeforeunload,
     string onhashchange,
     string onmessage,
+    string onmessageerror,
     string onoffline,
     string ononline,
     string onpagehide,
     string onpageshow,
     string onpopstate,
+    string onrejectionhandled,
     string onstorage,
+    string onunhandledrejection,
     string onunload;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

@@ -29,6 +29,9 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |                    Added 'integrity' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
 |               Added 'referrerpolicy' attribute to HTML\\Link | `2.6.5 Referrer policy attributes` & `4.2.4 The link element` & `Referrer Policy`                      |
 |                    Made 'content' non-required on HTML\\Meta | `4.2.5 The meta element`                                                                               |
+|               Added 'onmessageerror' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|           Added 'onrejectionhandled' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|         Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 
 ### Links
 
@@ -41,6 +44,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [3.2.6.4 The dir attribute](https://html.spec.whatwg.org/#the-dir-attribute)
 - [4.2.4 The link element](https://html.spec.whatwg.org/#the-link-element)
 - [4.2.5 The meta element](https://html.spec.whatwg.org/#the-meta-element)
+- [4.3.1 The body element](https://html.spec.whatwg.org/#the-body-element)
 - [4.8.4.2.1 Srcset attributes](https://html.spec.whatwg.org/#srcset-attributes)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
