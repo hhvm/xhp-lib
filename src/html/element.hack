@@ -138,7 +138,8 @@ abstract xhp class element extends x\primitive {
     string ontimeupdate,
     string ontoggle,
     string onvolumechange,
-    string onwaiting;
+    string onwaiting,
+    string onwheel;
 
   protected string $tagName = '';
 
