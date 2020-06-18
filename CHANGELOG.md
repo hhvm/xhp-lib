@@ -32,6 +32,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |               Added 'onmessageerror' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 |           Added 'onrejectionhandled' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 |         Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|                          Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
 
 ### Links
 
@@ -45,6 +46,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.2.4 The link element](https://html.spec.whatwg.org/#the-link-element)
 - [4.2.5 The meta element](https://html.spec.whatwg.org/#the-meta-element)
 - [4.3.1 The body element](https://html.spec.whatwg.org/#the-body-element)
+- [4.4.8 The li element](https://html.spec.whatwg.org/#the-li-element)
 - [4.8.4.2.1 Srcset attributes](https://html.spec.whatwg.org/#srcset-attributes)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
@@ -59,6 +61,7 @@ This section contains a longer explanations for changes when needed.
 - I removed 'autofocus' from Button, Input, Keyget, Select, and Textarea. They have gotten it back via extending HTML\element. This attribute should be available to all HTML elements. According to the HTML spec: _The following attributes are common to and may be specified on all HTML elements_, see `3.2.6 Global attributes`.
 - The 'is' attribute should be a name of a defined Custom Element. This /could/ be classname\<\_>, however, this is too restricive. Non-XHP js code may define these on the fly. Therefore, the 'string' typehint was used.
 - The 'content' attribute on meta is sometimes required, but other times it must be omitted. We can't do much better than making it optional under all circumstances. _If either name, http-equiv, or itemprop is specified, then the content attribute must also be specified. Otherwise, it must be omitted._
+- The 'value' attribute on HTML\\Li is an ordinal value.
 
 ### Breaking changes that could be made to XHP
 
