@@ -33,6 +33,8 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |           Added 'onrejectionhandled' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 |         Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 |                          Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
+|                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements`                                   |
+|                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
 
 ### Links
 
@@ -47,6 +49,8 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.2.5 The meta element](https://html.spec.whatwg.org/#the-meta-element)
 - [4.3.1 The body element](https://html.spec.whatwg.org/#the-body-element)
 - [4.4.8 The li element](https://html.spec.whatwg.org/#the-li-element)
+- [4.5.1 The a element](https://html.spec.whatwg.org/#the-a-element)
+- [4.6.2 Links created by a and area elements](https://html.spec.whatwg.org/#links-created-by-a-and-area-elements)
 - [4.8.4.2.1 Srcset attributes](https://html.spec.whatwg.org/#srcset-attributes)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
