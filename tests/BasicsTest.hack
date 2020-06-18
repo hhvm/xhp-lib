@@ -8,8 +8,9 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\div;
+use type Facebook\XHP\HTML\{br, div, img, singleton};
 use function Facebook\FBExpect\expect;
+use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
 
 xhp class test:renders_primitive extends x\element {
@@ -62,5 +63,26 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   public async function testRendersPrimitive(): Awaitable<void> {
     $xhp = <test:renders_primitive />;
     expect(await $xhp->toStringAsync())->toEqual('<div>123</div>');
+  }
+
+  public function provideSingletonElements(): vec<(singleton, string)> {
+    return vec[
+      // This syntax creates the same object behind the scenes,
+      // but I put in an extra test, just in case.
+      tuple(<br></br>, '<br>'),
+      tuple(<br />, '<br>'),
+      tuple(
+        <img src="https://example.com/image.jpg" />,
+        '<img src="https://example.com/image.jpg">',
+      ),
+    ];
+  }
+
+  <<DataProvider('provideSingletonElements')>>
+  public async function testRenderedSingletonsShouldBeVoidElements(
+    singleton $void_element,
+    string $expect,
+  ): Awaitable<void> {
+    expect(await $void_element->toStringAsync())->toEqual($expect);
   }
 }
