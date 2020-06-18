@@ -21,6 +21,7 @@ xhp class video extends element {
     bool loop,
     string mediagroup,
     bool muted,
+    bool playsinline,
     string poster,
     enum {'none', 'metadata', 'auto'} preload,
     string src,
