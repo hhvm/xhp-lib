@@ -34,7 +34,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |         Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
 |                          Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
 |                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements`                                   |
-|                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
+|                  Added 'referrerpolicy' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
 
 ### Links
 
