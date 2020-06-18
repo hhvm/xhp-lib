@@ -6,46 +6,48 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 
 ### Changes
 
-|                                                      Message | Spec Links                                                                                             |
-| -----------------------------------------------------------: | :----------------------------------------------------------------------------------------------------- |
-|                                              Added Changelog | N/A                                                                                                    |
-|            Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`                                                 |
-|                 Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                                            |
-|              Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute`                       |
-|                        Added 'is' attribute to HTML\\element | `3.2.6 Global attributes` & `4.13.3 Core concepts`                                                     |
-|                     Added 'nonce' attribute to HTML\\element | `2.6.6 Nonce attributes` & `3.2.6 Global attributes`                                                   |
-|                Added 'onauxclick' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                    Added 'oncopy' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                     Added 'oncut' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                Added 'onformdata' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                   Added 'onpaste' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-| Added 'onsecuritypolicyviolation' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|              Added 'onslotchange' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                   Added 'onwheel' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
-|                        Added 'color' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
-|                     Added 'disabled' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
-|                   Added 'imagesizes' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
-|                  Added 'imagesrcset' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
-|                    Added 'integrity' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
-|               Added 'referrerpolicy' attribute to HTML\\Link | `2.6.5 Referrer policy attributes` & `4.2.4 The link element` & `Referrer Policy`                      |
-|                    Made 'content' non-required on HTML\\Meta | `4.2.5 The meta element`                                                                               |
-|               Added 'onmessageerror' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
-|           Added 'onrejectionhandled' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
-|         Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
-|                          Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
-|                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements`                                   |
-|                  Added 'referrerpolicy' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
-|                      Added 'decoding' attribute to HTML\\Img | `4.8.3 The img element` & `4.8.4.3.4 Decoding images`                                                  |
-|                       Added 'loading' attribute to HTML\\Img | `2.6.7 Lazy loading attributes` & `4.8.3 The img element`                                              |
-|                Added 'referrerpolicy' attribute to HTML\\Img | `4.8.3 The img element` & `Referrer Policy`                                                            |
-|                      Added 'allow' attribute to HTML\\IFrame | `4.8.5 The iframe element`                                                                             |
-|        Added 'allowpaymentrequest' attribute to HTML\\IFrame | `4.8.5 The iframe element`                                                                             |
-|             Added 'referrerpolicy' attribute to HTML\\IFrame | `4.8.5 The iframe element` & `Referrer Policy`                                                         |
-|      Added documentation about HTML\\Embed's attribute rules | `4.8.6 The embed element`                                                                              |
-|                 Added 'playsinline' attribute to HTML\\Video | `4.8.9 The video element`                                                                              |
-|                         Added 'ping' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements`                               |
-|               Added 'referrerpolicy' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`           |
-|                         Added 'rel' attribute the HTML\\Form | `4.10.3 The form element`                                                                              |
+|                                                        Message | Spec Links                                                                                             |
+| -------------------------------------------------------------: | :----------------------------------------------------------------------------------------------------- |
+|                                                Added Changelog | N/A                                                                                                    |
+|              Added 'autocapitalize' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.6 Autocapitalization`                                                 |
+|                   Added 'autofocus' attribute to HTML\\element | `3.2.6 Global attributes` & `6.5.7 The autofocus attribute`                                            |
+|                Added 'enterkeyhint' attribute to HTML\\element | `3.2.6 Global attributes` & `6.7.8 Input modalities: the enterkeyhint attribute`                       |
+|                          Added 'is' attribute to HTML\\element | `3.2.6 Global attributes` & `4.13.3 Core concepts`                                                     |
+|                       Added 'nonce' attribute to HTML\\element | `2.6.6 Nonce attributes` & `3.2.6 Global attributes`                                                   |
+|                  Added 'onauxclick' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                      Added 'oncopy' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                       Added 'oncut' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                  Added 'onformdata' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                     Added 'onpaste' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|   Added 'onsecuritypolicyviolation' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                Added 'onslotchange' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                     Added 'onwheel' attribute to HTML\\element | `3.2.6 Global attributes` & `8.1.5.2 Event handlers on elements, Document objects, and Window objects` |
+|                          Added 'color' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|                       Added 'disabled' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|                     Added 'imagesizes' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
+|                    Added 'imagesrcset' attribute to HTML\\Link | `4.2.4 The link element` & `4.8.4.2.1 Srcset attributes`                                               |
+|                      Added 'integrity' attribute to HTML\\Link | `4.2.4 The link element`                                                                               |
+|                 Added 'referrerpolicy' attribute to HTML\\Link | `2.6.5 Referrer policy attributes` & `4.2.4 The link element` & `Referrer Policy`                      |
+|                      Made 'content' non-required on HTML\\Meta | `4.2.5 The meta element`                                                                               |
+|                 Added 'onmessageerror' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|             Added 'onrejectionhandled' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|           Added 'onunhandledrejection' attribute to HTML\\Body | `4.3.1 The body element`                                                                               |
+|                            Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
+|                              Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements`                                   |
+|                    Added 'referrerpolicy' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
+|                        Added 'decoding' attribute to HTML\\Img | `4.8.3 The img element` & `4.8.4.3.4 Decoding images`                                                  |
+|                         Added 'loading' attribute to HTML\\Img | `2.6.7 Lazy loading attributes` & `4.8.3 The img element`                                              |
+|                  Added 'referrerpolicy' attribute to HTML\\Img | `4.8.3 The img element` & `Referrer Policy`                                                            |
+|                        Added 'allow' attribute to HTML\\IFrame | `4.8.5 The iframe element`                                                                             |
+|          Added 'allowpaymentrequest' attribute to HTML\\IFrame | `4.8.5 The iframe element`                                                                             |
+|               Added 'referrerpolicy' attribute to HTML\\IFrame | `4.8.5 The iframe element` & `Referrer Policy`                                                         |
+|        Added documentation about HTML\\Embed's attribute rules | `4.8.6 The embed element`                                                                              |
+|                   Added 'playsinline' attribute to HTML\\Video | `4.8.9 The video element`                                                                              |
+|                           Added 'ping' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements`                               |
+|                 Added 'referrerpolicy' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`           |
+|                            Added 'rel' attribute to HTML\\Form | `4.10.3 The form element`                                                                              |
+|                 Added 'autocomplete' attribute to HTML\\Select | `4.10.7 The select element`                                                                            |
+| Changed typehint of 'autocomplete' on HTML\\TextArea to string | `4.10.11 The textarea element` & `4.10.18.7.1 Autofilling form controls: the autocomplete attribute`   |
 
 ### Links
 
@@ -71,7 +73,10 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.8.6 The embed element](https://html.spec.whatwg.org/#the-embed-element)
 - [4.8.9 The video element](https://html.spec.whatwg.org/#the-video-element)
 - [4.8.14 The area element](https://html.spec.whatwg.org/#the-area-element)
-- [4.10.3](https://html.spec.whatwg.org/#the-form-element)
+- [4.10.3 The form element](https://html.spec.whatwg.org/#the-form-element)
+- [4.10.7 The select element](https://html.spec.whatwg.org/#the-select-element)
+- [4.10.11 The textarea element](https://html.spec.whatwg.org/#the-textarea-element)
+- [4.10.18.7.1 Autofilling form controls: the autocomplete attribute](https://html.spec.whatwg.org/#attr-fe-autocomplete)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
@@ -87,6 +92,9 @@ This section contains a longer explanations for changes when needed.
 - The 'content' attribute on meta is sometimes required, but other times it must be omitted. We can't do much better than making it optional under all circumstances. _If either name, http-equiv, or itemprop is specified, then the content attribute must also be specified. Otherwise, it must be omitted._
 - The 'value' attribute on HTML\\Li is an ordinal value.
 - The attribute list on HTML\\Embed is never complete, since it is infinite. Let's encourage people to add attributes if they need them / see them in the wild.
+- The 'autocomplete' attribute on form elements is either 'on', 'off' or a description. _There are two ways this attribute is used._
+  _When wearing the autofill expectation mantle, the autocomplete attribute describes what input is expected from users._
+  _When wearing the autofill anchor mantle, the autocomplete attribute describes the meaning of the given value._
 
 ### Breaking changes that could be made to XHP
 

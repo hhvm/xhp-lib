@@ -14,6 +14,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class select extends element {
   use \XHPChildValidation;
   attribute
+    string autocomplete,
     bool disabled,
     string form,
     bool multiple,
