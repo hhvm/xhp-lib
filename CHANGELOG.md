@@ -35,6 +35,9 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |                          Added 'value' attribute to HTML\\Li | `4.4.8 The li element`                                                                                 |
 |                            Added 'ping' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements`                                   |
 |                  Added 'referrerpolicy' attribute to HTML\\A | `4.5.1 The a element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`               |
+|                      Added 'decoding' attribute to HTML\\Img | `4.8.3 The img element` & `4.8.4.3.4 Decoding images`                                                  |
+|                       Added 'loading' attribute to HTML\\Img | `2.6.7 Lazy loading attributes` & `4.8.3 The img element`                                              |
+|                Added 'referrerpolicy' attribute to HTML\\Img | `4.8.3 The img element` & `Referrer Policy`                                                            |
 
 ### Links
 
@@ -43,6 +46,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [Referrer Policy](https://w3c.github.io/webappsec-referrer-policy/)
 - [2.6.5 Referrer policy attributes](https://html.spec.whatwg.org/#referrer-policy-attribute)
 - [2.6.6 Nonce attributes](https://html.spec.whatwg.org/#nonce-attributes)
+- [2.6.7 Lazy loading attributes](https://html.spec.whatwg.org/#lazy-loading-attributes)
 - [3.2.6 Global attributes](https://html.spec.whatwg.org/#global-attributes)
 - [3.2.6.4 The dir attribute](https://html.spec.whatwg.org/#the-dir-attribute)
 - [4.2.4 The link element](https://html.spec.whatwg.org/#the-link-element)
@@ -51,7 +55,9 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.4.8 The li element](https://html.spec.whatwg.org/#the-li-element)
 - [4.5.1 The a element](https://html.spec.whatwg.org/#the-a-element)
 - [4.6.2 Links created by a and area elements](https://html.spec.whatwg.org/#links-created-by-a-and-area-elements)
+- [4.8.3 The img element](https://html.spec.whatwg.org/#the-img-element)
 - [4.8.4.2.1 Srcset attributes](https://html.spec.whatwg.org/#srcset-attributes)
+- [4.8.4.3.4 Decoding images](https://html.spec.whatwg.org/#decoding-images)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
