@@ -50,6 +50,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 | Changed typehint of 'autocomplete' on HTML\\TextArea to string | `4.10.11 The textarea element` & `4.10.18.7.1 Autofilling form controls: the autocomplete attribute`   |
 |                     Added 'nomodule' attribute on HTML\\Script | `4.12.1 The script element`                                                                            |
 |               Added 'referrerpolicy' attribute to HTML\\Script | `4.12.1 The script element` & `Referrer Policy`                                                        |
+|                     New Tag: HTML\\Slot, Based On: HTML\\Small | `4.12.4 The slot element`                                                                              |
 
 ### Links
 
@@ -80,6 +81,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.10.11 The textarea element](https://html.spec.whatwg.org/#the-textarea-element)
 - [4.10.18.7.1 Autofilling form controls: the autocomplete attribute](https://html.spec.whatwg.org/#attr-fe-autocomplete)
 - [4.12.1 The script element](https://html.spec.whatwg.org/#the-script-element)
+- [4.12.4 The slot element](https://html.spec.whatwg.org/#the-slot-element)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
