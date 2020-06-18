@@ -43,6 +43,8 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |             Added 'referrerpolicy' attribute to HTML\\IFrame | `4.8.5 The iframe element` & `Referrer Policy`                                                         |
 |      Added documentation about HTML\\Embed's attribute rules | `4.8.6 The embed element`                                                                              |
 |                 Added 'playsinline' attribute to HTML\\Video | `4.8.9 The video element`                                                                              |
+|                         Added 'ping' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements`                               |
+|               Added 'referrerpolicy' attribute to HTML\\Area | `4.8.14 The area element` & `4.6.2 Links created by a and area elements` & `Referrer Policy`           |
 
 ### Links
 
@@ -67,6 +69,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.8.5 The iframe element](https://html.spec.whatwg.org/#the-iframe-element)
 - [4.8.6 The embed element](https://html.spec.whatwg.org/#the-embed-element)
 - [4.8.9 The video element](https://html.spec.whatwg.org/#the-video-element)
+- [4.8.14 The area element](https://html.spec.whatwg.org/#the-area-element)
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)

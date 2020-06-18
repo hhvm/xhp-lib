@@ -17,6 +17,18 @@ xhp class area extends singleton {
     string href,
     bool hreflang,
     string media,
+    string ping,
+    enum {
+      '',
+      'no-referrer',
+      'no-referrer-when-downgrade',
+      'same-origin',
+      'origin',
+      'strict-origin',
+      'origin-when-cross-origin',
+      'strict-origin-when-cross-origin',
+      'unsafe-url',
+    } referrerpolicy,
     string rel,
     enum {
       'circ',
