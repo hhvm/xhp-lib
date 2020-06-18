@@ -28,7 +28,8 @@ abstract xhp class unescaped_pcdata_element
   extends pcdata_element
   implements \Facebook\XHP\UnsafeRenderable {
 
-  protected function stringify(): string {
+  <<__Override>>
+  protected async function stringifyAsync(): Awaitable<string> {
     $buf = $this->renderBaseAttrs().'>';
     foreach ($this->getChildren() as $child) {
       if (!($child is string)) {
@@ -41,6 +42,6 @@ abstract xhp class unescaped_pcdata_element
   }
 
   final public async function toHTMLStringAsync(): Awaitable<string> {
-    return $this->stringify();
+    return await $this->stringifyAsync();
   }
 }

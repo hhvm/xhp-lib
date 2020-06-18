@@ -8,7 +8,7 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\{br, div, img, singleton};
+use type Facebook\XHP\HTML\{br, div, head, img, singleton, style};
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
@@ -84,5 +84,13 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     string $expect,
   ): Awaitable<void> {
     expect(await $void_element->toStringAsync())->toEqual($expect);
+  }
+
+  public async function testUnescapedPCDataElementDoesNotEscapeItsChild(
+  ): Awaitable<void> {
+    $dangerous_chars = '"\'<>&';
+    expect(
+      await (<head><style>{$dangerous_chars}</style></head>)->toStringAsync(),
+    )->toEqual('<head><style>'.$dangerous_chars.'</style></head>');
   }
 }
