@@ -113,6 +113,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
   public async function testOmittingRequiredAttributes(): Awaitable<void> {
     expect(() ==> {
+      /*HH_FIXME[4314] Attribute :mystring is not provided*/
       $x = <test:required_attributes />;
       expect($x->:mystring)->toBeNull();
     })->toThrow(Facebook\XHP\AttributeRequiredException::class);

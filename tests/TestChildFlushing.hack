@@ -55,6 +55,7 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
     x\node $root,
     string $expected,
   ): Awaitable<void> {
+    /*HH_FIXME[4314] Attribute :root is not provided*/
     $elem = <test:verbatim_root />;
     $elem->setContext('root', $root);
     expect(await $elem->toStringAsync())->toEqual($expected);
@@ -65,6 +66,7 @@ class XHPChildFlushTest extends Facebook\HackTest\HackTest {
     x\node $root,
     string $expected,
   ): Awaitable<void> {
+    /*HH_FIXME[4314] Attribute :root is not provided*/
     $elem = <test:verbatim_root:async />;
     $elem->setContext('root', $root);
     expect(await $elem->toStringAsync())->toEqual($expected);
