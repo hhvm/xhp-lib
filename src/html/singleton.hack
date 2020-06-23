@@ -22,8 +22,8 @@ abstract xhp class singleton extends element {
     return XHPChild\empty();
   }
 
-
-  protected function stringify(): string {
+  <<__Override>>
+  protected async function stringifyAsync(): Awaitable<string> {
     return $this->renderBaseAttrs().'>';
   }
 }
