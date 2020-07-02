@@ -51,6 +51,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |                     Added 'nomodule' attribute on HTML\\Script | `4.12.1 The script element`                                                                            |
 |               Added 'referrerpolicy' attribute to HTML\\Script | `4.12.1 The script element` & `Referrer Policy`                                                        |
 |                     New Tag: HTML\\Slot, Based On: HTML\\Small | `4.12.4 The slot element`                                                                              |
+|                        Promote inputmode to a global attribute | `3.2.6 Global attributes` & `6.7.7 Input modalities: the inputmode attribute`                          |
 
 ### Links
 
@@ -85,6 +86,7 @@ Because the above table becomes unreadable in markdown once urls are added, the 
 - [4.13.3 Core concepts](https://html.spec.whatwg.org/#custom-elements-core-concepts)
 - [6.5.7 The autofocus attribute](https://html.spec.whatwg.org/#the-autofocus-attribute)
 - [6.7.6 Autocapitalization](https://html.spec.whatwg.org/#autocapitalization)
+- [6.7.7 Input modalities: the inputmode attribute](https://html.spec.whatwg.org/#input-modalities:-the-inputmode-attribute)
 - [6.7.8 Input modalities: the enterkeyhint attribute](https://html.spec.whatwg.org/#input-modalities:-the-enterkeyhint-attribute)
 - [8.1.5.2 Event handlers on elements, Document objects, and Window objects](https://html.spec.whatwg.org/#event-handlers-on-elements,-document-objects,-and-window-objects)
 
