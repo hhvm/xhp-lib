@@ -16,7 +16,7 @@ xhp class polyline extends element {
     string requiredExtensions,
     string systemLanguage,
     unknown pathLength,
-    unknown points;
+    string points;
 
   protected string $tagName = 'polyline';
 }

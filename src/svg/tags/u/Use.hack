@@ -16,8 +16,8 @@ xhp class use extends element {
     string requiredExtensions,
     string systemLanguage,
     string href,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     string width,
     string height;
 

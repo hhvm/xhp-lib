@@ -15,15 +15,18 @@ xhp class text extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown lengthAdjust,
-    unknown x,
-    unknown y,
-    // <length-percentage> or <number>
+    enum {'spacing', 'spacingAndGlyphs'} lengthAdjust,
+    // <length-percentage> or float
+    mixed x,
+    // <length-percentage> or float
+    mixed y,
+    // <length-percentage> or float
     mixed dx,
-    // <length-percentage> or <number>
+    // <length-percentage> or float
     mixed dy,
     unknown rotate,
-    unknown textLength;
+    // <length-percentage> or float
+    mixed textLength;
 
   protected string $tagName = 'text';
 }

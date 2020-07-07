@@ -15,15 +15,16 @@ xhp class tspan extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown x,
-    unknown y,
-    // <length-percentage> or <number>
+    float x,
+    float y,
+    // <length-percentage> or float
     mixed dx,
-    // <length-percentage> or <number>
+    // <length-percentage> or float
     mixed dy,
     unknown rotate,
-    unknown textLength,
-    unknown lengthAdjust;
+    // <length-percentage> or float
+    mixed textLength,
+    enum {'spacing', 'spacingAndGlyphs'} lengthAdjust;
 
   protected string $tagName = 'tspan';
 }

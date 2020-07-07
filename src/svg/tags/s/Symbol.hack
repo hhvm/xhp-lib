@@ -17,8 +17,8 @@ xhp class symbol extends element {
     unknown viewBox,
     unknown refX,
     unknown refY,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     string width,
     string height;
 

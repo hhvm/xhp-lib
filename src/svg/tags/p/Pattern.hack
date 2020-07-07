@@ -15,8 +15,8 @@ xhp class pattern extends element {
   attribute
     unknown viewBox,
     string preserveAspectRatio,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     int width,
     int height,
     unknown patternUnits,

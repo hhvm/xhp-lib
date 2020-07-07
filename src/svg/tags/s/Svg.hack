@@ -25,8 +25,8 @@ xhp class svg extends element {
     unknown viewBox,
     string preserveAspectRatio,
     unknown transform,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     string width,
     string height;
 

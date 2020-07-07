@@ -18,8 +18,8 @@ xhp class image extends element {
     string preserveAspectRatio,
     string href,
     enum {'anonymous', 'use-credentials'} crossorigin,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     string width,
     string height;
 

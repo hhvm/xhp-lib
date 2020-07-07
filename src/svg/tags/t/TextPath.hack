@@ -15,8 +15,9 @@ xhp class textPath extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown lengthAdjust,
-    unknown textLength,
+    enum {'spacing', 'spacingAndGlyphs'} lengthAdjust,
+    // <length-percentage> or float
+    mixed textLength,
     unknown path,
     string href,
     unknown startOffset,

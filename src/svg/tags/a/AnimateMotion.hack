@@ -29,7 +29,7 @@ xhp class animateMotion extends element {
     // <Clock-value> or "media"
     string max,
     enum {'always', 'whenNotActive', 'never'} restart,
-    // <number> or "indefinite"
+    // float or "indefinite"
     arraykey repeatCount,
     // <Clock-value> or "indefinite"
     string repeatDur,

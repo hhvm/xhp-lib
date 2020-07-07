@@ -169,7 +169,7 @@ abstract xhp class element extends x\primitive {
     mixed stop-opacity,
     string stroke,
     string stroke-dasharray,
-    // <length-percentage> or <number>
+    // <length-percentage> or float
     mixed stroke-dashoffset,
     enum {'butt', 'round', 'square'} stroke-linecap,
     enum {'miter', 'miter-clip', 'round', 'bevel', 'arcs'} stroke-linejoin,

@@ -15,8 +15,8 @@ xhp class foreignObject extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown x,
-    unknown y,
+    float x,
+    float y,
     string width,
     string height;
 

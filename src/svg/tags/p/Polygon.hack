@@ -16,7 +16,7 @@ xhp class polygon extends element {
     string requiredExtensions,
     string systemLanguage,
     unknown pathLength,
-    unknown points;
+    string points;
 
   protected string $tagName = 'polygon';
 }
