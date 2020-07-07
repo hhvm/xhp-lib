@@ -11,6 +11,35 @@ namespace Facebook\XHP\SVG;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class a extends element {
+  /**
+   * Slightly different from `HTML\a`.
+   * The difference is in the spec.
+   * If you're missing something, look here to see
+   * if this attribute should exist on the svg version of <a>:
+   * https://svgwg.org/svg2-draft/linking.html#AElement
+   */
+  attribute
+    string requiredExtensions,
+    string systemLanguage,
+    string href,
+    string target,
+    // the value given is the suggested filename for the downloaded file
+    string download,
+    string ping,
+    string rel,
+    string hreflang,
+    string type,
+    enum {
+      '',
+      'no-referrer',
+      'no-referrer-when-downgrade',
+      'same-origin',
+      'origin',
+      'strict-origin',
+      'origin-when-cross-origin',
+      'strict-origin-when-cross-origin',
+      'unsafe-url',
+    } referrerpolicy;
 
   protected string $tagName = 'a';
 }

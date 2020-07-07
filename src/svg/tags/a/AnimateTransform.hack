@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class animateMotion extends element {
+xhp class animateTransform extends element {
 
   attribute
     enum {'replace', 'sum'} additive,
@@ -20,6 +20,7 @@ xhp class animateMotion extends element {
     string onend,
     string onrepeat,
     string href,
+    string attributeName,
     string begin,
     // <Clock-value> or "media" or "indefinite"
     string dur,
@@ -42,12 +43,7 @@ xhp class animateMotion extends element {
     string by,
     string requiredExtensions,
     string systemLanguage,
-    string path,
-    string keyPoints,
-    // float or "auto" or "auto-reverse"
-    mixed rotate,
-    // The ‘origin’ attribute ... has no effect in SVG.
-    enum {'default'} origin;
+    enum {'translate', 'scale', 'rotate', 'skewX', 'skewY'} type;
 
-  protected string $tagName = 'animateMotion';
+  protected string $tagName = 'animateTransform';
 }

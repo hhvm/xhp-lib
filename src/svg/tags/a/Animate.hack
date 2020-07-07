@@ -12,5 +12,38 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class animate extends element {
 
+  attribute
+    enum {'replace', 'sum'} additive,
+    enum {'none', 'sum'} accumulate,
+    string onbegin,
+    // Heads-up, HTML defines onended, but SVG defines onend
+    string onend,
+    string onrepeat,
+    string href,
+    string attributeName,
+    string begin,
+    // <Clock-value> or "media" or "indefinite"
+    string dur,
+    string end,
+    // <Clock-value> or "media"
+    string min,
+    // <Clock-value> or "media"
+    string max,
+    enum {'always', 'whenNotActive', 'never'} restart,
+    // <number> or "indefinite"
+    arraykey repeatCount,
+    // <Clock-value> or "indefinite"
+    string repeatDur,
+    enum {'freeze', 'remove'} fill,
+    enum {'discrete', 'linear', 'paced', 'spline'} calcMode,
+    string values,
+    string keyTimes,
+    string keySplines,
+    string from,
+    string to,
+    string by,
+    string requiredExtensions,
+    string systemLanguage;
+
   protected string $tagName = 'animate';
 }
