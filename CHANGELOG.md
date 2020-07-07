@@ -52,6 +52,7 @@ The version of the HTML spec I used can be found on [whatwg](https://html.spec.w
 |               Added 'referrerpolicy' attribute to HTML\\Script | `4.12.1 The script element` & `Referrer Policy`                                                        |
 |                     New Tag: HTML\\Slot, Based On: HTML\\Small | `4.12.4 The slot element`                                                                              |
 |                        Promote inputmode to a global attribute | `3.2.6 Global attributes` & `6.7.7 Input modalities: the inputmode attribute`                          |
+|         Breaking Change: Change `dir` type from string to enum | `3.2.6.4 The dir attribute`                                                                            |
 
 ### Links
 
