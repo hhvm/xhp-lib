@@ -12,5 +12,14 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class ellipse extends element {
 
+  attribute
+    string requiredExtensions,
+    string systemLanguage,
+    float pathLength,
+    string cx,
+    string cy,
+    string rx,
+    string ry;
+
   protected string $tagName = 'ellipse';
 }
