@@ -187,6 +187,7 @@ abstract xhp class element extends x\primitive {
       'optimizeLegibility',
       'geometricPrecision',
     } text-rendering,
+    string transform,
     string transform-origin,
     enum {
       'normal',

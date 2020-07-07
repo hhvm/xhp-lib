@@ -24,11 +24,12 @@ xhp class svg extends element {
     string onunload,
     string viewBox,
     string preserveAspectRatio,
-    string transform,
     float x,
     float y,
     string width,
-    string height;
+    string height,
+    // attributes not found in the spec (../../anfits.txt)
+    string version;
 
   protected string $tagName = 'svg';
 }

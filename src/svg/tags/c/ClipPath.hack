@@ -30,7 +30,6 @@ xhp class clipPath extends element {
     string enable-background,
     string fill,
     enum {'true', 'false'} externalResourcesRequired,
-    string transform,
     enum {'userSpaceOnUse', 'objectBoundingBox'} clipPathUnits;
 
   protected string $tagName = 'clipPath';
