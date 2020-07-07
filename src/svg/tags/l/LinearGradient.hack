@@ -21,7 +21,7 @@ xhp class linearGradient extends element {
     mixed x2,
     // float or <percentage>
     mixed y2,
-    unknown gradientUnits,
+    enum {'userSpaceOnUse', 'objectBoundingBox'} gradientUnits,
     unknown gradientTransform,
     unknown spreadMethod,
     string href;

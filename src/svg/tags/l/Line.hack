@@ -15,7 +15,7 @@ xhp class line extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown pathLength,
+    float pathLength,
     // float or <percentage>
     mixed x1,
     // float or <percentage>

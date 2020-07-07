@@ -31,8 +31,9 @@ xhp class feGaussianBlur extends element {
     string height,
     string result,
     string in,
-    unknown stdDeviation,
-    unknown edgeMode;
+    // <number-optional-number>
+    string stdDeviation,
+    enum {'duplicate', 'wrap', 'none'} edgeMode;
 
   protected string $tagName = 'feGaussianBlur';
 }

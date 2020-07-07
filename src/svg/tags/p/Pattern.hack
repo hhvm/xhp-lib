@@ -19,9 +19,9 @@ xhp class pattern extends element {
     float y,
     int width,
     int height,
-    unknown patternUnits,
-    unknown patternContentUnits,
-    unknown patternTransform,
+    enum {'userSpaceOnUse', 'objectBoundingBox'} patternUnits,
+    enum {'userSpaceOnUse', 'objectBoundingBox'} patternContentUnits,
+    string patternTransform,
     string href;
 
   protected string $tagName = 'pattern';

@@ -15,7 +15,7 @@ xhp class rect extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown pathLength,
+    float pathLength,
     float x,
     float y,
     string width,

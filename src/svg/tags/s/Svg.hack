@@ -21,7 +21,7 @@ xhp class svg extends element {
     unknown xmlns,
     string requiredExtensions,
     string systemLanguage,
-    unknown onunload,
+    string onunload,
     unknown viewBox,
     string preserveAspectRatio,
     unknown transform,

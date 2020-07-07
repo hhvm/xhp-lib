@@ -31,7 +31,8 @@ xhp class feDropShadow extends element {
     string height,
     string result,
     string in,
-    unknown stdDeviation,
+    // <number-optional-number>
+    string stdDeviation,
     float dx,
     float dy;
 

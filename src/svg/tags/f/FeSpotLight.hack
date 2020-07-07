@@ -19,7 +19,7 @@ xhp class feSpotLight extends element {
     float pointsAtX,
     float pointsAtY,
     float pointsAtZ,
-    unknown specularExponent,
+    float specularExponent,
     unknown limitingConeAngle;
 
   protected string $tagName = 'feSpotLight';

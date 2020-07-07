@@ -31,7 +31,7 @@ xhp class feMorphology extends element {
     string height,
     string result,
     string in,
-    unknown operator,
+    enum {'erode', 'dilate'} operator,
     unknown radius;
 
   protected string $tagName = 'feMorphology';

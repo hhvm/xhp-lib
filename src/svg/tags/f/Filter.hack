@@ -30,8 +30,8 @@ xhp class filter extends element {
     string y,
     string width,
     string height,
-    unknown filterUnits,
-    unknown primitiveUnits;
+    enum {'userSpaceOnUse', 'objectBoundingBox'} filterUnits,
+    enum {'userSpaceOnUse', 'objectBoundingBox'} primitiveUnits;
 
   protected string $tagName = 'filter';
 }

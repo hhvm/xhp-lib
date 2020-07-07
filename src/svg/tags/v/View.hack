@@ -13,7 +13,6 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class view extends element {
 
   attribute
-    unknown role,
     unknown viewBox,
     string preserveAspectRatio;
 

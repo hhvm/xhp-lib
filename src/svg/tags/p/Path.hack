@@ -15,7 +15,7 @@ xhp class path extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown pathLength,
+    float pathLength,
     string d;
 
   protected string $tagName = 'path';

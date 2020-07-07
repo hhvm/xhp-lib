@@ -15,12 +15,17 @@ xhp class marker extends element {
   attribute
     unknown viewBox,
     string preserveAspectRatio,
-    unknown refX,
-    unknown refY,
-    unknown markerUnits,
-    unknown markerWidth,
-    unknown markerHeight,
-    unknown orient;
+    // enum{...} or <length-percentage> or float
+    mixed refX,
+    // enum{...} or <length-percentage> or float
+    mixed refY,
+    enum {'strokeWidth', 'userSpaceOnUse'} markerUnits,
+    // <length-percentage> or float
+    mixed markerWidth,
+    // <length-percentage> or float
+    mixed markerHeight,
+    // "auto" or "auto-start-reverse" or <angle> or float
+    mixed orient;
 
   protected string $tagName = 'marker';
 }

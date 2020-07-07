@@ -15,7 +15,9 @@ xhp class symbol extends element {
   attribute
     string preserveAspectRatio,
     unknown viewBox,
+    // enum{...} or float
     unknown refX,
+    // enum{...} or float
     unknown refY,
     float x,
     float y,

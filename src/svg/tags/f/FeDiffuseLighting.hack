@@ -33,7 +33,8 @@ xhp class feDiffuseLighting extends element {
     string in,
     unknown surfaceScale,
     float diffuseConstant,
-    unknown kernelUnitLength;
+    // <number-optional-number>
+    string kernelUnitLength;
 
   protected string $tagName = 'feDiffuseLighting';
 }

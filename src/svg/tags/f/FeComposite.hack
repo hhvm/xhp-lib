@@ -32,11 +32,11 @@ xhp class feComposite extends element {
     string result,
     string in,
     string in2,
-    unknown operator,
-    unknown k1,
-    unknown k2,
-    unknown k3,
-    unknown k4;
+    enum {'over', 'in', 'out', 'atop', 'xor', 'lighter', 'arithmetic'} operator,
+    float k1,
+    float k2,
+    float k3,
+    float k4;
 
   protected string $tagName = 'feComposite';
 }

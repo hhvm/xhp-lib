@@ -37,9 +37,10 @@ xhp class feConvolveMatrix extends element {
     float bias,
     int targetX,
     int targetY,
-    unknown edgeMode,
-    unknown kernelUnitLength,
-    unknown preserveAlpha;
+    enum {'duplicate', 'wrap', 'none'} edgeMode,
+    // <number-optional-number>
+    string kernelUnitLength,
+    enum {'true', 'false'} preserveAlpha;
 
   protected string $tagName = 'feConvolveMatrix';
 }

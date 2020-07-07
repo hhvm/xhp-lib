@@ -13,10 +13,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class feFuncR extends element {
 
   attribute
-    unknown type,
-    unknown tableValues,
-    unknown slope,
-    unknown intercept,
+    enum {'identity', 'table', 'discrete', 'linear', 'gamma'} type,
+    string tableValues,
+    float slope,
+    float intercept,
     float amplitude,
     float exponent,
     float offset;

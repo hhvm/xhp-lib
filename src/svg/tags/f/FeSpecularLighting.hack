@@ -31,10 +31,11 @@ xhp class feSpecularLighting extends element {
     string height,
     string result,
     string in,
-    unknown surfaceScale,
-    unknown specularConstant,
-    unknown specularExponent,
-    unknown kernelUnitLength;
+    float surfaceScale,
+    float specularConstant,
+    float specularExponent,
+    // <number-optional-number>
+    string kernelUnitLength;
 
   protected string $tagName = 'feSpecularLighting';
 }
