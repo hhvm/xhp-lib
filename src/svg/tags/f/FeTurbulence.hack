@@ -12,5 +12,25 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feTurbulence extends element {
 
+  attribute
+    unknown clip,
+    unknown color-rendering,
+    unknown enable-background,
+    unknown fill,
+    unknown font,
+    unknown isolation,
+    unknown marker,
+    unknown stroke-miterlimit,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown result,
+    unknown baseFrequency,
+    unknown numOctaves,
+    unknown seed,
+    unknown stitchTiles,
+    unknown type;
+
   protected string $tagName = 'feTurbulence';
 }

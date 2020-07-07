@@ -12,5 +12,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class mpath extends element {
 
+  attribute unknown href;
+
   protected string $tagName = 'mpath';
 }

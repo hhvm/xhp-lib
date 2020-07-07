@@ -12,5 +12,25 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feSpecularLighting extends element {
 
+  attribute
+    unknown clip,
+    unknown color-rendering,
+    unknown enable-background,
+    unknown fill,
+    unknown font,
+    unknown isolation,
+    unknown marker,
+    unknown stroke-miterlimit,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown result,
+    unknown in,
+    unknown surfaceScale,
+    unknown specularConstant,
+    unknown specularExponent,
+    unknown kernelUnitLength;
+
   protected string $tagName = 'feSpecularLighting';
 }

@@ -12,5 +12,16 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class rect extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown pathLength,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown rx,
+    unknown ry;
+
   protected string $tagName = 'rect';
 }

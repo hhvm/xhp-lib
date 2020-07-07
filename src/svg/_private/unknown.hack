@@ -8,14 +8,6 @@
  */
 namespace Facebook\XHP\SVG;
 
-use namespace Facebook\XHP\ChildValidation as XHPChild;
-
-xhp class view extends element {
-
-  attribute
-    unknown role,
-    unknown viewBox,
-    unknown preserveAspectRatio;
-
-  protected string $tagName = 'view';
-}
+// A temporary typehint exported by my script.
+// @TODO Remove before declaring this PR ready for review.
+type unknown = mixed;

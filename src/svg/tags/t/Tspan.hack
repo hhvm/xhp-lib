@@ -12,5 +12,16 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class tspan extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown x,
+    unknown y,
+    unknown dx,
+    unknown dy,
+    unknown rotate,
+    unknown textLength,
+    unknown lengthAdjust;
+
   protected string $tagName = 'tspan';
 }

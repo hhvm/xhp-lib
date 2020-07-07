@@ -12,5 +12,24 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class mask extends element {
 
+  attribute
+    unknown requiredFeatures,
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown clip,
+    unknown color-profile,
+    unknown color-rendering,
+    unknown enable-background,
+    unknown fill,
+    unknown font,
+    unknown marker,
+    unknown stroke-miterlimit,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown maskUnits,
+    unknown maskContentUnits;
+
   protected string $tagName = 'mask';
 }

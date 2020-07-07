@@ -17,5 +17,18 @@ xhp class svg extends element {
   // Svg uses it own content model with very different rules and names.
   category %phrase;
 
+  attribute
+    unknown xmlns,
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown onunload,
+    unknown viewBox,
+    unknown preserveAspectRatio,
+    unknown transform,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height;
+
   protected string $tagName = 'svg';
 }

@@ -12,5 +12,27 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feComposite extends element {
 
+  attribute
+    unknown clip,
+    unknown color-rendering,
+    unknown enable-background,
+    unknown fill,
+    unknown font,
+    unknown isolation,
+    unknown marker,
+    unknown stroke-miterlimit,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown result,
+    unknown in,
+    unknown in2,
+    unknown operator,
+    unknown k1,
+    unknown k2,
+    unknown k3,
+    unknown k4;
+
   protected string $tagName = 'feComposite';
 }

@@ -12,5 +12,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class symbol extends element {
 
+  attribute
+    unknown preserveAspectRatio,
+    unknown viewBox,
+    unknown refX,
+    unknown refY,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height;
+
   protected string $tagName = 'symbol';
 }

@@ -12,5 +12,17 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class pattern extends element {
 
+  attribute
+    unknown viewBox,
+    unknown preserveAspectRatio,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height,
+    unknown patternUnits,
+    unknown patternContentUnits,
+    unknown patternTransform,
+    unknown href;
+
   protected string $tagName = 'pattern';
 }

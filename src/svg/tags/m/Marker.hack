@@ -12,5 +12,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class marker extends element {
 
+  attribute
+    unknown viewBox,
+    unknown preserveAspectRatio,
+    unknown refX,
+    unknown refY,
+    unknown markerUnits,
+    unknown markerWidth,
+    unknown markerHeight,
+    unknown orient;
+
   protected string $tagName = 'marker';
 }

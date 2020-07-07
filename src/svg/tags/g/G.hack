@@ -12,5 +12,9 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class g extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage;
+
   protected string $tagName = 'g';
 }

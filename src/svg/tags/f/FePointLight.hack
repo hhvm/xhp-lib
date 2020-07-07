@@ -12,5 +12,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class fePointLight extends element {
 
+  attribute
+    unknown x,
+    unknown y,
+    unknown z;
+
   protected string $tagName = 'fePointLight';
 }

@@ -12,5 +12,16 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class text extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown lengthAdjust,
+    unknown x,
+    unknown y,
+    unknown dx,
+    unknown dy,
+    unknown rotate,
+    unknown textLength;
+
   protected string $tagName = 'text';
 }

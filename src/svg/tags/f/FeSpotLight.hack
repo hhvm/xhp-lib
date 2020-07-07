@@ -12,5 +12,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feSpotLight extends element {
 
+  attribute
+    unknown x,
+    unknown y,
+    unknown z,
+    unknown pointsAtX,
+    unknown pointsAtY,
+    unknown pointsAtZ,
+    unknown specularExponent,
+    unknown limitingConeAngle;
+
   protected string $tagName = 'feSpotLight';
 }

@@ -12,5 +12,9 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feDistantLight extends element {
 
+  attribute
+    unknown azimuth,
+    unknown elevation;
+
   protected string $tagName = 'feDistantLight';
 }

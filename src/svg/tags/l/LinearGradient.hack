@@ -12,5 +12,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class linearGradient extends element {
 
+  attribute
+    unknown x1,
+    unknown y1,
+    unknown x2,
+    unknown y2,
+    unknown gradientUnits,
+    unknown gradientTransform,
+    unknown spreadMethod,
+    unknown href;
+
   protected string $tagName = 'linearGradient';
 }

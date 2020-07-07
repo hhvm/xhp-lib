@@ -12,5 +12,14 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class use extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown href,
+    unknown x,
+    unknown y,
+    unknown width,
+    unknown height;
+
   protected string $tagName = 'use';
 }

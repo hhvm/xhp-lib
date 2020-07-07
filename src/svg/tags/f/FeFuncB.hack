@@ -12,5 +12,14 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feFuncB extends element {
 
+  attribute
+    unknown type,
+    unknown tableValues,
+    unknown slope,
+    unknown intercept,
+    unknown amplitude,
+    unknown exponent,
+    unknown offset;
+
   protected string $tagName = 'feFuncB';
 }

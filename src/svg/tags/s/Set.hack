@@ -12,5 +12,24 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class set extends element {
 
+  attribute
+    unknown onbegin,
+    unknown onend,
+    unknown onrepeat,
+    unknown href,
+    unknown attributeName,
+    unknown begin,
+    unknown dur,
+    unknown end,
+    unknown min,
+    unknown max,
+    unknown restart,
+    unknown repeatCount,
+    unknown repeatDur,
+    unknown fill,
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown to;
+
   protected string $tagName = 'set';
 }

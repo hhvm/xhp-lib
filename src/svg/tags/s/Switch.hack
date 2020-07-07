@@ -12,5 +12,9 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class switch extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage;
+
   protected string $tagName = 'switch';
 }

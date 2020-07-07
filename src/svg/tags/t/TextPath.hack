@@ -12,5 +12,17 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class textPath extends element {
 
+  attribute
+    unknown requiredExtensions,
+    unknown systemLanguage,
+    unknown lengthAdjust,
+    unknown textLength,
+    unknown path,
+    unknown href,
+    unknown startOffset,
+    unknown method,
+    unknown spacing,
+    unknown side;
+
   protected string $tagName = 'textPath';
 }
