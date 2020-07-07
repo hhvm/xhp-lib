@@ -13,22 +13,26 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class feDiffuseLighting extends element {
 
   attribute
-    unknown clip,
-    unknown color-rendering,
-    unknown enable-background,
+    string clip,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    string enable-background,
     unknown fill,
     unknown font,
     unknown isolation,
     unknown marker,
-    unknown stroke-miterlimit,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
-    unknown result,
+    string width,
+    string height,
+    string result,
     unknown in,
     unknown surfaceScale,
-    unknown diffuseConstant,
+    float diffuseConstant,
     unknown kernelUnitLength;
 
   protected string $tagName = 'feDiffuseLighting';

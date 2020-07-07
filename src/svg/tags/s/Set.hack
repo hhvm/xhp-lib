@@ -16,10 +16,10 @@ xhp class set extends element {
     unknown onbegin,
     unknown onend,
     unknown onrepeat,
-    unknown href,
-    unknown attributeName,
-    unknown begin,
-    unknown dur,
+    string href,
+    string attributeName,
+    string begin,
+    string dur,
     unknown end,
     unknown min,
     unknown max,
@@ -27,8 +27,8 @@ xhp class set extends element {
     unknown repeatCount,
     unknown repeatDur,
     unknown fill,
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown to;
 
   protected string $tagName = 'set';

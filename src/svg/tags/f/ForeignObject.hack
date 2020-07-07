@@ -12,13 +12,13 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class foreignObject extends element {
 
-attribute 
-  unknown requiredExtensions,
-  unknown systemLanguage,
-  unknown x,
-  unknown y,
-  unknown width,
-  unknown height;
+  attribute
+    string requiredExtensions,
+    string systemLanguage,
+    unknown x,
+    unknown y,
+    string width,
+    string height;
 
   protected string $tagName = 'foreignObject';
 }

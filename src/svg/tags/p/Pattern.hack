@@ -17,12 +17,12 @@ xhp class pattern extends element {
     unknown preserveAspectRatio,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
+    int width,
+    int height,
     unknown patternUnits,
     unknown patternContentUnits,
     unknown patternTransform,
-    unknown href;
+    string href;
 
   protected string $tagName = 'pattern';
 }

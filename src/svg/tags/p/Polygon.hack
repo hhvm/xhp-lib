@@ -13,8 +13,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class polygon extends element {
 
   attribute
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown pathLength,
     unknown points;
 

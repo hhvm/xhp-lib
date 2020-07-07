@@ -20,7 +20,7 @@ xhp class linearGradient extends element {
     unknown gradientUnits,
     unknown gradientTransform,
     unknown spreadMethod,
-    unknown href;
+    string href;
 
   protected string $tagName = 'linearGradient';
 }

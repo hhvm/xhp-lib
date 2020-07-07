@@ -13,19 +13,23 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class feMerge extends element {
 
   attribute
-    unknown clip,
-    unknown color-rendering,
-    unknown enable-background,
+    string clip,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    string enable-background,
     unknown fill,
     unknown font,
     unknown isolation,
     unknown marker,
-    unknown stroke-miterlimit,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
-    unknown result;
+    string width,
+    string height,
+    string result;
 
   protected string $tagName = 'feMerge';
 }

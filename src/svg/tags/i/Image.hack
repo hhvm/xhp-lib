@@ -13,15 +13,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class image extends element {
 
   attribute
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown preserveAspectRatio,
-    unknown href,
-    unknown crossorigin,
+    string href,
+    enum {'anonymous', 'use-credentials'} crossorigin,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height;
+    string width,
+    string height;
 
   protected string $tagName = 'image';
 }

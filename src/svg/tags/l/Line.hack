@@ -13,8 +13,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class line extends element {
 
   attribute
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown pathLength,
     unknown x1,
     unknown y1,

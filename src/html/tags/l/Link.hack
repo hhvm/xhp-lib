@@ -18,11 +18,7 @@ final xhp class link
   attribute
     string as,
     string color,
-    enum {
-      '', //equiv to anonymous
-      'anonymous',
-      'use-credentials',
-    } crossorigin,
+    enum {'anonymous', 'use-credentials'} crossorigin,
     bool disabled,
     string href,
     string hreflang,

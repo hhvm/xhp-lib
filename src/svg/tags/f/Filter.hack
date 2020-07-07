@@ -13,19 +13,23 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class filter extends element {
 
   attribute
-    unknown clip,
-    unknown color-rendering,
-    unknown enable-background,
+    string clip,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    string enable-background,
     unknown fill,
     unknown font,
     unknown isolation,
     unknown marker,
-    unknown stroke-miterlimit,
     unknown externalResourcesRequired,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
+    string width,
+    string height,
     unknown filterUnits,
     unknown primitiveUnits;
 

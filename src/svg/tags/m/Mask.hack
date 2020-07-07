@@ -14,20 +14,24 @@ xhp class mask extends element {
 
   attribute
     unknown requiredFeatures,
-    unknown requiredExtensions,
-    unknown systemLanguage,
-    unknown clip,
-    unknown color-profile,
-    unknown color-rendering,
-    unknown enable-background,
+    string requiredExtensions,
+    string systemLanguage,
+    string clip,
+    string color-profile,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    string enable-background,
     unknown fill,
     unknown font,
     unknown marker,
-    unknown stroke-miterlimit,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
+    string width,
+    string height,
     unknown maskUnits,
     unknown maskContentUnits;
 

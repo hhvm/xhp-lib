@@ -13,23 +13,27 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class feImage extends element {
 
   attribute
-    unknown clip,
-    unknown color-rendering,
-    unknown enable-background,
+    string clip,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    string enable-background,
     unknown fill,
     unknown font,
     unknown isolation,
     unknown marker,
-    unknown stroke-miterlimit,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
-    unknown result,
+    string width,
+    string height,
+    string result,
     unknown externalResourcesRequired,
     unknown preserveAspectRatio,
-    unknown href,
-    unknown crossorigin;
+    string href,
+    enum {'anonymous', 'use-credentials'} crossorigin;
 
   protected string $tagName = 'feImage';
 }

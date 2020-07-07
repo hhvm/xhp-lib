@@ -19,8 +19,8 @@ xhp class symbol extends element {
     unknown refY,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height;
+    string width,
+    string height;
 
   protected string $tagName = 'symbol';
 }

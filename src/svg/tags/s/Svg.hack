@@ -19,16 +19,16 @@ xhp class svg extends element {
 
   attribute
     unknown xmlns,
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown onunload,
     unknown viewBox,
     unknown preserveAspectRatio,
     unknown transform,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height;
+    string width,
+    string height;
 
   protected string $tagName = 'svg';
 }

@@ -13,13 +13,13 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class rect extends element {
 
   attribute
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown pathLength,
     unknown x,
     unknown y,
-    unknown width,
-    unknown height,
+    string width,
+    string height,
     unknown rx,
     unknown ry;
 

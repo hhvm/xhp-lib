@@ -13,13 +13,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class text extends element {
 
   attribute
-    unknown requiredExtensions,
-    unknown systemLanguage,
+    string requiredExtensions,
+    string systemLanguage,
     unknown lengthAdjust,
     unknown x,
     unknown y,
-    unknown dx,
-    unknown dy,
+    // <length-percentage> or <number>
+    mixed dx,
+    // <length-percentage> or <number>
+    mixed dy,
     unknown rotate,
     unknown textLength;
 

@@ -17,7 +17,7 @@ xhp class feFuncB extends element {
     unknown tableValues,
     unknown slope,
     unknown intercept,
-    unknown amplitude,
+    float amplitude,
     unknown exponent,
     unknown offset;
 

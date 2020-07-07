@@ -40,7 +40,6 @@ abstract xhp class element extends x\primitive {
     string xml:base,
     string xml:lang,
     string xml:space,
-
     // https://svgwg.org/svg2-draft/styling.html#TermPresentationAttribute
     // presentation attributes common to all
     enum {
@@ -174,7 +173,7 @@ abstract xhp class element extends x\primitive {
     mixed stroke-dashoffset,
     enum {'butt', 'round', 'square'} stroke-linecap,
     enum {'miter', 'miter-clip', 'round', 'bevel', 'arcs'} stroke-linejoin,
-    float stroke-miter-limit,
+    float stroke-miterlimit,
     // "inherit" or <alpha-value>
     mixed stroke-opacity,
     // <length-percentage> or float

@@ -13,8 +13,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class radialGradient extends element {
 
   attribute
-    unknown cx,
-    unknown cy,
+    string cx,
+    string cy,
     unknown r,
     unknown fx,
     unknown fy,
@@ -22,7 +22,7 @@ xhp class radialGradient extends element {
     unknown gradientUnits,
     unknown gradientTransform,
     unknown spreadMethod,
-    unknown href;
+    string href;
 
   protected string $tagName = 'radialGradient';
 }
