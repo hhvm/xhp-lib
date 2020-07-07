@@ -20,6 +20,7 @@ use namespace Facebook\XHP\HTML;
  * own elements.
  */
 abstract xhp class element extends x\primitive {
+  use HTML\XHPHTMLHelpers;
   use x\TagLikeRenderable;
   // These attributes are only valid when the SVG element
   // is embedded in a HTML document.
@@ -30,10 +31,12 @@ abstract xhp class element extends x\primitive {
   use HTML\EventAttributes;
 
   // https://svgwg.org/svg2-draft/struct.html#TermCoreAttribute
-  // ‘id’, ‘tabindex’, ‘autofocus’, ‘lang’, ‘class’ and ‘style’
+  // ‘tabindex’, ‘autofocus’, ‘lang’ and ‘style’
   // are missing intentionally, see HTML\GlobalAttributes trait.
   attribute
     // core attributes
+    string class,
+    string id,
     string xml:lang,
     string xml:space,
 
