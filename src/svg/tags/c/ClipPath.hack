@@ -12,5 +12,26 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class clipPath extends element {
 
+  attribute
+    string requiredFeatures,
+    string requiredExtensions,
+    string systemLanguage,
+    // rect() or "auto"
+    string clip,
+    // 	"auto" or "sRGB" or <name> or <iri> or "inherit"
+    string color-profile,
+    enum {
+      'auto',
+      'optimizeSpeed',
+      'optimizeQuality',
+      'inherit',
+    } color-rendering,
+    // "accumulate" or "new" or [ <x> <y> <width> <height> ] or "inherit"
+    string enable-background,
+    string fill,
+    enum {'true', 'false'} externalResourcesRequired,
+    string transform,
+    enum {'userSpaceOnUse', 'objectBoundingBox'} clipPathUnits;
+
   protected string $tagName = 'clipPath';
 }

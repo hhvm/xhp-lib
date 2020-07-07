@@ -37,6 +37,7 @@ abstract xhp class element extends x\primitive {
     // core attributes
     string class,
     string id,
+    string xml:base,
     string xml:lang,
     string xml:space,
 

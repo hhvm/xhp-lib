@@ -12,5 +12,13 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class circle extends element {
 
+  attribute
+    string requiredExtensions,
+    string systemLanguage,
+    float pathLength,
+    string cx,
+    string cy,
+    string r;
+
   protected string $tagName = 'circle';
 }

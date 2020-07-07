@@ -34,7 +34,7 @@ xhp class animate extends element {
     arraykey repeatCount,
     // <Clock-value> or "indefinite"
     string repeatDur,
-    enum {'freeze', 'remove'} fill,
+    string fill,
     enum {'discrete', 'linear', 'paced', 'spline'} calcMode,
     string values,
     string keyTimes,
