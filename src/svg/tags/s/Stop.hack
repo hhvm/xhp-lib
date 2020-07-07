@@ -12,7 +12,9 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class stop extends element {
 
-  attribute unknown offset;
+  attribute
+    // float or <percentage>
+    mixed offset;
 
   protected string $tagName = 'stop';
 }

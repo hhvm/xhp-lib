@@ -21,17 +21,17 @@ xhp class feBlend extends element {
       'inherit',
     } color-rendering,
     string enable-background,
-    unknown fill,
-    unknown font,
-    unknown isolation,
+    string fill,
+    string font,
+    enum {'auto', 'isolate'} isolation,
     unknown marker,
     unknown x,
     unknown y,
     string width,
     string height,
     string result,
-    unknown in,
-    unknown in2,
+    string in,
+    string in2,
     unknown mode;
 
   protected string $tagName = 'feBlend';

@@ -26,7 +26,7 @@ xhp class set extends element {
     unknown restart,
     unknown repeatCount,
     unknown repeatDur,
-    unknown fill,
+    string fill,
     string requiredExtensions,
     string systemLanguage,
     unknown to;

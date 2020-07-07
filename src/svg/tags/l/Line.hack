@@ -16,10 +16,14 @@ xhp class line extends element {
     string requiredExtensions,
     string systemLanguage,
     unknown pathLength,
-    unknown x1,
-    unknown y1,
-    unknown x2,
-    unknown y2;
+    // float or <percentage>
+    mixed x1,
+    // float or <percentage>
+    mixed y1,
+    // float or <percentage>
+    mixed x2,
+    // float or <percentage>
+    mixed y2;
 
   protected string $tagName = 'line';
 }

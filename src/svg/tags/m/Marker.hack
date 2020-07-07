@@ -14,7 +14,7 @@ xhp class marker extends element {
 
   attribute
     unknown viewBox,
-    unknown preserveAspectRatio,
+    string preserveAspectRatio,
     unknown refX,
     unknown refY,
     unknown markerUnits,

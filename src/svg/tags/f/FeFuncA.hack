@@ -18,8 +18,8 @@ xhp class feFuncA extends element {
     unknown slope,
     unknown intercept,
     float amplitude,
-    unknown exponent,
-    unknown offset;
+    float exponent,
+    float offset;
 
   protected string $tagName = 'feFuncA';
 }

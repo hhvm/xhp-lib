@@ -23,7 +23,7 @@ xhp class svg extends element {
     string systemLanguage,
     unknown onunload,
     unknown viewBox,
-    unknown preserveAspectRatio,
+    string preserveAspectRatio,
     unknown transform,
     unknown x,
     unknown y,

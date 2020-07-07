@@ -15,7 +15,7 @@ xhp class image extends element {
   attribute
     string requiredExtensions,
     string systemLanguage,
-    unknown preserveAspectRatio,
+    string preserveAspectRatio,
     string href,
     enum {'anonymous', 'use-credentials'} crossorigin,
     unknown x,

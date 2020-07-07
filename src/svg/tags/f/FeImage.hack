@@ -21,9 +21,9 @@ xhp class feImage extends element {
       'inherit',
     } color-rendering,
     string enable-background,
-    unknown fill,
-    unknown font,
-    unknown isolation,
+    string fill,
+    string font,
+    enum {'auto', 'isolate'} isolation,
     unknown marker,
     unknown x,
     unknown y,
@@ -31,7 +31,7 @@ xhp class feImage extends element {
     string height,
     string result,
     unknown externalResourcesRequired,
-    unknown preserveAspectRatio,
+    string preserveAspectRatio,
     string href,
     enum {'anonymous', 'use-credentials'} crossorigin;
 

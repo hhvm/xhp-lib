@@ -15,7 +15,7 @@ xhp class view extends element {
   attribute
     unknown role,
     unknown viewBox,
-    unknown preserveAspectRatio;
+    string preserveAspectRatio;
 
   protected string $tagName = 'view';
 }
