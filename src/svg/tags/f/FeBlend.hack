@@ -48,7 +48,7 @@ xhp class feBlend extends element {
       'hue',
       'saturation',
       'color',
-      'luminosit',
+      'luminosity',
     } mode;
 
   protected string $tagName = 'feBlend';
