@@ -92,13 +92,13 @@ abstract xhp class element extends x\primitive {
       'hanging',
       'text-top',
     } dominant-baseline,
-    // "inherit" or <alpha-value>
+    // "inherit" or float 0 to 1 or percentage
     mixed fill-opacity,
     enum {'nonzero', 'evenodd'} fill-rule,
     string filter,
     string flood-color,
-    // <alpha-value>
-    string flood-opacity,
+    // float 0 to 1 or percentage
+    mixed flood-opacity,
     string font-family,
     // <absolute-size>, <relative-size>, <length-percentage>
     string font-size,
@@ -141,7 +141,7 @@ abstract xhp class element extends x\primitive {
     string marker-start,
     string mask,
     enum {'alpha', 'luminance'} mask-type,
-    // "inherit" or <alpha-value>
+    // "inherit" or float 0 to 1 or percentage
     mixed opacity,
     enum {'auto', 'hidden', 'inherit', 'scroll', 'visible'} overflow,
     enum {'normal', 'fill', 'stoke', 'markers'} paint-order,
@@ -174,7 +174,7 @@ abstract xhp class element extends x\primitive {
     enum {'butt', 'round', 'square'} stroke-linecap,
     enum {'miter', 'miter-clip', 'round', 'bevel', 'arcs'} stroke-linejoin,
     float stroke-miterlimit,
-    // "inherit" or <alpha-value>
+    // "inherit" or float 0 to 1 or percentage
     mixed stroke-opacity,
     // <length-percentage> or float
     mixed stroke-width,
