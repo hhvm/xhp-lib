@@ -17,7 +17,7 @@ final class SvgTest extends Facebook\HackTest\HackTest {
    * License: Do What The F*ck You Want To Public License
    *
    * Edits made:
-   *  - Changed the SVG version to 2.0 from 1.1
+   *  - Removed the SVG version, since this is invalid SVG2
    *  - Removed the deprecated `attributeType` attribute.
    * Source: https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/attributeType
    */
@@ -25,7 +25,6 @@ final class SvgTest extends Facebook\HackTest\HackTest {
     $svg =
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        version="2.0"
         width="110px"
         height="110px">
         <g transform="translate(5 5)">

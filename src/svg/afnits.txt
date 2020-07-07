@@ -1,7 +1,0 @@
-Some attributes are not mentioned at all in the spec,
-however they appear on real documents and the attributes are valid attributes.
-I don't know if it is implicitly permitted by another spec that svg builds on though.
-
-`<svg version="..." />`
-`version` is a valid attribute, but it is not mentioned anywhere in the spec.
-https://svgwg.org/svg2-draft/single-page.html#struct-SVGElement

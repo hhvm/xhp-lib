@@ -28,7 +28,15 @@ xhp class svg extends element {
     float y,
     string width,
     string height,
-    // attributes not found in the spec (../../anfits.txt)
+    // only valid in SVG 1.1 and below
+    // leaving it in here, since many svg documents
+    // specify their version as `1.0` or `1.1`.
+    // This is valid.
+    // However, doing so may make some attributes / elements
+    // unavailable to you, since these elements are from the SVG2 spec.
+    // You'll not be able to use attributes which were deprecated or removed
+    // in SVG2, since they have been removed from the xhp classes.
+    // Declare a SVG1 version in your application code if you need them.
     string version;
 
   protected string $tagName = 'svg';
