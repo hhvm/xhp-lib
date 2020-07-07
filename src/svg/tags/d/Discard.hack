@@ -12,5 +12,11 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class discard extends element {
 
+  attribute
+    string requiredExtensions,
+    string systemLanguage,
+    string begin,
+    string href;
+
   protected string $tagName = 'discard';
 }
