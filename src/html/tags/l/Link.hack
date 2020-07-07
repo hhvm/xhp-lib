@@ -12,10 +12,30 @@ namespace Facebook\XHP\HTML;
 xhp class link extends singleton {
   attribute
     string as,
-    enum {'anonymous', 'use-credentials'} crossorigin,
+    string color,
+    enum {
+      '', //equiv to anonymous
+      'anonymous',
+      'use-credentials',
+    } crossorigin,
+    bool disabled,
     string href,
     string hreflang,
+    string imagesizes,
+    string imagesrcset,
+    string integrity,
     string media,
+    enum {
+      '',
+      'no-referrer',
+      'no-referrer-when-downgrade',
+      'same-origin',
+      'origin',
+      'strict-origin',
+      'origin-when-cross-origin',
+      'strict-origin-when-cross-origin',
+      'unsafe-url',
+    } referrerpolicy,
     string rel @required,
     string sizes,
     string type;

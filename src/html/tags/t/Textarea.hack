@@ -11,8 +11,7 @@ namespace Facebook\XHP\HTML;
 
 xhp class textarea extends pcdata_element {
   attribute
-    enum {'on', 'off'} autocomplete,
-    bool autofocus,
+    string autocomplete,
     int cols,
     string dirname,
     bool disabled,

@@ -11,23 +11,17 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class select extends element {
+xhp class slot extends element {
   use \XHPChildValidation;
-  attribute
-    string autocomplete,
-    bool disabled,
-    string form,
-    bool multiple,
-    string name,
-    bool required,
-    int size;
-  category %flow, %phrase, %interactive;
+  category %flow, %phrase;
+
+  attribute string name;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\ofType<option>(), XHPChild\ofType<optgroup>()),
+      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
     );
   }
 
-  protected string $tagName = 'select';
+  protected string $tagName = 'slot';
 }

@@ -21,6 +21,7 @@ xhp class form extends element {
     enum {'get', 'post'} method,
     string name,
     bool novalidate,
+    string rel,
     string target;
   category %flow;
   // Should not contain :form

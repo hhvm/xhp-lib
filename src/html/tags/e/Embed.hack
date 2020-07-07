@@ -13,6 +13,15 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class embed extends element {
   use \XHPChildValidation;
+  /*
+   * The HTML spec permits all non-namespaced attributes
+   * on the embed element.
+   * It is safe to add these attributes
+   * to this class if you need them.
+   * Make a PR against this repository.
+   * Adding all attributes that are use 'in the wild'
+   * seems like the best approach of this.
+   */
   attribute
     int height,
     string src,

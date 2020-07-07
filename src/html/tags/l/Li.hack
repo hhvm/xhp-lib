@@ -14,6 +14,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class li extends element {
   use \XHPChildValidation;
 
+  attribute int value;
+
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(
       XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),

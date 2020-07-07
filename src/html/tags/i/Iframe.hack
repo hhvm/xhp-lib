@@ -11,9 +11,22 @@ namespace Facebook\XHP\HTML;
 
 xhp class iframe extends pcdata_element {
   attribute
+    string allow,
     bool allowfullscreen,
+    bool allowpaymentrequest,
     string name,
     int height,
+    enum {
+      '',
+      'no-referrer',
+      'no-referrer-when-downgrade',
+      'same-origin',
+      'origin',
+      'strict-origin',
+      'origin-when-cross-origin',
+      'strict-origin-when-cross-origin',
+      'unsafe-url',
+    } referrerpolicy,
     string sandbox,
     bool seamless,
     string src,
