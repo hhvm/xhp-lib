@@ -20,8 +20,10 @@ xhp class rect extends element {
     float y,
     string width,
     string height,
-    unknown rx,
-    unknown ry;
+    // <length-pecentage> or "auto"
+    string rx,
+    // <length-pecentage> or "auto"
+    string ry;
 
   protected string $tagName = 'rect';
 }

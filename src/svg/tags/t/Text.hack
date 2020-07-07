@@ -24,7 +24,8 @@ xhp class text extends element {
     mixed dx,
     // <length-percentage> or float
     mixed dy,
-    unknown rotate,
+    // (number)+
+    string rotate,
     // <length-percentage> or float
     mixed textLength;
 

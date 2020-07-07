@@ -22,8 +22,8 @@ xhp class linearGradient extends element {
     // float or <percentage>
     mixed y2,
     enum {'userSpaceOnUse', 'objectBoundingBox'} gradientUnits,
-    unknown gradientTransform,
-    unknown spreadMethod,
+    string gradientTransform,
+    enum {'pad', 'reflect', 'repeat'} spreadMethod,
     string href;
 
   protected string $tagName = 'linearGradient';

@@ -31,8 +31,8 @@ xhp class feColorMatrix extends element {
     string height,
     string result,
     string in,
-    unknown type,
-    unknown values;
+    enum {'matrix', 'saturate', 'hueRotate', 'luminanceToAlpha'} type,
+    string values;
 
   protected string $tagName = 'feColorMatrix';
 }

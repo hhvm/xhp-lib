@@ -18,13 +18,13 @@ xhp class svg extends element {
   category %phrase;
 
   attribute
-    unknown xmlns,
+    string xmlns,
     string requiredExtensions,
     string systemLanguage,
     string onunload,
-    unknown viewBox,
+    string viewBox,
     string preserveAspectRatio,
-    unknown transform,
+    string transform,
     float x,
     float y,
     string width,

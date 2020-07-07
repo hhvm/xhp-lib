@@ -24,12 +24,14 @@ xhp class set extends element {
     string min,
     string max,
     enum {'always', 'whenNotActive', 'never'} restart,
-    unknown repeatCount,
-    unknown repeatDur,
+    // <number> (but fractions don't make sense)  or "indefinite"
+    arraykey repeatCount,
+    // <Clock-value> or "indefinite"
+    string repeatDur,
     string fill,
     string requiredExtensions,
     string systemLanguage,
-    unknown to;
+    string to;
 
   protected string $tagName = 'set';
 }

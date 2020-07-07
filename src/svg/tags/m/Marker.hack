@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class marker extends element {
 
   attribute
-    unknown viewBox,
+    string viewBox,
     string preserveAspectRatio,
     // enum{...} or <length-percentage> or float
     mixed refX,

@@ -32,10 +32,10 @@ xhp class feTurbulence extends element {
     string result,
     // <number-optional-number>
     string baseFrequency,
-    unknown numOctaves,
-    unknown seed,
-    unknown stitchTiles,
-    unknown type;
+    int numOctaves,
+    float seed,
+    enum {'stitch', 'noStitch'} stitchTiles,
+    enum {'fractalNoise', 'turbulence'} type;
 
   protected string $tagName = 'feTurbulence';
 }

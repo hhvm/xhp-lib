@@ -18,12 +18,12 @@ xhp class textPath extends element {
     enum {'spacing', 'spacingAndGlyphs'} lengthAdjust,
     // <length-percentage> or float
     mixed textLength,
-    unknown path,
+    string path,
     string href,
-    unknown startOffset,
-    unknown method,
-    unknown spacing,
-    unknown side;
+    string startOffset,
+    enum {'align', 'stretch'} method,
+    enum {'auto', 'exact'} spacing,
+    enum {'left', 'right'} side;
 
   protected string $tagName = 'textPath';
 }

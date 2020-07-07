@@ -31,8 +31,9 @@ xhp class feConvolveMatrix extends element {
     string height,
     string result,
     string in,
-    unknown order,
-    unknown kernelMatrix,
+    // <number-optional-number>
+    string order,
+    string kernelMatrix,
     float divisor,
     float bias,
     int targetX,

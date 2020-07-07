@@ -32,7 +32,24 @@ xhp class feBlend extends element {
     string result,
     string in,
     string in2,
-    unknown mode;
+    enum {
+      'normal',
+      'multiply',
+      'screen',
+      'overlay',
+      'darken',
+      'lighten',
+      'color-dodge',
+      'color-burn',
+      'hard-light',
+      'soft-light',
+      'difference',
+      'exclusion',
+      'hue',
+      'saturation',
+      'color',
+      'luminosit',
+    } mode;
 
   protected string $tagName = 'feBlend';
 }

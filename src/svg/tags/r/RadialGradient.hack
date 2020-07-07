@@ -15,13 +15,13 @@ xhp class radialGradient extends element {
   attribute
     string cx,
     string cy,
-    unknown r,
+    string r,
     string fx,
     string fy,
     string fr,
     enum {'userSpaceOnUse', 'objectBoundingBox'} gradientUnits,
-    unknown gradientTransform,
-    unknown spreadMethod,
+    string gradientTransform,
+    enum {'pad', 'reflect', 'repeat'} spreadMethod,
     string href;
 
   protected string $tagName = 'radialGradient';

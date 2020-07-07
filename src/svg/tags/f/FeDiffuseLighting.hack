@@ -31,7 +31,7 @@ xhp class feDiffuseLighting extends element {
     string height,
     string result,
     string in,
-    unknown surfaceScale,
+    float surfaceScale,
     float diffuseConstant,
     // <number-optional-number>
     string kernelUnitLength;

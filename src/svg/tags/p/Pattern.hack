@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class pattern extends element {
 
   attribute
-    unknown viewBox,
+    string viewBox,
     string preserveAspectRatio,
     float x,
     float y,

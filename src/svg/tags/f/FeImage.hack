@@ -30,7 +30,7 @@ xhp class feImage extends element {
     string width,
     string height,
     string result,
-    unknown externalResourcesRequired,
+    enum {'true', 'false'} externalResourcesRequired,
     string preserveAspectRatio,
     string href,
     enum {'anonymous', 'use-credentials'} crossorigin;

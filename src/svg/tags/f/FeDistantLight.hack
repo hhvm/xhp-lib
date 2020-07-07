@@ -14,7 +14,7 @@ xhp class feDistantLight extends element {
 
   attribute
     float azimuth,
-    unknown elevation;
+    float elevation;
 
   protected string $tagName = 'feDistantLight';
 }

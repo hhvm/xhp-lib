@@ -32,9 +32,9 @@ xhp class feDisplacementMap extends element {
     string result,
     string in,
     string in2,
-    unknown scale,
-    unknown xChannelSelector,
-    unknown yChannelSelector;
+    float scale,
+    enum {'R', 'G', 'B', 'A'} xChannelSelector,
+    enum {'R', 'G', 'B', 'A'} yChannelSelector;
 
   protected string $tagName = 'feDisplacementMap';
 }

@@ -25,7 +25,7 @@ xhp class filter extends element {
     string font,
     enum {'auto', 'isolate'} isolation,
     string marker,
-    unknown externalResourcesRequired,
+    enum {'true', 'false'} externalResourcesRequired,
     string x,
     string y,
     string width,
