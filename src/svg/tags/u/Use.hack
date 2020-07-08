@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class use
@@ -17,6 +18,7 @@ xhp class use
     Cat\RenderableElement,
     Cat\StruturalElement,
     Cat\StruturallyExternalElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -26,6 +28,17 @@ xhp class use
     float y,
     string width,
     string height;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<clipPath>(),
+      XHPChild\ofType<mask>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'use';
 }

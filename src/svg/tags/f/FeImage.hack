@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feImage extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -34,6 +36,16 @@ xhp class feImage extends element implements Cat\FilterPrimitive {
     string preserveAspectRatio,
     string href,
     enum {'anonymous', 'use-credentials'} crossorigin;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\FilterPrimitive>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<animateTransform>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feImage';
 }

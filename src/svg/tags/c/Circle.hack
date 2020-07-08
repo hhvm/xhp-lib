@@ -8,11 +8,13 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class circle
   extends element
   implements Cat\GraphicsElement, Cat\RenderableElement, Cat\ShapeElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -21,6 +23,19 @@ xhp class circle
     string cx,
     string cy,
     string r;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\PaintServerElement>(),
+      XHPChild\ofType<clipPath>(),
+      XHPChild\ofType<marker>(),
+      XHPChild\ofType<mask>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'circle';
 }

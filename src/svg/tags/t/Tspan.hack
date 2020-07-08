@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class tspan
@@ -17,6 +18,7 @@ xhp class tspan
     Cat\RenderableElement,
     Cat\TextContentElement,
     Cat\TextContentChildElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -32,6 +34,23 @@ xhp class tspan
     // <length-percentage> or float
     mixed textLength,
     enum {'spacing', 'spacingAndGlyphs'} lengthAdjust;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\PaintServerElement>(),
+      XHPChild\ofType<a>(),
+      // technically incorrect, we may only allow `SVG\a`
+      // but let's not punish you for using the wrong `<a>`
+      XHPChild\ofType<HTML\a>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+      XHPChild\ofType<HTML\style>(),
+      XHPChild\ofType<tspan>(),
+      XHPChild\pcdata(),
+    ));
+  }
 
   protected string $tagName = 'tspan';
 }

@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class image
@@ -17,6 +18,7 @@ xhp class image
     Cat\GraphicsReferencingElement,
     Cat\RenderableElement,
     Cat\StruturallyExternalElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -28,6 +30,18 @@ xhp class image
     float y,
     string width,
     string height;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<clipPath>(),
+      XHPChild\ofType<marker>(),
+      XHPChild\ofType<mask>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'image';
 }

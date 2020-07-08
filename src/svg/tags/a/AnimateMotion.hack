@@ -9,8 +9,10 @@
 namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
+use namespace Facebook\XHP\HTML;
 
 xhp class animateMotion extends element implements Cat\AnimationElement {
+  use \XHPChildValidation;
 
   attribute
     enum {'replace', 'sum'} additive,
@@ -48,6 +50,20 @@ xhp class animateMotion extends element implements Cat\AnimationElement {
     mixed rotate,
     // The ‘origin’ attribute ... has no effect in SVG.
     enum {'default'} origin;
+
+  /**
+   * Spec: Any number of descriptive elements,
+   *       ‘script’ and at most one ‘mpath’ element, in any order.
+   *
+   * Note: We allow any number of mpath elements, not just 1.
+   */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<mpath>(),
+      XHPChild\ofType<HTML\script>(),
+    ));
+  }
 
   protected string $tagName = 'animateMotion';
 }

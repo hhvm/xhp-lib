@@ -13,6 +13,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class a
   extends element
   implements Cat\ContainerElement, Cat\RenderableElement {
+  use \XHPChildValidation;
+
   /**
    * Slightly different from `HTML\a`.
    * The difference is in the spec.
@@ -42,6 +44,17 @@ xhp class a
       'strict-origin-when-cross-origin',
       'unsafe-url',
     } referrerpolicy;
+
+  /**
+   * Spec: Descriptive content, plus any element or text allowed by its parent's content model,
+   *       except for another a element. If the parent is a switch element,
+   *       use the content model of the nearest ancestor that isn't a switch.
+   *
+   * Note: We can't validate this, since we can't see our parents.
+   */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\any();
+  }
 
   protected string $tagName = 'a';
 }

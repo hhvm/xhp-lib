@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feComponentTransfer extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -31,6 +33,18 @@ xhp class feComponentTransfer extends element implements Cat\FilterPrimitive {
     string height,
     string result,
     string in;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<feFuncA>(),
+      XHPChild\ofType<feFuncB>(),
+      XHPChild\ofType<feFuncG>(),
+      XHPChild\ofType<feFuncR>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feComponentTransfer';
 }

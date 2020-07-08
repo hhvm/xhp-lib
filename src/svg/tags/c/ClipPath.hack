@@ -8,11 +8,13 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class clipPath
   extends element
   implements Cat\ContainerElement, Cat\NeverRenderedElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredFeatures,
@@ -33,6 +35,17 @@ xhp class clipPath
     string fill,
     enum {'true', 'false'} externalResourcesRequired,
     enum {'userSpaceOnUse', 'objectBoundingBox'} clipPathUnits;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\ShapeElement>(),
+      XHPChild\ofType<text>(),
+      XHPChild\ofType<namespace\use>(),
+      XHPChild\ofType<HTML\script>(),
+    ));
+  }
 
   protected string $tagName = 'clipPath';
 }

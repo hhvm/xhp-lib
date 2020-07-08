@@ -9,8 +9,10 @@
 namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
+use namespace Facebook\XHP\HTML;
 
 xhp class animate extends element implements Cat\AnimationElement {
+  use \XHPChildValidation;
 
   attribute
     enum {'replace', 'sum'} additive,
@@ -44,6 +46,13 @@ xhp class animate extends element implements Cat\AnimationElement {
     string by,
     string requiredExtensions,
     string systemLanguage;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+    ));
+  }
 
   protected string $tagName = 'animate';
 }

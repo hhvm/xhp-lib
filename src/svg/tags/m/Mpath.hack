@@ -8,11 +8,20 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class mpath extends element /* implements nothing */ {
+  use \XHPChildValidation;
 
   attribute string href;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+    ));
+  }
 
   protected string $tagName = 'mpath';
 }

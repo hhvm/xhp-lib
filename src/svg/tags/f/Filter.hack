@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class filter extends element /* implements nothing */ {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -32,6 +34,16 @@ xhp class filter extends element /* implements nothing */ {
     string height,
     enum {'userSpaceOnUse', 'objectBoundingBox'} filterUnits,
     enum {'userSpaceOnUse', 'objectBoundingBox'} primitiveUnits;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\FilterPrimitive>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'filter';
 }

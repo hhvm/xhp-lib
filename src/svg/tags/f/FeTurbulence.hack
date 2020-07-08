@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feTurbulence extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -36,6 +38,15 @@ xhp class feTurbulence extends element implements Cat\FilterPrimitive {
     float seed,
     enum {'stitch', 'noStitch'} stitchTiles,
     enum {'fractalNoise', 'turbulence'} type;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feTurbulence';
 }

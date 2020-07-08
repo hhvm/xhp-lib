@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feComposite extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -37,6 +39,15 @@ xhp class feComposite extends element implements Cat\FilterPrimitive {
     float k2,
     float k3,
     float k4;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feComposite';
 }

@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feGaussianBlur extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -34,6 +36,15 @@ xhp class feGaussianBlur extends element implements Cat\FilterPrimitive {
     // <number-optional-number>
     string stdDeviation,
     enum {'duplicate', 'wrap', 'none'} edgeMode;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feGaussianBlur';
 }

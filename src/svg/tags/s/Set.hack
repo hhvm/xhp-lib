@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class set extends element implements Cat\AnimationElement {
+  use \XHPChildValidation;
 
   attribute
     string onbegin,
@@ -32,6 +34,14 @@ xhp class set extends element implements Cat\AnimationElement {
     string requiredExtensions,
     string systemLanguage,
     string to;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'set';
 }

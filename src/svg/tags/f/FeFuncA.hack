@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feFuncA extends element implements Cat\TranferFunctionElement {
+  use \XHPChildValidation;
 
   attribute
     enum {'identity', 'table', 'discrete', 'linear', 'gamma'} type,
@@ -20,6 +22,15 @@ xhp class feFuncA extends element implements Cat\TranferFunctionElement {
     float amplitude,
     float exponent,
     float offset;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+    ));
+  }
 
   protected string $tagName = 'feFuncA';
 }

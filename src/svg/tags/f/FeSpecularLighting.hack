@@ -8,9 +8,11 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feSpecularLighting extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -36,6 +38,20 @@ xhp class feSpecularLighting extends element implements Cat\FilterPrimitive {
     float specularExponent,
     // <number-optional-number>
     string kernelUnitLength;
+
+  /**
+   * Spec: Any number of descriptive elements, script
+   *       and exactly one light sources element, in any order.
+   *
+   * Note: We allow any number of LightSources, not just 1.
+   */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<Cat\LightSource>(),
+    ));
+  }
 
   protected string $tagName = 'feSpecularLighting';
 }

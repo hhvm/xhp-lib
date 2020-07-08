@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class foreignObject
@@ -16,6 +17,7 @@ xhp class foreignObject
     Cat\GraphicsElement,
     Cat\RenderableElement,
     Cat\StruturallyExternalElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -24,6 +26,17 @@ xhp class foreignObject
     float y,
     string width,
     string height;
+
+  /**
+  * Spec: Any elements or character data.
+  *
+  * Note: It is unclear the me if this means all SVG elements,
+  *       or all elements (including HTML and other SGML applications).
+  *       Let's err on the side of caution.
+  */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\any();
+  }
 
   protected string $tagName = 'foreignObject';
 }

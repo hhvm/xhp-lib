@@ -11,6 +11,7 @@ namespace Facebook\XHP\SVG;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feMergeNode extends element implements Cat\FilterPrimitive {
+  use \XHPChildValidation;
 
   attribute
     string clip,
@@ -30,6 +31,10 @@ xhp class feMergeNode extends element implements Cat\FilterPrimitive {
     string width,
     string height,
     string result;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\ofType<Cat\FilterPrimitive>());
+  }
 
   protected string $tagName = 'feMergeNode';
 }

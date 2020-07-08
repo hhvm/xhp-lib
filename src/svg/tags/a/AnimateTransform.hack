@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class animateTransform extends element implements Cat\AnimationElement {
@@ -44,6 +45,13 @@ xhp class animateTransform extends element implements Cat\AnimationElement {
     string requiredExtensions,
     string systemLanguage,
     enum {'translate', 'scale', 'rotate', 'skewX', 'skewY'} type;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+    ));
+  }
 
   protected string $tagName = 'animateTransform';
 }

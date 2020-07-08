@@ -9,11 +9,14 @@
 
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class svg
   extends element
   implements Cat\ContainerElement, Cat\RenderableElement, Cat\StruturalElement {
+  use \XHPChildValidation;
+
   // The category is from the html family.
   // This is to allow svg documents to be embedded into HTML.
   // Svg uses it own content model with very different rules and names.
@@ -41,6 +44,24 @@ xhp class svg
     // in SVG2, since they have been removed from the xhp classes.
     // Declare a SVG1 version in your application code if you need them.
     string version;
+
+  /**
+   * Spec: Any number of the following elements, in any order:
+   *       animation, descriptive, paint server, shape, structural
+   *       a, audio, canvas, clipPath, filter, foreignObject, iframe,
+   *       image, marker, mask, script, style, switch, text, video, view
+   *
+   * Note: Let's be forgiving and allow all known HTML and SVG elements.
+   *       For example `<filter>`, `<mpath>`, `<stop>`, `<view>`, can not
+   *       be used otherwise, since they have no category.
+   *       We're only banning pcdata, but that seems like the right thing to do.
+   */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<element>(),
+      XHPChild\ofType<HTML\element>(),
+    ));
+  }
 
   protected string $tagName = 'svg';
 }

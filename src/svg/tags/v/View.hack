@@ -8,13 +8,24 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class view extends element /* implements nothing */ {
+  use \XHPChildValidation;
 
   attribute
     string viewBox,
     string preserveAspectRatio;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'view';
 }

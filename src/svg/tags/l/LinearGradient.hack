@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class linearGradient
@@ -16,6 +17,7 @@ xhp class linearGradient
     Cat\GradientElement,
     Cat\NeverRenderedElement,
     Cat\PaintServerElement {
+  use \XHPChildValidation;
 
   attribute
     // float or <percentage>
@@ -30,6 +32,18 @@ xhp class linearGradient
     string gradientTransform,
     enum {'pad', 'reflect', 'repeat'} spreadMethod,
     string href;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<animateTransform>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+      XHPChild\ofType<stop>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'linearGradient';
 }

@@ -8,11 +8,13 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class rect
   extends element
   implements Cat\GraphicsElement, Cat\RenderableElement, Cat\ShapeElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -26,6 +28,18 @@ xhp class rect
     string rx,
     // <length-pecentage> or "auto"
     string ry;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<animate>(),
+      XHPChild\ofType<animateTransform>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<set>(),
+      XHPChild\ofType<stop>(),
+      XHPChild\ofType<HTML\style>(),
+    ));
+  }
 
   protected string $tagName = 'rect';
 }

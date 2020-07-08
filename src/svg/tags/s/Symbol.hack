@@ -8,11 +8,13 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class symbol
   extends element
   implements Cat\ContainerElement, Cat\StruturalElement {
+  use \XHPChildValidation;
 
   attribute
     string preserveAspectRatio,
@@ -25,6 +27,35 @@ xhp class symbol
     float y,
     string width,
     string height;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\PaintServerElement>(),
+      XHPChild\ofType<Cat\ShapeElement>(),
+      XHPChild\ofType<Cat\StruturalElement>(),
+      XHPChild\ofType<a>(),
+      // technically incorrect, we may only allow `SVG\a`
+      // but let's not punish you for using the wrong `<a>`
+      XHPChild\ofType<HTML\a>(),
+      XHPChild\ofType<HTML\audio>(),
+      XHPChild\ofType<HTML\canvas>(),
+      XHPChild\ofType<clipPath>(),
+      XHPChild\ofType<filter>(),
+      XHPChild\ofType<foreignObject>(),
+      XHPChild\ofType<HTML\iframe>(),
+      XHPChild\ofType<image>(),
+      XHPChild\ofType<marker>(),
+      XHPChild\ofType<mask>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+      XHPChild\ofType<namespace\switch>(),
+      XHPChild\ofType<text>(),
+      XHPChild\ofType<HTML\video>(),
+      XHPChild\ofType<view>(),
+    ));
+  }
 
   protected string $tagName = 'symbol';
 }

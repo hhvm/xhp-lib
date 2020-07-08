@@ -14,5 +14,17 @@ xhp class title
   extends element
   implements Cat\DescriptiveElement, Cat\NeverRenderedElement {
 
+
+  /**
+   * Spec: Any elements or character data.
+   *
+   * Note: It is unclear the me if this means all SVG elements,
+   *       or all elements (including HTML and other SGML applications).
+   *       Let's err on the side of caution.
+   */
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\any();
+  }
+
   protected string $tagName = 'title';
 }

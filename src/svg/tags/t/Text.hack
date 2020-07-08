@@ -8,6 +8,7 @@
  */
 namespace Facebook\XHP\SVG;
 
+use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class text
@@ -16,6 +17,7 @@ xhp class text
     Cat\GraphicsElement,
     Cat\RenderableElement,
     Cat\TextContentElement {
+  use \XHPChildValidation;
 
   attribute
     string requiredExtensions,
@@ -33,6 +35,25 @@ xhp class text
     string rotate,
     // <length-percentage> or float
     mixed textLength;
+
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\anyNumberOf(XHPChild\anyOf(
+      XHPChild\ofType<Cat\AnimationElement>(),
+      XHPChild\ofType<Cat\DescriptiveElement>(),
+      XHPChild\ofType<Cat\PaintServerElement>(),
+      XHPChild\ofType<Cat\TextContentChildElement>(),
+      XHPChild\ofType<a>(),
+      // technically incorrect, we may only allow `SVG\a`
+      // but let's not punish you for using the wrong `<a>`
+      XHPChild\ofType<HTML\a>(),
+      XHPChild\ofType<clipPath>(),
+      XHPChild\ofType<marker>(),
+      XHPChild\ofType<mask>(),
+      XHPChild\ofType<HTML\script>(),
+      XHPChild\ofType<HTML\style>(),
+      XHPChild\pcdata(),
+    ));
+  }
 
   protected string $tagName = 'text';
 }
