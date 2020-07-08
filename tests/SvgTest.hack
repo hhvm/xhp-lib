@@ -7,10 +7,30 @@
  *
  */
 
-use type Facebook\XHP\SVG\{svg, g, circle, animate};
+use namespace Facebook\XHP\{HTML, SVG};
+use type Facebook\XHP\SVG\{svg, g, circle, animate, text};
 use function Facebook\FBExpect\expect;
 
 final class SvgTest extends Facebook\HackTest\HackTest {
+  public async function testBothHTMLAAndSVGAAreAllowedAsync(): Awaitable<void> {
+    $svg =
+      <svg>
+        <g>
+          <SVG:a href="https://example.com"></SVG:a>
+          <HTML:a href="https://example.com"></HTML:a>
+        </g>
+      </svg>;
+    expect(await $svg->toStringAsync())->toEqual(
+      '<svg><g><a href="https://example.com"></a><a href="https://example.com"></a></g></svg>',
+    );
+  }
+
+  public async function testInvalidChildren(): Awaitable<void> {
+    expect(() ==> (<text><svg /></text>)->toStringAsync())->toThrow(
+      Facebook\XHP\InvalidChildrenException::class,
+    );
+  }
+
   /**
    * Source: https://github.com/rendro/SVG-Spinner/blob/379a1169c4c24a35e1d000d061378c39eea997e6/images/fading-loader.svg
    *
@@ -23,10 +43,7 @@ final class SvgTest extends Facebook\HackTest\HackTest {
    */
   public async function testSvgImageFromTheInternetAsync(): Awaitable<void> {
     $svg =
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="110px"
-        height="110px">
+      <svg xmlns="http://www.w3.org/2000/svg" width="110px" height="110px">
         <g transform="translate(5 5)">
           <circle cx="50" cy="0" r="5" style="opacity:0.3">
             <animate
