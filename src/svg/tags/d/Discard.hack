@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class discard extends element {
+xhp class discard extends element implements Cat\AnimationElement {
 
   attribute
     string requiredExtensions,

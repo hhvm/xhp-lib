@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class feDropShadow extends element {
+xhp class feDropShadow extends element implements Cat\FilterPrimitive {
 
   attribute
     string clip,

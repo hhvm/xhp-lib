@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class mpath extends element {
+xhp class mpath extends element /* implements nothing */ {
 
   attribute string href;
 

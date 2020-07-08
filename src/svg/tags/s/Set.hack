@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class set extends element {
+xhp class set extends element implements Cat\AnimationElement {
 
   attribute
     string onbegin,

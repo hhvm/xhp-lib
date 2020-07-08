@@ -10,7 +10,9 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class metadata extends element {
+xhp class metadata
+  extends element
+  implements Cat\DescriptiveElement, Cat\NeverRenderedElement {
 
   protected string $tagName = 'metadata';
 }

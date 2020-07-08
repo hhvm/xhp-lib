@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class feComponentTransfer extends element {
+xhp class feComponentTransfer extends element implements Cat\FilterPrimitive {
 
   attribute
     string clip,

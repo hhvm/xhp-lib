@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class animateTransform extends element {
+xhp class animateTransform extends element implements Cat\AnimationElement {
 
   attribute
     enum {'replace', 'sum'} additive,

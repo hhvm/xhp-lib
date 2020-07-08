@@ -10,7 +10,9 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class line extends element {
+xhp class line
+  extends element
+  implements Cat\GraphicsElement, Cat\RenderableElement, Cat\ShapeElement {
 
   attribute
     string requiredExtensions,

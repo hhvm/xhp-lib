@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class feFuncR extends element {
+xhp class feFuncR extends element implements Cat\TranferFunctionElement {
 
   attribute
     enum {'identity', 'table', 'discrete', 'linear', 'gamma'} type,

@@ -10,7 +10,9 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class symbol extends element {
+xhp class symbol
+  extends element
+  implements Cat\ContainerElement, Cat\StruturalElement {
 
   attribute
     string preserveAspectRatio,

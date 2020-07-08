@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class stop extends element {
+xhp class stop extends element /* implements nothing */ {
 
   attribute
     // float or <percentage>

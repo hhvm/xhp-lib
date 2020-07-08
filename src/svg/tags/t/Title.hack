@@ -10,7 +10,9 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class title extends element {
+xhp class title
+  extends element
+  implements Cat\DescriptiveElement, Cat\NeverRenderedElement {
 
   protected string $tagName = 'title';
 }

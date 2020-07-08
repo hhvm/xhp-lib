@@ -10,7 +10,12 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class linearGradient extends element {
+xhp class linearGradient
+  extends element
+  implements
+    Cat\GradientElement,
+    Cat\NeverRenderedElement,
+    Cat\PaintServerElement {
 
   attribute
     // float or <percentage>

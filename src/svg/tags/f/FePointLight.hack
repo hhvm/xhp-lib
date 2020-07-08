@@ -10,7 +10,7 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class fePointLight extends element {
+xhp class fePointLight extends element implements Cat\LightSource {
 
   attribute
     float x,

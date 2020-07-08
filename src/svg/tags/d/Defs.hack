@@ -10,7 +10,12 @@ namespace Facebook\XHP\SVG;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class defs extends element {
+xhp class defs
+  extends element
+  implements
+    Cat\ContainerElement,
+    Cat\NeverRenderedElement,
+    Cat\StruturalElement {
 
   protected string $tagName = 'defs';
 }
