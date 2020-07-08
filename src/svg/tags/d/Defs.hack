@@ -17,6 +17,7 @@ xhp class defs
     Cat\ContainerElement,
     Cat\NeverRenderedElement,
     Cat\StruturalElement {
+  use \XHPChildValidation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\anyOf(
