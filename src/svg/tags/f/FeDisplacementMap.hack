@@ -38,7 +38,6 @@ xhp class feDisplacementMap extends element implements Cat\FilterPrimitive {
     enum {'R', 'G', 'B', 'A'} xChannelSelector,
     enum {'R', 'G', 'B', 'A'} yChannelSelector;
 
-
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\anyOf(
       XHPChild\ofType<Cat\DescriptiveElement>(),

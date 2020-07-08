@@ -12,7 +12,6 @@ namespace Facebook\XHP\SVG;
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\HTML;
 
-
 /**
  * This is the base library of SVG elements for use in XHP. This includes all
  * non-deprecated tags and attributes. Elements in this file should stay as
