@@ -12,7 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class object extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
   attribute
     string data,
     int height,

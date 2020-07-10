@@ -12,7 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class caption extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
   // Should not contain :table
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(

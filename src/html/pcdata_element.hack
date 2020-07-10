@@ -15,7 +15,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 abstract xhp class pcdata_element extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   final protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\anyNumberOf(XHPChild\pcdata());

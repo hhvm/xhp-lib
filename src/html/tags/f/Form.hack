@@ -12,7 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class form extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
   attribute
     string action,
     string accept-charset,

@@ -12,7 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class slot extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
   category %flow, %phrase;
 
   attribute string name;

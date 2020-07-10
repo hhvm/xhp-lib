@@ -16,7 +16,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 abstract xhp class singleton extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();

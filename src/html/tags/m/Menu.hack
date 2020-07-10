@@ -12,7 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class menu extends element {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
   attribute
     string label,
     enum {'popup', 'toolbar'} type;

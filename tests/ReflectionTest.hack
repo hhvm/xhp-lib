@@ -16,7 +16,7 @@ use type Facebook\XHP\HTML\{a, code, div};
 use namespace HH\Lib\{Dict, Str};
 
 xhp class test:for_reflection extends x\element {
-  use XHPChildValidation;
+  use XHPChild\Validation;
   attribute
     string mystring @required,
     enum {'herp', 'derp'} myenum,
