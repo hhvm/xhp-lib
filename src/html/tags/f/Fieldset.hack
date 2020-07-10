@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class fieldset extends element {
+final xhp class fieldset extends element {
   use XHPChild\Validation;
   attribute
     bool disabled,

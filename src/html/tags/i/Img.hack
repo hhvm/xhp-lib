@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class img extends singleton {
+final xhp class img extends singleton {
   attribute
     string alt,
     enum {'anonymous', 'use-credentials'} crossorigin,

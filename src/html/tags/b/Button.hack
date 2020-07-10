@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class button extends element {
+final xhp class button extends element {
   use XHPChild\Validation;
   attribute
     bool disabled,

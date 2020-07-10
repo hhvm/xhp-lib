@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class textarea extends pcdata_element {
+final xhp class textarea extends pcdata_element {
   attribute
     string autocomplete,
     int cols,

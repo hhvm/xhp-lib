@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class table extends element {
+final xhp class table extends element {
   use XHPChild\Validation;
   attribute
     int border,

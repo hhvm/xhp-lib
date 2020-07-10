@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class hr extends singleton {
+final xhp class hr extends singleton {
   category %flow;
   protected string $tagName = 'hr';
 }

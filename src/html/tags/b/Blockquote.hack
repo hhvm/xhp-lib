@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class blockquote extends element {
+final xhp class blockquote extends element {
   use XHPChild\Validation;
   attribute string cite;
   category %flow, %sectioning;

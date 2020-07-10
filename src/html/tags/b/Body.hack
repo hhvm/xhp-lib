@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class body extends element {
+final xhp class body extends element {
   use XHPChild\Validation;
   attribute
     string onafterprint,

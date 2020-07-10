@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class wbr extends singleton {
+final xhp class wbr extends singleton {
   category %flow, %phrase;
   protected string $tagName = 'wbr';
 }

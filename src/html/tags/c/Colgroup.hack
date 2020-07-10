@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class colgroup extends element {
+final xhp class colgroup extends element {
   use XHPChild\Validation;
   attribute int span;
 

@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class source extends singleton {
+final xhp class source extends singleton {
   attribute
     string media,
     string sizes,

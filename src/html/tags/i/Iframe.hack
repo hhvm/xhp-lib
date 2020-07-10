@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class iframe extends pcdata_element {
+final xhp class iframe extends pcdata_element {
   attribute
     string allow,
     bool allowfullscreen,

@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class keygen extends singleton {
+final xhp class keygen extends singleton {
   attribute
     string challenge,
     bool disabled,

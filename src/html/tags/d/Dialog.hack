@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class dialog extends element {
+final xhp class dialog extends element {
   use XHPChild\Validation;
   attribute bool open;
   category %flow, %sectioning;

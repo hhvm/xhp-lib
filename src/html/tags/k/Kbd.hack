@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class kbd extends element {
+final xhp class kbd extends element {
   use XHPChild\Validation;
   category %flow, %phrase;
 

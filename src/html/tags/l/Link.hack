@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class link extends singleton {
+final xhp class link extends singleton {
   attribute
     string as,
     string color,

@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class col extends singleton {
+final xhp class col extends singleton {
   attribute int span;
   protected string $tagName = 'col';
 }

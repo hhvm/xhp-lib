@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class embed extends element {
+final xhp class embed extends element {
   use XHPChild\Validation;
   /*
    * The HTML spec permits all non-namespaced attributes

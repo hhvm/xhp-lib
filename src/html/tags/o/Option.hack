@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class option extends pcdata_element {
+final xhp class option extends pcdata_element {
   attribute
     bool disabled,
     string label,

@@ -19,7 +19,7 @@ use namespace HH\Lib\{Str, Vec};
  */
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class conditional_comment extends x\primitive {
+final xhp class conditional_comment extends x\primitive {
   use XHPChild\Validation;
   attribute string if @required;
 

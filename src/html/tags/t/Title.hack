@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class title extends pcdata_element {
+final xhp class title extends pcdata_element {
   category %metadata;
   protected string $tagName = 'title';
 }

@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class menu extends element {
+final xhp class menu extends element {
   use XHPChild\Validation;
   attribute
     string label,

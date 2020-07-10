@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class dd extends element {
+final xhp class dd extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

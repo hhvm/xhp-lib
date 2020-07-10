@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class figure extends element {
+final xhp class figure extends element {
   use XHPChild\Validation;
   category %flow, %sectioning;
 

@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class q extends element {
+final xhp class q extends element {
   use XHPChild\Validation;
   attribute string cite;
   category %flow, %phrase;

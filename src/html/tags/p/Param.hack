@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-xhp class param extends pcdata_element {
+final xhp class param extends pcdata_element {
   attribute
     string name,
     string value;
