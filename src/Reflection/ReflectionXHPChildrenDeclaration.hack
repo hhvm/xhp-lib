@@ -10,7 +10,6 @@
 namespace Facebook\XHP;
 
 use type Facebook\TypeAssert\IncorrectTypeException;
-use namespace Facebook\XHP\Core as x;
 use namespace Facebook\TypeSpec;
 
 enum XHPChildrenDeclarationType: int {

@@ -8,7 +8,6 @@
  */
 
 namespace Facebook\XHP\HTML;
-use namespace Facebook\XHP\ChildValidation;
 
 /**
  * Subclasses of unescaped_pcdata_element must contain only string children.

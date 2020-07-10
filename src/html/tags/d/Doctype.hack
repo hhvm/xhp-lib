@@ -9,10 +9,8 @@
 
 namespace Facebook\XHP\HTML;
 
-use namespace Facebook\XHP\Core as x;
+use namespace Facebook\XHP\{ChildValidation as XHPChild, Core as x};
 use namespace HH\Lib\C;
-
-use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 /**
  * Render an <html /> element within a DOCTYPE, XHP has chosen to only support

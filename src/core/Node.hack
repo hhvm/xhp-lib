@@ -9,8 +9,6 @@
 
 namespace Facebook\XHP\Core;
 
-use type Facebook\TypeAssert\IncorrectTypeException;
-use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
 use type Facebook\XHP\{
   ReflectionXHPAttribute,
@@ -153,7 +151,7 @@ abstract xhp class node implements \XHPChild {
     }
 
     $children = vec[];
-    if ($selector[0] == '%') {
+    if ($selector[0] === '%') {
       $selector = Str\slice($selector, 1);
       foreach ($this->children as $child) {
         if ($child is node && $child->categoryOf($selector)) {
@@ -183,7 +181,7 @@ abstract xhp class node implements \XHPChild {
   final public function getFirstChild(?string $selector = null): ?\XHPChild {
     if ($selector === null) {
       return $this->children[0] ?? null;
-    } else if ($selector[0] == '%') {
+    } else if ($selector[0] === '%') {
       $selector = \substr($selector, 1);
       foreach ($this->children as $child) {
         if ($child is node && $child->categoryOf($selector)) {

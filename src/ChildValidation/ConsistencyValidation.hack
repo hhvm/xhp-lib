@@ -9,8 +9,7 @@
 
 namespace Facebook\XHP\ChildValidation;
 
-use namespace Facebook\XHP\ChildValidation as XHPChild;
-use namespace Facebook\XHP\Core as x;
+use namespace Facebook\XHP\{ChildValidation as XHPChild, Core as x};
 
 /** Verify that a new child declaration matches the legacy codegen. */
 trait ConsistencyValidation {

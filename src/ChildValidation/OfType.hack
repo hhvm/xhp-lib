@@ -10,6 +10,7 @@
 namespace Facebook\XHP\ChildValidation;
 
 final class OfType<<<__Enforceable>> reify T> extends LeafConstraint {
+  <<__Override>>
   public function legacySerializeAsLeaf(): (LegacyConstraintType, string) {
     return tuple(
       LegacyConstraintType::CLASSNAME,

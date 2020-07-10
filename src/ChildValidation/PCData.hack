@@ -10,6 +10,7 @@
 namespace Facebook\XHP\ChildValidation;
 
 final class PCData extends LeafConstraint {
+  <<__Override>>
   public function legacySerializeAsLeaf(): (LegacyConstraintType, mixed) {
     return tuple(LegacyConstraintType::PCDATA, null);
   }

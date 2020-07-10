@@ -10,15 +10,13 @@
 namespace Facebook\XHP\HTML;
 
 
-use namespace Facebook\XHP\Core as x;
+use namespace Facebook\XHP\{ChildValidation as XHPChild, Core as x};
 use namespace HH\Lib\{Str, Vec};
 
 /**
  * Render an HTML conditional comment. You can choose whatever you like as
  * the conditional statement.
  */
-use namespace Facebook\XHP\ChildValidation as XHPChild;
-
 final xhp class conditional_comment extends x\primitive {
   use XHPChild\Validation;
   attribute string if @required;

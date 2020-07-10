@@ -15,6 +15,7 @@ final class Category extends LeafConstraint {
   public function __construct(private string $category) {
   }
 
+  <<__Override>>
   public function legacySerializeAsLeaf(): (LegacyConstraintType, string) {
     return tuple(
       LegacyConstraintType::CATEGORY,

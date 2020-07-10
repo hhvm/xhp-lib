@@ -10,7 +10,6 @@
 namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\Core as x;
-use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\{C, Dict};
 use type Facebook\XHP\ReflectionXHPAttribute;
 
