@@ -7,20 +7,22 @@
  *
  */
 
+namespace Facebook\XHP;
+
 use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\C;
 
 class ReflectionXHPClass {
   public function __construct(private classname<x\node> $className) {
     invariant(
-      class_exists($this->className),
+      \class_exists($this->className),
       'Invalid class name: %s',
       $this->className,
     );
   }
 
-  public function getReflectionClass(): ReflectionClass {
-    return new ReflectionClass($this->getClassName());
+  public function getReflectionClass(): \ReflectionClass {
+    return new \ReflectionClass($this->getClassName());
   }
 
   public function getClassName(): classname<x\node> {

@@ -12,6 +12,14 @@ namespace Facebook\XHP\Core;
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\TypeAssert;
 use namespace HH\Lib\{C, Dict, Keyset, Str, Vec};
+use type Facebook\XHP\{
+  ReflectionXHPAttribute,
+  ReflectionXHPChildrenDeclaration,
+  ReflectionXHPChildrenExpression,
+  XHPChildrenConstraintType,
+  XHPChildrenDeclarationType,
+  XHPChildrenExpressionType,
+};
 
 <<__Sealed(primitive::class, element::class)>>
 abstract xhp class node implements \XHPChild {
@@ -219,7 +227,7 @@ abstract xhp class node implements \XHPChild {
       return $this->attributes[$attr];
     }
 
-    if (!\ReflectionXHPAttribute::IsSpecial($attr)) {
+    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
       // Get the declaration
       $decl = static::__xhpReflectionAttribute($attr);
 
@@ -237,17 +245,17 @@ abstract xhp class node implements \XHPChild {
 
   final public static function __xhpReflectionAttribute(
     string $attr,
-  ): ?\ReflectionXHPAttribute {
+  ): ?ReflectionXHPAttribute {
     return static::__xhpReflectionAttributes()[$attr] ?? null;
   }
 
   <<__MemoizeLSB>>
   final public static function __xhpReflectionAttributes(
-  ): dict<string, \ReflectionXHPAttribute> {
+  ): dict<string, ReflectionXHPAttribute> {
     $decl = static::__xhpAttributeDeclaration();
     return Dict\map_with_key(
       $decl,
-      ($name, $attr_decl) ==> new \ReflectionXHPAttribute($name, $attr_decl),
+      ($name, $attr_decl) ==> new ReflectionXHPAttribute($name, $attr_decl),
     );
   }
 
@@ -262,8 +270,8 @@ abstract xhp class node implements \XHPChild {
 
   <<__MemoizeLSB>>
   final public static function __xhpReflectionChildrenDeclaration(
-  ): \ReflectionXHPChildrenDeclaration {
-    return new \ReflectionXHPChildrenDeclaration(
+  ): ReflectionXHPChildrenDeclaration {
+    return new ReflectionXHPChildrenDeclaration(
       static::class,
       static::__legacySerializedXHPChildrenDeclaration(),
     );
@@ -313,7 +321,7 @@ abstract xhp class node implements \XHPChild {
       if (
         $value === null ||
         !(
-          \ReflectionXHPAttribute::IsSpecial($attr_name) ||
+          ReflectionXHPAttribute::IsSpecial($attr_name) ||
           (static::__xhpReflectionAttribute($attr_name) !== null)
         )
       ) {
@@ -508,10 +516,10 @@ abstract xhp class node implements \XHPChild {
   protected function validateChildren(): void {
     $decl = self::__xhpReflectionChildrenDeclaration();
     $type = $decl->getType();
-    if ($type === \XHPChildrenDeclarationType::ANY_CHILDREN) {
+    if ($type === XHPChildrenDeclarationType::ANY_CHILDREN) {
       return;
     }
-    if ($type === \XHPChildrenDeclarationType::NO_CHILDREN) {
+    if ($type === XHPChildrenDeclarationType::NO_CHILDREN) {
       if ($this->children) {
         throw new \Facebook\XHP\InvalidChildrenException($this, 0);
       } else {
@@ -531,26 +539,26 @@ abstract xhp class node implements \XHPChild {
   }
 
   final private function validateChildrenExpression(
-    \ReflectionXHPChildrenExpression $expr,
+    ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
     switch ($expr->getType()) {
-      case \XHPChildrenExpressionType::SINGLE:
+      case XHPChildrenExpressionType::SINGLE:
         // Exactly once -- :fb_thing
         return $this->validateChildrenRule($expr, $index);
-      case \XHPChildrenExpressionType::ANY_NUMBER:
+      case XHPChildrenExpressionType::ANY_NUMBER:
         // Zero or more times -- :fb_thing*
         do {
           list($ret, $index) = $this->validateChildrenRule($expr, $index);
         } while ($ret);
         return tuple(true, $index);
 
-      case \XHPChildrenExpressionType::ZERO_OR_ONE:
+      case XHPChildrenExpressionType::ZERO_OR_ONE:
         // Zero or one times -- :fb_thing?
         list($_, $index) = $this->validateChildrenRule($expr, $index);
         return tuple(true, $index);
 
-      case \XHPChildrenExpressionType::ONE_OR_MORE:
+      case XHPChildrenExpressionType::ONE_OR_MORE:
         // One or more times -- :fb_thing+
         list($ret, $index) = $this->validateChildrenRule($expr, $index);
         if (!$ret) {
@@ -561,7 +569,7 @@ abstract xhp class node implements \XHPChild {
         } while ($ret);
         return tuple(true, $index);
 
-      case \XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
+      case XHPChildrenExpressionType::SUB_EXPR_SEQUENCE:
         // Specific order -- :fb_thing, :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
@@ -580,7 +588,7 @@ abstract xhp class node implements \XHPChild {
         }
         return tuple(false, $oindex);
 
-      case \XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
+      case XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION:
         // Either or -- :fb_thing | :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
@@ -602,17 +610,17 @@ abstract xhp class node implements \XHPChild {
   }
 
   final private function validateChildrenRule(
-    \ReflectionXHPChildrenExpression $expr,
+    ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
     switch ($expr->getConstraintType()) {
-      case \XHPChildrenConstraintType::ANY:
+      case XHPChildrenConstraintType::ANY:
         if (C\contains_key($this->children, $index)) {
           return tuple(true, $index + 1);
         }
         return tuple(false, $index);
 
-      case \XHPChildrenConstraintType::PCDATA:
+      case XHPChildrenConstraintType::PCDATA:
         if (
           C\contains_key($this->children, $index) &&
           !($this->children[$index] is node)
@@ -621,7 +629,7 @@ abstract xhp class node implements \XHPChild {
         }
         return tuple(false, $index);
 
-      case \XHPChildrenConstraintType::ELEMENT:
+      case XHPChildrenConstraintType::ELEMENT:
         $class = $expr->getConstraintString();
         if (
           C\contains_key($this->children, $index) &&
@@ -631,7 +639,7 @@ abstract xhp class node implements \XHPChild {
         }
         return tuple(false, $index);
 
-      case \XHPChildrenConstraintType::CATEGORY:
+      case XHPChildrenConstraintType::CATEGORY:
         if (
           !C\contains_key($this->children, $index) ||
           !($this->children[$index] is node)
@@ -649,7 +657,7 @@ abstract xhp class node implements \XHPChild {
         }
         return tuple(true, $index + 1);
 
-      case \XHPChildrenConstraintType::SUB_EXPR:
+      case XHPChildrenConstraintType::SUB_EXPR:
         return $this->validateChildrenExpression(
           $expr->getSubExpression(),
           $index,

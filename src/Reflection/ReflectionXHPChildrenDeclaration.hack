@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP;
+
 use type Facebook\TypeAssert\IncorrectTypeException;
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\TypeSpec;
@@ -42,7 +44,7 @@ class ReflectionXHPChildrenDeclaration {
 
   <<__Memoize>>
   public function getType(): XHPChildrenDeclarationType {
-    if (is_array($this->data)) {
+    if (\is_array($this->data)) {
       return XHPChildrenDeclarationType::EXPRESSION;
     }
     return XHPChildrenDeclarationType::assert($this->data);
@@ -58,9 +60,9 @@ class ReflectionXHPChildrenDeclaration {
       // handled below
     }
 
-    throw new Exception(
+    throw new \Exception(
       "Tried to get child expression for XHP class ".
-      get_class($this->context).
+      \get_class($this->context).
       ", but it does not have an expressions.",
     );
   }
@@ -96,7 +98,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
         $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
-      get_class($this->context),
+      \get_class($this->context),
     );
     try {
       $sub_expr_1 = TypeSpec\varray(TypeSpec\mixed())
@@ -111,7 +113,7 @@ class ReflectionXHPChildrenExpression {
       // handled below
     }
 
-    throw new Exception('Data is not subexpressions - in '.$this->context);
+    throw new \Exception('Data is not subexpressions - in '.$this->context);
   }
 
   <<__Memoize>>
@@ -121,7 +123,7 @@ class ReflectionXHPChildrenExpression {
       $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
         $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
-      get_class($this->context),
+      \get_class($this->context),
     );
     return XHPChildrenConstraintType::assert($this->data[1]);
   }
@@ -133,7 +135,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenConstraintType::ELEMENT ||
         $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
-      get_class($this->context),
+      \get_class($this->context),
     );
     $data = $this->data[2];
     invariant($data is string, 'Expected string data');
@@ -156,9 +158,9 @@ class ReflectionXHPChildrenExpression {
       // handled below
     }
 
-    throw new Exception(
+    throw new \Exception(
       'Expected a sub-expression, got a '.
-      (is_object($data) ? get_class($data) : gettype($data)).
+      (\is_object($data) ? \get_class($data) : \gettype($data)).
       ' - in '.
       $this->context,
     );

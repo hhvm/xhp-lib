@@ -7,6 +7,8 @@
  *
  */
 
+namespace Facebook\XHP;
+
 use namespace HH\Lib\{C, Str, Vec};
 
 enum XHPAttributeType: int {
@@ -89,8 +91,8 @@ class ReflectionXHPAttribute {
     );
     $v = $this->extraType;
     invariant(
-      is_array($v),
-      'Class name for attribute %s is not a string',
+      \is_array($v),
+      'Class name for attribute %s is not an array',
       $this->getName(),
     );
     return keyset($v);
@@ -101,9 +103,9 @@ class ReflectionXHPAttribute {
    */
   <<__Memoize>>
   public static function IsSpecial(string $attr): bool {
-    return strlen($attr) >= 6 &&
+    return Str\length($attr) >= 6 &&
       $attr[4] === '-' &&
-      C\contains_key(self::$specialAttributes, substr($attr, 0, 4));
+      C\contains_key(self::$specialAttributes, Str\slice($attr, 0, 4));
   }
 
   public function __toString(): string {
@@ -140,7 +142,7 @@ class ReflectionXHPAttribute {
     }
     $out .= ' '.$this->getName();
     if ($this->hasDefaultValue()) {
-      $out .= ' = '.var_export($this->getDefaultValue(), true);
+      $out .= ' = '.\var_export($this->getDefaultValue(), true);
     }
     if ($this->isRequired()) {
       $out .= ' @required';

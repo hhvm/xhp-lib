@@ -12,6 +12,7 @@ namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\_Private;
 use namespace HH\Lib\{C, Dict};
+use type Facebook\XHP\ReflectionXHPAttribute;
 
 interface HasXHPAttributeClobbering_DEPRECATED extends HasXHPHTMLHelpers {
   public function transferAttributesToRenderedRoot(x\node $root): void;
@@ -103,7 +104,7 @@ trait XHPAttributeClobbering_DEPRECATED
       }
       if (
         C\contains_key($compatible, $attribute) ||
-        \ReflectionXHPAttribute::IsSpecial($attribute)
+        ReflectionXHPAttribute::IsSpecial($attribute)
       ) {
         $target->setAttribute($attribute, $value);
       }

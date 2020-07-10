@@ -11,6 +11,11 @@ use function Facebook\FBExpect\expect;
 
 use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
+use type Facebook\XHP\{
+  ReflectionXHPAttribute,
+  ReflectionXHPChildrenDeclaration,
+  ReflectionXHPClass,
+};
 use type Facebook\XHP\HTML\{a, code, div};
 
 use namespace HH\Lib\{Dict, Str};
