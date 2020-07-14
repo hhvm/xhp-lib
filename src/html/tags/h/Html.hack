@@ -19,8 +19,8 @@ final xhp class html extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<head>(),
-      XHPChild\ofType<body>(),
+      XHPChild\of_type<head>(),
+      XHPChild\of_type<body>(),
     );
   }
 

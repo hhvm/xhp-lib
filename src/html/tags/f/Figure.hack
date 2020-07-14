@@ -16,14 +16,14 @@ final xhp class figure extends element {
   category %flow, %sectioning;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
+    return XHPChild\any_of(
       XHPChild\sequence(
-        XHPChild\ofType<figcaption>(),
-        XHPChild\atLeastOneOf(XHPChild\category('%flow')),
+        XHPChild\of_type<figcaption>(),
+        XHPChild\at_least_one_of(XHPChild\category('%flow')),
       ),
       XHPChild\sequence(
-        XHPChild\atLeastOneOf(XHPChild\category('%flow')),
-        XHPChild\optional(XHPChild\ofType<figcaption>()),
+        XHPChild\at_least_one_of(XHPChild\category('%flow')),
+        XHPChild\optional(XHPChild\of_type<figcaption>()),
       ),
     );
   }

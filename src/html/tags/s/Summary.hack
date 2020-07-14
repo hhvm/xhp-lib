@@ -15,8 +15,8 @@ final xhp class summary extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%phrase')),
     );
   }
 

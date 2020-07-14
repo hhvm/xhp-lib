@@ -20,23 +20,23 @@ final xhp class table extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\optional(XHPChild\ofType<caption>()),
-      XHPChild\anyNumberOf(XHPChild\ofType<colgroup>()),
-      XHPChild\optional(XHPChild\ofType<thead>()),
-      XHPChild\anyOf(
+      XHPChild\optional(XHPChild\of_type<caption>()),
+      XHPChild\any_number_of(XHPChild\of_type<colgroup>()),
+      XHPChild\optional(XHPChild\of_type<thead>()),
+      XHPChild\any_of(
         XHPChild\sequence(
-          XHPChild\ofType<tfoot>(),
-          XHPChild\anyOf(
-            XHPChild\atLeastOneOf(XHPChild\ofType<tbody>()),
-            XHPChild\anyNumberOf(XHPChild\ofType<tr>()),
+          XHPChild\of_type<tfoot>(),
+          XHPChild\any_of(
+            XHPChild\at_least_one_of(XHPChild\of_type<tbody>()),
+            XHPChild\any_number_of(XHPChild\of_type<tr>()),
           ),
         ),
         XHPChild\sequence(
-          XHPChild\anyOf(
-            XHPChild\atLeastOneOf(XHPChild\ofType<tbody>()),
-            XHPChild\anyNumberOf(XHPChild\ofType<tr>()),
+          XHPChild\any_of(
+            XHPChild\at_least_one_of(XHPChild\of_type<tbody>()),
+            XHPChild\any_number_of(XHPChild\of_type<tr>()),
           ),
-          XHPChild\optional(XHPChild\ofType<tfoot>()),
+          XHPChild\optional(XHPChild\of_type<tfoot>()),
         ),
       ),
     );

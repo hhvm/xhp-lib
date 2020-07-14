@@ -20,7 +20,7 @@ final xhp class doctype extends x\primitive {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<html>();
+    return XHPChild\of_type<html>();
   }
 
 

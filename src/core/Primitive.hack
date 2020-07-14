@@ -20,6 +20,7 @@ use namespace HH\Lib\Dict;
 abstract xhp class primitive extends node {
   abstract protected function stringifyAsync(): Awaitable<string>;
 
+  <<__Override>>
   final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushSubtree();
     return await $that->stringifyAsync();
@@ -43,6 +44,7 @@ abstract xhp class primitive extends node {
     $this->replaceChildren($children);
   }
 
+  <<__Override>>
   final protected async function __flushSubtree(): Awaitable<primitive> {
     await $this->__flushElementChildren();
     if (\Facebook\XHP\ChildValidation\is_enabled()) {

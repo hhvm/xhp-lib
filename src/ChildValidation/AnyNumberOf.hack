@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\ChildValidation;
 
-final class AnyNumberOf<T as Constraint> extends QuantifierConstraint<T> {
+final class any_number_of<T as Constraint> extends QuantifierConstraint<T> {
   const LegacyExpressionType LEGACY_EXPRESSION_TYPE =
     LegacyExpressionType::ANY_QUANTITY;
 }

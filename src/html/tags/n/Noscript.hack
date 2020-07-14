@@ -15,7 +15,7 @@ final xhp class noscript extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
+    return XHPChild\any_number_of(XHPChild\any_of(
       XHPChild\pcdata(),
       XHPChild\category('%metadata'),
       XHPChild\category('%flow'),

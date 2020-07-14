@@ -17,8 +17,8 @@ final xhp class picture extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<source>()),
-      XHPChild\ofType<img>(),
+      XHPChild\any_number_of(XHPChild\of_type<source>()),
+      XHPChild\of_type<img>(),
     );
   }
 

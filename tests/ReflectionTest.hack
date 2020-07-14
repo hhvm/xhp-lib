@@ -29,9 +29,9 @@ xhp class test:for_reflection extends x\element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\atLeastOneOf(XHPChild\ofType<div>()),
+      XHPChild\at_least_one_of(XHPChild\of_type<div>()),
       XHPChild\optional(
-        XHPChild\sequence(XHPChild\ofType<code>(), XHPChild\ofType<a>()),
+        XHPChild\sequence(XHPChild\of_type<code>(), XHPChild\of_type<a>()),
       ),
     );
   }

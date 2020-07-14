@@ -16,7 +16,7 @@ final xhp class colgroup extends element {
   attribute int span;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<col>());
+    return XHPChild\any_number_of(XHPChild\of_type<col>());
   }
 
   protected string $tagName = 'colgroup';

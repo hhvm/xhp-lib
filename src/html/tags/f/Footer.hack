@@ -16,8 +16,8 @@ final xhp class footer extends element {
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
     );
   }
 

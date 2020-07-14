@@ -11,7 +11,7 @@ namespace Facebook\XHP\ChildValidation;
 
 use namespace HH\Lib\{C, Vec};
 
-final class AnyOf<T as Constraint> implements LegacyExpression {
+final class any_of<T as Constraint> implements LegacyExpression {
   private vec<T> $children;
   public function __construct(T $a, T $b, T ...$rest) {
     $this->children = Vec\concat(vec[$a, $b], $rest);

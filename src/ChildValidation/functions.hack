@@ -14,15 +14,15 @@ function any(): Any {
   return new Any();
 }
 
-function anyNumberOf<T as Constraint>(T $a): AnyNumberOf<T> {
-  return new AnyNumberOf($a);
+function any_number_of<T as Constraint>(T $a): any_number_of<T> {
+  return new any_number_of($a);
 }
 
-function anyOf<T as Constraint>(T $a, T $b, T ...$rest): AnyOf<T> {
-  return new AnyOf($a, $b, ...$rest);
+function any_of<T as Constraint>(T $a, T $b, T ...$rest): any_of<T> {
+  return new any_of($a, $b, ...$rest);
 }
 
-function atLeastOneOf<T as Constraint>(T $a): AtLeastOneOf<T> {
+function at_least_one_of<T as Constraint>(T $a): AtLeastOneOf<T> {
   return new AtLeastOneOf($a);
 }
 
@@ -36,7 +36,7 @@ function empty(): None {
   return new None();
 }
 
-function ofType<<<__Enforceable>> reify T>(): OfType<T> {
+function of_type<<<__Enforceable>> reify T>(): OfType<T> {
   return new OfType<T>();
 }
 

@@ -19,14 +19,14 @@ final xhp class menu extends element {
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
-      XHPChild\anyNumberOf(XHPChild\anyOf(
-        XHPChild\ofType<menuitem>(),
-        XHPChild\ofType<hr>(),
-        XHPChild\ofType<menu>(),
+    return XHPChild\any_of(
+      XHPChild\any_number_of(XHPChild\any_of(
+        XHPChild\of_type<menuitem>(),
+        XHPChild\of_type<hr>(),
+        XHPChild\of_type<menu>(),
       )),
-      XHPChild\anyNumberOf(XHPChild\ofType<li>()),
-      XHPChild\anyNumberOf(XHPChild\category('%flow')),
+      XHPChild\any_number_of(XHPChild\of_type<li>()),
+      XHPChild\any_number_of(XHPChild\category('%flow')),
     );
   }
 

@@ -18,7 +18,7 @@ abstract xhp class pcdata_element extends element {
   use XHPChild\Validation;
 
   final protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\pcdata());
+    return XHPChild\any_number_of(XHPChild\pcdata());
   }
 
 }

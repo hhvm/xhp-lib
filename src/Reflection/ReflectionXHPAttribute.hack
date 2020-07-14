@@ -102,7 +102,7 @@ class ReflectionXHPAttribute {
    * Returns true if the attribute is a data- or aria- attribute.
    */
   <<__Memoize>>
-  public static function IsSpecial(string $attr): bool {
+  public static function isSpecial(string $attr): bool {
     return Str\length($attr) >= 6 &&
       $attr[4] === '-' &&
       C\contains_key(self::$specialAttributes, Str\slice($attr, 0, 4));

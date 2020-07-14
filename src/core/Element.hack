@@ -21,12 +21,14 @@ use namespace Facebook\XHP\HTML;
 abstract xhp class element extends node {
   abstract protected function renderAsync(): Awaitable<node>;
 
+  <<__Override>>
   final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushRenderedRootElement();
     $ret = await $that->toStringAsync();
     return $ret;
   }
 
+  <<__Override>>
   final protected async function __flushSubtree(): Awaitable<primitive> {
     $that = await $this->__flushRenderedRootElement();
     return await $that->__flushSubtree();

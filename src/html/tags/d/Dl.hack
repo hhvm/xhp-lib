@@ -16,9 +16,9 @@ final xhp class dl extends element {
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\sequence(
-      XHPChild\atLeastOneOf(XHPChild\ofType<dt>()),
-      XHPChild\atLeastOneOf(XHPChild\ofType<dd>()),
+    return XHPChild\any_number_of(XHPChild\sequence(
+      XHPChild\at_least_one_of(XHPChild\of_type<dt>()),
+      XHPChild\at_least_one_of(XHPChild\of_type<dd>()),
     ));
   }
 

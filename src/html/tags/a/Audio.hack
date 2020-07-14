@@ -26,10 +26,10 @@ final xhp class audio extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<source>()),
-      XHPChild\anyNumberOf(XHPChild\ofType<track>()),
-      XHPChild\anyNumberOf(
-        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+      XHPChild\any_number_of(XHPChild\of_type<source>()),
+      XHPChild\any_number_of(XHPChild\of_type<track>()),
+      XHPChild\any_number_of(
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
       ),
     );
   }

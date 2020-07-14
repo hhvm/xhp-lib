@@ -15,8 +15,8 @@ final xhp class tr extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\ofType<th>(), XHPChild\ofType<td>()),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\of_type<th>(), XHPChild\of_type<td>()),
     );
   }
 

@@ -16,7 +16,7 @@ final xhp class ul extends element {
   category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<li>());
+    return XHPChild\any_number_of(XHPChild\of_type<li>());
   }
 
   protected string $tagName = 'ul';

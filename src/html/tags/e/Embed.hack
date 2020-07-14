@@ -38,8 +38,8 @@ final xhp class embed extends element {
   category %flow, %phrase, %embedded, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%phrase')),
     );
   }
 

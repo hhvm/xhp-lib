@@ -18,8 +18,8 @@ final xhp class details extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<summary>(),
-      XHPChild\atLeastOneOf(XHPChild\category('%flow')),
+      XHPChild\of_type<summary>(),
+      XHPChild\at_least_one_of(XHPChild\category('%flow')),
     );
   }
 

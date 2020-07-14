@@ -19,7 +19,7 @@ xhp class test:new_child_declaration_only extends x\element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<div>();
+    return XHPChild\of_type<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -32,7 +32,7 @@ xhp class test:new_and_old_child_declarations extends x\element {
   // the XHPChildDeclarationConsistencyValidation trait instead.
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<div>();
+    return XHPChild\of_type<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -44,7 +44,7 @@ xhp class test:old_child_declaration_only extends x\element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<div>();
+    return XHPChild\of_type<div>();
   }
 
 
@@ -78,7 +78,7 @@ xhp class test:no_children extends x\element {
 xhp class test:single_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\ofType<div>();
+    return XHPChild\of_type<div>();
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -89,7 +89,7 @@ xhp class test:single_child extends x\element {
 xhp class test:optional_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\optional(XHPChild\ofType<div>());
+    return XHPChild\optional(XHPChild\of_type<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -100,7 +100,7 @@ xhp class test:optional_child extends x\element {
 xhp class test:any_number_of_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<div>());
+    return XHPChild\any_number_of(XHPChild\of_type<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -111,7 +111,7 @@ xhp class test:any_number_of_child extends x\element {
 xhp class test:at_least_one_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\atLeastOneOf(XHPChild\ofType<div>());
+    return XHPChild\at_least_one_of(XHPChild\of_type<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -122,7 +122,7 @@ xhp class test:at_least_one_child extends x\element {
 xhp class test:two_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\sequence(XHPChild\ofType<div>(), XHPChild\ofType<div>());
+    return XHPChild\sequence(XHPChild\of_type<div>(), XHPChild\of_type<div>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -134,9 +134,9 @@ xhp class test:three_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\ofType<div>(),
-      XHPChild\ofType<div>(),
-      XHPChild\ofType<div>(),
+      XHPChild\of_type<div>(),
+      XHPChild\of_type<div>(),
+      XHPChild\of_type<div>(),
     );
   }
 
@@ -149,7 +149,7 @@ xhp class test:three_children extends x\element {
 xhp class test:either_of_two_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(XHPChild\ofType<div>(), XHPChild\ofType<code>());
+    return XHPChild\any_of(XHPChild\of_type<div>(), XHPChild\of_type<code>());
   }
 
   protected async function renderAsync(): Awaitable<x\node> {
@@ -160,10 +160,10 @@ xhp class test:either_of_two_children extends x\element {
 xhp class test:any_of_three_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
-      XHPChild\ofType<div>(),
-      XHPChild\ofType<code>(),
-      XHPChild\ofType<p>(),
+    return XHPChild\any_of(
+      XHPChild\of_type<div>(),
+      XHPChild\of_type<code>(),
+      XHPChild\of_type<p>(),
     );
   }
 
@@ -176,9 +176,9 @@ xhp class test:any_of_three_children extends x\element {
 xhp class test:nested_rule extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
-      XHPChild\ofType<div>(),
-      XHPChild\atLeastOneOf(XHPChild\ofType<code>()),
+    return XHPChild\any_of(
+      XHPChild\of_type<div>(),
+      XHPChild\at_least_one_of(XHPChild\of_type<code>()),
     );
   }
 

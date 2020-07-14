@@ -18,7 +18,7 @@ final xhp class optgroup extends element {
     string label;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<option>());
+    return XHPChild\any_number_of(XHPChild\of_type<option>());
   }
 
   protected string $tagName = 'optgroup';

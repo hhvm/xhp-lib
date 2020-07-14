@@ -15,7 +15,7 @@ final xhp class tfoot extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\ofType<tr>());
+    return XHPChild\any_number_of(XHPChild\of_type<tr>());
   }
 
   protected string $tagName = 'tfoot';

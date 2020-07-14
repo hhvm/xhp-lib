@@ -24,8 +24,8 @@ final xhp class select extends element {
   category %flow, %phrase, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\ofType<option>(), XHPChild\ofType<optgroup>()),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\of_type<option>(), XHPChild\of_type<optgroup>()),
     );
   }
 

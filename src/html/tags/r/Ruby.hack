@@ -16,15 +16,15 @@ final xhp class ruby extends element {
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
-      XHPChild\atLeastOneOf(
-        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<rb>()),
+    return XHPChild\any_of(
+      XHPChild\at_least_one_of(
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<rb>()),
       ),
-      XHPChild\atLeastOneOf(XHPChild\anyOf(
-        XHPChild\sequence(XHPChild\ofType<rp>(), XHPChild\ofType<rt>()),
-        XHPChild\sequence(XHPChild\ofType<rp>(), XHPChild\ofType<rtc>()),
-        XHPChild\sequence(XHPChild\ofType<rt>(), XHPChild\ofType<rp>()),
-        XHPChild\sequence(XHPChild\ofType<rtc>(), XHPChild\ofType<rp>()),
+      XHPChild\at_least_one_of(XHPChild\any_of(
+        XHPChild\sequence(XHPChild\of_type<rp>(), XHPChild\of_type<rt>()),
+        XHPChild\sequence(XHPChild\of_type<rp>(), XHPChild\of_type<rtc>()),
+        XHPChild\sequence(XHPChild\of_type<rt>(), XHPChild\of_type<rp>()),
+        XHPChild\sequence(XHPChild\of_type<rtc>(), XHPChild\of_type<rp>()),
       )),
     );
   }

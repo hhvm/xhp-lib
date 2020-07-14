@@ -225,7 +225,7 @@ abstract xhp class node implements \XHPChild {
       return $this->attributes[$attr];
     }
 
-    if (!ReflectionXHPAttribute::IsSpecial($attr)) {
+    if (!ReflectionXHPAttribute::isSpecial($attr)) {
       // Get the declaration
       $decl = static::__xhpReflectionAttribute($attr);
 

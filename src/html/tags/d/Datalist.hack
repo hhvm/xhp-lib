@@ -16,9 +16,9 @@ final xhp class datalist extends element {
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyOf(
-      XHPChild\atLeastOneOf(XHPChild\category('%phrase')),
-      XHPChild\anyNumberOf(XHPChild\ofType<option>()),
+    return XHPChild\any_of(
+      XHPChild\at_least_one_of(XHPChild\category('%phrase')),
+      XHPChild\any_number_of(XHPChild\of_type<option>()),
     );
   }
 

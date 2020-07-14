@@ -16,13 +16,13 @@ final xhp class hgroup extends element {
   category %flow, %heading;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\atLeastOneOf(XHPChild\anyOf(
-      XHPChild\ofType<h1>(),
-      XHPChild\ofType<h2>(),
-      XHPChild\ofType<h3>(),
-      XHPChild\ofType<h4>(),
-      XHPChild\ofType<h5>(),
-      XHPChild\ofType<h6>(),
+    return XHPChild\at_least_one_of(XHPChild\any_of(
+      XHPChild\of_type<h1>(),
+      XHPChild\of_type<h2>(),
+      XHPChild\of_type<h3>(),
+      XHPChild\of_type<h4>(),
+      XHPChild\of_type<h5>(),
+      XHPChild\of_type<h6>(),
     ));
   }
 

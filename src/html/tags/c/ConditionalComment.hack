@@ -22,8 +22,8 @@ final xhp class conditional_comment extends x\primitive {
   attribute string if @required;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\ofType<x\node>()),
+    return XHPChild\any_number_of(
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<x\node>()),
     );
   }
 

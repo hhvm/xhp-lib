@@ -15,8 +15,8 @@ final xhp class rt extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\atLeastOneOf(
-      XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%phrase')),
+    return XHPChild\at_least_one_of(
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%phrase')),
     );
   }
 

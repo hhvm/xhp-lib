@@ -17,7 +17,7 @@ final xhp class data extends element {
   category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\category('%phrase'));
+    return XHPChild\any_number_of(XHPChild\category('%phrase'));
   }
 
   protected string $tagName = 'data';

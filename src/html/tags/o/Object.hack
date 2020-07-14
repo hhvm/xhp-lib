@@ -26,9 +26,9 @@ final xhp class object extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
-      XHPChild\anyNumberOf(XHPChild\ofType<param>()),
-      XHPChild\anyNumberOf(
-        XHPChild\anyOf(XHPChild\pcdata(), XHPChild\category('%flow')),
+      XHPChild\any_number_of(XHPChild\of_type<param>()),
+      XHPChild\any_number_of(
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
       ),
     );
   }
