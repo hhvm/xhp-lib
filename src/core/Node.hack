@@ -319,7 +319,7 @@ abstract xhp class node implements \XHPChild {
       if (
         $value === null ||
         !(
-          ReflectionXHPAttribute::IsSpecial($attr_name) ||
+          ReflectionXHPAttribute::isSpecial($attr_name) ||
           (static::__xhpReflectionAttribute($attr_name) !== null)
         )
       ) {

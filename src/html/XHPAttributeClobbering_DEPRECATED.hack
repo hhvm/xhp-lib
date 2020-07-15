@@ -103,7 +103,7 @@ trait XHPAttributeClobbering_DEPRECATED
       }
       if (
         C\contains_key($compatible, $attribute) ||
-        ReflectionXHPAttribute::IsSpecial($attribute)
+        ReflectionXHPAttribute::isSpecial($attribute)
       ) {
         $target->setAttribute($attribute, $value);
       }
