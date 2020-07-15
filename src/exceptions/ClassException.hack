@@ -17,7 +17,8 @@ class ClassException extends namespace\Exception {
       'Exception in class `'.
       self::getElementName($that).
       "`\n\n".
-      "$that->source\n\n".
+      $that->source.
+      "\n\n".
       $msg,
     );
   }

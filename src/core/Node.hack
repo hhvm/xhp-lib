@@ -60,7 +60,7 @@ abstract xhp class node implements \XHPChild {
       if (self::isSpreadKey($key)) {
         invariant(
           $value is node,
-          "Only XHP can be used with an attribute spread operator",
+          'Only XHP can be used with an attribute spread operator',
         );
         $this->spreadElementImpl($value);
       } else {
@@ -261,7 +261,7 @@ abstract xhp class node implements \XHPChild {
     invariant(
       self::emptyInstance()->__xhpChildrenDeclaration() ===
         self::__NO_LEGACY_CHILDREN_DECLARATION,
-      "Legacy XHP children declaration syntax is no longer supported",
+      'Legacy XHP children declaration syntax is no longer supported',
     );
     return 1; // any children
   }

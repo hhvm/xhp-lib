@@ -180,6 +180,7 @@ abstract xhp class element extends x\primitive {
     return $buf;
   }
 
+  <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
     $buf = $this->renderBaseAttrs().'>';
     $buf .= await Vec\map_async(

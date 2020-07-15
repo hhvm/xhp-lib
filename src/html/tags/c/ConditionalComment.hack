@@ -28,6 +28,7 @@ final xhp class conditional_comment extends x\primitive {
   }
 
 
+  <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
     $html = '<!--[if '.$this->:if.']>';
     $html .= await Vec\map_async(

@@ -14,3 +14,4 @@ composer install || true
 hhvm -dhhvm.hack.lang.enable_xhp_class_modifier=true -dhhvm.hack.lang.disable_xhp_element_mangling=true vendor/bin/hh-autoload
 hh_client
 hhvm -dhhvm.hack.lang.enable_xhp_class_modifier=true -dhhvm.hack.lang.disable_xhp_element_mangling=true vendor/bin/hacktest tests/
+hhvm -dhhvm.hack.lang.enable_xhp_class_modifier=true -dhhvm.hack.lang.disable_xhp_element_mangling=true vendor/bin/hhast-lint

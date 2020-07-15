@@ -35,7 +35,7 @@ abstract xhp class element extends node {
   }
 
   protected async function __renderAndProcess(): Awaitable<node> {
-    invariant(!$this->__isRendered, "Attempted to render XHP element twice");
+    invariant(!$this->__isRendered, 'Attempted to render XHP element twice');
     $this->__isRendered = true;
     if (\Facebook\XHP\ChildValidation\is_enabled()) {
       $this->validateChildren();

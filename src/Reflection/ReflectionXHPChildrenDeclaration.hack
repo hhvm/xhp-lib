@@ -60,9 +60,9 @@ class ReflectionXHPChildrenDeclaration {
     }
 
     throw new \Exception(
-      "Tried to get child expression for XHP class ".
+      'Tried to get child expression for XHP class '.
       \get_class($this->context).
-      ", but it does not have an expressions.",
+      ', but it does not have an expressions.',
     );
   }
 

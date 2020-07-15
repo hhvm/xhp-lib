@@ -18,6 +18,7 @@ use namespace HH\Lib\{Str, Vec};
  * appended to the element.
  */
 xhp class frag extends primitive {
+  <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
     return await Vec\map_async(
       $this->getChildren(),

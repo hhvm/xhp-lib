@@ -35,7 +35,7 @@ final class any_of<T as Constraint> implements LegacyExpression {
     return $it;
   }
 
-  final public function legacySerializeAsLeaf(): null {
+  public function legacySerializeAsLeaf(): null {
     return null;
   }
 }
