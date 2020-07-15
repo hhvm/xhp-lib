@@ -97,7 +97,7 @@ trait XHPHelpers implements HasXHPHelpers {
     if ($ignore === null) {
       $ignore = :xhp:html-element::__xhpAttributeDeclaration();
     } else {
-      $ignore = array_fill_keys($ignore->toArray(), true);
+      $ignore = array_fill_keys(varray($ignore), true);
     }
 
     $compatible = new Map($target::__xhpAttributeDeclaration());
