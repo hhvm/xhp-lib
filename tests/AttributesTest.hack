@@ -58,7 +58,7 @@ xhp class test:callable_attribute extends x\element {
     callable foo; // unsupported in 2.0+
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
-    $x = $this->getAttribute('foo');
+    $_ = $this->getAttribute('foo');
     return <div />;
   }
 }

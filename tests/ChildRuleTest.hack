@@ -255,6 +255,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:any_number_of_child />,
     ];
     foreach ($elems as $elem) {
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
@@ -280,6 +281,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     ];
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
@@ -332,7 +334,6 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:category_child />,
     ];
     foreach ($elems as $elem) {
-      $exception = null;
       $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
       expect(async () ==> await $elem->toStringAsync())
         ->toThrow(Facebook\XHP\InvalidChildrenException::class);
@@ -354,6 +355,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       $exception = null;
       $elem->appendChild(<thead />);
       try {
+        /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
         await $elem->toStringAsync();
       } catch (Exception $e) {
         $exception = $e;
@@ -372,6 +374,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     ];
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /></x:frag>);
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
@@ -380,6 +383,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
     $elems = vec[<test:any_number_of_child />, <test:at_least_one_child />];
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /></x:frag>);
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       expect(await $elem->toStringAsync())->toEqual('<div></div>');
     }
   }
