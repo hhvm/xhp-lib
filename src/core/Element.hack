@@ -56,6 +56,7 @@ abstract xhp class element extends node {
     $that = $this;
     // Flush root elements returned from render() to an primitive
     while ($that is element) {
+      /* HHAST_IGNORE_ERROR[DontAwaitInALoop] */
       $that = await $that->__renderAndProcess();
     }
 

@@ -66,10 +66,10 @@ class ReflectionXHPAttribute {
   public function getValueClass(): string {
     $t = $this->getValueType();
     invariant(
-      $this->getValueType() === XHPAttributeType::TYPE_OBJECT,
+      $t === XHPAttributeType::TYPE_OBJECT,
       'Tried to get value class for attribute %s of type %s - needed '.'OBJECT',
       $this->getName(),
-      XHPAttributeType::getNames()[$this->getValueType()],
+      XHPAttributeType::getNames()[$t],
     );
     $v = $this->extraType;
     invariant(
@@ -84,10 +84,10 @@ class ReflectionXHPAttribute {
   public function getEnumValues(): keyset<string> {
     $t = $this->getValueType();
     invariant(
-      $this->getValueType() === XHPAttributeType::TYPE_ENUM,
+      $t  === XHPAttributeType::TYPE_ENUM,
       'Tried to get enum values for attribute %s of type %s - needed '.'ENUM',
       $this->getName(),
-      XHPAttributeType::getNames()[$this->getValueType()],
+      XHPAttributeType::getNames()[$t],
     );
     $v = $this->extraType;
     invariant(
