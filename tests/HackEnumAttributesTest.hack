@@ -19,6 +19,7 @@ enum TestEnum: int {
 
 xhp class test:hack_enum_attribute extends x\element {
   attribute TestEnum foo @required;
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     $foo = TestEnum::getNames()[$this->:foo];
     return <div>{$foo}</div>;

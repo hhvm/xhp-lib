@@ -11,10 +11,11 @@ use namespace Facebook\XHP\Core as x;
 use namespace Facebook\XHP\HTML as h;
 
 namespace MyTestNS {
-  use type Facebook\XHP\HTML\{dl, dt, dd};
+  use type Facebook\XHP\HTML\{dd, dl, dt};
 
   /** Intentionally conflicting name */
   xhp class div extends x\element {
+    <<__Override>>
     protected async function renderAsync(): Awaitable<x\node> {
       return
         <h:div>
@@ -30,6 +31,7 @@ namespace MyTestNS {
   }
 
   xhp class useswithinnamespace extends x\element {
+    <<__Override>>
     protected async function renderAsync(): Awaitable<x\node> {
       return
         <dl>
@@ -50,7 +52,7 @@ namespace MyTestNS {
 } // namespace MyTestNS
 
 namespace {
-  use type Facebook\XHP\HTML\{div, dl, dt, dd};
+  use type Facebook\XHP\HTML\{dd, div, dl, dt};
 
   use function Facebook\FBExpect\expect;
   use type MyTestNS\div as aliaseddiv;

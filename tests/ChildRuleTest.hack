@@ -22,6 +22,7 @@ xhp class test:new_child_declaration_only extends x\element {
     return XHPChild\of_type<div>();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
@@ -35,6 +36,7 @@ xhp class test:new_and_old_child_declarations extends x\element {
     return XHPChild\of_type<div>();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -48,6 +50,7 @@ xhp class test:old_child_declaration_only extends x\element {
   }
 
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
@@ -59,6 +62,7 @@ xhp class test:any_children extends x\element {
     return XHPChild\any();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -70,6 +74,7 @@ xhp class test:no_children extends x\element {
     return XHPChild\empty();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -81,6 +86,7 @@ xhp class test:single_child extends x\element {
     return XHPChild\of_type<div>();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -92,6 +98,7 @@ xhp class test:optional_child extends x\element {
     return XHPChild\optional(XHPChild\of_type<div>());
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -103,6 +110,7 @@ xhp class test:any_number_of_child extends x\element {
     return XHPChild\any_number_of(XHPChild\of_type<div>());
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -114,6 +122,7 @@ xhp class test:at_least_one_child extends x\element {
     return XHPChild\at_least_one_of(XHPChild\of_type<div>());
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -125,6 +134,7 @@ xhp class test:two_children extends x\element {
     return XHPChild\sequence(XHPChild\of_type<div>(), XHPChild\of_type<div>());
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -140,6 +150,7 @@ xhp class test:three_children extends x\element {
     );
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -152,6 +163,7 @@ xhp class test:either_of_two_children extends x\element {
     return XHPChild\any_of(XHPChild\of_type<div>(), XHPChild\of_type<code>());
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -167,6 +179,7 @@ xhp class test:any_of_three_children extends x\element {
     );
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -182,6 +195,7 @@ xhp class test:nested_rule extends x\element {
     );
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -193,6 +207,7 @@ xhp class testpcdata_child extends x\element {
     return XHPChild\pcdata();
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
   }
@@ -204,6 +219,7 @@ xhp class test:category_child extends x\element {
     return XHPChild\category('%flow');
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -212,6 +228,7 @@ xhp class test:category_child extends x\element {
 xhp class test:has_comma_category extends x\element {
   category %foo:bar;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -223,6 +240,7 @@ xhp class test:needs_comma_category extends x\element {
     return XHPChild\category('%foo:bar');
   }
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }

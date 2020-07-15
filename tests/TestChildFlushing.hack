@@ -16,6 +16,7 @@ use type Facebook\HackTest\DataProvider;
 xhp class test:verbatim_root extends x\element {
   attribute x\node root @required;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return $this->:root;
   }
@@ -25,6 +26,7 @@ xhp class test:verbatim_root:async extends x\element {
 
   attribute x\node root @required;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return $this->:root;
   }

@@ -8,13 +8,14 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\{div, XHPAttributeClobbering_DEPRECATED, XHPHTMLHelpers};
+use type Facebook\XHP\HTML\{XHPAttributeClobbering_DEPRECATED, XHPHTMLHelpers, div};
 use function Facebook\FBExpect\expect;
 
 xhp class test:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :Facebook:XHP:HTML:element;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -24,6 +25,7 @@ xhp class test:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :Facebook:XHP:HTML:element;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
   }
@@ -33,6 +35,7 @@ xhp class test:async:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :Facebook:XHP:HTML:element;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -42,6 +45,7 @@ xhp class test:async:xhphelpers extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :Facebook:XHP:HTML:element;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -51,6 +55,7 @@ xhp class test:with_class_on_root extends x\element {
   use XHPAttributeClobbering_DEPRECATED;
   attribute :Facebook:XHP:HTML:element;
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div class="rootClass" />;
   }
@@ -98,18 +103,18 @@ class XHPAttributeClobbering_DEPRECATEDTest extends Facebook\HackTest\HackTest {
 
   public async function testAddClassWithoutHelpers(): Awaitable<void> {
     $x = <test:no_xhphelpers class="foo" />;
-    $x->addClass("bar");
-    $x->conditionClass(true, "herp");
-    $x->conditionClass(false, "derp");
+    $x->addClass('bar');
+    $x->conditionClass(true, 'herp');
+    $x->conditionClass(false, 'derp');
     expect($x->:class)->toEqual('foo bar herp');
-    expect(await $x->toStringAsync())->toEqual("<div></div>");
+    expect(await $x->toStringAsync())->toEqual('<div></div>');
   }
 
   public async function testAddClassWithHelpers(): Awaitable<void> {
     $x = <test:xhphelpers class="foo" />;
-    $x->addClass("bar");
-    $x->conditionClass(true, "herp");
-    $x->conditionClass(false, "derp");
+    $x->addClass('bar');
+    $x->conditionClass(true, 'herp');
+    $x->conditionClass(false, 'derp');
     expect($x->:class)->toEqual('foo bar herp');
     expect(await $x->toStringAsync())->toEqual(
       '<div class="foo bar herp"></div>',

@@ -38,6 +38,7 @@ xhp class test:for_reflection extends x\element {
 
   category %herp, %derp;
 
+  <<__Override>>
   public async function renderAsync(): Awaitable<x\node> {
     return <div />;
   }
@@ -46,6 +47,7 @@ xhp class test:for_reflection extends x\element {
 class ReflectionTest extends Facebook\HackTest\HackTest {
   private ?ReflectionXHPClass $rxc;
 
+  <<__Override>>
   public async function beforeEachTestAsync(): Awaitable<void> {
     $this->rxc = new ReflectionXHPClass(:test:for_reflection::class);
   }

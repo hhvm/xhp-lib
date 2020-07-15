@@ -15,6 +15,7 @@ use type Facebook\HackTest\DataProvider;
 
 xhp class async:test extends x\element {
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <div>{$this->getChildren()}</div>;
   }
@@ -22,6 +23,7 @@ xhp class async:test extends x\element {
 
 xhp class test:xfrag_wrap extends x\element {
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
@@ -29,6 +31,7 @@ xhp class test:xfrag_wrap extends x\element {
 
 xhp class test:async_xfrag_wrap extends x\element {
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
   }
@@ -40,6 +43,7 @@ xhp class async:par_test extends x\element {
 
   public static vec<(string, string)> $log = vec[];
 
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     $label = $this->:label;
     self::$log[] = tuple($label, 'start');

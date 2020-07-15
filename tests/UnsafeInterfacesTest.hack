@@ -32,6 +32,7 @@ class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue {
   public function __construct(public string $htmlString) {
   }
 
+  <<__Override>>
   public function toHTMLString(): string {
     return $this->htmlString;
   }
@@ -64,14 +65,14 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
 
   public async function testUnsafeAttribute(): Awaitable<void> {
     // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
-    $attr = "foo &amp;&amp; bar";
+    $attr = 'foo &amp;&amp; bar';
     $xhp = <div onclick={$attr} />;
     expect(await $xhp->toStringAsync())->toEqual(
       '<div onclick="foo &amp;amp;&amp;amp; bar"></div>',
     );
 
     // using XHPUnsafeAttributeValue the &amp; is not double escaped
-    $escaped = new ExampleUnsafeAttribute("foo &amp;&amp; bar");
+    $escaped = new ExampleUnsafeAttribute('foo &amp;&amp; bar');
     $xhp = <div />;
     $xhp->forceAttribute('onclick', $escaped);
     expect(await $xhp->toStringAsync())->toEqual(

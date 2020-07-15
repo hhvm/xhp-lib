@@ -14,6 +14,7 @@ use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
 
 xhp class test:renders_primitive extends x\element {
+  <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag><div>123</div></x:frag>;
   }
@@ -39,7 +40,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testInterpolation(): Awaitable<void> {
-    $x = "Herp";
+    $x = 'Herp';
     $xhp = <div>{$x}</div>;
     expect(await $xhp->toStringAsync())->toEqual('<div>Herp</div>');
   }
@@ -54,7 +55,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testEscaping(): Awaitable<void> {
-    $xhp = <div>{"foo<SCRIPT>bar"}</div>;
+    $xhp = <div>{'foo<SCRIPT>bar'}</div>;
     expect(await $xhp->toStringAsync())->toEqual(
       '<div>foo&lt;SCRIPT&gt;bar</div>',
     );
