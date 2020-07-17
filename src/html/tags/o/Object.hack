@@ -11,7 +11,13 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class object extends element {
+final xhp class object
+  extends element
+  implements
+    Cat\PhraseElement,
+    Cat\FlowElement,
+    Cat\InteractiveElement,
+    Cat\EmbeddedElement {
   use XHPChild\Validation;
   attribute
     string data,
@@ -22,7 +28,6 @@ final xhp class object extends element {
     bool typemustmatch,
     string usemap,
     int width;
-  category %flow, %phrase, %embedded, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

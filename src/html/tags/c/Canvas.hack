@@ -11,12 +11,14 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class canvas extends element {
+final xhp class canvas
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\EmbeddedElement {
   use XHPChild\Validation;
   attribute
     int height,
     int width;
-  category %flow, %phrase, %embedded;
+
   // Should not contain :table
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

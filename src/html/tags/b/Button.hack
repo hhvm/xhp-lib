@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class button extends element {
+final xhp class button
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   use XHPChild\Validation;
   attribute
     bool disabled,
@@ -25,7 +27,7 @@ final xhp class button extends element {
     string name,
     enum {'submit', 'button', 'reset'} type,
     string value;
-  category %flow, %phrase, %interactive;
+
   // Should not contain interactive
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

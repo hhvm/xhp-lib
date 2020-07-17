@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class input extends singleton {
+final xhp class input
+  extends singleton
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   attribute
     string accept,
     string alt,
@@ -65,6 +67,6 @@ final xhp class input extends singleton {
     } type,
     string value,
     int width;
-  category %flow, %phrase, %interactive;
+
   protected string $tagName = 'input';
 }

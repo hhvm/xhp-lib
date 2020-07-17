@@ -11,7 +11,13 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class audio extends element {
+final xhp class audio
+  extends element
+  implements
+    Cat\PhraseElement,
+    Cat\FlowElement,
+    Cat\InteractiveElement,
+    Cat\EmbeddedElement {
   use XHPChild\Validation;
   attribute
     bool autoplay,
@@ -22,7 +28,6 @@ final xhp class audio extends element {
     bool muted,
     enum {'none', 'metadata', 'auto'} preload,
     string src;
-  category %flow, %phrase, %embedded, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

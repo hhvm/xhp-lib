@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class br extends singleton {
-  category %flow, %phrase;
+final xhp class br
+  extends singleton
+  implements Cat\PhraseElement, Cat\FlowElement {
+
   protected string $tagName = 'br';
 }

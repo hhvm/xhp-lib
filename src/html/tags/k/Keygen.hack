@@ -9,13 +9,15 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class keygen extends singleton {
+final xhp class keygen
+  extends singleton
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   attribute
     string challenge,
     bool disabled,
     string form,
     string keytype,
     string name;
-  category %flow, %phrase, %interactive;
+
   protected string $tagName = 'keygen';
 }

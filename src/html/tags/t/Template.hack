@@ -9,8 +9,10 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class template extends element {
-  category %flow, %phrase, %metadata;
+final xhp class template
+  extends element
+  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
+
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.
   protected string $tagName = 'template';

@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class select extends element {
+final xhp class select
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   use XHPChild\Validation;
   attribute
     string autocomplete,
@@ -21,7 +23,6 @@ final xhp class select extends element {
     string name,
     bool required,
     int size;
-  category %flow, %phrase, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

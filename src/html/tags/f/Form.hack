@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class form extends element {
+final xhp class form extends element implements Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     string action,
@@ -23,7 +23,7 @@ final xhp class form extends element {
     bool novalidate,
     string rel,
     string target;
-  category %flow;
+
   // Should not contain :form
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

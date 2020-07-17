@@ -11,9 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class address extends element {
+final xhp class address extends element implements Cat\FlowElement {
   use XHPChild\Validation;
-  category %flow;
+
   // May not contain %heading, %sectioning, :header, :footer, or :address
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

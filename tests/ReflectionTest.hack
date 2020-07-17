@@ -36,7 +36,7 @@ xhp class test:for_reflection extends x\element {
     );
   }
 
-  category %herp, %derp;
+  category %herp_DEPRECATED, %derp_DEPRECATED;
 
   <<__Override>>
   public async function renderAsync(): Awaitable<x\node> {
@@ -66,7 +66,8 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
     $children = $this->rxc?->getChildren();
     expect($children)->toBeInstanceOf(ReflectionXHPChildrenDeclaration::class);
     expect($children?->__toString())->toEqual(
-      Str\format('\\%s+,(\\%s,\\%s)?', div::class, code::class, a::class));
+      Str\format('\\%s+,(\\%s,\\%s)?', div::class, code::class, a::class),
+    );
   }
 
   public function testGetAttributes(): void {
@@ -84,6 +85,6 @@ class ReflectionTest extends Facebook\HackTest\HackTest {
 
   public function testGetCategories(): void {
     $categories = $this->rxc?->getCategories();
-    expect($categories)->toEqual(keyset['herp', 'derp']);
+    expect($categories)->toEqual(keyset['herp_DEPRECATED', 'derp_DEPRECATED']);
   }
 }

@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class script extends unescaped_pcdata_element {
+final xhp class script
+  extends unescaped_pcdata_element
+  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
   attribute
     bool async,
     string charset,
@@ -32,6 +34,6 @@ final xhp class script extends unescaped_pcdata_element {
     string integrity,
     // Legacy
     string language;
-  category %flow, %phrase, %metadata;
+
   protected string $tagName = 'script';
 }

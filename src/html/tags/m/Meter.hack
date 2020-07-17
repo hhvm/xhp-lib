@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class meter extends element {
+final xhp class meter
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     float high,
@@ -20,7 +22,7 @@ final xhp class meter extends element {
     float min,
     float optimum,
     float value;
-  category %flow, %phrase;
+
   // Should not contain :meter
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

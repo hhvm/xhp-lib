@@ -11,12 +11,14 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class progress extends element {
+final xhp class progress
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     float max,
     float value;
-  category %flow, %phrase;
+
   // Should not contain :progress
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
