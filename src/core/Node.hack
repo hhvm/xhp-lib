@@ -169,6 +169,16 @@ abstract xhp class node implements \XHPChild {
     return $children;
   }
 
+  public function getChildrenOfType<<<__Enforceable>> reify T>(): vec<T> {
+    $children = vec[];
+    foreach ($this->children as $child) {
+      if ($child is T) {
+        $children[] = $child;
+      }
+    }
+    return $children;
+  }
+
 
   /**
    * Fetches the first direct child of the element, or the first child that
@@ -198,6 +208,32 @@ abstract xhp class node implements \XHPChild {
     return null;
   }
 
+  public function getFirstChildx(?string $selector = null): \XHPChild {
+    $child = $this->getFirstChild($selector);
+    if ($child is nonnull) {
+      return $child;
+    }
+    if ($selector === '' || $selector is null) {
+      invariant_violation('Cannot get first child, element has no children');
+    }
+    invariant_violation('No child matching selector "%s" found', $selector);
+  }
+
+  public function getFirstChildOfType<<<__Enforceable>> reify T>(): ?T {
+    foreach ($this->children as $child) {
+      if ($child is T) {
+        return $child;
+      }
+    }
+    return null;
+  }
+
+  public function getFirstChildOfTypex<<<__Enforceable>> reify T>(): T {
+    $child = $this->getFirstChildOfType<T>();
+    invariant($child is nonnull, 'No such child');
+    return $child;
+  }
+
   /**
    * Fetches the last direct child of the element, or the last child that
    * matches the tag or category if one is given
@@ -208,6 +244,34 @@ abstract xhp class node implements \XHPChild {
    */
   final public function getLastChild(?string $selector = null): ?\XHPChild {
     return $this->getChildren($selector) |> C\last($$);
+  }
+
+  public function getLastChildx(?string $selector = null): \XHPChild {
+    $child = $this->getLastChild($selector);
+    if ($child is nonnull) {
+      return $child;
+    }
+    if ($selector === '' || $selector is null) {
+      invariant_violation('Cannot get last child, element has no children');
+    }
+    invariant_violation('No child matching selector "%s" found', $selector);
+  }
+
+
+  public function getLastChildOfType<<<__Enforceable>> reify T>(): ?T {
+    for ($i = C\count($this->children) - 1; $i >= 0; --$i) {
+      $child = $this->children[$i];
+      if ($child is T) {
+        return $child;
+      }
+    }
+    return null;
+  }
+
+  public function getLastChildOfTypex<<<__Enforceable>> reify T>(): T {
+    $child = $this->getLastChildOfType<T>();
+    invariant($child is nonnull, 'No such child');
+    return $child;
   }
 
   /**

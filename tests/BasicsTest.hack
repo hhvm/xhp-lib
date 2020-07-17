@@ -8,7 +8,7 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\{br, div, head, img, singleton, style};
+use type Facebook\XHP\HTML\{br, div, h1, h2, h3, head, img, singleton, style};
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
@@ -93,5 +93,51 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect(
       await (<head><style>{$dangerous_chars}</style></head>)->toStringAsync(),
     )->toEqual('<head><style>'.$dangerous_chars.'</style></head>');
+  }
+
+  public function testSelectingChildren(): void {
+    $empty = <div></div>;
+    $one = <h1 />;
+    $two = <h2 />;
+    $three = <h3 />;
+    $four = <h2 />;
+    $five = <h1 />;
+    $full = <div>{vec[$one, $two, $three, $four, $five]}</div>;
+
+    expect($empty->getFirstChild())->toBeNull();
+    expect($empty->getFirstChild(''))->toBeNull();
+    expect($empty->getFirstChild(h2::class))->toBeNull();
+    expect($empty->getLastChild())->toBeNull();
+    expect($empty->getLastChild(''))->toBeNull();
+    expect($empty->getLastChild(h2::class))->toBeNull();
+
+    expect($full->getFirstChild())->toEqual($one);
+    // This differs from getChildren(), which treats empty string as wildcards (like null)
+    expect($full->getFirstChild(''))->toBeNull();
+    expect($full->getFirstChild(h2::class))->toEqual($two);
+    // Watch out, this is a painful BC break.
+    // The typechecker won't warn you that the class is not named h2.
+    // You need to pass Facebook\XHP\HTML\h2 (h2::class)
+    expect($full->getFirstChild('h2'))->toBeNull();
+
+    expect($full->getLastChild())->toEqual($five);
+    // This uses getChildren() under the hood.
+    // So empty string /is/ a wildcard here.
+    // Let's make this consistent before v4 is set in stone.
+    expect($full->getLastChild(''))->toEqual($five);
+    expect($full->getLastChild(h2::class))->toEqual($four);
+    expect($full->getFirstChild('h2'))->toBeNull();
+
+    expect($empty->getFirstChildOfType<h2>())->toBeNull();
+    expect($empty->getLastChildOfType<h2>())->toBeNull();
+    expect($full->getFirstChildOfType<h2>())->toEqual($two);
+    expect($full->getLastChildOfType<h2>())->toEqual($four);
+    expect($full->getFirstChildOfType<h1>())->toEqual($one);
+    expect($full->getLastChildOfType<h1>())->toEqual($five);
+    expect($full->getLastChildOfType<br>())->toBeNull();
+
+    expect($empty->getChildrenOfType<h1>())->toBeEmpty();
+    expect($full->getChildrenOfType<h1>())->toEqual(vec[$one, $five]);
+    expect($full->getChildrenOfType<br>())->toBeEmpty();
   }
 }
