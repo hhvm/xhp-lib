@@ -19,8 +19,8 @@ final xhp class noscript
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(XHPChild\any_of(
       XHPChild\pcdata(),
-      XHPChild\category('%metadata'),
-      XHPChild\category('%flow'),
+      XHPChild\of_type<Cat\MetadataElement>(),
+      XHPChild\of_type<Cat\FlowElement>(),
     ));
   }
 

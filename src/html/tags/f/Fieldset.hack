@@ -22,7 +22,7 @@ final xhp class fieldset extends element implements Cat\FlowElement {
     return XHPChild\sequence(
       XHPChild\optional(XHPChild\of_type<legend>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
       ),
     );
   }

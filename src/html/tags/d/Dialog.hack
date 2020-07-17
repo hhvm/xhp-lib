@@ -18,7 +18,7 @@ final xhp class dialog
   attribute bool open;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\category('%flow');
+    return XHPChild\of_type<Cat\FlowElement>();
   }
 
   protected string $tagName = 'dialog';

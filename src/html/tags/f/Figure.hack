@@ -20,10 +20,10 @@ final xhp class figure
     return XHPChild\any_of(
       XHPChild\sequence(
         XHPChild\of_type<figcaption>(),
-        XHPChild\at_least_one_of(XHPChild\category('%flow')),
+        XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
       ),
       XHPChild\sequence(
-        XHPChild\at_least_one_of(XHPChild\category('%flow')),
+        XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
         XHPChild\optional(XHPChild\of_type<figcaption>()),
       ),
     );

@@ -17,7 +17,7 @@ final xhp class address extends element implements Cat\FlowElement {
   // May not contain %heading, %sectioning, :header, :footer, or :address
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
     );
   }
 
