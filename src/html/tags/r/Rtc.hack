@@ -16,7 +16,7 @@ final xhp class rtc extends element {
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\at_least_one_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%phrase')),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\PhraseElement>()),
     );
   }
 

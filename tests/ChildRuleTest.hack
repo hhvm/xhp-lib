@@ -9,7 +9,7 @@
 
 use namespace Facebook\XHP\Core as x;
 use type Facebook\XHP\HTML\{code, div, p, thead};
-
+use namespace Facebook\XHP\HTML\Cat;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
@@ -213,10 +213,10 @@ xhp class testpcdata_child extends x\element {
   }
 }
 
-xhp class test:category_child extends x\element {
+xhp class test:category_interface_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\category('%flow');
+    return XHPChild\of_type<Cat\FlowElement>();
   }
 
   <<__Override>>
@@ -278,7 +278,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:either_of_two_children />,
       <test:any_of_three_children />,
       <test:nested_rule />,
-      <test:category_child />,
+      <test:category_interface_child />,
     ];
     foreach ($elems as $elem) {
       $elem->appendChild(<div>Foo</div>);
@@ -321,7 +321,10 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
         Str\format('\\%s|\\%s+', div::class, code::class),
       ),
       tuple(<testpcdata_child />, 'pcdata'),
-      tuple(<test:category_child />, '%flow'),
+      tuple(
+        <test:category_interface_child />,
+        '\Facebook\XHP\HTML\Cat\FlowElement',
+      ),
     ];
   }
 
@@ -347,7 +350,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:three_children />,
       <test:either_of_two_children />,
       <test:nested_rule />,
-      <test:category_child />,
+      <test:category_interface_child />,
     ];
     foreach ($elems as $elem) {
       $elem->appendChild(<x:frag><div /><div /><div /><div /></x:frag>);
@@ -365,7 +368,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       <test:either_of_two_children />,
       <test:any_of_three_children />,
       <test:nested_rule />,
-      <test:category_child />,
+      <test:category_interface_child />,
     ];
     foreach ($elems as $elem) {
       $exception = null;

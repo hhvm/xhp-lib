@@ -27,7 +27,7 @@ final xhp class form extends element implements Cat\FlowElement {
   // Should not contain :form
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
     );
   }
 

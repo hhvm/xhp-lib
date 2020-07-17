@@ -38,7 +38,7 @@ final xhp class video
       XHPChild\any_number_of(XHPChild\of_type<source>()),
       XHPChild\any_number_of(XHPChild\of_type<track>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
       ),
     );
   }

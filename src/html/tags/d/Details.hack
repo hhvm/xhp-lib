@@ -20,7 +20,7 @@ final xhp class details
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
       XHPChild\of_type<summary>(),
-      XHPChild\at_least_one_of(XHPChild\category('%flow')),
+      XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
     );
   }
 

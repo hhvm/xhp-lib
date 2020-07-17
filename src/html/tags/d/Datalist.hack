@@ -18,7 +18,7 @@ final xhp class datalist
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(
-      XHPChild\at_least_one_of(XHPChild\category('%phrase')),
+      XHPChild\at_least_one_of(XHPChild\of_type<Cat\PhraseElement>()),
       XHPChild\any_number_of(XHPChild\of_type<option>()),
     );
   }

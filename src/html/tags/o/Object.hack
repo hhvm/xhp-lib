@@ -33,7 +33,7 @@ final xhp class object
     return XHPChild\sequence(
       XHPChild\any_number_of(XHPChild\of_type<param>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
       ),
     );
   }

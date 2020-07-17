@@ -25,7 +25,7 @@ final xhp class menu extends element implements Cat\FlowElement {
         XHPChild\of_type<menu>(),
       )),
       XHPChild\any_number_of(XHPChild\of_type<li>()),
-      XHPChild\any_number_of(XHPChild\category('%flow')),
+      XHPChild\any_number_of(XHPChild\of_type<Cat\FlowElement>()),
     );
   }
 

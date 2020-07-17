@@ -18,7 +18,7 @@ final xhp class data
   attribute string value @required;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\any_number_of(XHPChild\category('%phrase'));
+    return XHPChild\any_number_of(XHPChild\of_type<Cat\PhraseElement>());
   }
 
   protected string $tagName = 'data';

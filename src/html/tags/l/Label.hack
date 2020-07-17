@@ -22,7 +22,7 @@ final xhp class label
   // may not contain label
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%phrase')),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\PhraseElement>()),
     );
   }
 

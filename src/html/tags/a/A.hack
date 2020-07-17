@@ -42,7 +42,7 @@ final xhp class a
   // Should not contain %interactive
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\category('%flow')),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
     );
   }
 
