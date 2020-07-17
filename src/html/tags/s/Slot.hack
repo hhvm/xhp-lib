@@ -11,9 +11,10 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class slot extends element {
+final xhp class slot
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement {
   use XHPChild\Validation;
-  category %flow, %phrase;
 
   attribute string name;
 

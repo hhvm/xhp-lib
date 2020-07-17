@@ -11,10 +11,11 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class time extends element {
+final xhp class time
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement {
   use XHPChild\Validation;
   attribute string datetime;
-  category %flow, %phrase;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

@@ -11,13 +11,12 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class ol extends element {
+final xhp class ol extends element implements Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     bool reversed,
     int start,
     enum {'1', 'a', 'A', 'i', 'I'} type;
-  category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(XHPChild\of_type<li>());

@@ -11,9 +11,10 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class section extends element {
+final xhp class section
+  extends element
+  implements Cat\FlowElement, Cat\SectioningElement {
   use XHPChild\Validation;
-  category %flow, %sectioning;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

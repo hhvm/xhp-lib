@@ -11,7 +11,13 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class video extends element {
+final xhp class video
+  extends element
+  implements
+    Cat\PhraseElement,
+    Cat\FlowElement,
+    Cat\InteractiveElement,
+    Cat\EmbeddedElement {
   use XHPChild\Validation;
   attribute
     bool autoplay,
@@ -26,7 +32,6 @@ final xhp class video extends element {
     enum {'none', 'metadata', 'auto'} preload,
     string src,
     int width;
-  category %flow, %phrase, %embedded, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

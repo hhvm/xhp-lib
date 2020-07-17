@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class a extends element {
+final xhp class a
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   use XHPChild\Validation;
 
   attribute
@@ -36,7 +38,7 @@ final xhp class a extends element {
     string type,
     // Legacy
     string name;
-  category %flow, %phrase, %interactive;
+
   // Should not contain %interactive
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

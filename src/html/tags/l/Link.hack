@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class link extends singleton {
+final xhp class link
+  extends singleton
+  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
   attribute
     string as,
     string color,
@@ -39,6 +41,6 @@ final xhp class link extends singleton {
     string rel @required,
     string sizes,
     string type;
-  category %metadata, %phrase, %flow;
+
   protected string $tagName = 'link';
 }

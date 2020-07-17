@@ -226,6 +226,7 @@ xhp class test:category_child extends x\element {
 }
 
 xhp class test:has_comma_category extends x\element {
+  // Can not be foo:bar_DEPRECATED, because of mangling
   category %foo:bar;
 
   <<__Override>>
@@ -299,11 +300,26 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       tuple(<test:optional_child />, '\\'.div::class.'?'),
       tuple(<test:any_number_of_child />, '\\'.div::class.'*'),
       tuple(<test:at_least_one_child />, '\\'.div::class.'+'),
-      tuple(<test:two_children />, Str\format('\\%s,\\%s', div::class, div::class)),
-      tuple(<test:three_children />, Str\format('\\%s,\\%s,\\%s', div::class, div::class, div::class)),
-      tuple(<test:either_of_two_children />, Str\format('\\%s|\\%s', div::class, code::class)),
-      tuple(<test:any_of_three_children />,  Str\format('\\%s|\\%s|\\%s', div::class ,code::class, p::class)),
-      tuple(<test:nested_rule />, Str\format('\\%s|\\%s+', div::class, code::class)),
+      tuple(
+        <test:two_children />,
+        Str\format('\\%s,\\%s', div::class, div::class),
+      ),
+      tuple(
+        <test:three_children />,
+        Str\format('\\%s,\\%s,\\%s', div::class, div::class, div::class),
+      ),
+      tuple(
+        <test:either_of_two_children />,
+        Str\format('\\%s|\\%s', div::class, code::class),
+      ),
+      tuple(
+        <test:any_of_three_children />,
+        Str\format('\\%s|\\%s|\\%s', div::class, code::class, p::class),
+      ),
+      tuple(
+        <test:nested_rule />,
+        Str\format('\\%s|\\%s+', div::class, code::class),
+      ),
       tuple(<testpcdata_child />, 'pcdata'),
       tuple(<test:category_child />, '%flow'),
     ];

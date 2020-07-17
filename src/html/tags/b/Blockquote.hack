@@ -11,10 +11,11 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class blockquote extends element {
+final xhp class blockquote
+  extends element
+  implements Cat\FlowElement, Cat\SectioningElement {
   use XHPChild\Validation;
   attribute string cite;
-  category %flow, %sectioning;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

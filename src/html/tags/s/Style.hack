@@ -9,11 +9,13 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class style extends unescaped_pcdata_element {
+final xhp class style
+  extends unescaped_pcdata_element
+  implements Cat\MetadataElement, Cat\FlowElement {
   attribute
     string media,
     bool scoped,
     string type;
-  category %flow, %metadata;
+
   protected string $tagName = 'style';
 }

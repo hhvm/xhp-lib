@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class img extends singleton {
+final xhp class img
+  extends singleton
+  implements Cat\PhraseElement, Cat\FlowElement {
   attribute
     string alt,
     enum {'anonymous', 'use-credentials'} crossorigin,
@@ -33,6 +35,6 @@ final xhp class img extends singleton {
     string srcset,
     string usemap,
     int width;
-  category %flow, %phrase;
+
   protected string $tagName = 'img';
 }

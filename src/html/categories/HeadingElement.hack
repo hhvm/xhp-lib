@@ -7,10 +7,6 @@
  *
  */
 
-namespace Facebook\XHP\HTML;
+namespace Facebook\XHP\HTML\Cat;
 
-final xhp class wbr
-  extends singleton
-  implements Cat\PhraseElement, Cat\FlowElement {
-  protected string $tagName = 'wbr';
-}
+interface HeadingElement {}

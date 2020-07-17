@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class area extends singleton {
+final xhp class area
+  extends singleton
+  implements Cat\PhraseElement, Cat\FlowElement {
   attribute
     string alt,
     string coords,
@@ -41,6 +43,6 @@ final xhp class area extends singleton {
     } shape,
     string target,
     string type;
-  category %flow, %phrase;
+
   protected string $tagName = 'area';
 }

@@ -9,7 +9,9 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class textarea extends pcdata_element {
+final xhp class textarea
+  extends pcdata_element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   attribute
     string autocomplete,
     int cols,
@@ -24,6 +26,6 @@ final xhp class textarea extends pcdata_element {
     bool required,
     int rows,
     enum {'soft', 'hard'} wrap;
-  category %flow, %phrase, %interactive;
+
   protected string $tagName = 'textarea';
 }

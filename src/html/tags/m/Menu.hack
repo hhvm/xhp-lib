@@ -11,12 +11,11 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class menu extends element {
+final xhp class menu extends element implements Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     string label,
     enum {'popup', 'toolbar'} type;
-  category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(

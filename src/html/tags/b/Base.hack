@@ -9,10 +9,10 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class base extends singleton {
+final xhp class base extends singleton implements Cat\MetadataElement {
   attribute
     string href,
     string target;
-  category %metadata;
+
   protected string $tagName = 'base';
 }

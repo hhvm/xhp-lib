@@ -11,12 +11,14 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class label extends element {
+final xhp class label
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   use XHPChild\Validation;
   attribute
     string for,
     string form;
-  category %flow, %phrase, %interactive;
+
   // may not contain label
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

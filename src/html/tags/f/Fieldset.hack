@@ -11,13 +11,12 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class fieldset extends element {
+final xhp class fieldset extends element implements Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     bool disabled,
     string form,
     string name;
-  category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

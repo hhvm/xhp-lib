@@ -11,12 +11,11 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class table extends element {
+final xhp class table extends element implements Cat\FlowElement {
   use XHPChild\Validation;
   attribute
     int border,
     bool sortable;
-  category %flow;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(

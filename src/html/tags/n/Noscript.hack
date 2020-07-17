@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class noscript extends element {
+final xhp class noscript
+  extends element
+  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -22,6 +24,5 @@ final xhp class noscript extends element {
     ));
   }
 
-  category %flow, %phrase, %metadata;
   protected string $tagName = 'noscript';
 }

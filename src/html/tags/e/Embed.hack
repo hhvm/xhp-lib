@@ -11,7 +11,13 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class embed extends element {
+final xhp class embed
+  extends element
+  implements
+    Cat\PhraseElement,
+    Cat\FlowElement,
+    Cat\InteractiveElement,
+    Cat\EmbeddedElement {
   use XHPChild\Validation;
   /*
    * The HTML spec permits all non-namespaced attributes
@@ -34,8 +40,6 @@ final xhp class embed extends element {
     bool allowfullscreen,
     enum {'always', 'never'} allowscriptaccess,
     string wmode;
-
-  category %flow, %phrase, %embedded, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(

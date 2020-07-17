@@ -11,10 +11,11 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class details extends element {
+final xhp class details
+  extends element
+  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
   use XHPChild\Validation;
   attribute bool open;
-  category %flow, %phrase, %interactive;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
