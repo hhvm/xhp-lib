@@ -51,6 +51,22 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     );
   }
 
+  public async function testRenderingAnElementTwiceThrows(): Awaitable<void> {
+    $div = <div />;
+    await $div->toStringAsync();
+    expect(() ==> $div->toStringAsync())->toThrow(
+      InvariantException::class,
+      'render XHP element twice',
+    );
+
+    $not_primitive = <not_primitive />;
+    await $not_primitive->toStringAsync();
+    expect(() ==> $not_primitive->toStringAsync())->toThrow(
+      InvariantException::class,
+      'render XHP element twice',
+    );
+  }
+
   public async function testFragWithString(): Awaitable<void> {
     $xhp = <x:frag>Derp</x:frag>;
     expect(await $xhp->toStringAsync())->toEqual('Derp');

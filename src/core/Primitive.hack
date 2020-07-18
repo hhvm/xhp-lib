@@ -22,6 +22,7 @@ abstract xhp class primitive extends node {
 
   <<__Override>>
   final public async function toStringAsync(): Awaitable<string> {
+    invariant(!$this->__isRendered, 'Attempted to render XHP element twice');
     $that = await $this->__flushSubtree();
     $result = await $that->stringifyAsync();
     $this->__isRendered = true;
