@@ -143,28 +143,12 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     $full = <div>{vec[$one, $two, $three, $four, $five]}</div>;
 
     expect($empty->getFirstChild())->toBeNull();
-    expect($empty->getFirstChild(''))->toBeNull();
-    expect($empty->getFirstChild(h2::class))->toBeNull();
+    expect(() ==> $empty->getFirstChildx())->toThrow(\Exception::class);
     expect($empty->getLastChild())->toBeNull();
-    expect($empty->getLastChild(''))->toBeNull();
-    expect($empty->getLastChild(h2::class))->toBeNull();
+    expect(() ==> $empty->getLastChildx())->toThrow(\Exception::class);
 
     expect($full->getFirstChild())->toEqual($one);
-    // This differs from getChildren(), which treats empty string as wildcards (like null)
-    expect($full->getFirstChild(''))->toBeNull();
-    expect($full->getFirstChild(h2::class))->toEqual($two);
-    // Watch out, this is a painful BC break.
-    // The typechecker won't warn you that the class is not named h2.
-    // You need to pass Facebook\XHP\HTML\h2 (h2::class)
-    expect($full->getFirstChild('h2'))->toBeNull();
-
     expect($full->getLastChild())->toEqual($five);
-    // This uses getChildren() under the hood.
-    // So empty string /is/ a wildcard here.
-    // Let's make this consistent before v4 is set in stone.
-    expect($full->getLastChild(''))->toEqual($five);
-    expect($full->getLastChild(h2::class))->toEqual($four);
-    expect($full->getFirstChild('h2'))->toBeNull();
 
     expect($empty->getFirstChildOfType<h2>())->toBeNull();
     expect($empty->getLastChildOfType<h2>())->toBeNull();
