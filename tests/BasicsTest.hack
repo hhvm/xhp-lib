@@ -13,6 +13,13 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
 
+xhp class not_primitive extends x\element {
+  <<__Override>>
+  public async function renderAsync(): Awaitable<div> {
+    return <div><div>I am not a primitive</div></div>;
+  }
+}
+
 xhp class test:renders_primitive extends x\element {
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -27,6 +34,37 @@ class BasicsTest extends Facebook\HackTest\HackTest {
         Hello, world.
       </div>;
     expect(await $xhp->toStringAsync())->toEqual('<div> Hello, world. </div>');
+  }
+
+  public async function testCertainActionAreProhibitedAfterRender(
+  ): Awaitable<void> {
+    $not_primitive = <not_primitive />;
+    await $not_primitive->toStringAsync();
+    expect(() ==> $not_primitive->setAttribute('class', 'already-rendered'))
+      ->toThrow(InvariantException::class, 'after render');
+
+    $div = <div />;
+    await $div->toStringAsync();
+    expect(() ==> $div->setAttribute('class', 'already-rendered'))->toThrow(
+      InvariantException::class,
+      'after render',
+    );
+  }
+
+  public async function testRenderingAnElementTwiceThrows(): Awaitable<void> {
+    $div = <div />;
+    await $div->toStringAsync();
+    expect(() ==> $div->toStringAsync())->toThrow(
+      InvariantException::class,
+      'render XHP element twice',
+    );
+
+    $not_primitive = <not_primitive />;
+    await $not_primitive->toStringAsync();
+    expect(() ==> $not_primitive->toStringAsync())->toThrow(
+      InvariantException::class,
+      'render XHP element twice',
+    );
   }
 
   public async function testFragWithString(): Awaitable<void> {
