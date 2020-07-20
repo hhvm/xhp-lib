@@ -89,9 +89,14 @@ abstract xhp class node implements \XHPChild {
    * then it will behave like a DocumentFragment.
    *
    * @param $child     single child or a Traversable of children
+   * @throws UseAfterRenderException
    */
   final public function appendChild(mixed $child): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     if ($child is Traversable<_>) {
       foreach ($child as $c) {
         $this->appendChild($c);
@@ -111,9 +116,14 @@ abstract xhp class node implements \XHPChild {
    * Replaces all children in this node.
    *
    * @param $children  single child or a Traversable of children
+   * @throws UseAfterRenderException
    */
   final public function replaceChildren(\XHPChild ...$children): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     // This function has been micro-optimized
     $new_children = vec[];
     foreach ($children as $xhp) {
@@ -401,9 +411,14 @@ abstract xhp class node implements \XHPChild {
    *
    * @param $attr      attribute to set
    * @param $val       value
+   * @throws UseAfterRenderException
    */
   final public function setAttribute(string $attr, mixed $value): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     $this->attributes[$attr] = $value;
     return $this;
   }
@@ -436,9 +451,14 @@ abstract xhp class node implements \XHPChild {
    * Removes an attribute from this element's attribute store.
    *
    * @param $attr      attribute to remove
+   * @throws UseAfterRenderException
    */
   final public function removeAttribute(string $attr): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     unset($this->attributes[$attr]);
     return $this;
   }
@@ -451,9 +471,14 @@ abstract xhp class node implements \XHPChild {
    *
    * @param $attr      attribute to set
    * @param $val       value
+   * @throws UseAfterRenderException
    */
   final public function forceAttribute(string $attr, mixed $value): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     $this->attributes[$attr] = $value;
     return $this;
   }
@@ -491,9 +516,14 @@ abstract xhp class node implements \XHPChild {
    * @param $key       The key
    * @param $default   The value to set
    * @return           $this
+   * @throws UseAfterRenderException
    */
   final public function setContext(string $key, mixed $value): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     $this->context[$key] = $value;
     return $this;
   }
@@ -507,11 +537,16 @@ abstract xhp class node implements \XHPChild {
    *
    * @param KeyedContainer $context  A map of key/value pairs
    * @return               $this
+   * @throws UseAfterRenderException
    */
   final public function addContextMap(
     KeyedContainer<string, mixed> $context,
   ): this {
-    invariant(!$this->__isRendered, "Can't %s after render", __FUNCTION__);
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        Str\format("Can't %s after render", __FUNCTION__),
+      );
+    }
     $this->context = Dict\merge($this->context, $context);
     return $this;
   }

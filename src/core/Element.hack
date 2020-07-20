@@ -21,6 +21,9 @@ use namespace Facebook\XHP\HTML;
 abstract xhp class element extends node {
   abstract protected function renderAsync(): Awaitable<node>;
 
+  /**
+   * @throws UseAfterRenderException
+   */
   <<__Override>>
   final public async function toStringAsync(): Awaitable<string> {
     $that = await $this->__flushRenderedRootElement();
@@ -28,14 +31,24 @@ abstract xhp class element extends node {
     return $ret;
   }
 
+  /**
+   * @throws UseAfterRenderException
+   */
   <<__Override>>
   final protected async function __flushSubtree(): Awaitable<primitive> {
     $that = await $this->__flushRenderedRootElement();
     return await $that->__flushSubtree();
   }
 
+  /**
+   * @throws UseAfterRenderException
+   */
   protected async function __renderAndProcess(): Awaitable<node> {
-    invariant(!$this->__isRendered, 'Attempted to render XHP element twice');
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        'Attempted to render XHP element twice',
+      );
+    }
     $this->__isRendered = true;
     if (\Facebook\XHP\ChildValidation\is_enabled()) {
       $this->validateChildren();
@@ -51,6 +64,9 @@ abstract xhp class element extends node {
     return $composed;
   }
 
+  /**
+   * @throws UseAfterRenderException
+   */
   final protected async function __flushRenderedRootElement(
   ): Awaitable<primitive> {
     $that = $this;

@@ -41,12 +41,12 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     $not_primitive = <not_primitive />;
     await $not_primitive->toStringAsync();
     expect(() ==> $not_primitive->setAttribute('class', 'already-rendered'))
-      ->toThrow(InvariantException::class, 'after render');
+      ->toThrow(x\UseAfterRenderException::class, 'after render');
 
     $div = <div />;
     await $div->toStringAsync();
     expect(() ==> $div->setAttribute('class', 'already-rendered'))->toThrow(
-      InvariantException::class,
+      x\UseAfterRenderException::class,
       'after render',
     );
   }
@@ -55,14 +55,14 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     $div = <div />;
     await $div->toStringAsync();
     expect(() ==> $div->toStringAsync())->toThrow(
-      InvariantException::class,
+      x\UseAfterRenderException::class,
       'render XHP element twice',
     );
 
     $not_primitive = <not_primitive />;
     await $not_primitive->toStringAsync();
     expect(() ==> $not_primitive->toStringAsync())->toThrow(
-      InvariantException::class,
+      x\UseAfterRenderException::class,
       'render XHP element twice',
     );
   }
