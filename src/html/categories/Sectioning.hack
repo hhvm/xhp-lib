@@ -9,4 +9,4 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Sectioning {}
+interface Sectioning extends Category {}

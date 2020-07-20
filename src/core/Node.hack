@@ -159,7 +159,7 @@ abstract xhp class node implements \XHPChild {
   /**
    * Fetches all direct children of this element of the given type.
    */
-  public function getChildrenOfType<<<__Enforceable>> reify T>(): vec<T> {
+  public function getChildrenOfType<<<__Enforceable>> reify T as \XHPChild>(): vec<T> {
     $children = vec[];
     foreach ($this->children as $child) {
       if ($child is T) {
@@ -195,7 +195,7 @@ abstract xhp class node implements \XHPChild {
    *
    * If no matching child is present, returns `null`.
    */
-  public function getFirstChildOfType<<<__Enforceable>> reify T>(): ?T {
+  public function getFirstChildOfType<<<__Enforceable>> reify T as \XHPChild>(): ?T {
     foreach ($this->children as $child) {
       if ($child is T) {
         return $child;
@@ -209,7 +209,7 @@ abstract xhp class node implements \XHPChild {
    *
    * If no matching child is present, an exception is thrown.
    */
-  public function getFirstChildOfTypex<<<__Enforceable>> reify T>(): T {
+  public function getFirstChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(): T {
     $child = $this->getFirstChildOfType<T>();
     invariant(
       $child is nonnull,
@@ -246,7 +246,7 @@ abstract xhp class node implements \XHPChild {
    *
    * If the element has no matching children, `null` is returned.
    */
-  public function getLastChildOfType<<<__Enforceable>> reify T>(): ?T {
+  public function getLastChildOfType<<<__Enforceable>> reify T as \XHPChild>(): ?T {
     for ($i = C\count($this->children) - 1; $i >= 0; --$i) {
       $child = $this->children[$i];
       if ($child is T) {
@@ -261,9 +261,9 @@ abstract xhp class node implements \XHPChild {
    *
    * If the element has no matching children, an exception is thrown.
    */
-  public function getLastChildOfTypex<<<__Enforceable>> reify T>(): T {
+  public function getLastChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(): T {
     $child = $this->getLastChildOfType<T>();
-    invariant($child is nonnull, 'No such child');
+    invariant($child is nonnull, '%s called with no matching child', __FUNCTION__);
     return $child;
   }
 

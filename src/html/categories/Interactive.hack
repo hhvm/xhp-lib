@@ -9,4 +9,4 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Interactive {}
+interface Interactive extends Category {}

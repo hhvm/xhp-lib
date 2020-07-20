@@ -9,4 +9,5 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Phrase extends Category {}
+interface Category extends \XHPChild {
+}

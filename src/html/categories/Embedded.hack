@@ -9,4 +9,4 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Embedded {}
+interface Embedded extends Category {}

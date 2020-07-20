@@ -9,4 +9,4 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Flow {}
+interface Flow extends Category {}

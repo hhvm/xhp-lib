@@ -9,4 +9,4 @@
 
 namespace Facebook\XHP\HTML\Category;
 
-interface Heading {}
+interface Heading extends Category {}

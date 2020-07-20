@@ -8,7 +8,8 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\{br, div, h1, h2, h3, head, img, singleton, style};
+use type Facebook\XHP\HTML\{body, br, details, div, h1, h2, h3, head, html, img, p, script, singleton, style};
+use namespace Facebook\XHP\HTML\Category;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
@@ -161,5 +162,23 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect($empty->getChildrenOfType<h1>())->toBeEmpty();
     expect($full->getChildrenOfType<h1>())->toEqual(vec[$one, $five]);
     expect($full->getChildrenOfType<br>())->toBeEmpty();
+
+    $one = <details />;
+    $two = <script />;
+    $three = <details />;
+    $full = <div>{$one}{$two}{$three}</div>;
+    expect($full->getFirstChildOfType<Category\Interactive>())->toEqual($one);
+    expect($full->getFirstChildOfType<Category\Metadata>())->toEqual($two);
+    expect($full->getLastChildOfType<Category\Interactive>())->toEqual($three);
+    expect($full->getLastChildOfType<Category\Metadata>())->toEqual($two);
+
+    $body = <body />;
+    $html = <html>{$body}</html>;
+    // The intent is to make sure that `OfType` still works even if the
+    // element does not implement any categories. If body starts
+    // implementing categories, pick a different element - don't change
+    // this expectation.
+    expect($body is \Facebook\XHP\HTML\Category\Category)->toBeFalse();
+    expect($html->getFirstChildOfType<body>())->toEqual($body);
   }
 }
