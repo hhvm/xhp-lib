@@ -11,7 +11,10 @@ namespace Facebook\XHP\HTML;
 
 final xhp class script
   extends unescaped_pcdata_element
-  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
+  implements
+    Category\Phrase,
+    Category\Metadata,
+    Category\Flow {
   attribute
     bool async,
     string charset,

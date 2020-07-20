@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 final xhp class style
   extends unescaped_pcdata_element
-  implements Cat\MetadataElement, Cat\FlowElement {
+  implements Category\Metadata, Category\Flow {
   attribute
     string media,
     bool scoped,

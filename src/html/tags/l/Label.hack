@@ -13,7 +13,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class label
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive {
   use XHPChild\Validation;
   attribute
     string for,
@@ -22,7 +25,10 @@ final xhp class label
   // may not contain label
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\PhraseElement>()),
+      XHPChild\any_of(
+        XHPChild\pcdata(),
+        XHPChild\of_type<Category\Phrase>(),
+      ),
     );
   }
 

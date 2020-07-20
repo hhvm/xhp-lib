@@ -9,6 +9,6 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class hr extends singleton implements Cat\FlowElement {
+final xhp class hr extends singleton implements Category\Flow {
   protected string $tagName = 'hr';
 }

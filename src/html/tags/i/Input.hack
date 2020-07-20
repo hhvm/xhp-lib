@@ -11,7 +11,10 @@ namespace Facebook\XHP\HTML;
 
 final xhp class input
   extends singleton
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive {
   attribute
     string accept,
     string alt,

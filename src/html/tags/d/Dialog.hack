@@ -13,12 +13,12 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class dialog
   extends element
-  implements Cat\FlowElement, Cat\SectioningElement {
+  implements Category\Flow, Category\Sectioning {
   use XHPChild\Validation;
   attribute bool open;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\of_type<Cat\FlowElement>();
+    return XHPChild\of_type<Category\Flow>();
   }
 
   protected string $tagName = 'dialog';

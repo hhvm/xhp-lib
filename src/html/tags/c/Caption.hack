@@ -16,7 +16,10 @@ final xhp class caption extends element {
   // Should not contain :table
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
+      XHPChild\any_of(
+        XHPChild\pcdata(),
+        XHPChild\of_type<Category\Flow>(),
+      ),
     );
   }
 

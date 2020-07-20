@@ -7,6 +7,6 @@
  *
  */
 
-namespace Facebook\XHP\HTML\Cat;
+namespace Facebook\XHP\HTML\Category;
 
-interface MetadataElement {}
+interface Metadata {}

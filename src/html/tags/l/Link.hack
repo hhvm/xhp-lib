@@ -11,7 +11,10 @@ namespace Facebook\XHP\HTML;
 
 final xhp class link
   extends singleton
-  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
+  implements
+    Category\Phrase,
+    Category\Metadata,
+    Category\Flow {
   attribute
     string as,
     string color,

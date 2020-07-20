@@ -14,10 +14,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 final xhp class video
   extends element
   implements
-    Cat\PhraseElement,
-    Cat\FlowElement,
-    Cat\InteractiveElement,
-    Cat\EmbeddedElement {
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive,
+    Category\Embedded {
   use XHPChild\Validation;
   attribute
     bool autoplay,
@@ -38,7 +38,10 @@ final xhp class video
       XHPChild\any_number_of(XHPChild\of_type<source>()),
       XHPChild\any_number_of(XHPChild\of_type<track>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
+        XHPChild\any_of(
+          XHPChild\pcdata(),
+          XHPChild\of_type<Category\Flow>(),
+        ),
       ),
     );
   }

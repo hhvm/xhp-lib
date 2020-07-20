@@ -12,10 +12,10 @@ namespace Facebook\XHP\HTML;
 final xhp class iframe
   extends pcdata_element
   implements
-    Cat\PhraseElement,
-    Cat\FlowElement,
-    Cat\InteractiveElement,
-    Cat\EmbeddedElement {
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive,
+    Category\Embedded {
   attribute
     string allow,
     bool allowfullscreen,
