@@ -140,35 +140,15 @@ abstract xhp class node implements \XHPChild {
   }
 
   /**
-   * Fetches all direct children of this element that match a particular tag
-   * name or category (or all children if none is given)
-   *
-   * @param $selector   tag name or category (optional)
+   * Fetches all direct children of this element.
    */
-  final public function getChildren(?string $selector = null): vec<\XHPChild> {
-    if ($selector is null || $selector === '') {
-      return $this->children;
-    }
-
-    $children = vec[];
-    if ($selector[0] === '%') {
-      $selector = Str\slice($selector, 1);
-      foreach ($this->children as $child) {
-        if ($child is node && $child->categoryOf($selector)) {
-          $children[] = $child;
-        }
-      }
-    } else {
-      foreach ($this->children as $child) {
-        if (\is_a($child, $selector, /* allow strings = */ true)) {
-          $children[] = $child;
-        }
-      }
-    }
-
-    return $children;
+  final public function getChildren(): vec<\XHPChild> {
+    return $this->children;
   }
 
+  /**
+   * Fetches all direct children of this element of the given type.
+   */
   public function getChildrenOfType<<<__Enforceable>> reify T>(): vec<T> {
     $children = vec[];
     foreach ($this->children as $child) {
@@ -181,44 +161,30 @@ abstract xhp class node implements \XHPChild {
 
 
   /**
-   * Fetches the first direct child of the element, or the first child that
-   * matches the tag if one is given
-   *
-   * @param $selector  tag name or category (optional)
-   * @return           the first child node (with the given selector),
-   *                       null if there are no (matching) children
+   * Fetches the first direct child of the element, if any.
    */
-  final public function getFirstChild(?string $selector = null): ?\XHPChild {
-    if ($selector === null) {
-      return $this->children[0] ?? null;
-    } else if ($selector[0] === '%') {
-      $selector = \substr($selector, 1);
-      foreach ($this->children as $child) {
-        if ($child is node && $child->categoryOf($selector)) {
-          return $child;
-        }
-      }
-    } else {
-      foreach ($this->children as $child) {
-        if (\is_a($child, $selector, /* allow strings = */ true)) {
-          return $child;
-        }
-      }
-    }
-    return null;
+  final public function getFirstChild(): ?\XHPChild {
+    return $this->children[0] ?? null;
   }
 
-  public function getFirstChildx(?string $selector = null): \XHPChild {
-    $child = $this->getFirstChild($selector);
+  /**
+   * Fetch the first direct child of the element.
+   *
+   * An exception is thrown if the element has no children.
+   */
+  public function getFirstChildx(): \XHPChild {
+    $child = $this->getFirstChild();
     if ($child is nonnull) {
       return $child;
     }
-    if ($selector === '' || $selector is null) {
-      invariant_violation('Cannot get first child, element has no children');
-    }
-    invariant_violation('No child matching selector "%s" found', $selector);
+    invariant_violation('%s called on element with no children', __FUNCTION__);
   }
 
+  /**
+   * Fetch the first direct child of a given type, if any.
+   *
+   * If no matching child is present, returns `null`.
+   */
   public function getFirstChildOfType<<<__Enforceable>> reify T>(): ?T {
     foreach ($this->children as $child) {
       if ($child is T) {
@@ -228,36 +194,48 @@ abstract xhp class node implements \XHPChild {
     return null;
   }
 
+  /**
+   * Fetch the first direct child of a given type.
+   *
+   * If no matching child is present, an exception is thrown.
+   */
   public function getFirstChildOfTypex<<<__Enforceable>> reify T>(): T {
     $child = $this->getFirstChildOfType<T>();
-    invariant($child is nonnull, 'No such child');
+    invariant(
+      $child is nonnull,
+      '%s called with no matching child',
+      __FUNCTION__,
+    );
     return $child;
   }
 
   /**
-   * Fetches the last direct child of the element, or the last child that
-   * matches the tag or category if one is given
+   * Fetches the last direct child of the element, if any.
    *
-   * @param $selector  tag name or category (optional)
-   * @return           the last child node (with the given selector),
-   *                       null if there are no (matching) children
+   * If the element has no children, `null` is returned.
    */
-  final public function getLastChild(?string $selector = null): ?\XHPChild {
-    return $this->getChildren($selector) |> C\last($$);
+  final public function getLastChild(): ?\XHPChild {
+    return C\last($this->getChildren());
   }
 
-  public function getLastChildx(?string $selector = null): \XHPChild {
-    $child = $this->getLastChild($selector);
+  /**
+   * Fetches the last direct child of the element.
+   *
+   * If the element has no children, an exception is thrown.
+   */
+  public function getLastChildx(): \XHPChild {
+    $child = $this->getLastChild();
     if ($child is nonnull) {
       return $child;
     }
-    if ($selector === '' || $selector is null) {
-      invariant_violation('Cannot get last child, element has no children');
-    }
-    invariant_violation('No child matching selector "%s" found', $selector);
+    invariant_violation('%s called on element with no children', __FUNCTION__);
   }
 
-
+  /**
+   * Fetch the last direct child of the element of a given type, if any.
+   *
+   * If the element has no matching children, `null` is returned.
+   */
   public function getLastChildOfType<<<__Enforceable>> reify T>(): ?T {
     for ($i = C\count($this->children) - 1; $i >= 0; --$i) {
       $child = $this->children[$i];
@@ -268,6 +246,11 @@ abstract xhp class node implements \XHPChild {
     return null;
   }
 
+  /**
+   * Fetch the last direct child of the element of a given type.
+   *
+   * If the element has no matching children, an exception is thrown.
+   */
   public function getLastChildOfTypex<<<__Enforceable>> reify T>(): T {
     $child = $this->getLastChildOfType<T>();
     invariant($child is nonnull, 'No such child');
