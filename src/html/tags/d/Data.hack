@@ -13,12 +13,12 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class data
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement {
+  implements Category\Phrase, Category\Flow {
   use XHPChild\Validation;
   attribute string value @required;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\any_number_of(XHPChild\of_type<Cat\PhraseElement>());
+    return XHPChild\any_number_of(XHPChild\of_type<Category\Phrase>());
   }
 
   protected string $tagName = 'data';

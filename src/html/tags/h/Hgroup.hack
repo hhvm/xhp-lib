@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class hgroup
   extends element
-  implements Cat\FlowElement, Cat\HeadingElement {
+  implements Category\Flow, Category\Heading {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

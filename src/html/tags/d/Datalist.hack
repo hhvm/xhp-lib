@@ -13,12 +13,12 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class datalist
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement {
+  implements Category\Phrase, Category\Flow {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(
-      XHPChild\at_least_one_of(XHPChild\of_type<Cat\PhraseElement>()),
+      XHPChild\at_least_one_of(XHPChild\of_type<Category\Phrase>()),
       XHPChild\any_number_of(XHPChild\of_type<option>()),
     );
   }

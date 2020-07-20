@@ -11,7 +11,10 @@ namespace Facebook\XHP\HTML;
 
 final xhp class meta
   extends singleton
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\MetadataElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Metadata {
   attribute
     // The correct definition of http-equiv is an enum, but there are legacy
     // values still used and any strictness here would only be frustrating.

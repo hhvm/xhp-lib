@@ -13,14 +13,17 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class details
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive {
   use XHPChild\Validation;
   attribute bool open;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
       XHPChild\of_type<summary>(),
-      XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
+      XHPChild\at_least_one_of(XHPChild\of_type<Category\Flow>()),
     );
   }
 

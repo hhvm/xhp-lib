@@ -13,17 +13,17 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class figure
   extends element
-  implements Cat\FlowElement, Cat\SectioningElement {
+  implements Category\Flow, Category\Sectioning {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(
       XHPChild\sequence(
         XHPChild\of_type<figcaption>(),
-        XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
+        XHPChild\at_least_one_of(XHPChild\of_type<Category\Flow>()),
       ),
       XHPChild\sequence(
-        XHPChild\at_least_one_of(XHPChild\of_type<Cat\FlowElement>()),
+        XHPChild\at_least_one_of(XHPChild\of_type<Category\Flow>()),
         XHPChild\optional(XHPChild\of_type<figcaption>()),
       ),
     );

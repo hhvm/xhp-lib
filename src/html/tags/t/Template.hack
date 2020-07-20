@@ -11,7 +11,10 @@ namespace Facebook\XHP\HTML;
 
 final xhp class template
   extends element
-  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
+  implements
+    Category\Phrase,
+    Category\Metadata,
+    Category\Flow {
 
   // The children declaration for this element is extraordinarily verbose so
   // I leave it to you to use it appropriately.

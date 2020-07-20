@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class ol extends element implements Cat\FlowElement {
+final xhp class ol extends element implements Category\Flow {
   use XHPChild\Validation;
   attribute
     bool reversed,

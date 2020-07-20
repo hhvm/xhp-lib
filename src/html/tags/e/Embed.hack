@@ -14,10 +14,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 final xhp class embed
   extends element
   implements
-    Cat\PhraseElement,
-    Cat\FlowElement,
-    Cat\InteractiveElement,
-    Cat\EmbeddedElement {
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive,
+    Category\Embedded {
   use XHPChild\Validation;
   /*
    * The HTML spec permits all non-namespaced attributes
@@ -43,7 +43,10 @@ final xhp class embed
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\PhraseElement>()),
+      XHPChild\any_of(
+        XHPChild\pcdata(),
+        XHPChild\of_type<Category\Phrase>(),
+      ),
     );
   }
 

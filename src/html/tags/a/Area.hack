@@ -11,7 +11,7 @@ namespace Facebook\XHP\HTML;
 
 final xhp class area
   extends singleton
-  implements Cat\PhraseElement, Cat\FlowElement {
+  implements Category\Phrase, Category\Flow {
   attribute
     string alt,
     string coords,

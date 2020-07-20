@@ -9,7 +9,7 @@
 
 namespace Facebook\XHP\HTML;
 
-final xhp class base extends singleton implements Cat\MetadataElement {
+final xhp class base extends singleton implements Category\Metadata {
   attribute
     string href,
     string target;

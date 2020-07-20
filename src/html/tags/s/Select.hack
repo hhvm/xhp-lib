@@ -13,7 +13,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class select
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive {
   use XHPChild\Validation;
   attribute
     string autocomplete,

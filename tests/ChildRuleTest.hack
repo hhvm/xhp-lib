@@ -9,7 +9,7 @@
 
 use namespace Facebook\XHP\Core as x;
 use type Facebook\XHP\HTML\{code, div, p, thead};
-use namespace Facebook\XHP\HTML\Cat;
+use namespace Facebook\XHP\HTML\Category;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
@@ -216,7 +216,7 @@ xhp class testpcdata_child extends x\element {
 xhp class test:category_interface_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\of_type<Cat\FlowElement>();
+    return XHPChild\of_type<Category\Flow>();
   }
 
   <<__Override>>
@@ -323,7 +323,7 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
       tuple(<testpcdata_child />, 'pcdata'),
       tuple(
         <test:category_interface_child />,
-        '\Facebook\XHP\HTML\Cat\FlowElement',
+        '\Facebook\XHP\HTML\Category\Flow',
       ),
     ];
   }

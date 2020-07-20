@@ -15,7 +15,7 @@ final xhp class head extends element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\any_number_of(XHPChild\of_type<Cat\MetadataElement>());
+    return XHPChild\any_number_of(XHPChild\of_type<Category\Metadata>());
   }
 
   protected string $tagName = 'head';

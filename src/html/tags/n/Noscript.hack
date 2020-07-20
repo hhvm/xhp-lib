@@ -13,14 +13,17 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class noscript
   extends element
-  implements Cat\PhraseElement, Cat\MetadataElement, Cat\FlowElement {
+  implements
+    Category\Phrase,
+    Category\Metadata,
+    Category\Flow {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(XHPChild\any_of(
       XHPChild\pcdata(),
-      XHPChild\of_type<Cat\MetadataElement>(),
-      XHPChild\of_type<Cat\FlowElement>(),
+      XHPChild\of_type<Category\Metadata>(),
+      XHPChild\of_type<Category\Flow>(),
     ));
   }
 

@@ -13,13 +13,16 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class blockquote
   extends element
-  implements Cat\FlowElement, Cat\SectioningElement {
+  implements Category\Flow, Category\Sectioning {
   use XHPChild\Validation;
   attribute string cite;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\FlowElement>()),
+      XHPChild\any_of(
+        XHPChild\pcdata(),
+        XHPChild\of_type<Category\Flow>(),
+      ),
     );
   }
 

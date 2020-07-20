@@ -13,7 +13,10 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class button
   extends element
-  implements Cat\PhraseElement, Cat\FlowElement, Cat\InteractiveElement {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Interactive {
   use XHPChild\Validation;
   attribute
     bool disabled,
@@ -31,7 +34,10 @@ final xhp class button
   // Should not contain interactive
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Cat\PhraseElement>()),
+      XHPChild\any_of(
+        XHPChild\pcdata(),
+        XHPChild\of_type<Category\Phrase>(),
+      ),
     );
   }
 
