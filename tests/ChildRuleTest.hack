@@ -429,11 +429,15 @@ class ChildRuleTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testCommaCategory(): Awaitable<void> {
-    $x =
-      <test:needs_comma_category>
-        <test:has_comma_category />
-      </test:needs_comma_category>;
-    expect(await $x->toStringAsync())->toEqual('<div></div>');
+    expect(
+      () ==>
+        <test:needs_comma_category>
+          <test:has_comma_category />
+        </test:needs_comma_category>,
+    )->toThrow(
+      InvariantException::class,
+      'no longer supported',
+    );
   }
 
   public async function testFrags(): Awaitable<void> {

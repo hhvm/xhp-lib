@@ -52,6 +52,15 @@ abstract xhp class node implements \XHPChild {
     Traversable<\XHPChild> $children,
     dynamic ...$debug_info
   ) {
+    invariant(
+      $this->__xhpChildrenDeclaration() === self::__NO_LEGACY_CHILDREN_DECLARATION,
+      'The `children` keyword is no longer supported',
+    );
+    invariant(
+      $this->__xhpCategoryDeclaration() === self::__NO_LEGACY_CATEGORY_DECLARATION,
+      'The `category` keyword is no longer supported',
+    );
+
     foreach ($children as $child) {
       $this->appendChild($child);
     }
@@ -573,10 +582,11 @@ abstract xhp class node implements \XHPChild {
    * categories an element belongs to. Each category is a key with value 1.
    */
   protected function __xhpCategoryDeclaration(): darray<string, int> {
-    return darray[];
+    return self::__NO_LEGACY_CATEGORY_DECLARATION;
   }
 
   const int __NO_LEGACY_CHILDREN_DECLARATION = -31337;
+  const darray<string, int> __NO_LEGACY_CATEGORY_DECLARATION = darray["\0INVALID\0" => 0];
 
   /**
    * Defined in elements by the `children` keyword. This returns a pattern of

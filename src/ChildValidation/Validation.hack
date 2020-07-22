@@ -23,15 +23,4 @@ trait Validation {
   ): mixed {
     return static::getChildrenDeclaration()->legacySerialize();
   }
-
-  final public function validateChildren(): void {
-    invariant(
-      $this->__xhpChildrenDeclaration() ===
-        x\element::__NO_LEGACY_CHILDREN_DECLARATION,
-      "The XHPChildValidation trait can not be used with a 'children' ".
-      "declaration; override 'getChildrenDeclaration()'' instead",
-    );
-
-    parent::validateChildren();
-  }
 }
