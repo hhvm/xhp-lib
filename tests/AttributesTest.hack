@@ -18,7 +18,7 @@ xhp class test:attribute_types extends x\element {
     string mystring,
     bool mybool,
     int myint,
-    array<int> myarray,
+    varray<int> myarray,
     stdClass myobject,
     enum {'foo', 'bar'} myenum,
     float myfloat,
