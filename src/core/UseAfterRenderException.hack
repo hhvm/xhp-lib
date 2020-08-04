@@ -21,6 +21,7 @@ final class UseAfterRenderException extends \InvalidOperationException {
     $this->xhpPath = Vec\concat(vec[$node], $this->xhpPath);
   }
 
+  <<__Override>>
   public function getMessage(): string {
     if (C\is_empty($this->xhpPath)) {
       return $this->message;
