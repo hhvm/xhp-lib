@@ -8,7 +8,23 @@
  */
 
 use namespace Facebook\XHP\Core as x;
-use type Facebook\XHP\HTML\{body, br, details, div, h1, h2, h3, head, html, img, p, script, singleton, style};
+use type Facebook\XHP\HTML\{
+  body,
+  br,
+  details,
+  div,
+  h1,
+  h2,
+  h3,
+  head,
+  html,
+  img,
+  p,
+  script,
+  singleton,
+  span,
+  style,
+};
 use namespace Facebook\XHP\HTML\Category;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
@@ -18,6 +34,15 @@ xhp class not_primitive extends x\element {
   <<__Override>>
   public async function renderAsync(): Awaitable<div> {
     return <div><div>I am not a primitive</div></div>;
+  }
+}
+
+xhp class ui:div extends x\element {
+  <<__Override>>
+  public async function renderAsync(): Awaitable<div> {
+    $div = <div>{$this->getChildren()}</div>;
+    $div->requireUniqueID();
+    return $div;
   }
 }
 
@@ -66,6 +91,91 @@ class BasicsTest extends Facebook\HackTest\HackTest {
       x\UseAfterRenderException::class,
       'render XHP element twice',
     );
+  }
+
+  public function provideFaultyTrees(): vec<(x\node, string)> {
+    $br = <br />;
+    $ui_div = <ui:div><div><span /></div></ui:div>;
+    \HH\Asio\join($br->toStringAsync());
+    \HH\Asio\join($ui_div->toStringAsync());
+
+    return vec[
+      tuple(
+        <div><span>{$br}</span></div>,
+        // Normal path
+        'Via XHPPath: HTML\\div -> HTML\\span -> HTML\\br.',
+      ),
+      tuple(
+        <div><ui:div>{$br}</ui:div></div>,
+        // Works for custom elements
+        'Via XHPPath: HTML\\div -> ui\\div -> HTML\\div -> HTML\\br.',
+      ),
+      tuple(
+        <div><x:frag>{$br}</x:frag></div>,
+        // Frags are not included in the XHPPath
+        'Via XHPPath: HTML\\div -> HTML\\br.',
+      ),
+      tuple(
+        <div><span>{$ui_div}</span></div>,
+        // Custom element at the end of the chain
+        'Via XHPPath: HTML\\div -> HTML\\span -> ui\\div.',
+      ),
+      tuple(
+        <div>
+          <span />
+          <div><span /></div>
+          <ui:div><span>{$br}</span></ui:div>
+          <ui:div />
+        </div>,
+        // In a subtree
+        'Via XHPPath: HTML\\div -> ui\\div -> HTML\\div -> HTML\span -> HTML\\br.',
+      ),
+      tuple(
+        <div>
+          <ui:div><ui:div><span>{$br}</span></ui:div></ui:div>
+        </div>,
+        // Custom inside of custom
+        'Via XHPPath: HTML\\div -> ui\\div -> HTML\\div -> ui\\div -> HTML\\div -> HTML\span -> HTML\\br.',
+      ),
+    ];
+  }
+
+  <<DataProvider('provideFaultyTrees')>>
+  public async function testRenderedChildrenOfRenderingTreesThrowExceptionWithPleasantMessages(
+    x\node $node,
+    string $xhp_path,
+  ): Awaitable<void> {
+    try {
+      await $node->toStringAsync();
+      self::fail('Expected an exception, got none');
+    } catch (x\UseAfterRenderException $e) {
+      $error_message = $e->getMessage();
+      expect($error_message)->toContainSubstring('render XHP element twice');
+      expect($error_message)->toContainSubstring($xhp_path);
+    }
+  }
+
+  public async function testNoXHPPathForTheTopLevelNode(): Awaitable<void> {
+    $br = <br />;
+    $ui_div = <ui:div><div><span /></div></ui:div>;
+    concurrent {
+      await $br->toStringAsync();
+      await $ui_div->toStringAsync();
+    }
+
+    try {
+      await $br->toStringAsync();
+      self::fail('Expected an exception, got none');
+    } catch (x\UseAfterRenderException $e) {
+      expect($e->getMessage())->toNotContainSubstring('XHPPath');
+    }
+
+    try {
+      await $ui_div->toStringAsync();
+      self::fail('Expected an exception, got none');
+    } catch (x\UseAfterRenderException $e) {
+      expect($e->getMessage())->toNotContainSubstring('XHPPath');
+    }
   }
 
   public async function testFragWithString(): Awaitable<void> {

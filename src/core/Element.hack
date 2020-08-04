@@ -36,8 +36,13 @@ abstract xhp class element extends node {
    */
   <<__Override>>
   final protected async function __flushSubtree(): Awaitable<primitive> {
-    $that = await $this->__flushRenderedRootElement();
-    return await $that->__flushSubtree();
+    try {
+      $that = await $this->__flushRenderedRootElement();
+      return await $that->__flushSubtree();
+    } catch (UseAfterRenderException $e) {
+      $e->__viaXHPPath(static::class);
+      throw $e;
+    }
   }
 
   /**
