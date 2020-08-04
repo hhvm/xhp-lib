@@ -26,9 +26,19 @@ abstract xhp class element extends node {
    */
   <<__Override>>
   final public async function toStringAsync(): Awaitable<string> {
-    $that = await $this->__flushRenderedRootElement();
-    $ret = await $that->toStringAsync();
-    return $ret;
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        'Attempted to render XHP element twice',
+      );
+    }
+    try {
+      $that = await $this->__flushRenderedRootElement();
+      $this->__isRendered = true;
+      return await $that->toStringAsync();
+    } catch (UseAfterRenderException $e) {
+      $e->__viaXHPPath(static::class);
+      throw $e;
+    }
   }
 
   /**
