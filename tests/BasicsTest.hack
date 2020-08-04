@@ -46,6 +46,13 @@ xhp class ui:div extends x\element {
   }
 }
 
+xhp class ui:returning:ui extends x\element {
+  <<__Override>>
+  public async function renderAsync(): Awaitable<ui\div> {
+    return <ui:div>{$this->getChildren()}</ui:div>;
+  }
+}
+
 xhp class test:renders_primitive extends x\element {
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -123,6 +130,11 @@ class BasicsTest extends Facebook\HackTest\HackTest {
         'Via XHPPath: HTML\\div -> HTML\\span -> ui\\div.',
       ),
       tuple(
+        <ui:div><span>{$ui_div}</span></ui:div>,
+        // Custom element at the start of the chain
+        'Via XHPPath: ui\\div -> HTML\\div -> HTML\\span -> ui\\div.',
+      ),
+      tuple(
         <div>
           <span />
           <div><span /></div>
@@ -138,6 +150,11 @@ class BasicsTest extends Facebook\HackTest\HackTest {
         </div>,
         // Custom inside of custom
         'Via XHPPath: HTML\\div -> ui\\div -> HTML\\div -> ui\\div -> HTML\\div -> HTML\span -> HTML\\br.',
+      ),
+      tuple(
+        <ui:returning:ui><span>{$br}</span></ui:returning:ui>,
+        // Limitation a ui:div is missing V here, because Element::__flushRenderedRootElement loops until a primitive
+        'Via XHPPath: ui\\returning\\ui -> HTML\\div -> HTML\span -> HTML\\br.',
       ),
     ];
   }
