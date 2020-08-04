@@ -96,7 +96,9 @@ class BasicsTest extends Facebook\HackTest\HackTest {
   public function provideFaultyTrees(): vec<(x\node, string)> {
     $br = <br />;
     $ui_div = <ui:div><div><span /></div></ui:div>;
+    /*HHAST_IGNORE_ERROR[DontUseAsioJoin]*/
     \HH\Asio\join($br->toStringAsync());
+    /*HHAST_IGNORE_ERROR[DontUseAsioJoin]*/
     \HH\Asio\join($ui_div->toStringAsync());
 
     return vec[
