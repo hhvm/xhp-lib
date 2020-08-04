@@ -51,12 +51,22 @@ abstract xhp class primitive extends node {
         $children[$idx] = $child;
       }
     }
+    if ($this->__isRendered) {
+      throw new UseAfterRenderException(
+        'Attempted to render XHP element twice',
+      );
+    }
     $this->replaceChildren($children);
   }
 
   <<__Override>>
   final protected async function __flushSubtree(): Awaitable<primitive> {
-    await $this->__flushElementChildren();
+    try {
+      await $this->__flushElementChildren();
+    } catch (UseAfterRenderException $e) {
+      $e->__viaXHPPath(static::class);
+      throw $e;
+    }
     if (\Facebook\XHP\ChildValidation\is_enabled()) {
       $this->validateChildren();
     }
