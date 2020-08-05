@@ -33,7 +33,6 @@ abstract xhp class element extends node {
     }
     try {
       $that = await $this->__flushRenderedRootElement();
-      $this->__isRendered = true;
       return await $that->toStringAsync();
     } catch (UseAfterRenderException $e) {
       $e->__viaXHPPath(static::class);

@@ -18,7 +18,7 @@ final class UseAfterRenderException extends \InvalidOperationException {
   }
 
   public function __viaXHPPath(classname<node> $node): void {
-    $this->xhpPath = Vec\concat(vec[$node], $this->xhpPath);
+    $this->xhpPath[] = $node;
   }
 
   <<__Override>>
@@ -26,10 +26,8 @@ final class UseAfterRenderException extends \InvalidOperationException {
     if (C\is_empty($this->xhpPath)) {
       return $this->message;
     }
-    return Vec\map(
-      $this->xhpPath,
-      $class ==> Str\strip_prefix($class, 'Facebook\\XHP\\'),
-    )
+    return Vec\reverse($this->xhpPath)
+      |> Vec\map($$, $class ==> Str\strip_prefix($class, 'Facebook\\XHP\\'))
       |> $this->message."\nVia XHPPath: ".Str\join($$, ' -> ').'.';
   }
 }
