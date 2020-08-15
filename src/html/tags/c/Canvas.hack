@@ -16,7 +16,8 @@ final xhp class canvas
   implements
     Category\Phrase,
     Category\Flow,
-    Category\Embedded {
+    Category\Embedded,
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     int height,
@@ -25,10 +26,7 @@ final xhp class canvas
   // Should not contain :table
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Flow>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
     );
   }
 

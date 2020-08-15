@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class fieldset extends element implements Category\Flow {
+final xhp class fieldset
+  extends element
+  implements Category\Flow, Category\Sectioning, Category\Palpable {
   use XHPChild\Validation;
   attribute
     bool disabled,
@@ -22,10 +24,7 @@ final xhp class fieldset extends element implements Category\Flow {
     return XHPChild\sequence(
       XHPChild\optional(XHPChild\of_type<legend>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(
-          XHPChild\pcdata(),
-          XHPChild\of_type<Category\Flow>(),
-        ),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
       ),
     );
   }

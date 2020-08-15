@@ -17,7 +17,8 @@ final xhp class embed
     Category\Phrase,
     Category\Flow,
     Category\Interactive,
-    Category\Embedded {
+    Category\Embedded,
+    Category\Palpable {
   use XHPChild\Validation;
   /*
    * The HTML spec permits all non-namespaced attributes
@@ -43,10 +44,7 @@ final xhp class embed
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Phrase>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Phrase>()),
     );
   }
 

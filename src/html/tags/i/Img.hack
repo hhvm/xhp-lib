@@ -11,7 +11,13 @@ namespace Facebook\XHP\HTML;
 
 final xhp class img
   extends singleton
-  implements Category\Phrase, Category\Flow {
+  implements
+    Category\Phrase,
+    Category\Flow,
+    Category\Embedded,
+    Category\Palpable,
+    // Iff Interactive when usemap is set
+    Category\Interactive {
   attribute
     string alt,
     enum {'anonymous', 'use-credentials'} crossorigin,

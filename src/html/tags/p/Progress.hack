@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class progress
   extends element
-  implements Category\Phrase, Category\Flow {
+  implements Category\Phrase, Category\Flow, Category\Palpable {
   use XHPChild\Validation;
   attribute
     float max,
@@ -22,10 +22,7 @@ final xhp class progress
   // Should not contain :progress
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Phrase>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Phrase>()),
     );
   }
 

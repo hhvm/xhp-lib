@@ -16,7 +16,8 @@ final xhp class select
   implements
     Category\Phrase,
     Category\Flow,
-    Category\Interactive {
+    Category\Interactive,
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     string autocomplete,

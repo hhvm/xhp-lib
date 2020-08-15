@@ -15,7 +15,8 @@ final xhp class iframe
     Category\Phrase,
     Category\Flow,
     Category\Interactive,
-    Category\Embedded {
+    Category\Embedded,
+    Category\Palpable {
   attribute
     string allow,
     bool allowfullscreen,

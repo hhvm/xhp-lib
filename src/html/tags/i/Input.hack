@@ -14,7 +14,9 @@ final xhp class input
   implements
     Category\Phrase,
     Category\Flow,
-    Category\Interactive {
+    Category\Interactive,
+    // Iff Palpable hidden is not set
+    Category\Palpable {
   attribute
     string accept,
     string alt,

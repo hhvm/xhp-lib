@@ -11,7 +11,12 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class ul extends element implements Category\Flow {
+final xhp class ul
+  extends element
+  implements
+    Category\Flow,
+    // Iff Palpable when at least one li in children
+    Category\Palpable {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {

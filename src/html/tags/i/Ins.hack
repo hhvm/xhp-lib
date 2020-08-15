@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 final xhp class ins
   extends element
-  implements Category\Phrase, Category\Flow {
+  implements Category\Phrase, Category\Flow, Category\Palpable {
   use XHPChild\Validation;
   attribute
     string cite,
@@ -21,10 +21,7 @@ final xhp class ins
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Flow>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
     );
   }
 

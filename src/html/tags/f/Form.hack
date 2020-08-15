@@ -11,7 +11,9 @@ namespace Facebook\XHP\HTML;
 
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-final xhp class form extends element implements Category\Flow {
+final xhp class form
+  extends element
+  implements Category\Flow, Category\Palpable {
   use XHPChild\Validation;
   attribute
     string action,
@@ -27,10 +29,7 @@ final xhp class form extends element implements Category\Flow {
   // Should not contain :form
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Flow>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
     );
   }
 
