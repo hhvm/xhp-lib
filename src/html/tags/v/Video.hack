@@ -17,7 +17,8 @@ final xhp class video
     Category\Phrase,
     Category\Flow,
     Category\Interactive,
-    Category\Embedded {
+    Category\Embedded,
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     bool autoplay,
@@ -38,10 +39,7 @@ final xhp class video
       XHPChild\any_number_of(XHPChild\of_type<source>()),
       XHPChild\any_number_of(XHPChild\of_type<track>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(
-          XHPChild\pcdata(),
-          XHPChild\of_type<Category\Flow>(),
-        ),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
       ),
     );
   }

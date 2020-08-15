@@ -14,7 +14,8 @@ final xhp class textarea
   implements
     Category\Phrase,
     Category\Flow,
-    Category\Interactive {
+    Category\Interactive,
+    Category\Palpable {
   attribute
     string autocomplete,
     int cols,

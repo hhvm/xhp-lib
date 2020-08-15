@@ -17,7 +17,8 @@ final xhp class object
     Category\Phrase,
     Category\Flow,
     Category\Interactive,
-    Category\Embedded {
+    Category\Embedded,
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     string data,
@@ -33,10 +34,7 @@ final xhp class object
     return XHPChild\sequence(
       XHPChild\any_number_of(XHPChild\of_type<param>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(
-          XHPChild\pcdata(),
-          XHPChild\of_type<Category\Flow>(),
-        ),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
       ),
     );
   }

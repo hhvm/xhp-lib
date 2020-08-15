@@ -17,7 +17,9 @@ final xhp class audio
     Category\Phrase,
     Category\Flow,
     Category\Interactive,
-    Category\Embedded {
+    Category\Embedded,
+    // Iff Palpable when controls is true
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     bool autoplay,
@@ -34,10 +36,7 @@ final xhp class audio
       XHPChild\any_number_of(XHPChild\of_type<source>()),
       XHPChild\any_number_of(XHPChild\of_type<track>()),
       XHPChild\any_number_of(
-        XHPChild\any_of(
-          XHPChild\pcdata(),
-          XHPChild\of_type<Category\Flow>(),
-        ),
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
       ),
     );
   }

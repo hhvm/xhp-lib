@@ -16,7 +16,8 @@ final xhp class button
   implements
     Category\Phrase,
     Category\Flow,
-    Category\Interactive {
+    Category\Interactive,
+    Category\Palpable {
   use XHPChild\Validation;
   attribute
     bool disabled,
@@ -34,10 +35,7 @@ final xhp class button
   // Should not contain interactive
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(
-      XHPChild\any_of(
-        XHPChild\pcdata(),
-        XHPChild\of_type<Category\Phrase>(),
-      ),
+      XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Phrase>()),
     );
   }
 

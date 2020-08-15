@@ -11,6 +11,7 @@ use namespace Facebook\XHP\Core as x;
 use type Facebook\XHP\HTML\{
   body,
   br,
+  caption,
   details,
   div,
   h1,
@@ -324,13 +325,13 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect($full->getLastChildOfType<Category\Interactive>())->toEqual($three);
     expect($full->getLastChildOfType<Category\Metadata>())->toEqual($two);
 
-    $body = <body />;
-    $html = <html>{$body}</html>;
+    $caption = <caption />;
+    $html = <html>{$caption}</html>;
     // The intent is to make sure that `OfType` still works even if the
     // element does not implement any categories. If body starts
     // implementing categories, pick a different element - don't change
     // this expectation.
-    expect($body is \Facebook\XHP\HTML\Category\Category)->toBeFalse();
-    expect($html->getFirstChildOfType<body>())->toEqual($body);
+    expect($caption is \Facebook\XHP\HTML\Category\Category)->toBeFalse();
+    expect($html->getFirstChildOfType<caption>())->toEqual($caption);
   }
 }
