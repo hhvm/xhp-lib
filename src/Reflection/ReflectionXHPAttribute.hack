@@ -91,7 +91,7 @@ class ReflectionXHPAttribute {
     );
     $v = $this->extraType;
     invariant(
-      \is_array($v),
+      \HH\is_php_array($v),
       'Class name for attribute %s is not an array',
       $this->getName(),
     );
