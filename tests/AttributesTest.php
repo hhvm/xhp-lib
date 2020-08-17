@@ -99,9 +99,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
 
       $x =
         <test:attribute-types
-          /* HH_IGNORE_ERROR[4110] */
-          /* HH_IGNORE_ERROR[4343] */
-          /* HH_IGNORE_ERROR[4166] */
+          /* HH_FIXME[4057] */
           myshape={shape('foo' => 'herp', 'bar' => 'derp', 'baz' => 'extra')}
         />;
       expect($x->toString())->toEqual('<div></div>');

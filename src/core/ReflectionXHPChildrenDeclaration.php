@@ -40,7 +40,7 @@ class ReflectionXHPChildrenDeclaration {
 
   <<__Memoize>>
   public function getType(): XHPChildrenDeclarationType {
-    if (is_array($this->data)) {
+    if ($this->data is Traversable<_>) {
       return XHPChildrenDeclarationType::EXPRESSION;
     }
     return XHPChildrenDeclarationType::assert($this->data);

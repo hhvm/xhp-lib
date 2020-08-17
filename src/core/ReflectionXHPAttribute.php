@@ -88,11 +88,20 @@ class ReflectionXHPAttribute {
     );
     $v = $this->extraType;
     invariant(
-      is_array($v),
+      $v is Traversable<_>,
       'Class name for attribute %s is not a string',
       $this->getName(),
     );
-    return new Set($v);
+    $ret = Set {};
+    foreach ($v as $item) {
+      invariant(
+        $item is string,
+        'Class name for attribute %s is not a string',
+        $this->getName(),
+      );
+      $ret[] = $item;
+    }
+    return $ret;
   }
 
   /**
