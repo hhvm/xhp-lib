@@ -328,7 +328,7 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     $caption = <caption />;
     $html = <html>{$caption}</html>;
     // The intent is to make sure that `OfType` still works even if the
-    // element does not implement any categories. If body starts
+    // element does not implement any categories. If caption starts
     // implementing categories, pick a different element - don't change
     // this expectation.
     expect($caption is \Facebook\XHP\HTML\Category\Category)->toBeFalse();
