@@ -91,7 +91,6 @@ trait XHPAttributeClobbering_DEPRECATED
   final private function transferAttributesImpl(
     x\node $target,
     ?keyset<string> $ignore = null,
-    bool $_remove = false,
   ): void {
     $ignore ??= element::__xhpAttributeDeclaration();
 
