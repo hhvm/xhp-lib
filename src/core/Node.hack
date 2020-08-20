@@ -458,6 +458,9 @@ abstract xhp class node implements \XHPChild {
   /**
    * @deprecated This functionality will be removed in a future release.
    *
+   * This has not yet been removed as it is currently the only way to
+   * set an `UnsafeAttributeValue`.
+   *
    * Sets an attribute in this element's attribute store. Always foregoes
    * validation.
    *
