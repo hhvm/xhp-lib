@@ -63,7 +63,6 @@ abstract xhp class element extends node {
         'Attempted to render XHP element twice',
       );
     }
-    $this->__isRendered = true;
     if (\Facebook\XHP\ChildValidation\is_enabled()) {
       $this->validateChildren();
     }
@@ -74,6 +73,7 @@ abstract xhp class element extends node {
     if ($this is HTML\HasXHPAttributeClobbering_DEPRECATED) {
       $this->transferAttributesToRenderedRoot($composed);
     }
+    $this->__isRendered = true;
 
     return $composed;
   }

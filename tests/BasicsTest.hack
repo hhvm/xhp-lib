@@ -60,6 +60,18 @@ xhp class test:renders_primitive extends x\element {
   }
 }
 
+xhp class test:modify_in_render extends x\element {
+  attribute string foo @required;
+  <<__Override>>
+  protected async function renderAsync(): Awaitable<x\node> {
+    $foo = $this->:foo;
+    $this->setAttribute('foo', 'bar');
+    $children = $this->getChildren();
+    $this->replaceChildren(vec[]);
+    return <div>{$foo}{$children}</div>;
+  }
+}
+
 class BasicsTest extends Facebook\HackTest\HackTest {
   public async function testDivWithString(): Awaitable<void> {
     $xhp =
@@ -82,6 +94,17 @@ class BasicsTest extends Facebook\HackTest\HackTest {
       x\UseAfterRenderException::class,
       'after render',
     );
+  }
+
+  public async function testModifyInRender(): Awaitable<void> {
+    $xhp =
+      <test:modify_in_render foo="hello, world">
+        <p>herpderp</p>
+      </test:modify_in_render>;
+    $html = await $xhp->toStringAsync();
+    expect($html)->toEqual('<div>hello, world<p>herpderp</p></div>');
+    expect(() ==> $xhp->appendChild(<p />))->toThrow(x\UseAfterRenderException::class);
+    expect(async () ==> await $xhp->toStringAsync())->toThrow(x\UseAfterRenderException::class);
   }
 
   public async function testRenderingAnElementTwiceThrows(): Awaitable<void> {
