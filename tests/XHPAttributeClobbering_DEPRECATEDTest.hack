@@ -31,6 +31,25 @@ xhp class test:xhphelpers extends x\element {
   }
 }
 
+xhp class test:clobber_vs_splat:clobber extends x\element {
+  use XHPAttributeClobbering_DEPRECATED;
+  attribute string style = 'color: #f00';
+
+  <<__Override>>
+  protected async function renderAsync(): Awaitable<x\node> {
+    return <div>{$this->getChildren()}</div>;
+  }
+}
+
+xhp class test:clobber_vs_splat:splat extends x\element {
+  attribute string style = 'color: #f00';
+
+  <<__Override>>
+  protected async function renderAsync(): Awaitable<x\node> {
+    return <div {...$this}>{$this->getChildren()}</div>;
+  }
+}
+
 xhp class test:async:no_xhphelpers extends x\element {
   use XHPHTMLHelpers;
   attribute :Facebook:XHP:HTML:element;
@@ -147,5 +166,14 @@ class XHPAttributeClobbering_DEPRECATEDTest extends Facebook\HackTest\HackTest {
     expect(await $x->toStringAsync())->toEqual(
       '<div class="herp"><div class="derp"></div></div>',
     );
+  }
+
+  public async function testClobberVsSplatDefaults(): Awaitable<void> {
+    $clobber = <test:clobber_vs_splat:clobber>clobber</test:clobber_vs_splat:clobber>;
+    $splat = <test:clobber_vs_splat:splat>splat</test:clobber_vs_splat:splat>;
+
+    expect(await $clobber->toStringAsync())->toEqual('<div>clobber</div>');
+    expect(await $splat->toStringAsync())
+      ->toEqual('<div style="color: #f00">splat</div>');
   }
 }
