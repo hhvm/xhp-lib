@@ -74,7 +74,7 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
     // using XHPUnsafeAttributeValue_DEPRECATED the &amp; is not double escaped
     $escaped = new ExampleUnsafeAttribute('foo &amp;&amp; bar');
     $xhp = <div />;
-    $xhp->forceAttribute('onclick', $escaped);
+    $xhp->forceAttribute_DEPRECATED('onclick', $escaped);
     expect(await $xhp->toStringAsync())->toEqual(
       '<div onclick="foo &amp;&amp; bar"></div>',
     );

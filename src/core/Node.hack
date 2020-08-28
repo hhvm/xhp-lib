@@ -468,7 +468,7 @@ abstract xhp class node implements \XHPChild {
    * @param $val       value
    * @throws UseAfterRenderException
    */
-  final public function forceAttribute(string $attr, mixed $value): this {
+  final public function forceAttribute_DEPRECATED(string $attr, mixed $value): this {
     if ($this->__isRendered) {
       throw new UseAfterRenderException(
         Str\format("Can't %s after render", __FUNCTION__),

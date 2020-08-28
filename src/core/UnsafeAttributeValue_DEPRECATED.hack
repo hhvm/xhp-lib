@@ -16,7 +16,7 @@ namespace Facebook\XHP;
  * This is useful when migrating to XHP for attribute values which are already escaped.
  * If the attribute contains unescaped double quotes, this will not escape them, which will break the runtime behavior.
  *
- * This must be used via `forceAttribute()`.
+ * This must be used via `forceAttribute_DEPRECATED()`.
  */
 abstract class UnsafeAttributeValue_DEPRECATED {
   abstract public function toHTMLString(): string;
