@@ -70,9 +70,6 @@ abstract xhp class element extends node {
     $composed = await $this->renderAsync();
 
     $composed->__transferContext($this->getAllContexts());
-    if ($this is HTML\HasXHPAttributeClobbering_DEPRECATED) {
-      $this->transferAttributesToRenderedRoot($composed);
-    }
     $this->__isRendered = true;
 
     return $composed;
