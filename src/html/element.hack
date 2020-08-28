@@ -167,7 +167,7 @@ abstract xhp class element extends x\primitive {
         if ($val === true) {
           $buf .= ' '.\htmlspecialchars($key);
         } else {
-          if ($val is \Facebook\XHP\UnsafeAttributeValue) {
+          if ($val is \Facebook\XHP\UnsafeAttributeValue_DEPRECATED) {
             $val_str = $val->toHTMLString();
           } else {
             $val_str = \htmlspecialchars((string)$val, \ENT_COMPAT);

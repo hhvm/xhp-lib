@@ -18,7 +18,7 @@ namespace Facebook\XHP;
  *
  * This must be used via `forceAttribute()`.
  */
-abstract class UnsafeAttributeValue {
+abstract class UnsafeAttributeValue_DEPRECATED {
   abstract public function toHTMLString(): string;
 
   final public function __toString(): string {

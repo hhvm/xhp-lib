@@ -28,7 +28,7 @@ class ExampleVeryUnsafeRenderable
   implements Facebook\XHP\UnsafeRenderable, Facebook\XHP\AlwaysValidChild {
 }
 
-class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue {
+class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue_DEPRECATED {
   public function __construct(public string $htmlString) {
   }
 
@@ -64,14 +64,14 @@ class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
   }
 
   public async function testUnsafeAttribute(): Awaitable<void> {
-    // without using XHPUnsafeAttributeValue, each &amp; will be double-escaped as &amp;amp;
+    // without using XHPUnsafeAttributeValue_DEPRECATED, each &amp; will be double-escaped as &amp;amp;
     $attr = 'foo &amp;&amp; bar';
     $xhp = <div onclick={$attr} />;
     expect(await $xhp->toStringAsync())->toEqual(
       '<div onclick="foo &amp;amp;&amp;amp; bar"></div>',
     );
 
-    // using XHPUnsafeAttributeValue the &amp; is not double escaped
+    // using XHPUnsafeAttributeValue_DEPRECATED the &amp; is not double escaped
     $escaped = new ExampleUnsafeAttribute('foo &amp;&amp; bar');
     $xhp = <div />;
     $xhp->forceAttribute('onclick', $escaped);
