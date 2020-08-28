@@ -14,8 +14,6 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 final xhp class details
   extends element
   implements
-    //--- Phrase is not correct, do we keep it for BC?
-    Category\Phrase,
     Category\Flow,
     Category\Interactive,
     Category\Sectioning,

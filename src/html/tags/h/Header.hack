@@ -15,8 +15,6 @@ final xhp class header
   extends element
   implements
     Category\Flow,
-    //--- Heading is incorrect, do we keep it for BC?
-    Category\Heading,
     Category\Palpable {
   use XHPChild\Validation;
 

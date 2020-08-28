@@ -12,9 +12,7 @@ namespace Facebook\XHP\HTML;
 final xhp class style
   extends unescaped_pcdata_element
   implements
-    Category\Metadata,
-    //--- Flow is wrong, do we keep it for BC?
-    Category\Flow {
+    Category\Metadata {
   attribute
     string media,
     bool scoped,
