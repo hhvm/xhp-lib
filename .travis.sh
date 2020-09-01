@@ -9,7 +9,16 @@ php --version
   cd $(mktemp -d)
   curl https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 )
-composer install
+composer install --no-autoloader
+
+hhvm \
+  -dhhvm.hack.lang.enable_xhp_class_modifier=false \
+  -dhhvm.hack.lang.disable_xhp_element_mangling=false \
+  vendor/bin/hh-autoload
 
 hh_client
-vendor/bin/hacktest tests/
+
+hhvm \
+  -dhhvm.hack.lang.enable_xhp_class_modifier=false \
+  -dhhvm.hack.lang.disable_xhp_element_mangling=false \
+  vendor/bin/hacktest tests/
