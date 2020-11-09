@@ -10,7 +10,6 @@
 namespace Facebook\XHP;
 
 use type Facebook\TypeAssert\IncorrectTypeException;
-use namespace Facebook\TypeSpec;
 
 enum XHPChildrenDeclarationType: int {
   NO_CHILDREN = 0;
@@ -52,18 +51,17 @@ class ReflectionXHPChildrenDeclaration {
   <<__Memoize>>
   public function getExpression(): ReflectionXHPChildrenExpression {
     try {
-      $data = TypeSpec\varray(TypeSpec\mixed())
-        ->assertType($this->data);
-      return new ReflectionXHPChildrenExpression($this->context, $data);
-    } catch (IncorrectTypeException $_) {
-      // handled below
+      return new ReflectionXHPChildrenExpression(
+        $this->context,
+        $this->data as KeyedContainer<_, _>,
+      );
+    } catch (\TypeAssertionException $_) {
+      throw new \Exception(
+        'Tried to get child expression for XHP class '.
+        $this->context.
+        ', but it does not have an expressions.',
+      );
     }
-
-    throw new \Exception(
-      'Tried to get child expression for XHP class '.
-      \get_class($this->context).
-      ', but it does not have an expressions.',
-    );
   }
 
   public function __toString(): string {
@@ -80,7 +78,7 @@ class ReflectionXHPChildrenDeclaration {
 class ReflectionXHPChildrenExpression {
   public function __construct(
     private string $context,
-    private varray<mixed> $data,
+    private KeyedContainer<arraykey, mixed> $data,
   ) {
   }
 
@@ -97,22 +95,22 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenExpressionType::SUB_EXPR_SEQUENCE ||
         $type === XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Only disjunctions and sequences have two sub-expressions - in %s',
-      \get_class($this->context),
+      $this->context,
     );
     try {
-      $sub_expr_1 = TypeSpec\varray(TypeSpec\mixed())
-        ->assertType($this->data[1]);
-      $sub_expr_2 = TypeSpec\varray(TypeSpec\mixed())
-        ->assertType($this->data[2]);
       return tuple(
-        new ReflectionXHPChildrenExpression($this->context, $sub_expr_1),
-        new ReflectionXHPChildrenExpression($this->context, $sub_expr_2),
+        new ReflectionXHPChildrenExpression(
+          $this->context,
+          $this->data[1] as KeyedContainer<_, _>,
+        ),
+        new ReflectionXHPChildrenExpression(
+          $this->context,
+          $this->data[2] as KeyedContainer<_, _>,
+        ),
       );
-    } catch (IncorrectTypeException $_) {
-      // handled below
+    } catch (\TypeAssertionException $_) {
+      throw new \Exception('Data is not subexpressions - in '.$this->context);
     }
-
-    throw new \Exception('Data is not subexpressions - in '.$this->context);
   }
 
   <<__Memoize>>
@@ -122,7 +120,7 @@ class ReflectionXHPChildrenExpression {
       $type !== XHPChildrenExpressionType::SUB_EXPR_SEQUENCE &&
         $type !== XHPChildrenExpressionType::SUB_EXPR_DISJUNCTION,
       'Disjunctions and sequences do not have a constraint type - in %s',
-      \get_class($this->context),
+      $this->context,
     );
     return XHPChildrenConstraintType::assert($this->data[1]);
   }
@@ -134,7 +132,7 @@ class ReflectionXHPChildrenExpression {
       $type === XHPChildrenConstraintType::ELEMENT ||
         $type === XHPChildrenConstraintType::CATEGORY,
       'Only element and category constraints have string data - in %s',
-      \get_class($this->context),
+      $this->context,
     );
     $data = $this->data[2];
     invariant($data is string, 'Expected string data');
@@ -150,19 +148,18 @@ class ReflectionXHPChildrenExpression {
     );
     $data = $this->data[2];
     try {
-      $data = TypeSpec\varray(TypeSpec\mixed())
-        ->assertType($this->data[2]);
-      return new ReflectionXHPChildrenExpression($this->context, $data);
-    } catch (IncorrectTypeException $_) {
-      // handled below
+      return new ReflectionXHPChildrenExpression(
+        $this->context,
+        $data as KeyedContainer<_, _>,
+      );
+    } catch (\TypeAssertionException $_) {
+      throw new \Exception(
+        'Expected a sub-expression, got a '.
+        (\is_object($data) ? \get_class($data) : \gettype($data)).
+        ' - in '.
+        $this->context,
+      );
     }
-
-    throw new \Exception(
-      'Expected a sub-expression, got a '.
-      (\is_object($data) ? \get_class($data) : \gettype($data)).
-      ' - in '.
-      $this->context,
-    );
   }
 
   public function __toString(): string {
