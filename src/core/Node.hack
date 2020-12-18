@@ -115,8 +115,7 @@ abstract xhp class node implements \XHPChild {
         $this->children[] = $new_child;
       }
     } else if ($child !== null) {
-      assert($child is \XHPChild);
-      $this->children[] = $child;
+      $this->children[] = $child as \XHPChild;
     }
     return $this;
   }
@@ -733,17 +732,16 @@ abstract xhp class node implements \XHPChild {
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::CATEGORY:
-        if (
-          !C\contains_key($this->children, $index) ||
-          !($this->children[$index] is node)
-        ) {
+        if (!C\contains_key($this->children, $index)) {
+          return tuple(false, $index);
+        }
+        $child = $this->children[$index];
+        if (!$child is node) {
           return tuple(false, $index);
         }
         $category = $expr->getConstraintString()
           |> Str\replace($$, '__', ':')
           |> Str\replace($$, '_', '-');
-        $child = $this->children[$index];
-        assert($child is node);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);
