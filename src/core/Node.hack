@@ -30,8 +30,7 @@ abstract xhp class node implements \XHPChild {
   private dict<string, mixed> $context = dict[];
   public ?string $source;
 
-  protected function init(): void {
-  }
+  protected function init(): void {}
 
   /**
    * A new :x:node is instantiated for every literal tag
