@@ -85,8 +85,7 @@ abstract class :x:composable-element extends :xhp {
     } else if ($child is :x:frag) {
       $this->children->addAll($child->getChildren());
     } else if ($child !== null) {
-      assert($child is XHPChild);
-      $this->children->add($child);
+      $this->children->add($child as XHPChild);
     }
     return $this;
   }
@@ -717,17 +716,16 @@ abstract class :x:composable-element extends :xhp {
         return tuple(false, $index);
 
       case XHPChildrenConstraintType::CATEGORY:
-        if (
-          !$this->children->containsKey($index) ||
-          !($this->children->get($index) is :xhp)
-        ) {
+        if (!$this->children->containsKey($index)) {
+          return tuple(false, $index);
+        }
+        $child = $this->children->get($index);
+        if (!$child is :xhp) {
           return tuple(false, $index);
         }
         $category = $expr->getConstraintString()
           |> Str\replace($$, '__', ':')
           |> Str\replace($$, '_', '-');
-        $child = $this->children->get($index);
-        assert($child is :xhp);
         $categories = $child->__xhpCategoryDeclaration();
         if (($categories[$category] ?? 0) === 0) {
           return tuple(false, $index);

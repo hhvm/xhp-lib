@@ -12,5 +12,5 @@ disallow_array_literal = true
 enable_xhp_class_modifier=false
 disable_xhp_element_mangling=false
 disable_xhp_children_declarations=false
-allowed_decl_fixme_codes=2049,2053,4045
-allowed_fixme_codes_strict=2011,2049,2050,2053,4026,4027,4045,4053,4057,4107,4108,4110,4112,4128,4135,4188,4240,4281,4323,4343
+allowed_decl_fixme_codes=2049,2053,4045,4047
+allowed_fixme_codes_strict=2011,2049,2050,2053,4026,4027,4045,4053,4057,4104,4107,4108,4047,4110,4112,4128,4135,4188,4240,4281,4323,4343
