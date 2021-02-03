@@ -19,56 +19,10 @@ jobs:
     runs-on: ${{matrix.os}}-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Install Composer
-        run: .github/workflows/install-composer.sh --install-dir=${{runner.temp}}
-      - name: Install HHVM (apt)
-        if: matrix.os == 'ubuntu'
-        run: |
-          set -ex
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common apt-transport-https
-          sudo apt-key add .github/workflows/hhvm.gpg.key
-          if [ "${{matrix.hhvm}}" = "nightly" ]; then
-            sudo add-apt-repository https://dl.hhvm.com/ubuntu
-            sudo apt-get install -y hhvm-nightly
-          elif [ "${{matrix.hhvm}}" = "latest" ]; then
-            sudo add-apt-repository https://dl.hhvm.com/ubuntu
-            sudo apt-get install -y hhvm
-          else
-            DISTRO=$(lsb_release --codename --short)
-            sudo add-apt-repository \
-              "deb https://dl.hhvm.com/ubuntu ${DISTRO}-${{matrix.hhvm}} main"
-            sudo apt-get install -y hhvm
-          fi
-      - name: Install HHVM (brew)
-        if: matrix.os == 'macos'
-        run: |
-          brew tap hhvm/hhvm
-          if [ "${{matrix.hhvm}}" = "latest" ]; then
-            brew install hhvm
-          else
-            brew install hhvm-${{matrix.hhvm}}
-          fi
-      - name: Inspect HHVM and Hack versions
-        run: |
-          hhvm --version
-          hh_client --version
       - name: Create branch for version alias
         run: git checkout -b CI_current_pull_request
-      - name: Install project dependencies
-        run: php ${{runner.temp}}/composer.phar install --no-autoloader
-      - name: Generate autoload map
-        run: |
-          hhvm \
-            -dhhvm.hack.lang.enable_xhp_class_modifier=false \
-            -dhhvm.hack.lang.disable_xhp_element_mangling=false \
-            vendor/bin/hh-autoload
-      - name: Typecheck
-        run: hh_client
-      - name: Run tests
-        run: |
-          hhvm \
-            -dhhvm.hack.lang.enable_xhp_class_modifier=false \
-            -dhhvm.hack.lang.disable_xhp_element_mangling=false \
-            vendor/bin/hacktest tests/
+      - uses: hhvm/actions/hack-lint-test@master
+        with:
+          hhvm: ${{matrix.hhvm}}
+          skip_lint: true
+          hhvm_flags: -dhhvm.hack.lang.enable_xhp_class_modifier=false -dhhvm.hack.lang.disable_xhp_element_mangling=false
