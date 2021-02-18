@@ -16,7 +16,7 @@ abstract class :xhp implements XHPChild, JsonSerializable {
 
   public function __construct(
     KeyedTraversable<string, mixed> $attributes,
-    Traversable<XHPChild> $children,
+    Traversable<?XHPChild> $children,
   ): void {
   }
   abstract public function appendChild(mixed $child): this;

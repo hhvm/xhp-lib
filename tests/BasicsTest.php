@@ -50,6 +50,11 @@ class BasicsTest extends Facebook\HackTest\HackTest {
     expect($xhp->toString())->toEqual('<div>herpderp</div>');
   }
 
+  public async function testScalarChildren(): Awaitable<void> {
+    $xhp = <div>{42}{' str '}{3.14}{null}</div>;
+    expect($xhp->toString())->toEqual('<div>42 str 3.14</div>');
+  }
+
   public function testEscaping(): void {
     $xhp = <div>{"foo<SCRIPT>bar"}</div>;
     expect($xhp->toString())->toEqual('<div>foo&lt;SCRIPT&gt;bar</div>');

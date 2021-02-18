@@ -35,7 +35,7 @@ abstract class :x:composable-element extends :xhp {
    */
   final public function __construct(
     KeyedTraversable<string, mixed> $attributes,
-    Traversable<XHPChild> $children,
+    Traversable<?XHPChild> $children,
     dynamic ...$debug_info
   ) {
     parent::__construct($attributes, $children);
