@@ -49,7 +49,7 @@ abstract xhp class node implements \XHPChild {
    */
   final public function __construct(
     KeyedTraversable<string, mixed> $attributes,
-    Traversable<\XHPChild> $children,
+    Traversable<?\XHPChild> $children,
     dynamic ...$debug_info
   ) {
     invariant(
