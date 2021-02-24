@@ -14,7 +14,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class clipPath
   extends element
   implements Cat\ContainerElement, Cat\NeverRenderedElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string requiredFeatures,
@@ -37,13 +37,13 @@ xhp class clipPath
     enum {'userSpaceOnUse', 'objectBoundingBox'} clipPathUnits;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<Cat\AnimationElement>(),
-      XHPChild\ofType<Cat\ShapeElement>(),
-      XHPChild\ofType<text>(),
-      XHPChild\ofType<namespace\use>(),
-      XHPChild\ofType<HTML\script>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<Cat\AnimationElement>(),
+      XHPChild\of_type<Cat\ShapeElement>(),
+      XHPChild\of_type<text>(),
+      XHPChild\of_type<namespace\use>(),
+      XHPChild\of_type<HTML\script>(),
     ));
   }
 

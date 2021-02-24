@@ -12,7 +12,7 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feComponentTransfer extends element implements Cat\FilterPrimitive {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string clip,
@@ -35,14 +35,14 @@ xhp class feComponentTransfer extends element implements Cat\FilterPrimitive {
     string in;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<feFuncA>(),
-      XHPChild\ofType<feFuncB>(),
-      XHPChild\ofType<feFuncG>(),
-      XHPChild\ofType<feFuncR>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<feFuncA>(),
+      XHPChild\of_type<feFuncB>(),
+      XHPChild\of_type<feFuncG>(),
+      XHPChild\of_type<feFuncR>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
     ));
   }
 

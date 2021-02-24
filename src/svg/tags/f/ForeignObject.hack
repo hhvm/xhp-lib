@@ -17,7 +17,7 @@ xhp class foreignObject
     Cat\GraphicsElement,
     Cat\RenderableElement,
     Cat\StruturallyExternalElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string requiredExtensions,

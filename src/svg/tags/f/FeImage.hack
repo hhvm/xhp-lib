@@ -12,7 +12,7 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feImage extends element implements Cat\FilterPrimitive {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string clip,
@@ -38,12 +38,12 @@ xhp class feImage extends element implements Cat\FilterPrimitive {
     enum {'anonymous', 'use-credentials'} crossorigin;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\FilterPrimitive>(),
-      XHPChild\ofType<animate>(),
-      XHPChild\ofType<animateTransform>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\FilterPrimitive>(),
+      XHPChild\of_type<animate>(),
+      XHPChild\of_type<animateTransform>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
     ));
   }
 

@@ -12,18 +12,18 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class stop extends element /* implements nothing */ {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     // float or <percentage>
     mixed offset;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<animate>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
-      XHPChild\ofType<HTML\style>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<animate>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
+      XHPChild\of_type<HTML\style>(),
     ));
   }
 

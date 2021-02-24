@@ -12,7 +12,7 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class set extends element implements Cat\AnimationElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string onbegin,
@@ -36,10 +36,10 @@ xhp class set extends element implements Cat\AnimationElement {
     string to;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<HTML\style>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<HTML\style>(),
     ));
   }
 

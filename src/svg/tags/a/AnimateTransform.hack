@@ -47,9 +47,9 @@ xhp class animateTransform extends element implements Cat\AnimationElement {
     enum {'translate', 'scale', 'rotate', 'skewX', 'skewY'} type;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<HTML\script>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<HTML\script>(),
     ));
   }
 

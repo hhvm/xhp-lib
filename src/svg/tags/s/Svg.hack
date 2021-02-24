@@ -15,7 +15,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class svg
   extends element
   implements Cat\ContainerElement, Cat\RenderableElement, Cat\StruturalElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   // The category is from the html family.
   // This is to allow svg documents to be embedded into HTML.
@@ -57,9 +57,9 @@ xhp class svg
    *       We're only banning pcdata, but that seems like the right thing to do.
    */
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<element>(),
-      XHPChild\ofType<HTML\element>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<element>(),
+      XHPChild\of_type<HTML\element>(),
     ));
   }
 

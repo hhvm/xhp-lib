@@ -12,7 +12,7 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feFuncG extends element implements Cat\TranferFunctionElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     enum {'identity', 'table', 'discrete', 'linear', 'gamma'} type,
@@ -24,11 +24,11 @@ xhp class feFuncG extends element implements Cat\TranferFunctionElement {
     float offset;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<animate>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<animate>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
     ));
   }
 

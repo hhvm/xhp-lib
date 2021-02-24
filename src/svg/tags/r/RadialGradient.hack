@@ -17,7 +17,7 @@ xhp class radialGradient
     Cat\GradientElement,
     Cat\NeverRenderedElement,
     Cat\PaintServerElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string cx,
@@ -32,14 +32,14 @@ xhp class radialGradient
     string href;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<animate>(),
-      XHPChild\ofType<animateTransform>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
-      XHPChild\ofType<stop>(),
-      XHPChild\ofType<HTML\style>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<animate>(),
+      XHPChild\of_type<animateTransform>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
+      XHPChild\of_type<stop>(),
+      XHPChild\of_type<HTML\style>(),
     ));
   }
 

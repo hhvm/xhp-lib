@@ -12,7 +12,7 @@ use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class feSpecularLighting extends element implements Cat\FilterPrimitive {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string clip,
@@ -46,10 +46,10 @@ xhp class feSpecularLighting extends element implements Cat\FilterPrimitive {
    * Note: We allow any number of LightSources, not just 1.
    */
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<Cat\LightSource>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<Cat\LightSource>(),
     ));
   }
 

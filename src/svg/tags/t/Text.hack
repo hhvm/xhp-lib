@@ -17,7 +17,7 @@ xhp class text
     Cat\GraphicsElement,
     Cat\RenderableElement,
     Cat\TextContentElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string requiredExtensions,
@@ -37,20 +37,20 @@ xhp class text
     mixed textLength;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\AnimationElement>(),
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<Cat\PaintServerElement>(),
-      XHPChild\ofType<Cat\TextContentChildElement>(),
-      XHPChild\ofType<a>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\AnimationElement>(),
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<Cat\PaintServerElement>(),
+      XHPChild\of_type<Cat\TextContentChildElement>(),
+      XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`
-      XHPChild\ofType<HTML\a>(),
-      XHPChild\ofType<clipPath>(),
-      XHPChild\ofType<marker>(),
-      XHPChild\ofType<mask>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<HTML\style>(),
+      XHPChild\of_type<HTML\a>(),
+      XHPChild\of_type<clipPath>(),
+      XHPChild\of_type<marker>(),
+      XHPChild\of_type<mask>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<HTML\style>(),
       XHPChild\pcdata(),
     ));
   }

@@ -14,7 +14,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class marker
   extends element
   implements Cat\ContainerElement, Cat\NeverRenderedElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string viewBox,
@@ -32,31 +32,31 @@ xhp class marker
     mixed orient;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\AnimationElement>(),
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<Cat\PaintServerElement>(),
-      XHPChild\ofType<Cat\ShapeElement>(),
-      XHPChild\ofType<Cat\StruturalElement>(),
-      XHPChild\ofType<a>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\AnimationElement>(),
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<Cat\PaintServerElement>(),
+      XHPChild\of_type<Cat\ShapeElement>(),
+      XHPChild\of_type<Cat\StruturalElement>(),
+      XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`
-      XHPChild\ofType<HTML\a>(),
-      XHPChild\ofType<HTML\audio>(),
-      XHPChild\ofType<HTML\canvas>(),
-      XHPChild\ofType<clipPath>(),
-      XHPChild\ofType<filter>(),
-      XHPChild\ofType<foreignObject>(),
-      XHPChild\ofType<HTML\iframe>(),
-      XHPChild\ofType<image>(),
-      XHPChild\ofType<marker>(),
-      XHPChild\ofType<mask>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<HTML\style>(),
-      XHPChild\ofType<namespace\switch>(),
-      XHPChild\ofType<text>(),
-      XHPChild\ofType<HTML\video>(),
-      XHPChild\ofType<view>(),
+      XHPChild\of_type<HTML\a>(),
+      XHPChild\of_type<HTML\audio>(),
+      XHPChild\of_type<HTML\canvas>(),
+      XHPChild\of_type<clipPath>(),
+      XHPChild\of_type<filter>(),
+      XHPChild\of_type<foreignObject>(),
+      XHPChild\of_type<HTML\iframe>(),
+      XHPChild\of_type<image>(),
+      XHPChild\of_type<marker>(),
+      XHPChild\of_type<mask>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<HTML\style>(),
+      XHPChild\of_type<namespace\switch>(),
+      XHPChild\of_type<text>(),
+      XHPChild\of_type<HTML\video>(),
+      XHPChild\of_type<view>(),
     ));
   }
 

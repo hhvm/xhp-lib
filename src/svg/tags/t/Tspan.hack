@@ -18,7 +18,7 @@ xhp class tspan
     Cat\RenderableElement,
     Cat\TextContentElement,
     Cat\TextContentChildElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string requiredExtensions,
@@ -36,18 +36,18 @@ xhp class tspan
     enum {'spacing', 'spacingAndGlyphs'} lengthAdjust;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<Cat\PaintServerElement>(),
-      XHPChild\ofType<a>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<Cat\PaintServerElement>(),
+      XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`
-      XHPChild\ofType<HTML\a>(),
-      XHPChild\ofType<animate>(),
-      XHPChild\ofType<HTML\script>(),
-      XHPChild\ofType<set>(),
-      XHPChild\ofType<HTML\style>(),
-      XHPChild\ofType<tspan>(),
+      XHPChild\of_type<HTML\a>(),
+      XHPChild\of_type<animate>(),
+      XHPChild\of_type<HTML\script>(),
+      XHPChild\of_type<set>(),
+      XHPChild\of_type<HTML\style>(),
+      XHPChild\of_type<tspan>(),
       XHPChild\pcdata(),
     ));
   }

@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class a
   extends element
   implements Cat\ContainerElement, Cat\RenderableElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   /**
    * Slightly different from `HTML\a`.

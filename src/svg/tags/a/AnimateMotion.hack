@@ -12,7 +12,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 use namespace Facebook\XHP\HTML;
 
 xhp class animateMotion extends element implements Cat\AnimationElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     enum {'replace', 'sum'} additive,
@@ -58,10 +58,10 @@ xhp class animateMotion extends element implements Cat\AnimationElement {
    * Note: We allow any number of mpath elements, not just 1.
    */
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\DescriptiveElement>(),
-      XHPChild\ofType<mpath>(),
-      XHPChild\ofType<HTML\script>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\DescriptiveElement>(),
+      XHPChild\of_type<mpath>(),
+      XHPChild\of_type<HTML\script>(),
     ));
   }
 

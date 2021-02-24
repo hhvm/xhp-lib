@@ -14,30 +14,30 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 xhp class switch
   extends element
   implements Cat\ContainerElement, Cat\RenderableElement {
-  use \XHPChildValidation;
+  use XHPChild\Validation;
 
   attribute
     string requiredExtensions,
     string systemLanguage;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
-    return XHPChild\anyNumberOf(XHPChild\anyOf(
-      XHPChild\ofType<Cat\AnimationElement>(),
-      XHPChild\ofType<Cat\ShapeElement>(),
-      XHPChild\ofType<a>(),
+    return XHPChild\any_number_of(XHPChild\any_of(
+      XHPChild\of_type<Cat\AnimationElement>(),
+      XHPChild\of_type<Cat\ShapeElement>(),
+      XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`
-      XHPChild\ofType<HTML\a>(),
-      XHPChild\ofType<HTML\audio>(),
-      XHPChild\ofType<HTML\canvas>(),
-      XHPChild\ofType<foreignObject>(),
-      XHPChild\ofType<g>(),
-      XHPChild\ofType<HTML\iframe>(),
-      XHPChild\ofType<image>(),
-      XHPChild\ofType<svg>(),
-      XHPChild\ofType<namespace\switch>(),
-      XHPChild\ofType<text>(),
-      XHPChild\ofType<HTML\video>(),
+      XHPChild\of_type<HTML\a>(),
+      XHPChild\of_type<HTML\audio>(),
+      XHPChild\of_type<HTML\canvas>(),
+      XHPChild\of_type<foreignObject>(),
+      XHPChild\of_type<g>(),
+      XHPChild\of_type<HTML\iframe>(),
+      XHPChild\of_type<image>(),
+      XHPChild\of_type<svg>(),
+      XHPChild\of_type<namespace\switch>(),
+      XHPChild\of_type<text>(),
+      XHPChild\of_type<HTML\video>(),
     ));
   }
 
