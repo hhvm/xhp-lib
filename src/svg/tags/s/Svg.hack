@@ -14,14 +14,8 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class svg
   extends element
-  implements Cat\ContainerElement, Cat\RenderableElement, Cat\StruturalElement {
+  implements Cat\ContainerElement, Cat\RenderableElement, Cat\StruturalElement, HTML\Category\Phrase {
   use XHPChild\Validation;
-
-  // The category is from the html family.
-  // This is to allow svg documents to be embedded into HTML.
-  // Svg uses it own content model with very different rules and names.
-  // @see Cat\__ interfaces above.
-  category %phrase;
 
   attribute
     string xmlns,
