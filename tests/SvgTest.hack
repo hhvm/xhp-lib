@@ -8,7 +8,7 @@
  */
 
 use namespace Facebook\XHP\{HTML, SVG};
-use type Facebook\XHP\SVG\{svg, g, circle, animate, text};
+use type Facebook\XHP\SVG\{animate, circle, g, svg, text};
 use function Facebook\FBExpect\expect;
 
 final class SvgTest extends Facebook\HackTest\HackTest {
