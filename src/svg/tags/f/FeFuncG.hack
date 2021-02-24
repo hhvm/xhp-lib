@@ -11,7 +11,7 @@ namespace Facebook\XHP\SVG;
 use namespace Facebook\XHP\HTML;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 
-xhp class feFuncG extends element implements Cat\TranferFunctionElement {
+xhp class feFuncG extends element implements Cat\TransferFunctionElement {
   use XHPChild\Validation;
 
   attribute

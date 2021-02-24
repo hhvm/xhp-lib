@@ -8,4 +8,4 @@
  */
 namespace Facebook\XHP\SVG\Cat;
 
-interface TranferFunctionElement {}
+interface TransferFunctionElement {}

@@ -16,7 +16,7 @@ xhp class foreignObject
   implements
     Cat\GraphicsElement,
     Cat\RenderableElement,
-    Cat\StruturallyExternalElement {
+    Cat\StructurallyExternalElement {
   use XHPChild\Validation;
 
   attribute

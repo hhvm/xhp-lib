@@ -58,7 +58,7 @@ xhp class mask
       XHPChild\of_type<Cat\AnimationElement>(),
       XHPChild\of_type<Cat\DescriptiveElement>(),
       XHPChild\of_type<Cat\ShapeElement>(),
-      XHPChild\of_type<Cat\StruturalElement>(),
+      XHPChild\of_type<Cat\StructuralElement>(),
       XHPChild\of_type<Cat\GradientElement>(),
       XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`

@@ -13,7 +13,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class symbol
   extends element
-  implements Cat\ContainerElement, Cat\StruturalElement {
+  implements Cat\ContainerElement, Cat\StructuralElement {
   use XHPChild\Validation;
 
   attribute
@@ -34,7 +34,7 @@ xhp class symbol
       XHPChild\of_type<Cat\DescriptiveElement>(),
       XHPChild\of_type<Cat\PaintServerElement>(),
       XHPChild\of_type<Cat\ShapeElement>(),
-      XHPChild\of_type<Cat\StruturalElement>(),
+      XHPChild\of_type<Cat\StructuralElement>(),
       XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`

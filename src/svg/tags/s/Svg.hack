@@ -14,7 +14,7 @@ use namespace Facebook\XHP\ChildValidation as XHPChild;
 
 xhp class svg
   extends element
-  implements Cat\ContainerElement, Cat\RenderableElement, Cat\StruturalElement, HTML\Category\Phrase {
+  implements Cat\ContainerElement, Cat\RenderableElement, Cat\StructuralElement, HTML\Category\Phrase {
   use XHPChild\Validation;
 
   attribute

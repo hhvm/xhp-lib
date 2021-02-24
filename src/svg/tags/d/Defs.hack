@@ -16,7 +16,7 @@ xhp class defs
   implements
     Cat\ContainerElement,
     Cat\NeverRenderedElement,
-    Cat\StruturalElement {
+    Cat\StructuralElement {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -25,7 +25,7 @@ xhp class defs
       XHPChild\of_type<Cat\DescriptiveElement>(),
       XHPChild\of_type<Cat\PaintServerElement>(),
       XHPChild\of_type<Cat\ShapeElement>(),
-      XHPChild\of_type<Cat\StruturalElement>(),
+      XHPChild\of_type<Cat\StructuralElement>(),
       XHPChild\of_type<a>(),
       // technically incorrect, we may only allow `SVG\a`
       // but let's not punish you for using the wrong `<a>`

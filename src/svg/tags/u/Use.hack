@@ -16,8 +16,8 @@ xhp class use
   implements
     Cat\GraphicsElement,
     Cat\RenderableElement,
-    Cat\StruturalElement,
-    Cat\StruturallyExternalElement {
+    Cat\StructuralElement,
+    Cat\StructurallyExternalElement {
   use XHPChild\Validation;
 
   attribute

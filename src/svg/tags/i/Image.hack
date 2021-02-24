@@ -17,7 +17,7 @@ xhp class image
     Cat\GraphicsElement,
     Cat\GraphicsReferencingElement,
     Cat\RenderableElement,
-    Cat\StruturallyExternalElement {
+    Cat\StructurallyExternalElement {
   use XHPChild\Validation;
 
   attribute
