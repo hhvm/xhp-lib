@@ -49,7 +49,6 @@ xhp class test:old_child_declaration_only extends x\element {
     return XHPChild\of_type<div>();
   }
 
-
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag>{$this->getChildren()}</x:frag>;
@@ -156,7 +155,6 @@ xhp class test:three_children extends x\element {
   }
 }
 
-
 xhp class test:either_of_two_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -184,7 +182,6 @@ xhp class test:any_of_three_children extends x\element {
     return <div />;
   }
 }
-
 
 xhp class test:nested_rule extends x\element {
   use XHPChild\Validation;
