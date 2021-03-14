@@ -23,7 +23,6 @@ final xhp class doctype extends x\primitive {
     return XHPChild\of_type<html>();
   }
 
-
   <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
     return '<!DOCTYPE html>'.

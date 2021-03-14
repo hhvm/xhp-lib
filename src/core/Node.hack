@@ -177,7 +177,6 @@ abstract xhp class node implements \XHPChild {
     return $children;
   }
 
-
   /**
    * Fetches the first direct child of the element, if any.
    */

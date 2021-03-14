@@ -7,7 +7,6 @@
  *
  */
 
-
 namespace Facebook\XHP;
 
 use namespace Facebook\XHP\Core as x;

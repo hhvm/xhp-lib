@@ -9,7 +9,6 @@
 
 namespace Facebook\XHP\HTML;
 
-
 use namespace Facebook\XHP\{ChildValidation as XHPChild, Core as x};
 use namespace HH\Lib\{Str, Vec};
 
@@ -26,7 +25,6 @@ final xhp class conditional_comment extends x\primitive {
       XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<x\node>()),
     );
   }
-
 
   <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
