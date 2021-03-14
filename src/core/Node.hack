@@ -429,8 +429,10 @@ abstract xhp class node implements \XHPChild {
   }
 
   /**
-   * Whether the attribute has been explicitly set to a nonnull value by the
-   * caller (vs. using the default set by "attribute" in the class definition).
+   * Whether the attribute has been explicitly set in either the XhpOpenTag
+   * or using setAttribute(). An attribute with a default value is not
+   * automatically considered set. Explicitly setting a value which is the
+   * same as the default value will make this method return true for that attribute.
    *
    * @param $attr attribute to check
    */
