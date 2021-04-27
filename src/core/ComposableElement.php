@@ -59,7 +59,7 @@ abstract class :x:composable-element extends :xhp {
       // There is some cost to having defaulted unused arguments on a function
       // so we leave these out and get them with func_get_args().
       if (C\count($debug_info) >= 2) {
-        $this->source = $debug_info[0].':'.$debug_info[1];
+        $this->source = (string)$debug_info[0].':'.(string)$debug_info[1];
       } else {
         $this->source =
           'You have child validation on, but debug information is not being '.

@@ -15,7 +15,8 @@ class XHPInvalidChildrenException extends XHPException {
       XHPException::getElementName($that).
       '` was rendered with '.
       "invalid children.\n\n".
-      "$that->source\n\n".
+      $that->__getSourcePositionWithErrorDefaultForNull().
+      "\n\n".
       "Verified $index children before failing.\n\n".
       "Children expected:\n".
       $that->__getChildrenDeclaration().
