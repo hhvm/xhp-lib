@@ -79,7 +79,7 @@ abstract xhp class node implements \XHPChild {
 
     if (\Facebook\XHP\ChildValidation\is_enabled()) {
       if (C\count($debug_info) >= 2) {
-        $this->source = $debug_info[0].':'.$debug_info[1];
+        $this->source = (string)$debug_info[0].':'.(string)$debug_info[1];
       } else {
         $this->source =
           'You have child validation on, but debug information is not being '.
@@ -789,6 +789,10 @@ abstract xhp class node implements \XHPChild {
       }
     }
     return Str\join($desc, ',');
+  }
+
+  final public function __getSourcePositionWithErrorDefaultForNull(): string {
+    return $this->source ?? '!!! SOURCE POSITION NOT KNOWN !!!';
   }
 
   final public function categoryOf(string $c): bool {

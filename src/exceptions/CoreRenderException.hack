@@ -19,7 +19,7 @@ class CoreRenderException extends namespace\Exception {
       '` reduced into `'.
       \gettype($rend).
       "`.\n\n".
-      $that->source,
+      $that->__getSourcePositionWithErrorDefaultForNull(),
     );
   }
 }

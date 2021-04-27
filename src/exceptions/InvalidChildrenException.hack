@@ -18,7 +18,7 @@ class InvalidChildrenException extends namespace\Exception {
       self::getElementName($that).
       '` was rendered with '.
       "invalid children.\n\n".
-      $that->source.
+      $that->__getSourcePositionWithErrorDefaultForNull().
       "\n\n".
       'Verified '.
       $index.

@@ -2,6 +2,7 @@
 *.[ls]o
 *.la
 *.swp
+.var/
 *.hhast.parser-cache
 .var/
 xhp/parser.yacc.*
