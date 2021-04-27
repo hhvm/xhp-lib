@@ -21,7 +21,7 @@ class XHPInvalidArrayKeyAttributeException extends XHPException {
       :xhp::class2element(get_class($that)).
       "`, expected ".
       "array<$type => ?>.\n\n".
-      $that->source,
+      $that->__getSourcePositionWithErrorDefaultForNull(),
     );
   }
 }

@@ -142,4 +142,8 @@ abstract class :xhp implements XHPChild, JsonSerializable {
   private static function areHyphensMangled(): bool {
     return !(ini_get('hhvm.hack.lang.disable_xhp_element_mangling') ?? false);
   }
+
+  final public function __getSourcePositionWithErrorDefaultForNull(): string {
+    return $this->source ?? '!!! SOURCE POSITION NOT KNOWN !!!';
+  }
 }

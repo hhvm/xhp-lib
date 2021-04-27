@@ -16,7 +16,7 @@ class XHPCoreRenderException extends XHPException {
       '` reduced into `'.
       gettype($rend).
       "`.\n\n".
-      $that->source,
+      $that->__getSourcePositionWithErrorDefaultForNull(),
     );
   }
 }

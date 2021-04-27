@@ -14,7 +14,8 @@ class XHPClassException extends XHPException {
       'Exception in class `'.
       XHPException::getElementName($that).
       "`\n\n".
-      "$that->source\n\n".
+      $that->__getSourcePositionWithErrorDefaultForNull().
+      "\n\n".
       $msg,
     );
   }

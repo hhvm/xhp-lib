@@ -17,7 +17,7 @@ class XHPAttributeRequiredException extends XHPException {
       '`'.
       XHPException::getElementName($that).
       "`.\n\n".
-      $that->source,
+      $that->__getSourcePositionWithErrorDefaultForNull(),
     );
   }
 }

@@ -18,7 +18,7 @@ class XHPAttributeNotSupportedException extends XHPException {
       XHPException::getElementName($that).
       '"'.
       "\n\n".
-      $that->source.
+      $that->__getSourcePositionWithErrorDefaultForNull().
       "\n\n".
       'Please check for typos in your attribute. If you are creating a new '.
       'attribute on this element define it with the "attribute" keyword'.
