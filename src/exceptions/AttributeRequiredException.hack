@@ -20,7 +20,7 @@ class AttributeRequiredException extends namespace\Exception {
       '`'.
       self::getElementName($that).
       "`.\n\n".
-      $that->source,
+      $that->__getSourcePositionWithErrorDefaultForNull(),
     );
   }
 }
