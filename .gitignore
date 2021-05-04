@@ -3,6 +3,7 @@
 *.la
 *.swp
 *.hhast.parser-cache
+.var/
 xhp/parser.yacc.*
 xhp/scanner.lex.*
 xhp/fastpath.cpp
