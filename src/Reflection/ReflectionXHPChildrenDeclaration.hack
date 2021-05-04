@@ -42,7 +42,7 @@ class ReflectionXHPChildrenDeclaration {
 
   <<__Memoize>>
   public function getType(): XHPChildrenDeclarationType {
-    if (\HH\is_php_array($this->data)) {
+    if ($this->data is Container<_>) {
       return XHPChildrenDeclarationType::EXPRESSION;
     }
     return XHPChildrenDeclarationType::assert($this->data);

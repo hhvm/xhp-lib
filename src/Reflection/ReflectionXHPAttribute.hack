@@ -91,11 +91,11 @@ class ReflectionXHPAttribute {
     );
     $v = $this->extraType;
     invariant(
-      \HH\is_php_array($v),
+      $v is Container<_>,
       'Class name for attribute %s is not an array',
       $this->getName(),
     );
-    return keyset($v);
+    return keyset(/* HH_FIXME[4110] not limited to arraykey */ $v);
   }
 
   /**
