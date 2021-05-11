@@ -21,6 +21,7 @@ final xhp class script
     enum {'anonymous', 'use-credentials'} crossorigin,
     bool defer,
     bool nomodule,
+    string nonce,
     enum {
       '',
       'no-referrer',
