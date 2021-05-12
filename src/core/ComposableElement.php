@@ -110,7 +110,7 @@ abstract class :x:composable-element extends :xhp {
    *
    * @param $children  Single child or array of children
    */
-  final public function replaceChildren(XHPChild ...$children): this {
+  final public function replaceChildren(mixed ...$children): this {
     // This function has been micro-optimized
     $new_children = Vector {};
     foreach ($children as $xhp) {
@@ -120,7 +120,7 @@ abstract class :x:composable-element extends :xhp {
           $new_children->add($child);
         }
       } else if (!($xhp is Traversable<_>)) {
-        $new_children->add($xhp);
+        $new_children->add($xhp as XHPChild);
       } else {
         foreach ($xhp as $element) {
           if ($element is :x:frag) {
