@@ -22,7 +22,7 @@ final class UseAfterRenderException extends \InvalidOperationException {
   }
 
   <<__Override>>
-  public function getMessage(): string {
+  public function getMessage()[]: string {
     if (C\is_empty($this->xhpPath)) {
       return $this->message;
     }
