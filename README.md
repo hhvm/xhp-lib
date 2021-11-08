@@ -177,7 +177,7 @@ class :async-thing extends :x:element {
   protected async function renderAsync(): Awaitable<XHPRoot> {
     $db = await AsyncMysqlClient::connect(...);
     $result = await $db->queryf(
-      'SELECT id2 FROM %T WHERE id1 %=d',
+      'SELECT id2 FROM %T WHERE id1 = %d',
       'friends',
       $this->getContext('viewer')->getUserID(),
     );
