@@ -36,7 +36,7 @@ abstract xhp class primitive extends node {
     return $result;
   }
 
-  final private async function __flushElementChildren(): Awaitable<void> {
+  private async function __flushElementChildren(): Awaitable<void> {
     $children = $this->getChildren();
     $awaitables = dict[];
     foreach ($children as $idx => $child) {
