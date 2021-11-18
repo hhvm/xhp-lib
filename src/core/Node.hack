@@ -631,7 +631,7 @@ abstract xhp class node implements \XHPChild {
     }
   }
 
-  final private function validateChildrenExpression(
+  private function validateChildrenExpression(
     ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
@@ -702,7 +702,7 @@ abstract xhp class node implements \XHPChild {
     }
   }
 
-  final private function validateChildrenRule(
+  private function validateChildrenRule(
     ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
