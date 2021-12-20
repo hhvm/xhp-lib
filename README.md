@@ -13,15 +13,15 @@ XHP augments the syntax of Hack such that XML document fragments become valid
 Hack expressions. This allows you to use Hack as a stricter templating engine and
 offers much more straightforward implementation of reusable components.
 
-If you want a high-level XHP UI library, you might want to take a look at https://github.com/hhvm/xhp-bootstrap/
+For a practical example of high level components you can build with xhp, you might want to take a look at the archived project [xhp-bootstrap](https://github.com/facebookarchive/xhp-bootstrap/).
 
-Announcements and articles are posted to [the XHP-Lib blog](https://hhvm.github.io/xhp-lib/)
+Announcements and articles are posted to [The HHVM blog](https://hhvm.com/blog) and were previously posted to [the XHP-Lib blog](https://hhvm.github.io/xhp-lib/)
 
 ## Installation
 
 [Composer](https://getcomposer.org) is the recommended installation method. To add XHP to your project, run the following command :
 ```console
-$ composer require facebook/xhp-lib:^3.0
+$ composer require facebook/xhp-lib
 ```
 
 ## Simple Example
@@ -31,9 +31,9 @@ $href = 'http://www.facebook.com';
 $link = <a href={$href}>Facebook</a>;
 ```
 
-Take note of the syntax on line 4, this is not a string. This is the major new syntax that XHP introduces to Hack.
+Take note of the syntax on line 2 (`$link = ...`), this is not a string. This is the major new syntax that XHP introduces to Hack. The `<a ...>` syntax is used to instantiate an object of the `a` class.
 
-Anything that's in {}'s is interpreted as a full Hack expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
+Notice the assignment to `href={$href}`. This is not string interpolation. It is setting the attribute `$link->:href`. Anything that's in {}'s is interpreted as a full Hack expression. This differs from {}'s in double-quoted strings; double-quoted strings can only contain variables.
 
 You can define arbitrary elements that can be instantiated in Hack. Under the covers each element you create is an instance of a class. To define new elements you just define a new class. XHP comes with a set of predefined elements which implement most of HTML for you.
 
@@ -67,6 +67,19 @@ foreach ($items as $item) {
 
 In the code, `<ul />` creates a ul with no children. Then we dynamically append children to it for each item in the `$items` list.
 
+Alternatively, you can pass an array of children to `<ul>...</ul>` instead. This is especially useful when dealing with larger xhp trees where it would be harder to get a variable reference to the `ul`.
+
+```hack
+$list_items = vec[];
+$items = ...;
+
+foreach($items as $item) {
+  $list_items[] = <li>{$item}</li>;
+}
+
+$list = <div><ul>{$list_items}</ul></div>;
+```
+
 ## Escaping
 
 An interesting feature of XHP is the idea of automatic escaping. If you want to render input from the user without using XHP, you must manually escape it. This practice is error-prone and has been proven over time to be an untenable solution. It increases code complexity and still leads to security vulnerabilities by careless programming. However, since XHP has context-specific about the page structure it can automatically escape data. The following two examples are identical, and both are "safe".
@@ -83,88 +96,74 @@ As you can see, using XHP makes safety the default rather than the exception.
 
 ## Defining Elements
 
-All elements in XHP are just Hack classes. Even the basic HTML elements like div and span are classes. You define an element just like you do a class, except you use a leading colon to specify that you're creating an XHP element:
+All elements in XHP are just Hack classes. Even the basic HTML elements like div and span are classes. You define an element using the `xhp` class modifier to specify that you're creating an XHP element:
 
 ```hack
-class :fb:thing extends :x:element {
+use namespace Facebook\XHP\Core as x;
+
+xhp class thing extends x\element {
   ...
 }
 ```
 
-After we define `fb:thing` we can instantiate it with the expression `<fb:thing />`. `:x:element` is the core XHP class you should subclass from when defining an element. It will provide you all the methods you need like `appendChild`, and so on. As an `:x:element` you must define only `render()`. `render()` should always return more XHP elements. It's important to remember this rule: even elements you define yourself will return XHP elements. The only XHP elements that are allowed to return a string are elements which subclass from `:x:primitive`. The only elements which should subclass `:x:primitive` are base elements that make HTML building blocks. XHP with the core HTML library is a viable replacement for strings of markup.
+Notice that we are extending `x\element`. The name `x\element` is a common shorthand for `Facebook\XHP\Core\element`. The `use` statement `use Facebook\XHP\Core as x;` is commonly used in files that use xhp-lib. The use clause will be left out in future examples as `x\...` has become the canonical name for `Core` for historical reasons.
 
-You can also use the leading-colon syntax to use an XHP element where you would normally use a class name, for instance while referencing class constants or typehinting:
-
-```hack
-$constant = :fb:thing::someConstant;
-```
-
-```
-function giveMeAThing(:fb:thing $thing) {
-}
-```
+After we define `thing` we can instantiate it with the expression `<thing />`. `x\element` is the core XHP class you should subclass from when defining an element. It will provide you all the methods you need like `appendChild`, and so on. As an `x\element` you must define only `renderAsync()`. `renderAsync()` should always return more XHP elements. It's important to remember this rule: even elements you define yourself will return XHP elements. The only XHP elements that are allowed to return a string are elements which subclass from `x\primitive`. The only elements which should subclass `x\primitive` are base elements that make HTML building blocks. XHP with the core HTML library is a viable replacement for strings of markup.
 
 ## Defining Attributes
 
 Most elements will take some number of attributes which affect its behavior. You define attributes in an element with the `attribute` keyword.
 
 ```hack
-class :fb:thing extends :x:element {
+xhp class thing extends x\element {
   attribute
     string title = "No Title",
-    enum { "cool", "lame" } type;
+    string sub-title,
+    float fill-percentage @required;
 }
 ```
 
-Here we define two attributes, `title` and `type`. `title` is of type `string` and the default value is `"No Title"`. type is of type `enum` and has two valid values -- `"cool"` and `"lame"`. Valid types are `bool`, `int`, `array`, `string`, and `var`. You can also specify a class or element name as a type. Finally, you can put @required after the name to specify that this attribute is required for the element to render.
+Here we define three attributes, `title`, `sub-title`, and `fill-percentage`. `title` is of type `string` and the default value is `"No Title"`. `sub-title` is of type `?string`. The attribute is optional and does not have a default value. Hack will therefore infer that `sub-title` will be `null` when you do not set it. `fill-percentage` is of type `float` and it is required. Because it is required, xhp-lib will throw during render or when accessing `$thing->:fill-percentage` if no value has been set. Hack can therefore be certain that the value will not be null.
 
 Note that when you extend another element you will always inherit its attributes. However, any attributes you specify with the same name will override your parent's attributes.
 
-You can also steal another element's attributes by specifying only a tag name in a definition. The declaration `attribute :div` says that this element may accept any attribute that a div element could accept.
+You can also copy another element's attribute declarations by specifying only a tag name in a definition. The declaration `attribute :div` says that this element may accept any attribute that a div element could accept.
 
 ## Defining Element Structure
 
-All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an `<input />` to appear directly inside of a `<body />` tag (it must be inside a form). XHP allows you to define a content model which documents must adhere to. This is done with the `children` keyword, which uses a syntax similar to regular expressions. Note, that unlike `attribute`, `children` may only appear once inside any class.
+All elements have some kind of structure that they must follow. For instance, in HTML5 it is illegal for an `<input />` to appear directly inside of a `<body />` tag (it must be inside a form). XHP allows you to define a content model which documents must adhere to. This is done with the `XHPChild\Validation` trait. `XHPChild\Validation` is short for `Facebook\XHP\ChildValidation\Validation`. The use clause `use namespace Facebook\XHP\ChildValidation as XHPChild` is often use in files declaring xhp classes. The use clause will be left out in the examples.
 
 ```hack
-class :fb:thing_container extends :x:element {
-  children (:fb:thing1 | :fb:thing2)*;
+xhp class thing_container extends x\element {
+  abstract protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\any_number_of(
+      XHPChild\any_of(
+        XHPChild\of_type<thing>(),
+        XHPChild\pcdata(),
+      )
+    );
+  }
 }
 ```
 
-A children declaration supports the following postfix operators:
-  - `?` : Zero or one instance
-  - `*` : Zero or more instances
-  - `+` : One or more instances
-
-If no operator is specified then the declaration must be matched exactly one time. You may also use the `,` or `|` operator to combine multiple declarations into one. The `,` operator specifies a list of declarations that must appear in order, and a `|` specifies a list of declarations, of which one must match. For instance if you are defining a page layout your children declaration may look like:
-
-```hack
-  children (:fb:left_column?, :fb:content, :fb:right_column?);
-```
-
-This specifies an optional left column followed by a required content and an optional right column.
-
-You can also use the special declarations `any` or `empty` to specify that your element can accept any elements, or no elements. If you don't specify a children declaration your parent class's declaration will be inherited. `:x:element`'s children declaration is `children any;`.
-
-Note: The algorithm which checks adherence to a children declaration is greedy with no backtracking. For most children declarations this will make no difference, but if you're defining a complex children declaration, you should know how it works. Basically, this declaration is impossible to satisfy: `children (:fb:thing*, :fb:thing);`. The `*` postfix operator is greedy and will capture all `fb:thing`'s. After that it's impossible to match another `fb:thing`.
+For the full list of constraints you can formulate, see the list of [ChildValidation functions](https://github.com/hhvm/xhp-lib/blob/main/src/ChildValidation/functions.hack). The example above composes the following rules. The top-level rule `any_number_of()` declares that there may be zero or more children, which all match the inner constraint. The inner constraint says that a child is valid when matches `any_of` the following contraints: It is an object of type `thing` or flat text (pcdata).
 
 ## Element Categories
 
-A lot of times you may want to accept all children of a particular group, but enumerating the group starts to become unsustainable. When this happens you can define an element group and specify in your child declaration that your element is a member. Then you can reference that group in a children declaration using the % prefix.
+A lot of times you may want to accept all children of a particular group, but enumerating the group starts to become unsustainable. When this happens you can use an interface as a marker to denote membership of a group. A good example is how all the built-in html elements implement the Category interfaces which match to the html-spec categories.
 
+Here is an example of the category `Flow` being used in the `<audio>` element children definition.:
+<!-- https://github.com/hhvm/xhp-lib/blob/d6893af6ae916dbf5e657cfc10d6d9b44bed7678/src/html/tags/a/Audio.hack#L34-L42 -->
 ```hack
-class :fb:thing1 extends :x:element {
-  category %fb:thing;
-}
-
-class :fb:thing2 extends :x:element {
-  category %fb:thing;
-}
-
-class :fb:thing_container extends :x:element {
-  children (%fb:thing)*;
-}
+  protected static function getChildrenDeclaration(): XHPChild\Constraint {
+    return XHPChild\sequence(
+      XHPChild\any_number_of(XHPChild\of_type<source>()),
+      XHPChild\any_number_of(XHPChild\of_type<track>()),
+      XHPChild\any_number_of(
+        XHPChild\any_of(XHPChild\pcdata(), XHPChild\of_type<Category\Flow>()),
+      ),
+    );
+  }
 ```
 
 ## Asynchronous data fetching
@@ -173,8 +172,8 @@ XHP supports Hack's 'async' functionality, allowing you to build components that
 efficiently fetch the data that they require:
 
 ```hack
-class :async-thing extends :x:element {
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+xhp class async_thing extends :x:element {
+  protected async function renderAsync(): Awaitable<x\node> {
     $db = await AsyncMysqlClient::connect(...);
     $result = await $db->queryf(
       'SELECT id2 FROM %T WHERE id1 %=d',
@@ -182,9 +181,9 @@ class :async-thing extends :x:element {
       $this->getContext('viewer')->getUserID(),
     );
 
-    $rows = $result->mapRowsTyped();
-    $friend_ids = $rows->map($row ==> $row['id2']);
-    $friend_data = await HH\Asio\mm(
+    $rows = $result->dictRowsTyped();
+    $friend_ids = Vec\map($rows, $row ==> $row['id2']);
+    $friend_data = await Vec\map_async(
       $friend_ids,
       $id ==> User::get($id),
     );
@@ -199,7 +198,7 @@ class :async-thing extends :x:element {
 }
 ```
 
-When an XHP tree is rendered, `asyncRender()` is called for all `XHPAsync` children,
+When an XHP tree is rendered, `renderAsync()` is called for all children,
 and data fetching happens in parallel. This allows the data dependencies of
 your components to efficiently be an implementation detail instead of having
 to have it as part of the API and passed by the user (eg in an attribute).
@@ -221,8 +220,8 @@ There are certain conventions that you should comply with while using XHP.
 * Don't pollute the global XHP namespace with namespace-less elements. Most elements you define should use some namespace. Elements that use no namespace should not be "magic" at all. For instance,
 
 ```hack
-class :fb:thing extends :x:element {
-  protected async function renderAsync(): Awaitable<XHPRoot> {
+xhp class fb:thing extends x\element {
+  protected async function renderAsync(): Awaitable<x\node> {
     return <div class="thing">thing</div>;
   }
 }
