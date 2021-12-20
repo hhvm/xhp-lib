@@ -106,7 +106,7 @@ xhp class thing extends x\element {
 }
 ```
 
-Notice that we are extending `x\element`. The name `x\element` is a common shorthand for `Facebook\XHP\Core\element`. The `use` statement `use Facebook\XHP\Core as x;` is commonly used in files that use xhp-lib. The use clause will be left out in future examples as `x\...` has become the canonical name for `Core` for historical reasons.
+Notice that we are extending `x\element`. The name `x\element` is a common shorthand for `Facebook\XHP\Core\element`. The `use` statement `use namespace Facebook\XHP\Core as x;` is commonly used in files that use xhp-lib. The use clause will be left out in future examples as `x\...` has become the canonical name for `Core` for historical reasons.
 
 After we define `thing` we can instantiate it with the expression `<thing />`. `x\element` is the core XHP class you should subclass from when defining an element. It will provide you all the methods you need like `appendChild`, and so on. As an `x\element` you must define only `renderAsync()`. `renderAsync()` should always return more XHP elements. It's important to remember this rule: even elements you define yourself will return XHP elements. The only XHP elements that are allowed to return a string are elements which subclass from `x\primitive`. The only elements which should subclass `x\primitive` are base elements that make HTML building blocks. XHP with the core HTML library is a viable replacement for strings of markup.
 
