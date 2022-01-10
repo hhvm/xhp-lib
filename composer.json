@@ -19,5 +19,10 @@
             "dev-master": "4.x-dev",
             "dev-main": "4.x-dev"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "hhvm/hhvm-autoload": true
+        }
     }
 }
