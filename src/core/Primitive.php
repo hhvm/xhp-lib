@@ -26,7 +26,7 @@ abstract class :x:primitive extends :x:composable-element implements XHPRoot {
     return $that->stringify();
   }
 
-  final private async function __flushElementChildren(): Awaitable<void> {
+  private async function __flushElementChildren(): Awaitable<void> {
     $children = $this->getChildren();
     $awaitables = Map {};
     foreach ($children as $idx => $child) {
