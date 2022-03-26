@@ -72,7 +72,7 @@ abstract final class XHPAttributeCoercion {
       return (string)$val;
     }
     if ($val is Stringish) {
-      /* HH_FIXME[4053] HH_FIXME[4062] HH_FIXME[4128]
+      /* HH_FIXME[4053] */ /* HH_FIXME[4062] */ /* HH_FIXME[4128]
          We know that $val is (not string & Stringish).
          This implies StringishObject, so calling __toString() is safe.
          StringishObject was added in hhvm 4.118 and this branch targets 4.32+. */
