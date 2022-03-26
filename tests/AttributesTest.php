@@ -94,7 +94,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testShapeWithExtraKey(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
 
       $x =
@@ -107,7 +109,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testShapeWithMissingOptionalKey(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
 
       /* HH_IGNORE_ERROR[4057] */
@@ -117,7 +121,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testShapeWithMissingRequiredKey(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       /* HH_IGNORE_ERROR[4057] */
       $x = <test:attribute-types myshape={shape()} />;
@@ -132,7 +138,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testInvalidArrayKeys(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       $x =
         <test:attribute-types
@@ -150,7 +158,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testInvalidNum(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
 
     expect(() ==> {
       $x =
@@ -332,7 +342,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testNotAContainerAsArray(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       $x =
         <test:attribute-types
@@ -344,7 +356,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testHackContainerAsArray(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       $x =
         <test:attribute-types
@@ -354,7 +368,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testIncompatibleObjectAsObject(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       $x =
         <test:attribute-types
@@ -366,7 +382,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testPassingArrayAsVector(): void {
-    self::markTestSkipped('Only enums are validated at runtime.');
+    (): void ==> {
+      self::markTestSkipped('Only enums are validated at runtime.');
+    }();
     expect(() ==> {
       $x =
         <test:attribute-types
@@ -433,7 +451,9 @@ class AttributesTest extends Facebook\HackTest\HackTest {
   }
 
   public function testRenderCallableAttribute(): void {
-    self::markTestSkipped('This type has been unsupported since 2.0');
+    (): void ==> {
+      self::markTestSkipped('This type has been unsupported since 2.0');
+    }();
     expect(() ==> {
       $x =
         <test:callable-attribute

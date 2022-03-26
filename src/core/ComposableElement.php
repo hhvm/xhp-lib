@@ -614,7 +614,7 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final private function validateChildrenExpression(
+  private function validateChildrenExpression(
     ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
@@ -685,7 +685,7 @@ abstract class :x:composable-element extends :xhp {
     }
   }
 
-  final private function validateChildrenRule(
+  private function validateChildrenRule(
     ReflectionXHPChildrenExpression $expr,
     int $index,
   ): (bool, int) {
