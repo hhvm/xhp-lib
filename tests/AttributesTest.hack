@@ -18,7 +18,7 @@ xhp class test:attribute_types extends x\element {
     string mystring,
     bool mybool,
     int myint,
-    varray<int> myarray,
+    vec<int> myarray,
     stdClass myobject,
     enum {'foo', 'bar'} myenum,
     float myfloat,
@@ -78,7 +78,7 @@ class AttributesTest extends Facebook\HackTest\HackTest {
         mystring="foo"
         mybool={true}
         myint={123}
-        myarray={varray[1, 2, 3]}
+        myarray={vec[1, 2, 3]}
         myobject={new stdClass()}
         myenum={'foo'}
         myfloat={1.23}

@@ -5,8 +5,7 @@
     "homepage": "https://github.com/facebook/xhp-lib",
     "license": ["MIT"],
     "require": {
-        "hhvm": "^4.102",
-        "hhvm/hsl": "^4.36.0"
+        "hhvm": "^4.128"
     },
     "require-dev": {
         "facebook/fbexpect": "^2.0.0",

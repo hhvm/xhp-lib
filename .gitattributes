@@ -1,1 +1,2 @@
 tests/ export-ignore
+.hhvmconfig.hdf export-ignore
