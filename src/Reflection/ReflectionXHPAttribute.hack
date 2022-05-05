@@ -35,7 +35,7 @@ class ReflectionXHPAttribute {
 
   private static keyset<string> $specialAttributes = keyset['data', 'aria'];
 
-  public function __construct(private string $name, varray<mixed> $decl) {
+  public function __construct(private string $name, vec<mixed> $decl) {
     $this->type = XHPAttributeType::assert($decl[0]);
     $this->extraType = $decl[1];
     $this->defaultValue = $decl[2];

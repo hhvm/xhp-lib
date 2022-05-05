@@ -576,20 +576,20 @@ abstract xhp class node implements \XHPChild {
    * Attribute types are suggested by the TYPE_* constants.
    */
   protected static function __xhpAttributeDeclaration(
-  ): darray<string, varray<mixed>> {
-    return darray[];
+  ): dict<string, vec<mixed>> {
+    return dict[];
   }
 
   /**
    * Defined in elements by the `category` keyword. This is just a list of all
    * categories an element belongs to. Each category is a key with value 1.
    */
-  protected function __xhpCategoryDeclaration(): darray<string, int> {
+  protected function __xhpCategoryDeclaration(): dict<string, int> {
     return self::__NO_LEGACY_CATEGORY_DECLARATION;
   }
 
   const int __NO_LEGACY_CHILDREN_DECLARATION = -31337;
-  const darray<string, int> __NO_LEGACY_CATEGORY_DECLARATION = darray["\0INVALID\0" => 0];
+  const dict<string, int> __NO_LEGACY_CATEGORY_DECLARATION = dict["\0INVALID\0" => 0];
 
   /**
    * Defined in elements by the `children` keyword. This returns a pattern of
@@ -775,7 +775,7 @@ abstract xhp class node implements \XHPChild {
    * :span[%inline],pcdata
    */
   final public function __getChildrenDescription(): string {
-    $desc = varray[];
+    $desc = vec[];
     foreach ($this->children as $child) {
       if ($child is node) {
         $tmp = '\\'.\get_class($child);
@@ -801,7 +801,7 @@ abstract xhp class node implements \XHPChild {
       return true;
     }
     // XHP parses the category string
-    $c = \str_replace(varray[':', '-'], varray['__', '_'], $c);
+    $c = \str_replace(vec[':', '-'], vec['__', '_'], $c);
     return ($categories[$c] ?? null) !== null;
   }
 

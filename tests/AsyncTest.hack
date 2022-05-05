@@ -106,7 +106,7 @@ class AsyncTest extends Facebook\HackTest\HackTest {
     $b = <async:par_test label="b" />;
     $c = <async:par_test label="c" />;
 
-    $container->replaceChildren(varray[$b, $c]);
+    $container->replaceChildren(vec[$b, $c]);
 
     $tree = <async:test>{$a}{$container}</async:test>;
     expect(await $tree->toStringAsync())->toEqual(
