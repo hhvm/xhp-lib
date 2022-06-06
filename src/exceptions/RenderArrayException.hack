@@ -9,5 +9,5 @@
 
 namespace Facebook\XHP;
 
-class RenderArrayException extends namespace\Exception {
+final class RenderArrayException extends namespace\Exception {
 }

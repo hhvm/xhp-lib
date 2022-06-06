@@ -13,7 +13,7 @@ use namespace HH\Lib\Math;
 use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 
-xhp class async:test extends x\element {
+final xhp class async:test extends x\element {
 
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -21,7 +21,7 @@ xhp class async:test extends x\element {
   }
 }
 
-xhp class test:xfrag_wrap extends x\element {
+final xhp class test:xfrag_wrap extends x\element {
 
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -29,7 +29,7 @@ xhp class test:xfrag_wrap extends x\element {
   }
 }
 
-xhp class test:async_xfrag_wrap extends x\element {
+final xhp class test:async_xfrag_wrap extends x\element {
 
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -37,7 +37,7 @@ xhp class test:async_xfrag_wrap extends x\element {
   }
 }
 
-xhp class async:par_test extends x\element {
+final xhp class async:par_test extends x\element {
 
   attribute string label @required;
 
@@ -55,7 +55,7 @@ xhp class async:par_test extends x\element {
   }
 }
 
-class AsyncTest extends Facebook\HackTest\HackTest {
+final class AsyncTest extends Facebook\HackTest\HackTest {
   public async function testDiv(): Awaitable<void> {
     $xhp = <async:test>Herp</async:test>;
     expect(await $xhp->toStringAsync())->toEqual('<div>Herp</div>');

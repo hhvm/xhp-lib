@@ -11,7 +11,7 @@ namespace Facebook\XHP;
 
 use namespace Facebook\XHP\Core as x;
 
-class Exception extends \Exception {
+abstract class Exception extends \Exception {
   protected static function getElementName(x\node $that): string {
     return \get_class($that);
   }

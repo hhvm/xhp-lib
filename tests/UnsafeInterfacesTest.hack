@@ -14,6 +14,7 @@ use function Facebook\FBExpect\expect;
 // Please see MIGRATING.md for information on how these should be used in
 // practice; please don't create/use classes as unsafe as these examples.
 
+/* HHAST_IGNORE_ERROR[FinalOrAbstractClass]: Intentionally non-final for test purpose  */
 class ExampleUnsafeRenderable implements Facebook\XHP\UnsafeRenderable {
   public function __construct(public string $htmlString) {
   }
@@ -23,12 +24,13 @@ class ExampleUnsafeRenderable implements Facebook\XHP\UnsafeRenderable {
   }
 }
 
+/* HHAST_IGNORE_ERROR[FinalOrAbstractClass]: Intentionally non-final for test purpose  */
 class ExampleVeryUnsafeRenderable
   extends ExampleUnsafeRenderable
   implements Facebook\XHP\UnsafeRenderable, Facebook\XHP\AlwaysValidChild {
 }
 
-class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue_DEPRECATED {
+final class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue_DEPRECATED {
   public function __construct(public string $htmlString) {
   }
 
@@ -38,7 +40,7 @@ class ExampleUnsafeAttribute extends Facebook\XHP\UnsafeAttributeValue_DEPRECATE
   }
 }
 
-class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
+final class UnsafeInterfacesTest extends Facebook\HackTest\HackTest {
   public async function testUnsafeRenderable(): Awaitable<void> {
     $x = new ExampleUnsafeRenderable('<script>lollerskates</script>');
     $xhp = <div>{$x}</div>;

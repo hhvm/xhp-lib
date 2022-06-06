@@ -11,7 +11,7 @@ use namespace Facebook\XHP\Core as x;
 use type Facebook\XHP\HTML\{div, p};
 use function Facebook\FBExpect\expect;
 
-xhp class test:contexts extends x\element {
+final xhp class test:contexts extends x\element {
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return
@@ -22,7 +22,7 @@ xhp class test:contexts extends x\element {
   }
 }
 
-class XHPContextsTest extends Facebook\HackTest\HackTest {
+final class XHPContextsTest extends Facebook\HackTest\HackTest {
   public async function testContextSimple(): Awaitable<void> {
     $x = <test:contexts />;
     $x->setContext('heading', 'herp');

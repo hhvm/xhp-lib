@@ -13,7 +13,7 @@ use function Facebook\FBExpect\expect;
 
 use type Facebook\HackTest\DataProvider;
 
-xhp class test:verbatim_root extends x\element {
+final xhp class test:verbatim_root extends x\element {
   attribute x\node root @required;
 
   <<__Override>>
@@ -22,7 +22,7 @@ xhp class test:verbatim_root extends x\element {
   }
 }
 
-xhp class test:verbatim_root:async extends x\element {
+final xhp class test:verbatim_root:async extends x\element {
 
   attribute x\node root @required;
 
@@ -32,7 +32,7 @@ xhp class test:verbatim_root:async extends x\element {
   }
 }
 
-class XHPChildFlushTest extends Facebook\HackTest\HackTest {
+final class XHPChildFlushTest extends Facebook\HackTest\HackTest {
   public function xhpRootProvider(): vec<(x\node, string)> {
     return vec[
       tuple(<div />, '<div></div>'),

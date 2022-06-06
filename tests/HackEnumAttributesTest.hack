@@ -17,7 +17,7 @@ enum TestEnum: int {
   DERP = 2;
 }
 
-xhp class test:hack_enum_attribute extends x\element {
+final xhp class test:hack_enum_attribute extends x\element {
   attribute TestEnum foo @required;
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -26,7 +26,7 @@ xhp class test:hack_enum_attribute extends x\element {
   }
 }
 
-class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
+final class HackEnumAttributesTest extends Facebook\HackTest\HackTest {
   public async function testValidValues(): Awaitable<void> {
     $x = <test:hack_enum_attribute foo={TestEnum::HERP} />;
     expect(await $x->toStringAsync())->toEqual('<div>HERP</div>');

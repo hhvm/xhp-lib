@@ -22,7 +22,7 @@ enum XHPAttributeType: int {
   TYPE_FLOAT = 8;
 }
 
-class ReflectionXHPAttribute {
+final class ReflectionXHPAttribute {
   private XHPAttributeType $type;
   /*
    * OBJECT: string (class name)
