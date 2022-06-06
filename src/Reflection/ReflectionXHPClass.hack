@@ -12,7 +12,7 @@ namespace Facebook\XHP;
 use namespace Facebook\XHP\Core as x;
 use namespace HH\Lib\C;
 
-class ReflectionXHPClass {
+final class ReflectionXHPClass {
   public function __construct(private classname<x\node> $className) {
     invariant(
       \class_exists($this->className),

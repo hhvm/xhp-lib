@@ -17,7 +17,7 @@ use namespace HH\Lib\{Str, Vec};
  * element the <x:frag /> will disappear and each child will be sequentially
  * appended to the element.
  */
-xhp class frag extends primitive {
+final xhp class frag extends primitive {
   <<__Override>>
   protected async function stringifyAsync(): Awaitable<string> {
     return await Vec\map_async(

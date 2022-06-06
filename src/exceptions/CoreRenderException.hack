@@ -11,7 +11,7 @@ namespace Facebook\XHP;
 
 use namespace Facebook\XHP\Core as x;
 
-class CoreRenderException extends namespace\Exception {
+final class CoreRenderException extends namespace\Exception {
   public function __construct(x\node $that, mixed $rend) {
     parent::__construct(
       ':x:element::render must reduce an object to an :x:primitive, but `'.

@@ -14,6 +14,7 @@ namespace MyTestNS {
   use type Facebook\XHP\HTML\{dd, dl, dt};
 
   /** Intentionally conflicting name */
+  /* HHAST_IGNORE_ERROR[FinalOrAbstractClass]: Intentionally non-final for test purpose */
   xhp class div extends x\element {
     <<__Override>>
     protected async function renderAsync(): Awaitable<x\node> {
@@ -24,13 +25,13 @@ namespace MyTestNS {
     }
   }
 
-  xhp class divsubclass extends div {
+  final xhp class divsubclass extends div {
   }
 
-  xhp class divsubclass2 extends :MyTestNS:div {
+  final xhp class divsubclass2 extends :MyTestNS:div {
   }
 
-  xhp class useswithinnamespace extends x\element {
+  final xhp class useswithinnamespace extends x\element {
     <<__Override>>
     protected async function renderAsync(): Awaitable<x\node> {
       return
@@ -58,7 +59,7 @@ namespace {
   use type MyTestNS\div as aliaseddiv;
   use namespace MyTestNS as AliasedNS;
 
-  class XHPNamespaceTest extends Facebook\HackTest\HackTest {
+  final class XHPNamespaceTest extends Facebook\HackTest\HackTest {
     public async function testQualifiedReference(): Awaitable<void> {
       expect(await (<MyTestNS:div>foo</MyTestNS:div>)->toStringAsync())
         ->toEqual('<div> -MyTestNS\\div-foo-/MyTestNS\\div- </div>');

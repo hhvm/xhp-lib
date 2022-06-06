@@ -15,7 +15,7 @@ use type Facebook\HackTest\DataProvider;
 use namespace Facebook\XHP\ChildValidation as XHPChild;
 use namespace HH\Lib\Str;
 
-xhp class test:new_child_declaration_only extends x\element {
+final xhp class test:new_child_declaration_only extends x\element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -28,7 +28,7 @@ xhp class test:new_child_declaration_only extends x\element {
   }
 }
 
-xhp class test:new_and_old_child_declarations extends x\element {
+final xhp class test:new_and_old_child_declarations extends x\element {
   // Providing all of these is invalid; for a migration consistency check, use
   // the XHPChildDeclarationConsistencyValidation trait instead.
   use XHPChild\Validation;
@@ -42,7 +42,7 @@ xhp class test:new_and_old_child_declarations extends x\element {
   }
 }
 
-xhp class test:old_child_declaration_only extends x\element {
+final xhp class test:old_child_declaration_only extends x\element {
   use XHPChild\Validation;
 
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
@@ -55,7 +55,7 @@ xhp class test:old_child_declaration_only extends x\element {
   }
 }
 
-xhp class test:any_children extends x\element {
+final xhp class test:any_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any();
@@ -67,7 +67,7 @@ xhp class test:any_children extends x\element {
   }
 }
 
-xhp class test:no_children extends x\element {
+final xhp class test:no_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\empty();
@@ -79,7 +79,7 @@ xhp class test:no_children extends x\element {
   }
 }
 
-xhp class test:single_child extends x\element {
+final xhp class test:single_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\of_type<div>();
@@ -91,7 +91,7 @@ xhp class test:single_child extends x\element {
   }
 }
 
-xhp class test:optional_child extends x\element {
+final xhp class test:optional_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\optional(XHPChild\of_type<div>());
@@ -103,7 +103,7 @@ xhp class test:optional_child extends x\element {
   }
 }
 
-xhp class test:any_number_of_child extends x\element {
+final xhp class test:any_number_of_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_number_of(XHPChild\of_type<div>());
@@ -115,7 +115,7 @@ xhp class test:any_number_of_child extends x\element {
   }
 }
 
-xhp class test:at_least_one_child extends x\element {
+final xhp class test:at_least_one_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\at_least_one_of(XHPChild\of_type<div>());
@@ -127,7 +127,7 @@ xhp class test:at_least_one_child extends x\element {
   }
 }
 
-xhp class test:two_children extends x\element {
+final xhp class test:two_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(XHPChild\of_type<div>(), XHPChild\of_type<div>());
@@ -139,7 +139,7 @@ xhp class test:two_children extends x\element {
   }
 }
 
-xhp class test:three_children extends x\element {
+final xhp class test:three_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\sequence(
@@ -155,7 +155,7 @@ xhp class test:three_children extends x\element {
   }
 }
 
-xhp class test:either_of_two_children extends x\element {
+final xhp class test:either_of_two_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(XHPChild\of_type<div>(), XHPChild\of_type<code>());
@@ -167,7 +167,7 @@ xhp class test:either_of_two_children extends x\element {
   }
 }
 
-xhp class test:any_of_three_children extends x\element {
+final xhp class test:any_of_three_children extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(
@@ -183,7 +183,7 @@ xhp class test:any_of_three_children extends x\element {
   }
 }
 
-xhp class test:nested_rule extends x\element {
+final xhp class test:nested_rule extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\any_of(
@@ -198,7 +198,7 @@ xhp class test:nested_rule extends x\element {
   }
 }
 
-xhp class testpcdata_child extends x\element {
+final xhp class testpcdata_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\pcdata();
@@ -210,7 +210,7 @@ xhp class testpcdata_child extends x\element {
   }
 }
 
-xhp class test:category_interface_child extends x\element {
+final xhp class test:category_interface_child extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\of_type<Category\Flow>();
@@ -222,7 +222,7 @@ xhp class test:category_interface_child extends x\element {
   }
 }
 
-xhp class test:has_comma_category extends x\element {
+final xhp class test:has_comma_category extends x\element {
   // Can not be foo:bar_DEPRECATED, because of mangling
   category %foo:bar;
 
@@ -232,7 +232,7 @@ xhp class test:has_comma_category extends x\element {
   }
 }
 
-xhp class test:needs_comma_category extends x\element {
+final xhp class test:needs_comma_category extends x\element {
   use XHPChild\Validation;
   protected static function getChildrenDeclaration(): XHPChild\Constraint {
     return XHPChild\category('%foo:bar');
@@ -244,7 +244,7 @@ xhp class test:needs_comma_category extends x\element {
   }
 }
 
-class ChildRuleTest extends Facebook\HackTest\HackTest {
+final class ChildRuleTest extends Facebook\HackTest\HackTest {
   public async function testNoChild(): Awaitable<void> {
     $elems = vec[
       <test:no_children />,

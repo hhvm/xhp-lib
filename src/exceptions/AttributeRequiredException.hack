@@ -11,7 +11,7 @@ namespace Facebook\XHP;
 
 use namespace Facebook\XHP\Core as x;
 
-class AttributeRequiredException extends namespace\Exception {
+final class AttributeRequiredException extends namespace\Exception {
   public function __construct(x\node $that, string $attr) {
     parent::__construct(
       'Required attribute `'.

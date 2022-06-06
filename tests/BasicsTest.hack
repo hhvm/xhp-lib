@@ -31,14 +31,14 @@ use function Facebook\FBExpect\expect;
 use type Facebook\HackTest\DataProvider;
 use namespace HH\Lib\C;
 
-xhp class not_primitive extends x\element {
+final xhp class not_primitive extends x\element {
   <<__Override>>
   public async function renderAsync(): Awaitable<div> {
     return <div><div>I am not a primitive</div></div>;
   }
 }
 
-xhp class ui:div extends x\element {
+final xhp class ui:div extends x\element {
   <<__Override>>
   public async function renderAsync(): Awaitable<div> {
     $div = <div>{$this->getChildren()}</div>;
@@ -47,21 +47,21 @@ xhp class ui:div extends x\element {
   }
 }
 
-xhp class ui:returning:ui extends x\element {
+final xhp class ui:returning:ui extends x\element {
   <<__Override>>
   public async function renderAsync(): Awaitable<ui\div> {
     return <ui:div>{$this->getChildren()}</ui:div>;
   }
 }
 
-xhp class test:renders_primitive extends x\element {
+final xhp class test:renders_primitive extends x\element {
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
     return <x:frag><div>123</div></x:frag>;
   }
 }
 
-xhp class test:modify_in_render extends x\element {
+final xhp class test:modify_in_render extends x\element {
   attribute string foo @required;
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -73,7 +73,7 @@ xhp class test:modify_in_render extends x\element {
   }
 }
 
-class BasicsTest extends Facebook\HackTest\HackTest {
+final class BasicsTest extends Facebook\HackTest\HackTest {
   public async function testDivWithString(): Awaitable<void> {
     $xhp =
       <div>

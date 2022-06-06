@@ -20,7 +20,7 @@ use type Facebook\XHP\HTML\{a, code, div};
 
 use namespace HH\Lib\{Dict, Str};
 
-xhp class test:for_reflection extends x\element {
+final xhp class test:for_reflection extends x\element {
   use XHPChild\Validation;
   attribute
     string mystring @required,
@@ -44,7 +44,7 @@ xhp class test:for_reflection extends x\element {
   }
 }
 
-class ReflectionTest extends Facebook\HackTest\HackTest {
+final class ReflectionTest extends Facebook\HackTest\HackTest {
   private ?ReflectionXHPClass $rxc;
 
   <<__Override>>
