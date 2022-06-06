@@ -1,0 +1,20 @@
+// For format details, see https://aka.ms/devcontainer.json.
+{
+  "name": "Hack",
+  "runArgs": [
+    "--init"
+  ],
+  "image": "hhvm/hhvm:latest",
+
+  // Set *default* container specific settings.json values on container create.
+  "userEnvProbe": "loginShell",
+
+  // Add the IDs of extensions you want installed when the container is created.
+  "extensions": [
+    "pranayagarwal.vscode-hack"
+  ],
+
+  // Use 'postCreateCommand' to run commands after the container is created.
+  "postCreateCommand": "curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer && composer install"
+
+}
