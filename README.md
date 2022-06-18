@@ -146,7 +146,7 @@ xhp class thing_container extends x\element {
 }
 ```
 
-For the full list of constraints you can formulate, see the list of [ChildValidation functions](https://github.com/hhvm/xhp-lib/blob/main/src/ChildValidation/functions.hack). The example above composes the following rules. The top-level rule `any_number_of()` declares that there may be zero or more children, which all match the inner constraint. The inner constraint says that a child is valid when matches `any_of` the following contraints: It is an object of type `thing` or flat text (pcdata).
+For the full list of constraints you can formulate, see the list of [ChildValidation functions](https://github.com/hhvm/xhp-lib/blob/main/src/ChildValidation/functions.hack). The example above composes the following rules. The top-level rule `any_number_of()` declares that there may be zero or more children, which all match the inner constraint. The inner constraint says that a child is valid when matches `any_of` the following constraints: It is an object of type `thing` or flat text (pcdata).
 
 ## Element Categories
 
@@ -201,7 +201,7 @@ xhp class async_thing extends :x:element {
 When an XHP tree is rendered, `renderAsync()` is called for all children,
 and data fetching happens in parallel. This allows the data dependencies of
 your components to efficiently be an implementation detail instead of having
-to have it as part of the API and passed by the user (eg in an attribute).
+it as part of the API and passed by the user (eg in an attribute).
 
 ## Whitespace
 
