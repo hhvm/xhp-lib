@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: '42 15 * * *'
+    - cron: '42 16 * * *'
 jobs:
   build:
     name: HHVM ${{matrix.hhvm}} - ${{matrix.os}}
