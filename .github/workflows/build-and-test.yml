@@ -11,12 +11,12 @@ jobs:
       # Run tests on all OS's and HHVM versions, even if one fails
       fail-fast: false
       matrix:
-        os: [ ubuntu ]
+        os: [ ubuntu-20.04 ]
         hhvm:
           - '4.128'
-          - latest
-          - nightly
-    runs-on: ${{matrix.os}}-latest
+          - '4.153'
+          - '4.168'
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v2
       - name: Create branch for version alias
