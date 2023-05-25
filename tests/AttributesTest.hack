@@ -9,6 +9,7 @@
 
 use namespace Facebook\XHP\Core as x;
 use type Facebook\XHP\HTML\div;
+use type Facebook\XHP\AttributeRequiredException;
 use function Facebook\FBExpect\expect;
 use namespace HH\Lib\Vec;
 
@@ -44,7 +45,10 @@ final xhp class test:required_attributes extends x\element {
 }
 
 final xhp class test:default_attributes extends x\element {
-  attribute string mystring = 'mydefault';
+  attribute string mystring = 'mydefault',
+    string data-with-initializer = 'initial',
+    string data-with-late-init @lateinit,
+    string data-plain;
 
   <<__Override>>
   protected async function renderAsync(): Awaitable<x\node> {
@@ -126,6 +130,10 @@ final class AttributesTest extends Facebook\HackTest\HackTest {
   public async function testProvidingDefaultAttributes(): Awaitable<void> {
     $x = <test:default_attributes mystring="herp" />;
     expect($x->:mystring)->toEqual('herp');
+    expect($x->:data-plain)->toBeNull();
+    expect($x->:data-that-does-not-exist)->toBeNull();
+    expect($x->:data-with-initializer)->toEqual('initial');
+    expect(() ==> $x->:data-with-late-init)->toThrow(AttributeRequiredException::class);
     expect(await $x->toStringAsync())->toEqual('<div>herp</div>');
   }
 
