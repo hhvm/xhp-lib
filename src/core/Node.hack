@@ -53,11 +53,13 @@ abstract xhp class node implements \XHPChild {
     dynamic ...$debug_info
   ) {
     invariant(
-      $this->__xhpChildrenDeclaration() === self::__NO_LEGACY_CHILDREN_DECLARATION,
+      $this->__xhpChildrenDeclaration() ===
+        self::__NO_LEGACY_CHILDREN_DECLARATION,
       'The `children` keyword is no longer supported',
     );
     invariant(
-      $this->__xhpCategoryDeclaration() === self::__NO_LEGACY_CATEGORY_DECLARATION,
+      $this->__xhpCategoryDeclaration() ===
+        self::__NO_LEGACY_CATEGORY_DECLARATION,
       'The `category` keyword is no longer supported',
     );
 
@@ -167,7 +169,8 @@ abstract xhp class node implements \XHPChild {
   /**
    * Fetches all direct children of this element of the given type.
    */
-  public function getChildrenOfType<<<__Enforceable>> reify T as \XHPChild>(): vec<T> {
+  public function getChildrenOfType<<<__Enforceable>> reify T as \XHPChild>(
+  ): vec<T> {
     $children = vec[];
     foreach ($this->children as $child) {
       if ($child is T) {
@@ -202,7 +205,8 @@ abstract xhp class node implements \XHPChild {
    *
    * If no matching child is present, returns `null`.
    */
-  public function getFirstChildOfType<<<__Enforceable>> reify T as \XHPChild>(): ?T {
+  public function getFirstChildOfType<<<__Enforceable>> reify T as \XHPChild>(
+  ): ?T {
     foreach ($this->children as $child) {
       if ($child is T) {
         return $child;
@@ -216,7 +220,8 @@ abstract xhp class node implements \XHPChild {
    *
    * If no matching child is present, an exception is thrown.
    */
-  public function getFirstChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(): T {
+  public function getFirstChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(
+  ): T {
     $child = $this->getFirstChildOfType<T>();
     invariant(
       $child is nonnull,
@@ -253,7 +258,8 @@ abstract xhp class node implements \XHPChild {
    *
    * If the element has no matching children, `null` is returned.
    */
-  public function getLastChildOfType<<<__Enforceable>> reify T as \XHPChild>(): ?T {
+  public function getLastChildOfType<<<__Enforceable>> reify T as \XHPChild>(
+  ): ?T {
     for ($i = C\count($this->children) - 1; $i >= 0; --$i) {
       $child = $this->children[$i];
       if ($child is T) {
@@ -268,9 +274,14 @@ abstract xhp class node implements \XHPChild {
    *
    * If the element has no matching children, an exception is thrown.
    */
-  public function getLastChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(): T {
+  public function getLastChildOfTypex<<<__Enforceable>> reify T as \XHPChild>(
+  ): T {
     $child = $this->getLastChildOfType<T>();
-    invariant($child is nonnull, '%s called with no matching child', __FUNCTION__);
+    invariant(
+      $child is nonnull,
+      '%s called with no matching child',
+      __FUNCTION__,
+    );
     return $child;
   }
 
@@ -289,20 +300,19 @@ abstract xhp class node implements \XHPChild {
       return $this->attributes[$attr];
     }
 
-    if (!ReflectionXHPAttribute::isSpecial($attr)) {
-      // Get the declaration
-      $decl = static::__xhpReflectionAttribute($attr);
-
-      if ($decl === null) {
+    // Get the declaration
+    $decl = static::__xhpReflectionAttribute($attr);
+    if ($decl === null) {
+      if (!ReflectionXHPAttribute::isSpecial($attr)) {
         throw new \Facebook\XHP\AttributeNotSupportedException($this, $attr);
-      } else if ($decl->isRequired()) {
-        throw new \Facebook\XHP\AttributeRequiredException($this, $attr);
-      } else {
-        return $decl->getDefaultValue();
       }
+    } else if ($decl->isRequired()) {
+      throw new \Facebook\XHP\AttributeRequiredException($this, $attr);
     } else {
-      return null;
+      return $decl->getDefaultValue();
     }
+
+    return null;
   }
 
   final public static function __xhpReflectionAttribute(
@@ -348,9 +358,8 @@ abstract xhp class node implements \XHPChild {
   // instance.
   <<__MemoizeLSB>>
   private static function emptyInstance(): this {
-    return (
-      new \ReflectionClass(static::class)
-    )->newInstanceWithoutConstructor();
+    return
+      (new \ReflectionClass(static::class))->newInstanceWithoutConstructor();
   }
 
   final public function getAttributes(): dict<string, mixed> {
@@ -382,10 +391,8 @@ abstract xhp class node implements \XHPChild {
     foreach ($attrs as $attr_name => $value) {
       if (
         $value === null ||
-        !(
-          ReflectionXHPAttribute::isSpecial($attr_name) ||
-          (static::__xhpReflectionAttribute($attr_name) !== null)
-        )
+        static::__xhpReflectionAttribute($attr_name) === null &&
+          !ReflectionXHPAttribute::isSpecial($attr_name)
       ) {
         continue;
       }
@@ -468,7 +475,10 @@ abstract xhp class node implements \XHPChild {
    * @param $val       value
    * @throws UseAfterRenderException
    */
-  final public function forceAttribute_DEPRECATED(string $attr, mixed $value): this {
+  final public function forceAttribute_DEPRECATED(
+    string $attr,
+    mixed $value,
+  ): this {
     if ($this->__isRendered) {
       throw new UseAfterRenderException(
         Str\format("Can't %s after render", __FUNCTION__),
@@ -589,7 +599,8 @@ abstract xhp class node implements \XHPChild {
   }
 
   const int __NO_LEGACY_CHILDREN_DECLARATION = -31337;
-  const dict<string, int> __NO_LEGACY_CATEGORY_DECLARATION = dict["\0INVALID\0" => 0];
+  const dict<string, int> __NO_LEGACY_CATEGORY_DECLARATION =
+    dict["\0INVALID\0" => 0];
 
   /**
    * Defined in elements by the `children` keyword. This returns a pattern of
@@ -619,10 +630,8 @@ abstract xhp class node implements \XHPChild {
         return;
       }
     }
-    list($ret, $ii) = $this->validateChildrenExpression(
-      $decl->getExpression(),
-      0,
-    );
+    list($ret, $ii) =
+      $this->validateChildrenExpression($decl->getExpression(), 0);
     if (!$ret || $ii < C\count($this->children)) {
       if (($this->children[$ii] ?? null) is \Facebook\XHP\AlwaysValidChild) {
         return;
@@ -666,15 +675,11 @@ abstract xhp class node implements \XHPChild {
         // Specific order -- :fb_thing, :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) = $this->validateChildrenExpression(
-          $sub_expr_1,
-          $index,
-        );
+        list($ret, $index) =
+          $this->validateChildrenExpression($sub_expr_1, $index);
         if ($ret) {
-          list($ret, $index) = $this->validateChildrenExpression(
-            $sub_expr_2,
-            $index,
-          );
+          list($ret, $index) =
+            $this->validateChildrenExpression($sub_expr_2, $index);
         }
         if ($ret) {
           return tuple(true, $index);
@@ -685,15 +690,11 @@ abstract xhp class node implements \XHPChild {
         // Either or -- :fb_thing | :fb_other_thing
         $oindex = $index;
         list($sub_expr_1, $sub_expr_2) = $expr->getSubExpressions();
-        list($ret, $index) = $this->validateChildrenExpression(
-          $sub_expr_1,
-          $index,
-        );
+        list($ret, $index) =
+          $this->validateChildrenExpression($sub_expr_1, $index);
         if (!$ret) {
-          list($ret, $index) = $this->validateChildrenExpression(
-            $sub_expr_2,
-            $index,
-          );
+          list($ret, $index) =
+            $this->validateChildrenExpression($sub_expr_2, $index);
         }
         if ($ret) {
           return tuple(true, $index);
@@ -750,10 +751,8 @@ abstract xhp class node implements \XHPChild {
         return tuple(true, $index + 1);
 
       case XHPChildrenConstraintType::SUB_EXPR:
-        return $this->validateChildrenExpression(
-          $expr->getSubExpression(),
-          $index,
-        );
+        return
+          $this->validateChildrenExpression($expr->getSubExpression(), $index);
     }
   }
 
@@ -815,9 +814,8 @@ abstract xhp class node implements \XHPChild {
       return await $child->toHTMLStringAsync();
     }
     if ($child is Traversable<_>) {
-      throw new \Facebook\XHP\RenderArrayException(
-        'Can not render traversables!',
-      );
+      throw
+        new \Facebook\XHP\RenderArrayException('Can not render traversables!');
     }
 
     /* HH_FIXME[4281] stringish migration */
