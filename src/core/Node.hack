@@ -289,20 +289,19 @@ abstract xhp class node implements \XHPChild {
       return $this->attributes[$attr];
     }
 
-    if (!ReflectionXHPAttribute::isSpecial($attr)) {
-      // Get the declaration
-      $decl = static::__xhpReflectionAttribute($attr);
-
-      if ($decl === null) {
+    // Get the declaration
+    $decl = static::__xhpReflectionAttribute($attr);
+    if ($decl === null) {
+      if (!ReflectionXHPAttribute::isSpecial($attr)) {
         throw new \Facebook\XHP\AttributeNotSupportedException($this, $attr);
-      } else if ($decl->isRequired()) {
-        throw new \Facebook\XHP\AttributeRequiredException($this, $attr);
-      } else {
-        return $decl->getDefaultValue();
       }
+    } else if ($decl->isRequired()) {
+      throw new \Facebook\XHP\AttributeRequiredException($this, $attr);
     } else {
-      return null;
+      return $decl->getDefaultValue();
     }
+    
+    return null;
   }
 
   final public static function __xhpReflectionAttribute(
